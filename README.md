@@ -10,10 +10,8 @@ The API is currently distributed in three class libraries
 2. CloverWindowsSDK contains classes that map to standard Clover objects such as `Payment`, `CardTransaction`, `Order`, etc.  These objects will match those defined in [clover-android-sdk](https://github.com/clover/clover-android-sdk) and the objects returned by the [Clover REST API](https://www.clover.com/api_docs)
 3. CloverWindowsTransport contains functionality to interface with a Clover Mini device via USB, though this version simulates a Clover device (`CloverTestDevice`) so no connectivity is required.
 
-The libraries currently require .NET 2.0 or higher.
+The libraries currently require .NET 2.0 or higher.  We intend to support Windows POSReady 2009 in addition to Windows 7 and above.
 
 An example project (CloverExamplePOS) is provided to demonstrate how to interact with the APIs.  To open this, please use Visual Studio and open `Clover.sln`
 
 Please report back to us any questions/comments/concerns.  We would love to hear your feedback and we will be publishing additional updates shortly.
-
-- The Clover Team
