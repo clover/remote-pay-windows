@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CloverConnector</name>
+    </assembly>
+    <members>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.#ctor(com.clover.remotepay.transport.CloverDeviceConfiguration)">
+            <summary>
+            CloverConnector constructor
+            </summary>
+            <param name="config">A CloverDeviceConfiguration object; TestDeviceConfiguration can be used for testing
+            </param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.Sale(com.clover.remotepay.sdk.SaleRequest)">
+            <summary>
+            Sale method, aka "purchase"
+            </summary>
+            <param name="request">A SaleRequest object containing basic information needed for the transaction</param>
+            <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.VoidTransaction(com.clover.remotepay.sdk.VoidRequest)">
+            <summary>
+            Void a transaction, given a previously used order ID and/or payment ID
+            TBD - defining a payment or order ID to be used with a void without requiring a response from Sale()
+            </summary>
+            <param name="request">A VoidRequest object containing basic information needed to void the transaction</param>
+            <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ManualRefund(com.clover.remotepay.sdk.ManualRefundRequest)">
+            <summary>
+            Manual refund method, aka "naked credit"
+            </summary>
+            <param name="request">A ManualRefundRequest object</param>
+            <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+        </member>
+    </members>
+</doc>
