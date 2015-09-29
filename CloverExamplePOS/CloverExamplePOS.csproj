@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -59,7 +59,13 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CloverConnector">
@@ -94,6 +100,24 @@
     <Compile Include="Model.cs" />
     <Compile Include="CloverExamplePOS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignatureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SignatureForm.Designer.cs">
+      <DependentUpon>SignatureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SignaturePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SignaturePanel.Designer.cs">
+      <DependentUpon>SignaturePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoreItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoreItem.Designer.cs">
+      <DependentUpon>StoreItem.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CloverExamplePOSForm.resx">
       <DependentUpon>CloverExamplePOSForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -108,6 +132,16 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="CloverExamplePOS_TemporaryKey.pfx" />
+    <EmbeddedResource Include="SignatureForm.resx">
+      <DependentUpon>SignatureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SignaturePanel.resx">
+      <DependentUpon>SignaturePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoreItem.resx">
+      <DependentUpon>StoreItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

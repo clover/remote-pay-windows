@@ -10,14 +10,24 @@ using com.clover.remotepay.sdk;
 using com.clover.remotepay.transport;
 using com.clover.sdk.v3.payments;
 using System.IO;
+using com.clover.remote.order;
 
 namespace CloverExamplePOS
 {
-    public partial class CloverExamplePOSForm : Form, CloverConnectionListener, CloverDeviceListener, CloverSaleListener, CloverVoidTransactionListener, CloverManualRefundListener
+    public partial class CloverExamplePOSForm : Form, CloverConnectionListener, CloverDeviceListener, CloverSaleListener, CloverVoidTransactionListener, CloverManualRefundListener, CloverSignatureListener
     {
         CloverConnector cloverConnector;
         Store Store;
         SynchronizationContext uiThread;
+
+        DisplayOrder DisplayOrder;
+        Dictionary<POSLineItem, DisplayLineItem> posLineItemToDisplayLineItem = new Dictionary<POSLineItem, DisplayLineItem>();
+        POSLineItem SelectedLineItem = null;
+
+        CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__");
+        CloverDeviceConfiguration TestConfig = new TestCloverDeviceConfiguration();
+
+        string OriginalFormTitle;
 
         public CloverExamplePOSForm()
         {
@@ -25,68 +35,340 @@ namespace CloverExamplePOS
 
             InitializeComponent();
             uiThread = WindowsFormsSynchronizationContext.Current;
+
+
         }
 
         private void ExamplePOSForm_Load(object sender, EventArgs e)
         {
-            //MessageBox.Show("Would ");
-            // what to do in the background thread
-            //CloverDeviceConfiguration config = new USBCloverDeviceConfiguration("__deviceID__");
-            CloverDeviceConfiguration config = new TestCloverDeviceConfiguration();
-            cloverConnector = new CloverConnector(config);
-
-            cloverConnector.Connections += this;
-            cloverConnector.Devices += this;
-
-            cloverConnector.Sales += this;
-            cloverConnector.Voids += this;
-            cloverConnector.ManualRefunds += this;
+            OriginalFormTitle = this.Text;
+            InitializeConnector(TestConfig);
 
             Store = new Store();
-            Store.AvailableItems.Add(new POSItem("abc123", "Hamburger ", 239));
-            Store.AvailableItems.Add(new POSItem("def456", "Cheeseburger ", 269));
-            Store.AvailableItems.Add(new POSItem("ace135", "Dbl. Hamburger ", 329));
-            Store.AvailableItems.Add(new POSItem("fda321", "Dbl. Cheeseburger ", 379));
-            Store.AvailableItems.Add(new POSItem("fdc742", "Chicken Sandwich ", 379));
-            Store.AvailableItems.Add(new POSItem("cea987", "French Fries - Small ", 129));
-            Store.AvailableItems.Add(new POSItem("acb654", "French Fries - Medium ", 159));
-            Store.AvailableItems.Add(new POSItem("dfa342", "French Fries - Large ", 179));
-            Store.AvailableItems.Add(new POSItem("dea937", "Soft Drink - Small ", 119));
-            Store.AvailableItems.Add(new POSItem("afc470", "Soft Drink - Medium ", 139));
-            Store.AvailableItems.Add(new POSItem("bce328", "Soft Drink - Large ", 189));
-            Store.AvailableItems.Add(new POSItem("eda216", "Gift Card ", 3000));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Hamburger ", 439));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Cheeseburger ", 499));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Dbl. Hamburger ", 559));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Dbl. Cheeseburger ", 629));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Chicken Sandwich ", 699));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Deluxe Chicken Sandwich ", 749));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "French Fries - Small ", 189));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "French Fries - Medium ", 229));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "French Fries - Large ", 269));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Soft Drink - Small ", 174));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Soft Drink - Medium ", 189));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Soft Drink - Large ", 229));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Milk Shake - Vanilla ", 389));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Milk Shake - Chocolate ", 399));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Milk Shake - Strawberry ", 399));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Gift Card - $25 ", 2500, false));
+            Store.AvailableItems.Add(new POSItem(Guid.NewGuid().ToString(), "Gift Card - $50 ", 5000, false));
+
 
             foreach (POSItem item in Store.AvailableItems)
             {
-                ListViewItem lvi = new ListViewItem();
+                StoreItem si = new StoreItem();
+                si.Item = item;
+                si += StoreItems_ItemSelected;
 
-                lvi.Tag = item;
-                lvi.Name = item.Name;
-
-                lvi.Text = item.Name + (item.Price / 100.0).ToString("C2");
-                StoreItems.Items.Add(lvi);
+                StoreItems.Controls.Add(si);
             }
+
+            NewOrder();
+
             UpdateUI();
 
         }
 
-        private void StoreItems_SelectedIndexChanged(object sender, EventArgs e)
+        //////////////// Sale methods /////////////
+        private void PayButton_Click(object sender, EventArgs e)
         {
-            if (StoreItems.SelectedItems.Count == 1)
+            StoreItems.BringToFront();
+
+            PayButton.Enabled = false;
+            StoreItems.Enabled = false;
+            newOrderBtn.Enabled = false;
+
+            SaleRequest request = new SaleRequest();
+            request.Amount = Store.CurrentOrder.Total;
+            request.TipAmount = 0;
+            if(cloverConnector.Sale(request)  < 0)
             {
-                ListViewItem lvi = StoreItems.SelectedItems[0];
-                POSItem item = (POSItem)lvi.Tag;
-
-                Store.CurrentOrder.AddItem(item, 1);
-
-                UpdateUI();
+                PaymentReset();
             }
-            StoreItems.SelectedIndices.Clear();
+        }
+        public void OnSaleResponse(SaleResponse response)
+        {
+            if(TransactionResponse.SUCCESS.Equals(response.Code))
+            {
+                Store.CurrentOrder.Status = POSOrder.OrderStatus.CLOSED;
+                POSPayment payment = new POSPayment(response.Payment.id, response.Payment.order.id, response.Payment.employee.id, response.Payment.amount, response.Payment.tipAmount);
+                payment.PaymentStatus = POSPayment.Status.PAID;
+                Store.CurrentOrder.AddPayment(payment);
+
+
+                uiThread.Send(delegate (object state) {
+                    PaymentReset();
+                    NewOrder();
+                }, null);
+            }
+            else if(TransactionResponse.FAIL.Equals(response.Code))
+            {
+                uiThread.Send(delegate (object state) {
+                    MessageBox.Show("Card authentication failed or was declined.");
+                    PaymentReset();
+                }, null);
+            }
+            else if (TransactionResponse.CANCEL.Equals(response.Code))
+            {
+                uiThread.Send(delegate (object state) {
+                    MessageBox.Show("User canceled transaction.");
+                    PaymentReset();
+                }, null);
+            }
         }
 
-        private void NewOrder_Click_1(object sender, EventArgs e)
+
+        //////////////// Void methods /////////////
+        private void VoidButton_Click(object sender, EventArgs e)
+        {
+            VoidRequest request = new VoidRequest();
+            if (OrderPaymentsView.SelectedItems.Count == 1)
+            {
+                POSPayment payment = ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag);
+                request.PaymentId = payment.PaymentID;
+                request.EmployeeId = payment.EmployeeID;
+                request.OrderId = payment.OrderID;
+                request.VoidReason = "USER_CANCEL";
+
+                cloverConnector.VoidTransaction(request);
+            }
+        }
+        public void OnVoidTransactionResponse(VoidResponse response)
+        {
+            bool voided = false;
+            foreach (POSOrder order in Store.Orders)
+            {
+                foreach (POSPayment payment in order.Payments)
+                {
+                    if(payment.PaymentID == response.PaymentId)
+                    {
+                        payment.PaymentStatus = POSPayment.Status.VOIDED;
+                        voided = true;
+                        break;
+                    }
+                }
+                if(voided)
+                {
+                    break;
+                }
+            }
+            uiThread.Send(delegate (object state) {
+                VoidButton.Enabled = false;
+                // shortbut to refresh UI
+                OrderPaymentsView.SelectedItems[0].SubItems[0].Text = POSPayment.Status.VOIDED.ToString();
+            }, null);
+
+        }
+
+
+
+        //////////////// Manual Refund methods /////////////
+        private void ManualRefundButton_Click(object sender, EventArgs e)
+        {
+            ManualRefundRequest request = new ManualRefundRequest();
+            request.Amount = int.Parse(RefundAmount.Text);
+            cloverConnector.ManualRefund(request);
+        }
+        public void OnManualRefundResponse(ManualRefundResponse response)
+        {
+
+            if (TransactionResponse.SUCCESS.Equals(response.Code))
+            {
+                uiThread.Send(delegate (object state) {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+
+                    lvi.SubItems[0].Text = (response.credit.amount / 100.0).ToString("C2");
+                    lvi.SubItems[1].Text = new DateTime(response.credit.createdTime).ToLongDateString();
+                    lvi.SubItems[2].Text = response.credit.cardTransaction.last4;
+
+
+                    MessageBox.Show("Refund of " + (response.credit.amount / 100.0).ToString("C2") + " was applied to card ending with " + response.credit.cardTransaction.last4);
+                    RefundAmount.Text = "0";
+
+                    TransactionsListView.Items.Add(lvi);
+                }, null);
+            }
+            else if (TransactionResponse.FAIL.Equals(response.Code))
+            {
+                uiThread.Send(delegate (object state) {
+                    MessageBox.Show("Card authentication failed");
+                    PaymentReset();
+                }, null);
+            }
+            else if (TransactionResponse.CANCEL.Equals(response.Code))
+            {
+                uiThread.Send(delegate (object state) {
+                    MessageBox.Show("User canceled transaction.");
+                    PaymentReset();
+                }, null);
+            }
+
+        }
+
+
+
+
+        ////////////////// CloverDeviceLister Methods //////////////////////
+
+        public void OnDeviceConnected()
+        {
+            uiThread.Send(delegate (object state) {
+                ConnectStatusLabel.Text = "Connecting...";
+            }, null);
+        }
+
+        public void OnDeviceReady()
+        {
+            uiThread.Send(delegate (object state) {
+                ConnectStatusLabel.Text = "Connected";
+                if(DisplayOrder.lineItems.elements.Count > 0)
+                {
+                    UpdateDisplayOrderTotals();
+                    cloverConnector.DisplayOrder(DisplayOrder);
+                }
+                PaymentReset();
+            }, null);
+        }
+
+        public void OnDeviceDisconnected()
+        {
+            try
+            {
+                uiThread.Send(delegate (object state) {
+                    ConnectStatusLabel.Text = "Disconnected";
+                    PaymentReset();
+                }, null);
+                
+            }
+            #pragma warning disable 0168
+            catch (Exception e)
+            #pragma warning restore 0168
+            {
+                // uiThread is gone on shutdown
+            }
+        }
+
+
+
+
+        ////////////////// CloverDeviceLister Methods //////////////////////
+        public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
+        {
+            uiThread.Send(delegate (object state) {
+                DeviceCurrentStatus.Text = deviceEvent.Message;
+            }, null);
+        }
+
+        public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
+        {
+            try
+            {
+                uiThread.Send(delegate (object state) {
+                    DeviceCurrentStatus.Text = " ";
+                }, null);
+            }
+            #pragma warning disable 0168
+            catch (Exception e)
+            #pragma warning restore 0168
+            {
+                // if UI goes away, uiThread may be disposed
+            }
+        }
+
+        public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
+        {
+            MessageBox.Show(deviceErrorEvent.Message);
+        }
+
+
+
+
+        ////////////////// CloverSignatureLister Methods //////////////////////
+        /// <summary>
+        /// Handle a request from the Clover device to verify a signature
+        /// </summary>
+        /// <param name="request"></param>
+        public void OnSignatureVerifyRequest(SignatureVerifyRequest request)
+        {
+            uiThread.Send(delegate (object state)
+            {
+                SignatureForm sigForm = new SignatureForm();
+                sigForm.SignatureVerifyRequest = request;
+                sigForm.ShowDialog(this);
+            }, null);
+            
+        }
+
+
+
+        ////////////////// UI Events and UI Management //////////////////////
+
+        private void StoreItems_ItemSelected(object sender, EventArgs e)
+        {
+            POSItem item = ((StoreItem)((Control)sender).Parent).Item;
+            POSLineItem lineItem = Store.CurrentOrder.AddItem(item, 1);
+
+            DisplayLineItem displayLineItem = null;
+            posLineItemToDisplayLineItem.TryGetValue(lineItem, out displayLineItem);
+            if (displayLineItem == null)
+            {
+                displayLineItem = DisplayFactory.createDisplayLineItem();
+                posLineItemToDisplayLineItem[lineItem] = displayLineItem;
+                displayLineItem.quantity = "1";
+                displayLineItem.name = lineItem.Item.Name;
+                displayLineItem.price = (lineItem.Item.Price / 100.0).ToString("C2");
+                DisplayOrder.addDisplayLineItem(displayLineItem);
+                UpdateDisplayOrderTotals();
+                cloverConnector.DisplayOrderLineItemAdded(DisplayOrder, displayLineItem);
+            }
+            else
+            {
+                displayLineItem.quantity = lineItem.Quantity.ToString();
+                UpdateDisplayOrderTotals();
+                cloverConnector.DisplayOrder(DisplayOrder);
+            }
+
+            UpdateUI();
+        }
+
+        private void UpdateDisplayOrderTotals()
+        {
+            DisplayOrder.tax = (Store.CurrentOrder.TaxAmount / 100.0).ToString("C2");
+            DisplayOrder.subtotal = (Store.CurrentOrder.SubTotal / 100.0).ToString("C2");
+            DisplayOrder.total = (Store.CurrentOrder.Total / 100.0).ToString("C2");
+
+            //DisplayOrder.lineItems.elements.Clear();
+        }
+
+        private void NewOrder_Click(object sender, EventArgs e)
+        {
+            NewOrder();
+        }
+
+        private void NewOrder()
         {
             Store.CreateOrder();
+            StoreItems.BringToFront();
+
+            DisplayOrder = DisplayFactory.createDisplayOrder();
+            DisplayOrder.title = Guid.NewGuid().ToString();
+            posLineItemToDisplayLineItem.Clear();
+
+            cloverConnector.ShowWelcomeScreen();
+            //cloverConnector.DisplayOrder(DisplayOrder); // want the welcome screen until something is added to the order
 
             PayButton.Enabled = true;
             StoreItems.Enabled = true;
@@ -107,7 +389,7 @@ namespace CloverExamplePOS
                 lvi.Tag = item;
                 lvi.Name = item.Item.Name;
 
-                //lvi.Text = item.Item.Name + " - " + (item.Item.Price/100.0).ToString("C2") + " x" + item.Quantity;
+                lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
                 lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
                 lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
                 lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
@@ -115,6 +397,9 @@ namespace CloverExamplePOS
                 lvi.SubItems[0].Text = "" + item.Quantity;
                 lvi.SubItems[1].Text = item.Item.Name;
                 lvi.SubItems[2].Text = (item.Item.Price / 100.0).ToString("C2");
+                lvi.SubItems[3].ForeColor = Color.ForestGreen;
+                lvi.SubItems[3].Text = (item.Discount == null) ? "" : "-" + (item.Discount.Value(item.Item) / 100.0).ToString("C2");
+                
 
                 OrderItems.Items.Add(lvi);
             }
@@ -164,6 +449,7 @@ namespace CloverExamplePOS
 
                 OrderDetailsListView.Items.Clear();
 
+                // update order items table
                 foreach (POSLineItem lineItem in selOrder.Items)
                 {
                     lvi = new ListViewItem();
@@ -179,6 +465,7 @@ namespace CloverExamplePOS
                     OrderDetailsListView.Items.Add(lvi);
                 }
 
+                // update order payments table
                 OrderPaymentsView.Items.Clear();
                 foreach (var Exchange in selOrder.Payments)
                 {
@@ -186,19 +473,28 @@ namespace CloverExamplePOS
                     lvi.Tag = Exchange;
                     lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
                     lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
 
                     lvi.SubItems[0].Text = (Exchange is POSPayment) ? ((POSPayment)Exchange).PaymentStatus.ToString() : "";
                     lvi.SubItems[1].Text = (Exchange.Amount / 100.0).ToString("C2");
+                    lvi.SubItems[2].Text = (Exchange is POSPayment) ? (((POSPayment)Exchange).TipAmount / 100.0).ToString("C2") : "";
+                    lvi.SubItems[3].Text = (Exchange is POSPayment) ? ((((POSPayment)Exchange).TipAmount + Exchange.Amount) / 100.0).ToString("C2") : (Exchange.Amount / 100.0).ToString("C2");
 
                     OrderPaymentsView.Items.Add(lvi);
                 }
             }
         }
-        public void PaymentFinished()
+        public void PaymentReset()
         {
             PayButton.Enabled = true;
             StoreItems.Enabled = true;
             TabControl.Enabled = true;
+
+            if(DisplayOrder.lineItems.elements.Count > 0)
+            {
+                cloverConnector.DisplayOrder(DisplayOrder);
+            }
 
             UpdateUI();
         }
@@ -242,136 +538,140 @@ namespace CloverExamplePOS
             }
         }
 
-        //////////////// Sale methods /////////////
-        private void PayButton_Click(object sender, EventArgs e)
+        private void ExamplePOSForm_Closed(object sender, FormClosedEventArgs e)
         {
-            PayButton.Enabled = false;
-            StoreItems.Enabled = false;
-            newOrderBtn.Enabled = false;
-
-            SaleRequest request = new SaleRequest();
-            request.Amount = Store.CurrentOrder.Total;
-            request.TipAmount = 0;
-            cloverConnector.Sale(request);
-        }
-        public void OnSaleResponse(SaleResponse response)
-        {
-            Store.CurrentOrder.Status = POSOrder.OrderStatus.CLOSED;
-            POSPayment payment = new POSPayment(response.Payment.id, response.Payment.order.id, response.Payment.employee.id, response.Payment.amount);
-            payment.PaymentStatus = POSPayment.Status.PAID;
-            Store.CurrentOrder.AddPayment(payment);
-            Store.CreateOrder();
-
-            uiThread.Send(delegate (object state) {
-                PaymentFinished();
-            }, null);
+            cloverConnector.ShowWelcomeScreen();
         }
 
-
-        //////////////// Void methods /////////////
-        private void VoidButton_Click(object sender, EventArgs e)
+        private void OrderItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            VoidRequest request = new VoidRequest();
-            if (OrderPaymentsView.SelectedItems.Count == 1)
+            // Need to show item panel?
+            if (OrderItems.SelectedItems.Count == 1)
             {
-                POSPayment payment = ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag);
-                request.PaymentId = payment.PaymentID;
-                request.EmployeeId = payment.EmployeeID;
-                request.OrderId = payment.OrderID;
-                request.VoidReason = "USER_CANCEL";
+                POSLineItem lineItem = (POSLineItem)((ListViewItem)OrderItems.SelectedItems[0]).Tag;
+                SelectedLineItem = lineItem;
+                ItemNameLabel.Text = lineItem.Item.Name;
+                ItemQuantityTextbox.Text = lineItem.Quantity.ToString();
+                // enable/disable Discount button. Can't add it twice...
+                DiscountButton.Enabled = lineItem.Discount == null;
+            }
+            SelectedItemPanel.BringToFront();
 
-                cloverConnector.VoidTransaction(request);
+        }
+
+        private void IncrementQuantityButton_Click(object sender, EventArgs e)
+        {
+            SelectedLineItem.Quantity++;
+            ItemQuantityTextbox.Text = "" + SelectedLineItem.Quantity;
+            UpdateDisplayOrderTotals();
+            posLineItemToDisplayLineItem[SelectedLineItem].quantity = "" + SelectedLineItem.Quantity;
+            cloverConnector.DisplayOrder(DisplayOrder);
+            UpdateUI();
+        }
+
+        private void DecrementQuantityButton_Click(object sender, EventArgs e)
+        {
+            SelectedLineItem.Quantity--;
+            if (SelectedLineItem.Quantity == 0)
+            {
+                RemoveSelectedItemFromCurrentOrder();
+            }
+            else
+            {
+                ItemQuantityTextbox.Text = "" + SelectedLineItem.Quantity;
+                UpdateDisplayOrderTotals();
+                posLineItemToDisplayLineItem[SelectedLineItem].quantity = "" + SelectedLineItem.Quantity;
+                cloverConnector.DisplayOrder(DisplayOrder);
+                UpdateUI();
             }
         }
-        public void OnVoidTransactionResponse(VoidResponse response)
+
+        private void RemoveItemButton_Click(object sender, EventArgs e)
         {
-            foreach (POSOrder order in Store.Orders)
+            RemoveSelectedItemFromCurrentOrder();
+        }
+
+        private void RemoveSelectedItemFromCurrentOrder()
+        {
+            Store.CurrentOrder.RemoveItem(SelectedLineItem);
+            UpdateDisplayOrderTotals();
+            cloverConnector.DisplayOrderLineItemRemoved(DisplayOrder, posLineItemToDisplayLineItem[SelectedLineItem]);
+            StoreItems.BringToFront();
+            UpdateUI();
+        }
+
+        private void DiscountButton_Click(object sender, EventArgs e)
+        {
+            SelectedLineItem.Discount = new POSLineItemDiscount(0.1f, "10% Off");
+            DisplayDiscount discount = new DisplayDiscount();
+            DisplayLineItem displayLineItem = posLineItemToDisplayLineItem[SelectedLineItem];
+            discount.lineItemId = displayLineItem.id;
+            displayLineItem.addDiscount(discount);
+
+            discount.name = SelectedLineItem.Discount.Name;
+            discount.percentage = "10";
+            discount.amount = (SelectedLineItem.Discount.Value(SelectedLineItem.Item) * SelectedLineItem.Quantity / 100.0).ToString("C2");
+
+            UpdateDisplayOrderTotals();
+            cloverConnector.DisplayOrder(DisplayOrder);
+
+            DiscountButton.Enabled = false;
+            UpdateUI();
+        }
+
+        private void DoneEditingLineItem_Click(object sender, EventArgs e)
+        {
+            StoreItems.BringToFront();
+            UpdateUI();
+        }
+
+        private void InitializeConnector(CloverDeviceConfiguration config)
+        {
+            if(cloverConnector != null)
             {
-                foreach (POSPayment payment in order.Payments)
-                {
-                    payment.PaymentStatus = POSPayment.Status.VOIDED;
-                    break;
-                }
+                cloverConnector.Connections -= this;
+                cloverConnector.Devices -= this;
+                cloverConnector.Signatures -= this;
+                cloverConnector.Sales -= this;
+                cloverConnector.Voids -= this;
+                cloverConnector.ManualRefunds -= this;
+
+                OnDeviceDisconnected(); // for any disabling, messaging, etc.
+                PayButton.Enabled = false; // everything can work except Pay
             }
-            uiThread.Send(delegate (object state) {
-                VoidButton.Enabled = false;
-            }, null);
 
-        }
-
-
-
-        //////////////// Manual Refund methods /////////////
-        private void ManualRefundButton_Click(object sender, EventArgs e)
-        {
-            ManualRefundRequest request = new ManualRefundRequest();
-            request.Amount = int.Parse(RefundAmount.Text);
-            cloverConnector.ManualRefund(request);
-        }
-        public void OnManualRefundResponse(ManualRefundResponse response)
-        {
-            uiThread.Send(delegate (object state) {
-                MessageBox.Show("Refund of " + (response.credit.amount / 100.0).ToString("c2") + " was applied to card ending with " + response.credit.cardTransaction.last4);
-                RefundAmount.Text = "";
-            }, null);
+            cloverConnector = new CloverConnector(config);
             
-        }
+            cloverConnector.Connections += this;
+            cloverConnector.Devices += this;
+            cloverConnector.Signatures += this;
+            cloverConnector.Sales += this;
+            cloverConnector.Voids += this;
+            cloverConnector.ManualRefunds += this;
 
-
-
-
-        ////////////////// CloverDeviceLister Methods //////////////////////
-
-        public void OnDeviceConnected()
-        {
-            uiThread.Send(delegate (object state) {
-                ConnectStatusLabel.Text = "Connecting...";
-            }, null);
-        }
-
-        public void OnDeviceReady()
-        {
-            uiThread.Send(delegate (object state) {
-                ConnectStatusLabel.Text = "Connected";
-            }, null);
-        }
-
-        public void OnDeviceDisconnected()
-        {
-            try
+            //ui cleanup
+            this.Text = OriginalFormTitle + " - " + config.getName();
+            if (config is TestCloverDeviceConfiguration)
             {
-                uiThread.Send(delegate (object state) {
-                    ConnectStatusLabel.Text = "Disconnected";
-                }, null);
+                TestDeviceMenuItem.Checked = true;
+                CloverMiniUSBMenuItem.Checked = false;
             }
-            catch(Exception e)
+            else if (config is USBCloverDeviceConfiguration)
             {
-                // uiThread is gone on shutdown
+                TestDeviceMenuItem.Checked = false;
+                CloverMiniUSBMenuItem.Checked = true;
             }
         }
 
-
-
-
-        ////////////////// CloverDeviceLister Methods //////////////////////
-        public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
+        private void TestDeviceMenuItem_Click(object sender, EventArgs e)
         {
-            uiThread.Send(delegate (object state) {
-                DeviceCurrentStatus.Text = deviceEvent.Message;
-            }, null);
+            InitializeConnector(TestConfig);
         }
 
-        public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
+        private void CloverMiniUSBMenuItem_Click(object sender, EventArgs e)
         {
-            uiThread.Send(delegate (object state) {
-                DeviceCurrentStatus.Text = "";
-            }, null);
+            InitializeConnector(USBConfig);
         }
 
-
-        public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
