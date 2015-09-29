@@ -4,6 +4,39 @@
         <name>CloverWindowsSDK</name>
     </assembly>
     <members>
+        <member name="P:com.clover.remote.order.DisplayLineItem.price">
+            Formatted unit quantity - such as 10 @ $1.99/oz
+        </member>
+        <member name="P:com.clover.remote.order.DisplayLineItem.unitPrice">
+            Formatted unit price in cases if applicable
+        </member>
+        <member name="P:com.clover.remote.order.DisplayLineItem.quantity">
+            Formatted quantity
+        </member>
+        <member name="P:com.clover.remote.order.DisplayLineItem.unitQuantity">
+            Formatted unit quantity - such as 10 @ $1.99/oz
+        </member>
+        <member name="P:com.clover.remote.order.DisplayOrder.subtotal">
+            Formatted subtotal of the order
+        </member>
+        <member name="P:com.clover.remote.order.DisplayOrder.tax">
+            Formatted tax of the order
+        </member>
+        <member name="P:com.clover.remote.order.DisplayOrder.total">
+            Formatted total of the order
+        </member>
+        <member name="P:com.clover.remote.order.DisplayOrder.serviceChargeName">
+            Optional service charge name (gratuity) applied to this order
+        </member>
+        <member name="P:com.clover.remote.order.DisplayOrder.serviceChargeAmount">
+            Optional service charge amount (gratuity) applied to this order
+        </member>
+        <member name="P:com.clover.remote.order.DisplayOrder.amountRemaining">
+            Formatted amount remaining
+        </member>
+        <member name="P:com.clover.remote.order.DisplayPayment.label">
+            Formatted display string for the tender e.g. credit card, cash, etc.
+        </member>
         <member name="P:com.clover.sdk.v3.base_.CountryInfo.countryCode">
             <summary>
             ISO 3166-1-alpha-2 code
