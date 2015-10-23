@@ -18,20 +18,36 @@ namespace CloverExamplePOS
             Status = OrderStatus.OPEN;
             Items = new List<POSLineItem>();
             Payments = new List<POSExchange>();
+            Discount = new POSDiscount("None", 0);
             Date = new DateTime();
         }
 
         public string ID { set; get; }
         public DateTime Date { set; get; }
         public OrderStatus Status { set; get; }
-
-        public long SubTotal {
+        public long PreDiscountSubTotal
+        {
+            get
+            {
+                long sub = 0;
+                foreach (POSLineItem li in Items)
+                {
+                    sub += li.Price * li.Quantity;
+                }
+                return sub;
+            }
+        }
+        public long PreTaxSubTotal {
             get
             {
                 long sub = 0;
                 foreach(POSLineItem li in Items)
                 {
                     sub += li.Price * li.Quantity ;
+                }
+                if(Discount != null)
+                {
+                    sub = Discount.AppliedTo(sub);
                 }
                 return sub;
             }
@@ -48,6 +64,10 @@ namespace CloverExamplePOS
                         sub += li.Price * li.Quantity;
                     }
                 }
+                if (Discount != null)
+                {
+                    sub = Discount.AppliedTo(sub);
+                }
                 return sub;
             }
         }
@@ -61,7 +81,7 @@ namespace CloverExamplePOS
         {
             get
             {
-                return SubTotal + TaxAmount;
+                return PreTaxSubTotal + TaxAmount;
             }
         }
         public long Tips()
@@ -74,11 +94,12 @@ namespace CloverExamplePOS
             return tips;
         }
 
-        public List<POSLineItem> Items { get; }
-        public List<POSExchange> Payments { get; }
+        public List<POSLineItem> Items { get; internal set; }
+        public List<POSExchange> Payments { get; internal set; }
+        public POSDiscount Discount { get; internal set; }
 
         /// <summary>
-        /// manageds adding a POSItem to an order. If the POSItem already exists, the quantity is just incremented
+        /// manages adding a POSItem to an order. If the POSItem already exists, the quantity is just incremented
         /// </summary>
         /// <param name="i"></param>
         /// <param name="quantity"></param>
@@ -133,6 +154,7 @@ namespace CloverExamplePOS
         {
             Items.Remove(selectedLineItem);
         }
+        
     }
 
     public class POSExchange
@@ -161,8 +183,8 @@ namespace CloverExamplePOS
 
     public class POSNakedRefund
     {
-        public string EmployeeID { get; }
-        public long Amount { get; }
+        public string EmployeeID { get; internal set; }
+        public long Amount { get; internal set; }
 
         public POSNakedRefund(String employeeID, long amount)
         {
@@ -177,9 +199,10 @@ namespace CloverExamplePOS
         {
             PAID, VOIDED, REFUNDED
         }
-        public POSPayment(string paymentID, string orderID, string employeeID, long amount, long tip = 0) : base(paymentID, orderID, employeeID, amount)
+        public POSPayment(string paymentID, string orderID, string employeeID, long amount, long tip = 0, long cashBack = 0) : base(paymentID, orderID, employeeID, amount)
         {
             TipAmount = tip;
+            CashBackAmount = cashBack;
         }
 
         private Status _status;
@@ -213,6 +236,7 @@ namespace CloverExamplePOS
         }
 
         public long TipAmount { get; set; }
+        public long CashBackAmount { get; set; }
     }
 
     public class POSLineItem
@@ -262,7 +286,7 @@ namespace CloverExamplePOS
             Price = price;
             Taxable = taxable;
         }
-        public bool Taxable { get; set; } = true;
+        public bool Taxable { get; set; }
         public string ID { get; set; }
         public long Price { get; set; }
         public String Name { get; set; }
@@ -270,7 +294,21 @@ namespace CloverExamplePOS
 
     public class POSDiscount
     {
-        public string Name { get; set; } = "";
+        public POSDiscount()
+        {
+            Name = "";
+        }
+        public POSDiscount(string name, float percentOff) : this()
+        {
+            Name = name;
+            PercentageOff = percentOff;
+        }
+        public POSDiscount(string name, long amountOff) : this()
+        {
+            Name = name;
+            AmountOff = amountOff;
+        }
+        public string Name { get; set; }
 
         private long _amountOff = 0;
         public long AmountOff
@@ -298,6 +336,30 @@ namespace CloverExamplePOS
                 _percentageOff = value;
             }
         }
+
+        internal long AppliedTo(long sub)
+        {
+            if(AmountOff == 0)
+            {
+                sub = (long)Math.Round(sub - (sub * PercentageOff));
+            }
+            else
+            {
+                sub -= AmountOff;
+            }
+            return sub;
+        }
+
+        public long Value(long sub)
+        {
+            long value = AmountOff;
+            if (AmountOff == 0)
+            {
+                value = (long)Math.Round(sub * PercentageOff);
+            }
+
+            return value;
+        }
     }
 
     public class POSOrderDiscount : POSDiscount
@@ -321,7 +383,7 @@ namespace CloverExamplePOS
             }
             else
             {
-                return (int)(order.SubTotal * PercentageOff);
+                return (int)(order.PreTaxSubTotal * PercentageOff);
             }
         }
 
@@ -360,9 +422,12 @@ namespace CloverExamplePOS
         public Store()
         {
             AvailableItems = new List<POSItem>();
+            AvailableDiscounts = new List<POSDiscount>();
             Orders = new List<POSOrder>();
         }
+
         public List<POSItem> AvailableItems { set; get; }
+        public List<POSDiscount> AvailableDiscounts { set; get; }
         public List<POSOrder> Orders { set; get; }
         public POSOrder CurrentOrder { set; get; }
 

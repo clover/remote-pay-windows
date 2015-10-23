@@ -187,6 +187,386 @@
             Unique identifier
             </summary>
         </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.name">
+            <summary>
+            Full name of the employee
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.nickname">
+            <summary>
+            Nickname of the employee (shows up on receipts)
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.customId">
+            <summary>
+            Custom ID of the employee
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.email">
+            <summary>
+            Email of the employee (optional)
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.inviteSent">
+            <summary>
+            Returns true if this employee was sent an invite to activate their account
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.claimedTime">
+            <summary>
+            Timestamp of when this employee claimed their account
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.pin">
+            <summary>
+            Employee PIN (hashed)
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.unhashedPin">
+            <summary>
+            Employee PIN
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.role">
+            <summary>
+            Employee System Role
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.isOwner">
+            <summary>
+            Returns true if this employee is the owner account for this merchant
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.shifts">
+            <summary>
+            This employee's shifts
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.payments">
+            <summary>
+            This employee's payments
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Employee.orders">
+            <summary>
+            This employee's orders
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Permissions.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Permissions.bits">
+            <summary>
+            A bitmap representing the permissions
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Permissions.readablePermissions">
+            <summary>
+            A readable list of permissions
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSet.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSet.name">
+            <summary>
+            Key of the permissionSet
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSet.label">
+            <summary>
+            Label of the permissionSet
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSet.permissions">
+            <summary>
+            Bitmap of permissions
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSet.roles">
+            <summary>
+            roles enabled for this merchant
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSetRole.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSetRole.role">
+            <summary>
+            The role
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.PermissionSetRole.permissionSet">
+            <summary>
+            The role
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Role.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Role.name">
+            <summary>
+            Full name of the role
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Role.systemRole">
+            <summary>
+            Base System Role
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Role.employeesRef">
+            <summary>
+            employees with this role
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.employee">
+            <summary>
+            The employee that worked this shift
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.cashTipsCollected">
+            <summary>
+            Amount of cash tips collected
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.serverBanking">
+            <summary>
+            Whether the employee used server banking
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.inTime">
+            <summary>
+            Clock in time
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.overrideInTime">
+            <summary>
+            Overridden clock in time
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.overrideInEmployee">
+            <summary>
+            The employee who overrode the clock in time
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.outTime">
+            <summary>
+            Clock out time
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.overrideOutTime">
+            <summary>
+            Overridden clock out time
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.employees.Shift.overrideOutEmployee">
+            <summary>
+            The employee who overrode the clock out time
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.name">
+            <summary>
+            Name of the merchant
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.owner">
+            <summary>
+            The account that owns this merchant
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.address">
+            <summary>
+            The address of the merchant.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.logoUrl">
+            <summary>
+            URL to the logo of the merchant. Generated from logoFilename.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.employees">
+            <summary>
+            This merchant's employees
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.items">
+            <summary>
+            This merchant's inventory items
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.tags">
+            <summary>
+            This merchant's inventory tags
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.tenders">
+            <summary>
+            This merchant's supported tenders
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.shifts">
+            <summary>
+            This merchant's employees' shifts
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.orders">
+            <summary>
+            This merchant's orders
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.payments">
+            <summary>
+            This merchant's order payments
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.reseller">
+            <summary>
+            The merchant's reseller
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.opening_hours">
+            <summary>
+            This merchant's opening hours
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.businessTypeCode">
+            <summary>
+            The business type of the merchant
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.isBillable">
+            <summary>
+            Returns true when the merchant is billable.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Merchant.devices">
+            <summary>
+            A list of devices a merchant owns
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantPlan.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantPlan.name">
+            <summary>
+            The name of the merchant plan
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantPlan.description">
+            <summary>
+            Description of the plan
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.locale">
+            <summary>
+            The locale of the merchant.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.vat">
+            <summary>
+            Whether this merchant is in a VAT country
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.vatTaxName">
+            <summary>
+            The VAT tax name that is shown on receipts
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.appBillingSystem">
+            <summary>
+            Temporary while we are switching US billing systems
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.abaAccountNumber">
+            <summary>
+            The ABA Account Number.  Supplied by First Data.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.ddaAccountNumber">
+            <summary>
+            The Masked DDA Account Number.  Supplied by First Data.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.businessTypeCode">
+            <summary>
+            The business type of the merchant
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.cashBackEnabled">
+            <summary>
+            Whether cash back is enabled for this merchant
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.cashBackOptions">
+            <summary>
+            List of cash back possible cash back amounts
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.maxCashBack">
+            <summary>
+            The maximum amount of cash back that the customer can select.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.hierarchy">
+            <summary>
+            Merchant hierarchy (Business, Bank, Agent, Corp, Chain). Supplied by First Data.
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.MerchantProperties.hasConsented">
+            <summary>
+            Whether or not merchant has consented to infolease billing
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.Module.id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.SyncSettings.authority">
+            <summary>
+            Sync authoirty
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.SyncSettings.level">
+            <summary>
+            The minumum sync level rquired for this authority
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.TipSuggestion.name">
+            <summary>
+            Name of the tip
+            </summary>
+        </member>
+        <member name="P:com.clover.sdk.v3.merchant.TipSuggestion.percentage">
+            <summary>
+            Suggested tip percentage
+            </summary>
+        </member>
         <member name="P:com.clover.sdk.v3.hours.HoursSet.id">
             <summary>
             Unique identifier
