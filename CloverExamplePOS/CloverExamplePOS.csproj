@@ -13,22 +13,6 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,39 +33,22 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>CDA60A4227DC015A8C50E8F4473AA7365AE18362</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>CloverExamplePOS_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>true</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CloverConnector">
+    <Reference Include="CloverConnector, Version=0.3.0.0, Culture=neutral, PublicKeyToken=2c122d0e452cca9f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CloverConnector.dll</HintPath>
     </Reference>
-    <Reference Include="CloverWindowsSDK">
+    <Reference Include="CloverWindowsSDK, Version=0.3.0.0, Culture=neutral, PublicKeyToken=221ffd43d33b01d0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CloverWindowsSDK.dll</HintPath>
     </Reference>
-    <Reference Include="CloverWindowsTransport">
+    <Reference Include="CloverWindowsTransport, Version=0.3.0.0, Culture=neutral, PublicKeyToken=4e1820199e986d18, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CloverWindowsTransport.dll</HintPath>
     </Reference>
-    <Reference Include="LibUsbDotNet">
+    <Reference Include="LibUsbDotNet, Version=2.2.8.104, Culture=neutral, PublicKeyToken=c677239abe1e02a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\LibUsbDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -97,9 +64,12 @@
     <Compile Include="CloverExamplePOSForm.Designer.cs">
       <DependentUpon>CloverExamplePOSForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model.cs" />
-    <Compile Include="CloverExamplePOS.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SignatureForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +82,15 @@
     <Compile Include="SignaturePanel.Designer.cs">
       <DependentUpon>SignaturePanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model.cs" />
+    <Compile Include="CloverExamplePOS.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StoreDiscount.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoreDiscount.Designer.cs">
+      <DependentUpon>StoreDiscount.cs</DependentUpon>
+    </Compile>
     <Compile Include="StoreItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -120,6 +99,15 @@
     </Compile>
     <EmbeddedResource Include="CloverExamplePOSForm.resx">
       <DependentUpon>CloverExamplePOSForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SignatureForm.resx">
+      <DependentUpon>SignatureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SignaturePanel.resx">
+      <DependentUpon>SignaturePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -131,17 +119,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="CloverExamplePOS_TemporaryKey.pfx" />
-    <EmbeddedResource Include="SignatureForm.resx">
-      <DependentUpon>SignatureForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SignaturePanel.resx">
-      <DependentUpon>SignaturePanel.cs</DependentUpon>
+    <EmbeddedResource Include="StoreDiscount.resx">
+      <DependentUpon>StoreDiscount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StoreItem.resx">
       <DependentUpon>StoreItem.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -154,13 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
