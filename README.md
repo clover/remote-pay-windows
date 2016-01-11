@@ -1,6 +1,6 @@
 # Clover SDK for Windows PoS Integration
 
-Current version: 0.3
+Current version: 0.4
 
 ## Overview
 
@@ -12,15 +12,27 @@ The API is currently distributed in three class libraries
 2. CloverWindowsSDK contains classes that map to standard Clover objects such as `Payment`, `CardTransaction`, `Order`, etc.  These objects will match those defined in [clover-android-sdk](https://github.com/clover/clover-android-sdk) and the objects returned by the [Clover REST API](https://www.clover.com/api_docs)
 3. CloverWindowsTransport contains functionality to interface with a Clover Mini device via USB or via LAN (WebSocket connection). You may also simulate a Clover device (`CloverTestDevice`) so no connectivity is required.
 
-The libraries currently require .NET 2.0 or higher, and are supported on Windows POSReady 2009, Windows 7 and Windows 8.
+The libraries currently require .NET 4.0 or higher, and are supported on Windows POSReady 2009, Windows 7 and Windows 8.
 
 An example project (CloverExamplePOS) is provided to demonstrate how to interact with the APIs.  To open this, please use Visual Studio and open `Clover.sln`
 
-Sample drivers for Windows 7 are availabe in the `drivers` folder.
+An installer is now available under the 'Releases' tab, which will automatically install the appropriate drivers needed to connect to Clover Mini.
 
 Please report back to us any questions/comments/concerns.
 
 ## Release Notes
+
+### Version 0.4
+* Add CardEntryMethod to CloverConnector which allows customization of entry methods (contactless, EMV/contact, swipe, manual entry)
+* Add a constructor to CloverConnector which takes a CloverDeviceConfiguration and a CloverConnectorListener
+* Add AcceptSignature and RejectSignature methods to CloverConnector
+* Add Cancel method to CloverConnector which should cancel the current card transaction whenever possible
+* Add InvokeInputOption method to CloverConnector which allows the POS to control most screens on the device (excluding PIN entry)
+* Payment.CardTransaction now returns a 'token' attribute, which will contain a TransArmor multi-pay token if the merchant is configured correctly
+* SaleRequest now accepts a VaultedCard object, which allows for completion of a transaction using multi-pay token
+* An installer (CloverSDKSetup.exe) is now available, which automatically installs appropriate USB drivers for Clover Mini; this has been tested on Windows 7 and above
+* In addition to the .NET class libraries, there is now an option to connect to a WebSocket service or REST service (with socket callbacks) from the Windows PC.  This was added to provide better support for programming/integration environments other than .NET
+* CloverExamplePOS application has been enhanced to allow testing with USB, LAN, REST service or WebSocket service, or an in-memory/mock 'test device'
 
 ### Version 0.3
 * Add properties to CloverConnector: DisablePrinting, DisableCashBack, DisableTip, and DisableRestartTransactionOnFail

@@ -9,7 +9,7 @@ using com.clover.remotepay.sdk;
 
 namespace CloverExamplePOS
 {
-    public partial class SignatureForm : Form
+    public partial class SignatureForm : OverlayForm
     {
         private SignatureVerifyRequest signatureVerifyRequest;
         public SignatureVerifyRequest SignatureVerifyRequest {
@@ -21,8 +21,7 @@ namespace CloverExamplePOS
                 signaturePanel1.Signature = signatureVerifyRequest.Signature;
             }
         }
-
-        public SignatureForm()
+        public SignatureForm(Form toCover) : base(toCover)
         {
             InitializeComponent();
         }
@@ -42,6 +41,5 @@ namespace CloverExamplePOS
             this.Dispose();
             SignatureVerifyRequest.Reject();
         }
-
     }
 }
