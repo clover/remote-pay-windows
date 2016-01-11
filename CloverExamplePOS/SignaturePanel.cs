@@ -22,7 +22,7 @@ namespace CloverExamplePOS
                 sig = value;
                 if(value != null)
                 {
-                    SetBounds(0, 0, sig.width, sig.height);
+                    SetBounds(0, 0, (int)(sig.width*scale), (int)(sig.height*scale));
                 }
             }
         }

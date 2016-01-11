@@ -9,7 +9,7 @@ namespace CloverExamplePOS
         
         public enum OrderStatus
         {
-            OPEN, CLOSED, LOCKED
+            OPEN, CLOSED, LOCKED, AUTHORIZED
         }
 
 
@@ -50,6 +50,25 @@ namespace CloverExamplePOS
                     sub = Discount.AppliedTo(sub);
                 }
                 return sub;
+            }
+        }
+        public long TippableAmount
+        {
+            get
+            {
+                long tippableAmount = 0;
+                foreach(POSLineItem li in Items)
+                {
+                    if (li.Item.Tippable)
+                    {
+                        tippableAmount += li.Price * li.Quantity;
+                    }
+                }
+                if (Discount != null)
+                {
+                    tippableAmount = Discount.AppliedTo(tippableAmount);
+                }
+                return tippableAmount + TaxAmount; // shuold match Total if there aren't any "non-tippable" items
             }
         }
         public long TaxableSubtotal
@@ -197,12 +216,15 @@ namespace CloverExamplePOS
     {
         public enum Status
         {
-            PAID, VOIDED, REFUNDED
+            PAID, VOIDED, REFUNDED, AUTHORIZED
         }
         public POSPayment(string paymentID, string orderID, string employeeID, long amount, long tip = 0, long cashBack = 0) : base(paymentID, orderID, employeeID, amount)
         {
             TipAmount = tip;
             CashBackAmount = cashBack;
+            OrderID = orderID;
+            EmployeeID = employeeID;
+            
         }
 
         private Status _status;
@@ -279,17 +301,20 @@ namespace CloverExamplePOS
 
     public class POSItem
     {
-        public POSItem(string id, string name, long price, bool taxable = true)
+        public POSItem(string id, string name, long price, bool taxable = true, bool tippable = true)
         {
             ID = id;
             Name = name;
             Price = price;
             Taxable = taxable;
+            Tippable = tippable;
         }
+        public bool Tippable { get; internal set; }
         public bool Taxable { get; set; }
         public string ID { get; set; }
         public long Price { get; set; }
         public String Name { get; set; }
+        
     }
 
     public class POSDiscount
