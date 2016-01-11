@@ -30,7 +30,7 @@ Please report back to us any questions/comments/concerns.
 * Add InvokeInputOption method to CloverConnector which allows the POS to control most screens on the device (excluding PIN entry)
 * Payment.CardTransaction now returns a 'token' attribute, which will contain a TransArmor multi-pay token if the merchant is configured correctly
 * SaleRequest now accepts a VaultedCard object, which allows for completion of a transaction using multi-pay token
-* An installer (CloverSDKSetup.exe) is now available, which automatically installs appropriate USB drivers for Clover Mini; this has been tested on Windows 7 and above
+* An installer ([CloverSDKSetup.exe|https://github.com/clover/remote-pay-windows/releases/download/release-0.4/CloverSDKSetup.exe]) is now available, which automatically installs appropriate USB drivers for Clover Mini; this has been tested on Windows 7 and above
 * In addition to the .NET class libraries, there is now an option to connect to a WebSocket service or REST service (with socket callbacks) from the Windows PC.  This was added to provide better support for programming/integration environments other than .NET
 * CloverExamplePOS application has been enhanced to allow testing with USB, LAN, REST service or WebSocket service, or an in-memory/mock 'test device'
 
