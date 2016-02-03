@@ -57,8 +57,26 @@ namespace com.clover.remotepay.transport.remote
             BodyStyle = WebMessageBodyStyle.Bare,
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "/CaptureAuthResponse")]
+        void CaptureAuthResponse(CaptureAuthResponse response);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            BodyStyle = WebMessageBodyStyle.Bare,
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "/ManualRefundResponse")]
         void ManualRefundResponse(ManualRefundResponse response);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            BodyStyle = WebMessageBodyStyle.Bare,
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "/VaultCardResponse")]
+        void VaultCardResponse(VaultCardResponse response);
 
 
         [OperationContract]

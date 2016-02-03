@@ -185,6 +185,11 @@
             Show the thank you screen on the device
             </summary>
         </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.VaultCard(System.Nullable{System.Int32})">
+            <summary>
+            Vault Card information and payment token
+            </summary>
+        </member>
         <member name="M:com.clover.remotepay.sdk.CloverConnector.DisplayReceiptOptions">
             <summary>
             Show the customer facing receipt option screen for the last order only.
@@ -356,6 +361,12 @@
             <param name="request">A ManualRefundRequest object</param>
             <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
         </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.VaultCard(System.Nullable{System.Int32})">
+            <summary>
+            Vault card, used to get payment token
+            </summary>
+            
+        </member>
         <member name="M:com.clover.remotepay.sdk.ICloverConnector.Cancel">
             <summary>
             Cancels the device from waiting for a payment card.
@@ -452,7 +463,7 @@
             </summary>
             <param name="order"></param>
         </member>
-        <member name="M:com.clover.remotepay.sdk.ICloverConnector.GetMerchantInfo">
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.Dispose">
             <summary>
             return the Merchant object for the Merchant configured for the Clover Mini
             </summary>

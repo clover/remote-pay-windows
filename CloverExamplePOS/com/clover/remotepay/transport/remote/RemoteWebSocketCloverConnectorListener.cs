@@ -132,5 +132,12 @@ namespace com.clover.remotepay.transport.remote
         {
             throw new NotImplementedException();
         }
+
+        public void OnVaultCardResponse(VaultCardResponse response)
+        {
+            OnVaultCardResponseMessage message = new OnVaultCardResponseMessage();
+            message.payload = response;
+            WebSocket.Send(JsonUtils.serialize(message));
+        }
     }
 }

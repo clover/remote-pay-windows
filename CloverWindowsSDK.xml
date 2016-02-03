@@ -34,9 +34,6 @@
         <member name="P:com.clover.remote.order.DisplayOrder.amountRemaining">
             Formatted amount remaining
         </member>
-        <member name="P:com.clover.remote.order.DisplayPayment.label">
-            Formatted display string for the tender e.g. credit card, cash, etc.
-        </member>
         <member name="P:com.clover.sdk.v3.base_.CountryInfo.countryCode">
             <summary>
             ISO 3166-1-alpha-2 code

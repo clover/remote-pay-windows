@@ -39,23 +39,21 @@
     <ApplicationIcon>clover.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CloverConnector">
+    <Reference Include="CloverConnector, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CloverConnector.dll</HintPath>
     </Reference>
-    <Reference Include="CloverWindowsSDK">
+    <Reference Include="CloverWindowsSDK, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CloverWindowsSDK.dll</HintPath>
     </Reference>
-    <Reference Include="CloverWindowsSDKServiceClient">
+    <Reference Include="CloverWindowsSDKServiceClient, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CloverWindowsSDKServiceClient.dll</HintPath>
     </Reference>
-    <Reference Include="CloverWindowsTransport">
+    <Reference Include="CloverWindowsTransport, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CloverWindowsTransport.dll</HintPath>
-    </Reference>
-    <Reference Include="Fleck">
-      <HintPath>..\Fleck.dll</HintPath>
-    </Reference>
-    <Reference Include="LibUsbDotNet">
-      <HintPath>..\LibUsbDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Newtonsoft.Json.dll</HintPath>
@@ -71,8 +69,7 @@
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebSocket4Net, Version=0.14.0.0, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="WebSocket4Net">
       <HintPath>..\WebSocket4Net.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -96,8 +93,20 @@
     <Compile Include="com\clover\remotepay\transport\remote\RemoteWebSocketCloverConfiguration.cs" />
     <Compile Include="com\clover\remotepay\transport\remote\RemoteWebSocketCloverConnector.cs" />
     <Compile Include="com\clover\remotepay\transport\remote\RemoteWebSocketCloverConnectorListener.cs" />
+    <Compile Include="CustomerCardCaptureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DropDownButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="OverlayForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PreAuthListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PreAuthListForm.Designer.cs">
+      <DependentUpon>PreAuthListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="StartupForm.cs">
       <SubType>Form</SubType>
@@ -139,14 +148,26 @@
     <Compile Include="StoreItem.Designer.cs">
       <DependentUpon>StoreItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="VaultedCardListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VaultedCardListForm.Designer.cs">
+      <DependentUpon>VaultedCardListForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AlertForm.resx">
       <DependentUpon>AlertForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CloverExamplePOSForm.resx">
       <DependentUpon>CloverExamplePOSForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CustomerCardCaptureForm.resx">
+      <DependentUpon>CustomerCardCaptureForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OverlayForm.resx">
       <DependentUpon>OverlayForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PreAuthListForm.resx">
+      <DependentUpon>PreAuthListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StartupForm.resx">
       <DependentUpon>StartupForm.cs</DependentUpon>
@@ -175,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="StoreItem.resx">
       <DependentUpon>StoreItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VaultedCardListForm.resx">
+      <DependentUpon>VaultedCardListForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

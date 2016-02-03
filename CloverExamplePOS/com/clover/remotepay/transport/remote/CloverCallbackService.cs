@@ -59,6 +59,11 @@ namespace com.clover.remotepay.transport.remote
             connectorListener.ForEach(listener => listener.OnSaleResponse(response));
         }
 
+        public void VaultCardResponse(VaultCardResponse response)
+        {
+            connectorListener.ForEach(listener => listener.OnVaultCardResponse(response));
+        }
+
         public void RefundPaymentResponse(RefundPaymentResponse response)
         {
             Console.WriteLine("RefundPaymentResponse: " + response.OrderId);
@@ -73,6 +78,11 @@ namespace com.clover.remotepay.transport.remote
         public void ManualRefundResponse(ManualRefundResponse response)
         {
             connectorListener.ForEach(listener => listener.OnManualRefundResponse(response));
+        }
+
+        public void CaptureAuthResponse(CaptureAuthResponse response)
+        {
+            connectorListener.ForEach(listener => listener.OnAuthCaptureResponse(response));
         }
 
         public void TipAdjustAuthResponse(TipAdjustAuthResponse response)
