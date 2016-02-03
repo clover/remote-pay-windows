@@ -103,14 +103,14 @@ namespace com.clover.remotepay.transport.remote
             catch(Exception exc)
             {
                 Console.WriteLine(exc.Message + " => " + e.Message);
-                listeners.ForEach(listeners => listeners.OnError(exc));
+                listeners.ForEach(listener => listener.OnError(exc));
                 return;
             }
             
             JToken method = jsonObj.GetValue(ServicePayloadConstants.PROP_METHOD);
             if(method == null)
             {
-                listeners.ForEach(listeners => listeners.OnError(new NullReferenceException("Invalid message: " + e.Message)));
+                listeners.ForEach(listener => listener.OnError(new NullReferenceException("Invalid message: " + e.Message)));
                 return;
             }
             JObject payload = (JObject)jsonObj.GetValue(ServicePayloadConstants.PROP_PAYLOAD);
@@ -188,6 +188,12 @@ namespace com.clover.remotepay.transport.remote
                         listeners.ForEach(listener => listener.OnAuthTipAdjustResponse(taar));
                         break;
                     }
+                case WebSocketMethod.VaultCardResponse:
+                    {
+                        VaultCardResponse vcr = JsonUtils.deserialize<VaultCardResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnVaultCardResponse(vcr));
+                        break;
+                    }
             }
         }
 
@@ -254,6 +260,18 @@ namespace com.clover.remotepay.transport.remote
             {
                 CaptureAuthRequestMessage message = new CaptureAuthRequestMessage();
                 message.payload = request;
+                websocket.Send(JsonUtils.serialize(message));
+                return 0;
+            }
+            return -1;
+        }
+
+        public int VaultCard(int? CardEntryMethods)
+        {
+            if(websocket != null)
+            {
+                VaultCardRequestMessage message = new VaultCardRequestMessage();
+                message.payload = new VaultCardMessage(CardEntryMethods);
                 websocket.Send(JsonUtils.serialize(message));
                 return 0;
             }

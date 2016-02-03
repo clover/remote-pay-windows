@@ -60,8 +60,8 @@ namespace CloverExamplePOS
             this.label10 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-            this.AuthButton = new System.Windows.Forms.Button();
-            this.SaleButton = new System.Windows.Forms.Button();
+            this.AuthButton = new DropDownButton();
+            this.SaleButton = new DropDownButton();
             this.newOrderBtn = new System.Windows.Forms.Button();
             this.RegisterTabs = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
@@ -82,6 +82,7 @@ namespace CloverExamplePOS
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
             this.OrdersListView = new System.Windows.Forms.ListView();
             this.idHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.totalHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -89,6 +90,7 @@ namespace CloverExamplePOS
             this.statusHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.subTotalHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.taxHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.OpenOrder_Button = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OrderDetailsListView = new System.Windows.Forms.ListView();
             this.quantityHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -116,9 +118,17 @@ namespace CloverExamplePOS
             this.ManualRefundButton = new System.Windows.Forms.Button();
             this.RefundAmount = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.Cards = new System.Windows.Forms.TabPage();
+            this.cardsListView = new System.Windows.Forms.ListView();
+            this.CardName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.First6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Last4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Exp_Month = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Exp_Year = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Token = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.VaultCardBtn = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
-            this.Cancel = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.PrintImage = new System.Windows.Forms.PictureBox();
             this.DisplayMessageTextbox = new System.Windows.Forms.TextBox();
@@ -126,15 +136,18 @@ namespace CloverExamplePOS
             this.label8 = new System.Windows.Forms.Label();
             this.PrintTextBox = new System.Windows.Forms.TextBox();
             this.PrintTextButton = new System.Windows.Forms.Button();
-            this.ShowWelcomeButton = new System.Windows.Forms.Button();
-            this.ShowReceiptButton = new System.Windows.Forms.Button();
-            this.ShowThankYouButton = new System.Windows.Forms.Button();
-            this.OpenCashDrawerButton = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.PrintImageButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.BrowseImageButton = new System.Windows.Forms.Button();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.ShowWelcomeButton = new System.Windows.Forms.Button();
+            this.ShowThankYouButton = new System.Windows.Forms.Button();
+            this.OpenCashDrawerButton = new System.Windows.Forms.Button();
+            this.ShowReceiptButton = new System.Windows.Forms.Button();
+            this.Cancel = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label12 = new System.Windows.Forms.Label();
             this.ManualEntryCheckbox = new System.Windows.Forms.CheckBox();
             this.MagStripeCheckbox = new System.Windows.Forms.CheckBox();
             this.ChipCheckbox = new System.Windows.Forms.CheckBox();
@@ -145,6 +158,11 @@ namespace CloverExamplePOS
             this.UIStateButtonPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.PreAuthButton = new System.Windows.Forms.Button();
+            this.PreAuthListView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel1.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -168,6 +186,7 @@ namespace CloverExamplePOS
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tableLayoutPanel17.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -178,14 +197,17 @@ namespace CloverExamplePOS
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
+            this.Cards.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tableLayoutPanel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PrintImage)).BeginInit();
             this.tableLayoutPanel16.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel14.SuspendLayout();
             this.tableLayoutPanel15.SuspendLayout();
+            this.tabPage7.SuspendLayout();
             this.SuspendLayout();
             // 
             // ConnectStatusLabel
@@ -245,6 +267,8 @@ namespace CloverExamplePOS
             this.TabControl.Controls.Add(this.tabPage1);
             this.TabControl.Controls.Add(this.tabPage2);
             this.TabControl.Controls.Add(this.tabPage3);
+            this.TabControl.Controls.Add(this.Cards);
+            this.TabControl.Controls.Add(this.tabPage7);
             this.TabControl.Controls.Add(this.tabPage4);
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Location = new System.Drawing.Point(0, 4);
@@ -505,30 +529,32 @@ namespace CloverExamplePOS
             // AuthButton
             // 
             this.AuthButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.AuthButton.Click = ((System.Collections.Generic.List<System.EventHandler>)(resources.GetObject("AuthButton.Click")));
             this.AuthButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AuthButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AuthButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AuthButton.Location = new System.Drawing.Point(161, 3);
             this.AuthButton.Name = "AuthButton";
+            this.AuthButton.Padding = new System.Windows.Forms.Padding(0, 0, 15, 0);
             this.AuthButton.Size = new System.Drawing.Size(81, 33);
             this.AuthButton.TabIndex = 27;
             this.AuthButton.Text = "Auth";
             this.AuthButton.UseVisualStyleBackColor = false;
-            this.AuthButton.Click += new System.EventHandler(this.AuthButton_Click);
             // 
             // SaleButton
             // 
             this.SaleButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.SaleButton.Click = ((System.Collections.Generic.List<System.EventHandler>)(resources.GetObject("SaleButton.Click")));
             this.SaleButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SaleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SaleButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SaleButton.Location = new System.Drawing.Point(76, 3);
             this.SaleButton.Name = "SaleButton";
+            this.SaleButton.Padding = new System.Windows.Forms.Padding(0, 0, 15, 0);
             this.SaleButton.Size = new System.Drawing.Size(79, 33);
             this.SaleButton.TabIndex = 17;
             this.SaleButton.Text = "Sale";
             this.SaleButton.UseVisualStyleBackColor = false;
-            this.SaleButton.Click += new System.EventHandler(this.PayButton_Click);
             // 
             // newOrderBtn
             // 
@@ -776,7 +802,7 @@ namespace CloverExamplePOS
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.OrdersListView);
+            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel17);
             // 
             // splitContainer1.Panel2
             // 
@@ -784,6 +810,21 @@ namespace CloverExamplePOS
             this.splitContainer1.Size = new System.Drawing.Size(889, 436);
             this.splitContainer1.SplitterDistance = 285;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // tableLayoutPanel17
+            // 
+            this.tableLayoutPanel17.ColumnCount = 1;
+            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel17.Controls.Add(this.OrdersListView, 0, 0);
+            this.tableLayoutPanel17.Controls.Add(this.OpenOrder_Button, 0, 1);
+            this.tableLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel17.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel17.Name = "tableLayoutPanel17";
+            this.tableLayoutPanel17.RowCount = 2;
+            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(889, 285);
+            this.tableLayoutPanel17.TabIndex = 21;
             // 
             // OrdersListView
             // 
@@ -798,10 +839,10 @@ namespace CloverExamplePOS
             this.OrdersListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OrdersListView.FullRowSelect = true;
             this.OrdersListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.OrdersListView.Location = new System.Drawing.Point(0, 0);
+            this.OrdersListView.Location = new System.Drawing.Point(3, 3);
             this.OrdersListView.MultiSelect = false;
             this.OrdersListView.Name = "OrdersListView";
-            this.OrdersListView.Size = new System.Drawing.Size(889, 285);
+            this.OrdersListView.Size = new System.Drawing.Size(883, 226);
             this.OrdersListView.TabIndex = 20;
             this.OrdersListView.UseCompatibleStateImageBehavior = false;
             this.OrdersListView.View = System.Windows.Forms.View.Details;
@@ -836,6 +877,21 @@ namespace CloverExamplePOS
             // 
             this.taxHeader.Text = "Tax";
             this.taxHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // OpenOrder_Button
+            // 
+            this.OpenOrder_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OpenOrder_Button.BackColor = System.Drawing.Color.White;
+            this.OpenOrder_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OpenOrder_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OpenOrder_Button.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.OpenOrder_Button.Location = new System.Drawing.Point(810, 235);
+            this.OpenOrder_Button.Name = "OpenOrder_Button";
+            this.OpenOrder_Button.Size = new System.Drawing.Size(76, 47);
+            this.OpenOrder_Button.TabIndex = 32;
+            this.OpenOrder_Button.Text = "Open Order";
+            this.OpenOrder_Button.UseVisualStyleBackColor = false;
+            this.OpenOrder_Button.Click += new System.EventHandler(this.OpenOrder_Button_Click);
             // 
             // splitContainer2
             // 
@@ -1061,6 +1117,7 @@ namespace CloverExamplePOS
             this.TransDateHeader,
             this.TransLast4});
             this.TransactionsListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TransactionsListView.FullRowSelect = true;
             this.TransactionsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.TransactionsListView.Location = new System.Drawing.Point(3, 68);
             this.TransactionsListView.Name = "TransactionsListView";
@@ -1133,6 +1190,79 @@ namespace CloverExamplePOS
             this.label5.Text = "Refund Amount";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // Cards
+            // 
+            this.Cards.Controls.Add(this.cardsListView);
+            this.Cards.Controls.Add(this.VaultCardBtn);
+            this.Cards.Location = new System.Drawing.Point(4, 25);
+            this.Cards.Name = "Cards";
+            this.Cards.Size = new System.Drawing.Size(901, 513);
+            this.Cards.TabIndex = 4;
+            this.Cards.Text = "Cards";
+            this.Cards.UseVisualStyleBackColor = true;
+            // 
+            // cardsListView
+            // 
+            this.cardsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cardsListView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cardsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.CardName,
+            this.First6,
+            this.Last4,
+            this.Exp_Month,
+            this.Exp_Year,
+            this.Token});
+            this.cardsListView.FullRowSelect = true;
+            this.cardsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.cardsListView.Location = new System.Drawing.Point(9, 4);
+            this.cardsListView.Name = "cardsListView";
+            this.cardsListView.Size = new System.Drawing.Size(884, 451);
+            this.cardsListView.TabIndex = 37;
+            this.cardsListView.UseCompatibleStateImageBehavior = false;
+            this.cardsListView.View = System.Windows.Forms.View.Details;
+            // 
+            // CardName
+            // 
+            this.CardName.Text = "Name";
+            this.CardName.Width = 135;
+            // 
+            // First6
+            // 
+            this.First6.Text = "First6";
+            this.First6.Width = 84;
+            // 
+            // Last4
+            // 
+            this.Last4.Text = "Last4";
+            // 
+            // Exp_Month
+            // 
+            this.Exp_Month.Text = "Exp. Month";
+            // 
+            // Exp_Year
+            // 
+            this.Exp_Year.Text = "Exp. Year";
+            // 
+            // Token
+            // 
+            this.Token.Text = "Token";
+            this.Token.Width = 147;
+            // 
+            // VaultCardBtn
+            // 
+            this.VaultCardBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.VaultCardBtn.BackColor = System.Drawing.Color.White;
+            this.VaultCardBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.VaultCardBtn.Location = new System.Drawing.Point(818, 461);
+            this.VaultCardBtn.Name = "VaultCardBtn";
+            this.VaultCardBtn.Size = new System.Drawing.Size(75, 49);
+            this.VaultCardBtn.TabIndex = 36;
+            this.VaultCardBtn.Text = "Vault Card";
+            this.VaultCardBtn.UseVisualStyleBackColor = false;
+            this.VaultCardBtn.Click += new System.EventHandler(this.VaultCardBtn_Click);
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.tableLayoutPanel8);
@@ -1141,7 +1271,7 @@ namespace CloverExamplePOS
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(901, 513);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Test";
+            this.tabPage4.Text = "Miscellaneous";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel8
@@ -1152,7 +1282,6 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel8.Controls.Add(this.Cancel, 0, 10);
             this.tableLayoutPanel8.Controls.Add(this.label9, 0, 0);
             this.tableLayoutPanel8.Controls.Add(this.PrintImage, 3, 2);
             this.tableLayoutPanel8.Controls.Add(this.DisplayMessageTextbox, 1, 0);
@@ -1160,44 +1289,23 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.Controls.Add(this.label8, 0, 1);
             this.tableLayoutPanel8.Controls.Add(this.PrintTextBox, 1, 1);
             this.tableLayoutPanel8.Controls.Add(this.PrintTextButton, 2, 1);
-            this.tableLayoutPanel8.Controls.Add(this.ShowWelcomeButton, 0, 3);
-            this.tableLayoutPanel8.Controls.Add(this.ShowReceiptButton, 0, 6);
-            this.tableLayoutPanel8.Controls.Add(this.ShowThankYouButton, 0, 8);
-            this.tableLayoutPanel8.Controls.Add(this.OpenCashDrawerButton, 0, 9);
             this.tableLayoutPanel8.Controls.Add(this.label11, 0, 2);
             this.tableLayoutPanel8.Controls.Add(this.PrintImageButton, 2, 2);
             this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel16, 1, 2);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel1, 3, 8);
-            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel5, 0, 3);
+            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel1, 0, 4);
+            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-            this.tableLayoutPanel8.RowCount = 11;
+            this.tableLayoutPanel8.RowCount = 5;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(895, 507);
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(895, 281);
             this.tableLayoutPanel8.TabIndex = 0;
-            // 
-            // Cancel
-            // 
-            this.Cancel.BackColor = System.Drawing.Color.White;
-            this.Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Cancel.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.Cancel.Location = new System.Drawing.Point(3, 390);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(75, 49);
-            this.Cancel.TabIndex = 32;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = false;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
             // label9
             // 
@@ -1268,57 +1376,6 @@ namespace CloverExamplePOS
             this.PrintTextButton.UseVisualStyleBackColor = false;
             this.PrintTextButton.Click += new System.EventHandler(this.PrintTextButton_Click);
             // 
-            // ShowWelcomeButton
-            // 
-            this.ShowWelcomeButton.BackColor = System.Drawing.Color.White;
-            this.ShowWelcomeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShowWelcomeButton.Location = new System.Drawing.Point(3, 169);
-            this.ShowWelcomeButton.Name = "ShowWelcomeButton";
-            this.ShowWelcomeButton.Size = new System.Drawing.Size(75, 49);
-            this.ShowWelcomeButton.TabIndex = 24;
-            this.ShowWelcomeButton.Text = "Show Welcome";
-            this.ShowWelcomeButton.UseVisualStyleBackColor = false;
-            this.ShowWelcomeButton.Click += new System.EventHandler(this.ShowWelcomeButton_Click);
-            // 
-            // ShowReceiptButton
-            // 
-            this.ShowReceiptButton.BackColor = System.Drawing.Color.White;
-            this.ShowReceiptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShowReceiptButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.ShowReceiptButton.Location = new System.Drawing.Point(3, 224);
-            this.ShowReceiptButton.Name = "ShowReceiptButton";
-            this.ShowReceiptButton.Size = new System.Drawing.Size(75, 49);
-            this.ShowReceiptButton.TabIndex = 25;
-            this.ShowReceiptButton.Text = "Show Previous Receipt";
-            this.ShowReceiptButton.UseVisualStyleBackColor = false;
-            this.ShowReceiptButton.Click += new System.EventHandler(this.ShowReceiptButton_Click);
-            // 
-            // ShowThankYouButton
-            // 
-            this.ShowThankYouButton.BackColor = System.Drawing.Color.White;
-            this.ShowThankYouButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShowThankYouButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.ShowThankYouButton.Location = new System.Drawing.Point(3, 279);
-            this.ShowThankYouButton.Name = "ShowThankYouButton";
-            this.ShowThankYouButton.Size = new System.Drawing.Size(75, 50);
-            this.ShowThankYouButton.TabIndex = 27;
-            this.ShowThankYouButton.Text = "Show Thank You";
-            this.ShowThankYouButton.UseVisualStyleBackColor = false;
-            this.ShowThankYouButton.Click += new System.EventHandler(this.ShowThankYouButton_Click);
-            // 
-            // OpenCashDrawerButton
-            // 
-            this.OpenCashDrawerButton.BackColor = System.Drawing.Color.White;
-            this.OpenCashDrawerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OpenCashDrawerButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.OpenCashDrawerButton.Location = new System.Drawing.Point(3, 335);
-            this.OpenCashDrawerButton.Name = "OpenCashDrawerButton";
-            this.OpenCashDrawerButton.Size = new System.Drawing.Size(75, 49);
-            this.OpenCashDrawerButton.TabIndex = 28;
-            this.OpenCashDrawerButton.Text = "Open Cash Drawer";
-            this.OpenCashDrawerButton.UseVisualStyleBackColor = false;
-            this.OpenCashDrawerButton.Click += new System.EventHandler(this.OpenCashDrawerButton_Click);
-            // 
             // label11
             // 
             this.label11.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1369,21 +1426,112 @@ namespace CloverExamplePOS
             this.BrowseImageButton.UseVisualStyleBackColor = true;
             this.BrowseImageButton.Click += new System.EventHandler(this.BrowseImageButton_Click);
             // 
+            // flowLayoutPanel5
+            // 
+            this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel5, 4);
+            this.flowLayoutPanel5.Controls.Add(this.ShowWelcomeButton);
+            this.flowLayoutPanel5.Controls.Add(this.ShowThankYouButton);
+            this.flowLayoutPanel5.Controls.Add(this.OpenCashDrawerButton);
+            this.flowLayoutPanel5.Controls.Add(this.ShowReceiptButton);
+            this.flowLayoutPanel5.Controls.Add(this.Cancel);
+            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 169);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(889, 74);
+            this.flowLayoutPanel5.TabIndex = 37;
+            // 
+            // ShowWelcomeButton
+            // 
+            this.ShowWelcomeButton.BackColor = System.Drawing.Color.White;
+            this.ShowWelcomeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowWelcomeButton.Location = new System.Drawing.Point(3, 8);
+            this.ShowWelcomeButton.Name = "ShowWelcomeButton";
+            this.ShowWelcomeButton.Size = new System.Drawing.Size(75, 49);
+            this.ShowWelcomeButton.TabIndex = 24;
+            this.ShowWelcomeButton.Text = "Show Welcome";
+            this.ShowWelcomeButton.UseVisualStyleBackColor = false;
+            this.ShowWelcomeButton.Click += new System.EventHandler(this.ShowWelcomeButton_Click);
+            // 
+            // ShowThankYouButton
+            // 
+            this.ShowThankYouButton.BackColor = System.Drawing.Color.White;
+            this.ShowThankYouButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowThankYouButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.ShowThankYouButton.Location = new System.Drawing.Point(84, 8);
+            this.ShowThankYouButton.Name = "ShowThankYouButton";
+            this.ShowThankYouButton.Size = new System.Drawing.Size(75, 50);
+            this.ShowThankYouButton.TabIndex = 27;
+            this.ShowThankYouButton.Text = "Show Thank You";
+            this.ShowThankYouButton.UseVisualStyleBackColor = false;
+            this.ShowThankYouButton.Click += new System.EventHandler(this.ShowThankYouButton_Click);
+            // 
+            // OpenCashDrawerButton
+            // 
+            this.OpenCashDrawerButton.BackColor = System.Drawing.Color.White;
+            this.OpenCashDrawerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OpenCashDrawerButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.OpenCashDrawerButton.Location = new System.Drawing.Point(165, 8);
+            this.OpenCashDrawerButton.Name = "OpenCashDrawerButton";
+            this.OpenCashDrawerButton.Size = new System.Drawing.Size(75, 49);
+            this.OpenCashDrawerButton.TabIndex = 28;
+            this.OpenCashDrawerButton.Text = "Open Cash Drawer";
+            this.OpenCashDrawerButton.UseVisualStyleBackColor = false;
+            this.OpenCashDrawerButton.Click += new System.EventHandler(this.OpenCashDrawerButton_Click);
+            // 
+            // ShowReceiptButton
+            // 
+            this.ShowReceiptButton.BackColor = System.Drawing.Color.White;
+            this.ShowReceiptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowReceiptButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.ShowReceiptButton.Location = new System.Drawing.Point(246, 8);
+            this.ShowReceiptButton.Name = "ShowReceiptButton";
+            this.ShowReceiptButton.Size = new System.Drawing.Size(75, 49);
+            this.ShowReceiptButton.TabIndex = 25;
+            this.ShowReceiptButton.Text = "Show Previous Receipt";
+            this.ShowReceiptButton.UseVisualStyleBackColor = false;
+            this.ShowReceiptButton.Click += new System.EventHandler(this.ShowReceiptButton_Click);
+            // 
+            // Cancel
+            // 
+            this.Cancel.BackColor = System.Drawing.Color.White;
+            this.Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Cancel.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.Cancel.Location = new System.Drawing.Point(327, 8);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(75, 49);
+            this.Cancel.TabIndex = 32;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = false;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            // 
             // flowLayoutPanel1
             // 
+            this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel1, 5);
+            this.flowLayoutPanel1.Controls.Add(this.label12);
             this.flowLayoutPanel1.Controls.Add(this.ManualEntryCheckbox);
             this.flowLayoutPanel1.Controls.Add(this.MagStripeCheckbox);
             this.flowLayoutPanel1.Controls.Add(this.ChipCheckbox);
             this.flowLayoutPanel1.Controls.Add(this.ContactlessCheckbox);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(289, 279);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 249);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(460, 50);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(500, 26);
             this.flowLayoutPanel1.TabIndex = 34;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 3);
+            this.label12.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(170, 13);
+            this.label12.TabIndex = 37;
+            this.label12.Text = "Card Entry Methods (Sale && Auth): ";
             // 
             // ManualEntryCheckbox
             // 
             this.ManualEntryCheckbox.AutoSize = true;
-            this.ManualEntryCheckbox.Location = new System.Drawing.Point(3, 3);
+            this.ManualEntryCheckbox.Location = new System.Drawing.Point(179, 3);
             this.ManualEntryCheckbox.Name = "ManualEntryCheckbox";
             this.ManualEntryCheckbox.Size = new System.Drawing.Size(61, 17);
             this.ManualEntryCheckbox.TabIndex = 33;
@@ -1396,7 +1544,7 @@ namespace CloverExamplePOS
             this.MagStripeCheckbox.AutoSize = true;
             this.MagStripeCheckbox.Checked = true;
             this.MagStripeCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.MagStripeCheckbox.Location = new System.Drawing.Point(70, 3);
+            this.MagStripeCheckbox.Location = new System.Drawing.Point(246, 3);
             this.MagStripeCheckbox.Name = "MagStripeCheckbox";
             this.MagStripeCheckbox.Size = new System.Drawing.Size(77, 17);
             this.MagStripeCheckbox.TabIndex = 34;
@@ -1409,7 +1557,7 @@ namespace CloverExamplePOS
             this.ChipCheckbox.AutoSize = true;
             this.ChipCheckbox.Checked = true;
             this.ChipCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChipCheckbox.Location = new System.Drawing.Point(153, 3);
+            this.ChipCheckbox.Location = new System.Drawing.Point(329, 3);
             this.ChipCheckbox.Name = "ChipCheckbox";
             this.ChipCheckbox.Size = new System.Drawing.Size(47, 17);
             this.ChipCheckbox.TabIndex = 35;
@@ -1422,7 +1570,7 @@ namespace CloverExamplePOS
             this.ContactlessCheckbox.AutoSize = true;
             this.ContactlessCheckbox.Checked = true;
             this.ContactlessCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ContactlessCheckbox.Location = new System.Drawing.Point(206, 3);
+            this.ContactlessCheckbox.Location = new System.Drawing.Point(382, 3);
             this.ContactlessCheckbox.Name = "ContactlessCheckbox";
             this.ContactlessCheckbox.Size = new System.Drawing.Size(81, 17);
             this.ContactlessCheckbox.TabIndex = 36;
@@ -1511,6 +1659,57 @@ namespace CloverExamplePOS
             this.tableLayoutPanel15.Size = new System.Drawing.Size(150, 50);
             this.tableLayoutPanel15.TabIndex = 19;
             // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.PreAuthListView);
+            this.tabPage7.Controls.Add(this.PreAuthButton);
+            this.tabPage7.Location = new System.Drawing.Point(4, 25);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(901, 513);
+            this.tabPage7.TabIndex = 5;
+            this.tabPage7.Text = "Pre-Auths";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // PreAuthButton
+            // 
+            this.PreAuthButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.PreAuthButton.BackColor = System.Drawing.Color.White;
+            this.PreAuthButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PreAuthButton.Location = new System.Drawing.Point(818, 458);
+            this.PreAuthButton.Name = "PreAuthButton";
+            this.PreAuthButton.Size = new System.Drawing.Size(75, 49);
+            this.PreAuthButton.TabIndex = 37;
+            this.PreAuthButton.Text = "Pre-Auth Card";
+            this.PreAuthButton.UseVisualStyleBackColor = false;
+            this.PreAuthButton.Click += new System.EventHandler(this.PreAuthButton_Click);
+            // 
+            // PreAuthListView
+            // 
+            this.PreAuthListView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PreAuthListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.PreAuthListView.FullRowSelect = true;
+            this.PreAuthListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.PreAuthListView.Location = new System.Drawing.Point(6, 6);
+            this.PreAuthListView.MultiSelect = false;
+            this.PreAuthListView.Name = "PreAuthListView";
+            this.PreAuthListView.Size = new System.Drawing.Size(887, 446);
+            this.PreAuthListView.TabIndex = 38;
+            this.PreAuthListView.UseCompatibleStateImageBehavior = false;
+            this.PreAuthListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Status";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Authorization Amount";
+            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader2.Width = 150;
+            // 
             // CloverExamplePOSForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1549,6 +1748,7 @@ namespace CloverExamplePOS
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tableLayoutPanel17.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -1560,17 +1760,20 @@ namespace CloverExamplePOS
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
+            this.Cards.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PrintImage)).EndInit();
             this.tableLayoutPanel16.ResumeLayout(false);
+            this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel14.ResumeLayout(false);
             this.tableLayoutPanel14.PerformLayout();
             this.tableLayoutPanel15.ResumeLayout(false);
+            this.tabPage7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1599,7 +1802,7 @@ namespace CloverExamplePOS
         private System.Windows.Forms.Label TotalAmount;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button SaleButton;
+        private DropDownButton SaleButton;
         private System.Windows.Forms.ListView OrderItems;
         private System.Windows.Forms.ColumnHeader Quantity;
         private System.Windows.Forms.ColumnHeader Item;
@@ -1684,14 +1887,32 @@ namespace CloverExamplePOS
         private System.Windows.Forms.Button BrowseImageButton;
         private System.Windows.Forms.PictureBox PrintImage;
         private System.Windows.Forms.ToolStripMenuItem RemoteRESTServiceMenuItem;
-        private System.Windows.Forms.Button AuthButton;
+        private DropDownButton AuthButton;
         private System.Windows.Forms.Button TipAdjustButton;
         private System.Windows.Forms.Button Cancel;
-        private System.Windows.Forms.CheckBox ManualEntryCheckbox;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox ManualEntryCheckbox;
         private System.Windows.Forms.CheckBox MagStripeCheckbox;
         private System.Windows.Forms.CheckBox ChipCheckbox;
         private System.Windows.Forms.CheckBox ContactlessCheckbox;
+        private System.Windows.Forms.TabPage Cards;
+        private System.Windows.Forms.ListView cardsListView;
+        private System.Windows.Forms.ColumnHeader CardName;
+        private System.Windows.Forms.ColumnHeader First6;
+        private System.Windows.Forms.ColumnHeader Last4;
+        private System.Windows.Forms.ColumnHeader Exp_Month;
+        private System.Windows.Forms.ColumnHeader Exp_Year;
+        private System.Windows.Forms.ColumnHeader Token;
+        private System.Windows.Forms.Button VaultCardBtn;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel17;
+        private System.Windows.Forms.Button OpenOrder_Button;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.ListView PreAuthListView;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button PreAuthButton;
     }
 }
 

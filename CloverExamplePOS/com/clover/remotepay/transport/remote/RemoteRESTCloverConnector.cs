@@ -119,6 +119,14 @@ namespace com.clover.remotepay.transport.remote
             return 0;
         }
 
+        public int VaultCard(int? CardEntryMethods)
+        {
+            VaultCard vc = new VaultCard();
+            vc.CardEntryMethod = CardEntryMethods;
+            Send("/VaultCard", vc);
+            return 0;
+        }
+
         public int Closeout(CloseoutRequest request)
         {
             Send("/Closeout", request);

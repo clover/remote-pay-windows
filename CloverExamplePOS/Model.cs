@@ -9,22 +9,101 @@ namespace CloverExamplePOS
         
         public enum OrderStatus
         {
-            OPEN, CLOSED, LOCKED, AUTHORIZED
+            PENDING, OPEN, CLOSED, LOCKED, AUTHORIZED
+        }
+        public enum OrderChangeTarget
+        {
+            ORDER, ITEM, PAYMENT
         }
 
+        public delegate void OrderDataChangeHandler(POSOrder order, OrderChangeTarget target);
+        public event OrderDataChangeHandler OrderChange;
+        protected void onOrderChange(POSOrder order, OrderChangeTarget target)
+        {
+            if (order.status == OrderStatus.PENDING &&
+                order.Items.Count > 0)
+            {
+                order.status = OrderStatus.OPEN;
+            }
+            if (OrderChange != null)
+            {
+                OrderChange(order, target);
+            }
+        }
 
         public POSOrder()
         {
-            Status = OrderStatus.OPEN;
+            Status = OrderStatus.PENDING;
             Items = new List<POSLineItem>();
             Payments = new List<POSExchange>();
             Discount = new POSDiscount("None", 0);
             Date = new DateTime();
         }
 
+        public List<POSLineItem> Items { get; internal set; }
+        public List<POSExchange> Payments { get; internal set; }
+        public POSDiscount Discount
+        {
+            get { return discount; }
+            set
+            {
+                if (discount != value)
+                {
+                    discount = value;
+                    onOrderChange(this, OrderChangeTarget.ORDER);
+                }
+            }
+        }
+        private OrderStatus status;
+        private POSDiscount discount;
         public string ID { set; get; }
         public DateTime Date { set; get; }
-        public OrderStatus Status { set; get; }
+        public OrderStatus Status {
+            get { return status; }
+            set
+            {
+                if (status != value)
+                {
+                    status = value;
+                    onOrderChange(this, OrderChangeTarget.ORDER);
+                }
+            }
+        }
+
+        public void AddOrderLineItem(POSLineItem item)
+        {
+            this.Items.Add(item);
+            onOrderChange(this, OrderChangeTarget.ITEM);
+        }
+
+        public void AddOrderPayment(POSPayment payment)
+        {
+            this.Payments.Add(payment);
+            onOrderChange(this, OrderChangeTarget.PAYMENT);
+        }
+        public void ModifyTipAmount(String paymentID, long amount)
+        {
+            foreach(Object paymentObject in Payments) {
+                if (paymentObject is POSPayment && ((POSPayment)paymentObject).PaymentID == paymentID)
+                {
+                    ((POSPayment)paymentObject).TipAmount = amount;
+                    onOrderChange(this, OrderChangeTarget.PAYMENT);
+                }
+            }
+        }
+        public void ModifyPaymentStatus(string paymentID, POSPayment.Status status)
+        {
+            foreach (Object paymentObject in Payments)
+            {
+                if (paymentObject is POSPayment && ((POSPayment)paymentObject).PaymentID == paymentID)
+                {
+                    ((POSPayment)paymentObject).PaymentStatus = status;
+                    onOrderChange(this, OrderChangeTarget.PAYMENT);
+                }
+            }
+
+        }
+
         public long PreDiscountSubTotal
         {
             get
@@ -68,7 +147,7 @@ namespace CloverExamplePOS
                 {
                     tippableAmount = Discount.AppliedTo(tippableAmount);
                 }
-                return tippableAmount + TaxAmount; // shuold match Total if there aren't any "non-tippable" items
+                return tippableAmount + TaxAmount; // should match Total if there aren't any "non-tippable" items
             }
         }
         public long TaxableSubtotal
@@ -113,16 +192,13 @@ namespace CloverExamplePOS
             return tips;
         }
 
-        public List<POSLineItem> Items { get; internal set; }
-        public List<POSExchange> Payments { get; internal set; }
-        public POSDiscount Discount { get; internal set; }
 
         /// <summary>
         /// manages adding a POSItem to an order. If the POSItem already exists, the quantity is just incremented
         /// </summary>
         /// <param name="i"></param>
         /// <param name="quantity"></param>
-        /// <returns>The POSLineItem for the POSItem. Will either return a new one, or an exising with its quantity incremented</returns>
+        /// <returns>The POSLineItem for the POSItem. Will either return a new one, or an existing with its quantity incremented</returns>
         public POSLineItem AddItem(POSItem i, int quantity)
         {
             bool exists = false;
@@ -145,12 +221,14 @@ namespace CloverExamplePOS
                 targetItem = li;
                 Items.Add(li);
             }
+            onOrderChange(this, OrderChangeTarget.ITEM);
             return targetItem;
         }
 
         public void AddPayment(POSPayment payment)
         {
             Payments.Add(payment);
+            onOrderChange(this, OrderChangeTarget.PAYMENT);
         }
 
         public void AddRefund(POSRefund refund)
@@ -162,18 +240,31 @@ namespace CloverExamplePOS
                     if (pay.PaymentID == refund.PaymentID)
                     {
                         ((POSPayment)pay).PaymentStatus = POSPayment.Status.REFUNDED;
+
                     }
 
                 }
             }
             Payments.Add(refund);
+            onOrderChange(this, OrderChangeTarget.PAYMENT);
         }
 
         internal void RemoveItem(POSLineItem selectedLineItem)
         {
             Items.Remove(selectedLineItem);
+            onOrderChange(this, OrderChangeTarget.ITEM);
         }
-        
+
+    }
+
+    public class POSCard
+    {
+        public string Name { get; set; }
+        public string First6 { get; set; }
+        public string Last4 { get; set; }
+        public string Month { get; set; }
+        public string Year { get; set; }
+        public string Token { get; set; }
     }
 
     public class POSExchange
@@ -237,7 +328,7 @@ namespace CloverExamplePOS
             }
             set
             {
-                if(_status == Status.PAID)
+                if(_status != value)
                 {
                     _status = value;
                 }
@@ -372,7 +463,7 @@ namespace CloverExamplePOS
             {
                 sub -= AmountOff;
             }
-            return sub;
+            return Math.Max(sub, 0);
         }
 
         public long Value(long sub)
@@ -449,19 +540,106 @@ namespace CloverExamplePOS
             AvailableItems = new List<POSItem>();
             AvailableDiscounts = new List<POSDiscount>();
             Orders = new List<POSOrder>();
+            NewDiscount = false;
+            Cards = new List<POSCard>();
+            PreAuths = new List<POSPayment>();
         }
 
+        public List<POSCard> Cards { set; get; }
+        public List<POSPayment> PreAuths { set; get; }
         public List<POSItem> AvailableItems { set; get; }
         public List<POSDiscount> AvailableDiscounts { set; get; }
         public List<POSOrder> Orders { set; get; }
         public POSOrder CurrentOrder { set; get; }
+        public Boolean NewDiscount { set; get; }
 
+        public enum OrderListAction
+        {
+            ADDED, REMOVED, UPDATED
+        }
+
+        public enum PreAuthAction
+        {
+            ADDED, REMOVED
+        }
+
+
+        public delegate void OrderListChangeHandler(Store store, OrderListAction action);
+        public event OrderListChangeHandler OrderListChange;
+        public delegate void PreAuthListChangeHandler(POSPayment payment, PreAuthAction action);
+        public event PreAuthListChangeHandler PreAuthListChange;
+        protected void onOrderListChange(Store store, OrderListAction action)
+        {
+            if (OrderListChange != null)
+            {
+                OrderListChange(store, action);
+            }
+        }
         public void CreateOrder()
         {
+            //Get rid of any prior pending orders, before creating a new one
+            DeletePendingOrder();
             POSOrder order = new POSOrder();
             order.ID = "" + (++orderNumber);
             CurrentOrder = order;
-            Orders.Add(order);
+            AddOrder(order);
         }
+        protected void OnPreAuthChanged(POSPayment payment, PreAuthAction action)
+        {
+            if (PreAuthListChange != null)
+            {
+                PreAuthListChange(payment, action);
+            }
+        }
+
+        /*  This will remove any other PENDING order before creating a new one. */
+        private void DeletePendingOrder()
+        {
+            POSOrder delOrder = null;
+            foreach (POSOrder order in Orders) {
+                if (order.Status == POSOrder.OrderStatus.PENDING)
+                {
+                    delOrder = order;
+                    break;
+                }
+            }
+            if (delOrder != null)
+            {
+                Orders.Remove(delOrder); //This shouldn't trigger a onOrderListChange, as PENDING orders aren't displayed
+                delOrder = null;
+            }
+        }
+        public void AddPreAuth(POSPayment payment)
+        {
+            PreAuths.Add(payment);
+            OnPreAuthChanged(payment, PreAuthAction.ADDED);
+        }
+        public void RemovePreAuth(POSPayment payment)
+        {
+            if(PreAuths.Remove(payment))
+            {
+                OnPreAuthChanged(payment, PreAuthAction.REMOVED);
+            }
+        }
+        public void AddOrder(POSOrder order)
+        {
+            Orders.Add(order);
+            onOrderListChange(this, OrderListAction.ADDED);
+        }
+        public POSOrder GetOrder(String paymentID)
+        {
+            foreach (POSOrder order in Orders)
+            {
+                foreach (Object payment in order.Payments) // payments can be POSPayment or POSRefund
+                {
+                    if (payment is POSPayment && ((POSPayment)payment).PaymentID == paymentID)
+                    {
+                        return order;
+                    }
+                }
+            }
+            return null;
+        }
+
     }
 }

@@ -6,12 +6,14 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using com.clover.remotepay.sdk;
+using com.clover.sdk.v3.payments;
 
 namespace CloverExamplePOS
 {
     public partial class SignatureForm : OverlayForm
     {
         private SignatureVerifyRequest signatureVerifyRequest;
+
         public SignatureVerifyRequest SignatureVerifyRequest {
             get {
                 return signatureVerifyRequest;
@@ -32,6 +34,9 @@ namespace CloverExamplePOS
 
         private void AcceptButton_Click(object sender, EventArgs e)
         {
+            POSCard storedCard = new POSCard();
+            //storedCard.First6 = First6TextBox.Text;
+            //storedCard.Name = CustomerName.Text;
             this.Dispose();
             SignatureVerifyRequest.Accept();
         }
