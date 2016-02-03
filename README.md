@@ -1,6 +1,6 @@
 # Clover SDK for Windows PoS Integration
 
-Current version: 0.4
+Current version: 0.5
 
 ## Overview
 
@@ -22,6 +22,11 @@ Please report back to us any questions/comments/concerns.
 
 ## Release Notes
 
+### Version 0.5
+* Add VaultCard method which prompts for card information on the Clover device to be captured for later use with Sale/Auth VaultedCard functionality
+* RefundResponse now supports `Code` attribute indicating whether response has been processed by device
+* CaptureAuth method now fully supported
+
 ### Version 0.4
 * Add CardEntryMethod to CloverConnector which allows customization of entry methods (contactless, EMV/contact, swipe, manual entry)
 * Add a constructor to CloverConnector which takes a CloverDeviceConfiguration and a CloverConnectorListener
@@ -30,7 +35,7 @@ Please report back to us any questions/comments/concerns.
 * Add InvokeInputOption method to CloverConnector which allows the POS to control most screens on the device (excluding PIN entry)
 * Payment.CardTransaction now returns a 'token' attribute, which will contain a TransArmor multi-pay token if the merchant is configured correctly
 * SaleRequest now accepts a VaultedCard object, which allows for completion of a transaction using multi-pay token
-* An installer ([CloverSDKSetup.exe](https://github.com/clover/remote-pay-windows/releases/download/release-0.4/CloverSDKSetup.exe)) is now available, which automatically installs appropriate USB drivers for Clover Mini; this has been tested on Windows 7 and above
+* An installer ([CloverSDKSetup.exe](https://github.com/clover/remote-pay-windows/releases/download/release-0.5/CloverSDKSetup.exe)) is now available, which automatically installs appropriate USB drivers for Clover Mini; this has been tested on Windows 7 and above
 * In addition to the .NET class libraries, there is now an option to connect to a WebSocket service or REST service (with socket callbacks) from the Windows PC.  This was added to provide better support for programming/integration environments other than .NET
 * CloverExamplePOS application has been enhanced to allow testing with USB, LAN, REST service or WebSocket service, or an in-memory/mock 'test device'
 
