@@ -22,6 +22,17 @@ Please report back to us any questions/comments/concerns.
 
 ## Release Notes
 
+### Version 0.6
+* Add Closeout method support, which allows the initiation of an account closeout for any pending authorizations
+* Add extended validation of requests based on merchant/gateway configuration.  Passes back a new ConfigErrorResponse message for any related validation errors.
+* Add PreAuth method to replace deprecated process of setting isPreAuth flag in an Auth request.  
+* Changes to aid in the stability of the local REST service 
+* Changes to usb transport code to aid in stability of the connection between the Clover device and the SDK transport
+* Add message field to the RefundResponse message to provide extended information on error responses
+* Add logging ability for the local REST service to aid in tracking/debugging of request/response message processing
+* Add onDeviceError methods for capturing communication issues detected by the transport layer during request/response message processing
+* Add new flags to enable/disable taking payments in an Offline mode, should gateway connectivity be interrupted  
+
 ### Version 0.5
 * Add VaultCard method which prompts for card information on the Clover device to be captured for later use with Sale/Auth VaultedCard functionality
 * RefundResponse now supports `Code` attribute indicating whether response has been processed by device
