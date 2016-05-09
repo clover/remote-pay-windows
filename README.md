@@ -32,7 +32,7 @@ Please report back to us any questions/comments/concerns.
 * Add logging ability for the local REST service to aid in tracking/debugging of request/response message processing
 * Add onDeviceError methods for capturing communication issues detected by the transport layer during request/response message processing
 * Add new flags to enable/disable taking payments in an Offline mode, should gateway connectivity be interrupted  
-* ([CloverSDKSetup.exe](https://github.com/clover/remote-pay-windows/releases/download/release-0.6/CloverSDKSetup.exe))
+* 0.6 Installer can be downloaded here - [CloverSDKSetup.exe](https://github.com/clover/remote-pay-windows/releases/download/release-0.6/CloverSDKSetup.exe)
 
 ### Version 0.5
 * Add VaultCard method which prompts for card information on the Clover device to be captured for later use with Sale/Auth VaultedCard functionality
