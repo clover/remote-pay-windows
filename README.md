@@ -1,6 +1,6 @@
 # Clover SDK for Windows PoS Integration
 
-Current version: 0.6
+Current version: 1.0.0.0RC1
 
 ## Overview
 
@@ -9,7 +9,7 @@ This SDK provides an API with which to allow your Windows-based Point-of-Sale (P
 The API is currently distributed in three class libraries
 
 1. CloverConnector is the high-level API with methods like `Sale()`, `VoidTransaction()`, `ManualRefund()`, etc.
-2. CloverWindowsSDK contains classes that map to standard Clover objects such as `Payment`, `CardTransaction`, `Order`, etc.  These objects will match those defined in [clover-android-sdk](https://github.com/clover/clover-android-sdk) and the objects returned by the [Clover REST API](https://www.clover.com/api_docs)
+2. CloverWindowsSDK contains classes that map to standard Clover objects such as `Payment`, `CardTransaction`, `Order`, etc.  These objects will match those defined in  [clover-android-sdk](https://github.com/clover/clover-android-sdk) and the objects returned by the [Clover REST API](https://www.clover.com/api_docs)
 3. CloverWindowsTransport contains functionality to interface with a Clover Mini device via USB or via LAN (WebSocket connection). You may also simulate a Clover device (`CloverTestDevice`) so no connectivity is required.
 
 The libraries currently require .NET 4.0 or higher, and are supported on Windows POSReady 2009, Windows 7 and Windows 8.
@@ -21,6 +21,79 @@ An installer is now available under the 'Releases' tab, which will automatically
 Please report back to us any questions/comments/concerns.
 
 ## Release Notes
+
+### Version 1.0.0.0RC1 (Release Candidate)
+
+ICloverConnector
+* Added InitializeConnection method that needs to be called directly after creation
+  of the CloverConnector and prior to attempting to send any actions to the device
+* Added PrintImageFromURL
+* Removed VoidTransaction
+* Changed all device action API calls to return void
+* Method Name/Signature Changes
+  * Changed SignatureVerifyRequest to VerifySignatureRequest
+  * Changed CaptureAuth to CapturePreAuth
+  * Changed CaptureAuthRequest to CapturePreAuthRequest
+  * Changed DisplayOrder to ShowDisplayOrder
+  * Changed DisplayOrderLineItemAdded to LineItemAddedToDisplayOrder (method arg order change)
+  * Changed DisplayOrderLineItemRemoved to LineItemRemovedFromDisplayOrder (method arg order change)
+  * Changed DisplayOrderDiscountAdded to DiscountAddedToDisplayOrder (method arg order change)
+  * Changed DisplayOrderDiscountRemoved to DiscountRemovedFromDisplayOrder (method arg order change)
+  * Changed DisplayOrderDelete to RemoveDisplayOrder
+  * Behavior change for RefundPaymentRequest.  In the prior versions, a value of zero for the amount
+    field would trigger a refund of the full payment amount.  With the 1.0 version, passing zero
+    in the amount field will trigger a validation failure.  Use FullRefund:boolean to specify a 
+    full refund amount. NOTE: This will attempt to refund the original (full) payment amount,
+    not the remaining amount, in a partial refund scenario.
+  * CloverConnecter now requires ApplicationId to be set via configuration/installation of the 
+  * SaleRequest, AuthRequest, PreAuthRequest and ManualRefund require ExternalId to be set.
+    * ExternalId should be unique per transaction request and will prevent the Clover device
+      from re-processing the last transaction
+
+ICloverConnectorListener
+* Method Name/Signature Changes
+  * Changed OnCaptureAuthResponse to OnCapturePreAuthResponse
+  * Changed CaptureAuthResponse to CapturePreAuthResponse
+  * Changed OnPaymentRefundResponse to OnRefundPaymentResponse
+  * Changed PaymentRefundResponse to RefundPaymentResponse
+  * Changed OnSignatureVerifyRequest to OnVerifySignatureRequest
+  * Changed SignatureVerifyRequest to VerifySignatureRequest
+  * Changed OnAuthTipAdjustResponse to OnTipAdjustAuthResponse
+  * Changed OnDeviceReady to pass back the MerchantInfo
+  * Removed OnConfigError
+  * All Response Messages now return the following:​
+    * Success:boolean
+    * Result:enum [SUCCESS|FAIL|CANCEL|ERROR|UNSUPPORTED]
+        FAIL - failed to process with values/properties as-is
+        CANCEL - canceled, retry could work
+        ERROR - un expected exception occurred
+        UNSUPPORTED - merchant config won't allow the request
+    * Reason:String optional information about result value, if not SUCCESS
+    * Message:String optional detail information about the result value, if not success
+* SaleResponse, AuthResponse and PreAuthResponse have 3 new flags (e.g. The payment gateway may
+  force an AuthRequest to a SaleRequest)
+  * IsSale:boolean - true if the payment is closed
+  * IsAuth:boolean - true if the payment can be tip adjusted before closeout
+  * IsPreAuth:boolean - true if the payment needs to be "captured" before closeout will close it
+
+
+REST Service
+* renamed the service to Clover Connector REST Service
+* Enum values are now passed as Strings instead of Int
+
+  REST Service Endpoints
+     * Changed to return "" instead of zero to match DLL api
+     * Added SDKInfo GET call returns the version Service's SDK information/version
+     * Changed /CaptureAuth to /CapturePreAuth
+     * Changed /DisplayOrderLineItemAdded to /LineItemAddeToDisplayOrder
+     * Changed /DisplayOrderLineItemRemoved to /LineItemRemovedFromDisplayOrder
+     * Changed /DisplayOrderDiscountAdded to /DiscountAddedToDisplayOrder
+     * Changed /DisplayOrderDiscountRemoved to /DiscountRemovedFromDisplayOrder
+     * Changed /DisplayOrderDelete to /RemoveDisplayOrder
+  REST Callbacks
+     * See notes above in ICloverConnectorListener about changes to payloads
+     * Changed /SignatureVerifyRequest to /VerifySignatureRequest
+     * Changed /CaptureAuthResponse to /CapturePreAuthResponse
 
 ### Version 0.6
 * Add Closeout method support, which allows the initiation of an account closeout for any pending authorizations
