@@ -50,6 +50,10 @@ namespace com.clover.remotepay.transport
         {
             if (enableLogging)
             {
+                if(msg.Length > 5000)
+                {
+                    msg = msg.Substring(0, 5000) + "...";
+                }
                 Trace.WriteLine(msg);
             }
         }

@@ -72,7 +72,8 @@ namespace com.clover.remotepay.data
         ORDER_ACTION_REMOVE_LINE_ITEM,
         ORDER_ACTION_RESPONSE,
         VAULT_CARD,
-        VAULT_CARD_RESPONSE
+        VAULT_CARD_RESPONSE,
+        LOG_MESSAGE
     }
 
     public enum MessageTypes

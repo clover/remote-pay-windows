@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using com.clover.remote.order;
 using com.clover.remotepay.transport;
 using com.clover.sdk.v3.payments;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Xml.Serialization;
 
 namespace com.clover.remotepay.sdk
 {
@@ -29,32 +25,15 @@ namespace com.clover.remotepay.sdk
         protected BaseRequest()
         {
         }
-        private Guid _RequestMessageUUID;
-        /// <summary>
-        /// The UUID used to correlate a request and response message.
-        /// </summary>
-        public Guid RequestMessageUUID
-        { 
-            get 
-            {
-                if (_RequestMessageUUID == Guid.Empty)
-                {
-                    _RequestMessageUUID = Guid.NewGuid();
-                }
-                return _RequestMessageUUID;
-            } 
-            set
-            {
-                if (_RequestMessageUUID == Guid.Empty)
-                {
-                    _RequestMessageUUID = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Request Message UUID is already set!");
-                }
-            }
+        protected String RequestId
+        {
+            get; set;
         }
+    }
+
+    public enum ResponseCode
+    {
+        SUCCESS, FAIL, UNSUPPORTED, CANCEL, ERROR
     }
 
     /// <summary>
@@ -62,28 +41,26 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public abstract class BaseResponse
     {
-        public static readonly string SUCCESS = "SUCCESS";
-        public static readonly string CANCEL = "CANCEL";
-        public static readonly string FAIL = "FAIL";
-        public static readonly string ERROR = "ERROR";
-
         protected BaseResponse()
         {
 
         }
-        protected BaseResponse(Guid requestUUID)
-        {
-            RequestMessageUUID = requestUUID;
-        }
         /// <summary>
-        /// 
+        /// If true then the requested operation succeeded
         /// </summary>
-        public Guid RequestMessageUUID { get; set; }
-
+        public bool Success { get; set; }
         /// <summary>
-        /// the status of the transaction activity.
+        /// The result of the requested operation.
         /// </summary>
-        public string Code { get; set; } //SUCCESS, CANCEL, ERROR, FAIL - TODO: enum
+        public ResponseCode Result { get; set; }
+        /// <summary>
+        /// Optional information about result.
+        /// </summary>
+        public String Reason { get; set; }
+        /// <summary>
+        /// Detailed information about result.
+        /// </summary>
+        public String Message { get; set; }
 
     }
 
@@ -94,26 +71,33 @@ namespace com.clover.remotepay.sdk
     /// please change your code to use PreAuthRequest/PreAuthResponse
     /// for all PreAuth transactions.
     /// </summary>
-    public class AuthRequest : SaleRequest
+    public class AuthRequest : TransactionRequest
     {
         public AuthRequest()
         {
-            IsPreAuth = false;
+            this.Type = PayIntent.TransactionType.PAYMENT; 
         }
-        public bool IsPreAuth { get; set; } 
-        public override PayIntent.TransactionType Type 
-        {
-            get {return IsPreAuth ? PayIntent.TransactionType.AUTH : PayIntent.TransactionType.PAYMENT;} 
-        } 
-        //public string OrderID { get; set; } // optional TODO: Revisit
-        //public string EmployeeID { get; set; } // optional TODO: Revisit
+        public bool DisableCashback { get; set; }
+        /// <summary>
+        /// Amount paid in tips
+        /// </summary>
+        public long TaxAmount { get; set; }
+        /// <summary>
+        /// If true then offline payments can be accepted
+        /// </summary>
+        public bool AllowOfflinePayment { get; set; }
+        /// <summary>
+        /// If true then offline payments will be approved without a prompt.  Currently must be true.
+        /// </summary>
+        public bool ApproveOfflinePaymentWithoutPrompt { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to OnAuthResponse
     /// </summary>
-    public class AuthResponse : SaleResponse
+    public class AuthResponse : PaymentResponse
     {
+
     }
 
     /// <summary>
@@ -124,63 +108,131 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class PreAuthRequest : TransactionRequest
     {
-        public override PayIntent.TransactionType Type
+        public PreAuthRequest()
         {
-            get
-            {
-                return PayIntent.TransactionType.AUTH;
-            }
+            this.Type = PayIntent.TransactionType.AUTH;
         }
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to OnPreAuthResponse
     /// </summary>
-    public class PreAuthResponse : AuthResponse
+    public class PreAuthResponse : PaymentResponse
     {
     }
+    public class PaymentResponse : BaseResponse
+    {
+
+        /**
+        * Initialize the values for this.
+        * @private
+        */
+        public PaymentResponse()
+        {
+        }
+        /// <summary>
+        /// The payment from the sale
+        /// </summary>
+        public Payment Payment { get; set; }
+        public bool IsSale
+        {
+            get {
+                if (Payment != null && Payment.cardTransaction != null &&
+                    Payment.cardTransaction.type.Equals(CardTransactionType.AUTH) && 
+                    Payment.result.Equals(clover.sdk.v3.payments.Result.SUCCESS))
+                {
+                    return true;
+                } else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool IsPreAuth
+        {
+            get
+            {
+                if (Payment != null && Payment.cardTransaction != null &&
+                    Payment.cardTransaction.type.Equals(CardTransactionType.PREAUTH) &&
+                    Payment.result.Equals(clover.sdk.v3.payments.Result.AUTH))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool IsAuth
+        {
+            get
+            {
+                if (Payment != null && Payment.cardTransaction != null &&
+                    Payment.cardTransaction.type.Equals(CardTransactionType.PREAUTH) &&
+                    Payment.result.Equals(clover.sdk.v3.payments.Result.SUCCESS))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public Signature2 Signature { get; set; } // optional
+    }
+
     /// <summary>
-    /// 
+    /// This request should be used for capturing payments obtained from
+    /// a PreAuth response
     /// </summary>
-    public class CaptureAuthRequest : BaseRequest
+    public class CapturePreAuthRequest : BaseRequest
     {
         public string PaymentID { get; set; }
         public long Amount { get; set; }
         public long TipAmount { get; set; }
     }
 
-    public class VaultCardResponse : TransactionResponse
+    /// <summary>
+    /// Object passed in to an OnVaultCardResponse
+    /// </summary>
+    public class VaultCardResponse : BaseResponse
     {
         public VaultedCard Card { get; set; }
-        public ResultStatus Status { get; set; }
-        public string Reason { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to OnCapturePreAuthResponse
     /// </summary>
-    public class CaptureAuthResponse : TransactionResponse
+    public class CapturePreAuthResponse : BaseResponse
     {
-        public string paymentId { get; set; }
-        public long amount { get; set; }
-        public long tipAmount { get; set; }
+        public string PaymentId { get; set; }
+        public long Amount { get; set; }
+        public long TipAmount { get; set; }
     }
 
+    /// <summary>
+    /// This request should be passed in to make a closeout request
+    /// </summary>
     public class CloseoutRequest : BaseRequest
     {
-        public bool allowOpenTabs { get; set; }
-        public string batchId { get; set; }
-    }
-
-    public class CloseoutResponse : BaseResponse
-    {
-        public ResultStatus status { get; set; }
-        public string reason { get; set; }
-        public Batch batch { get; set; }
+        public bool AllowOpenTabs { get; set; }
+        public string BatchId { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to OnCloseoutResponse
+    /// </summary>
+    public class CloseoutResponse : BaseResponse
+    {
+        public Batch Batch { get; set; }
+    }
+
+    /// <summary>
+    /// This request should be used to make a request to adjust the 
+    /// tip amount on a payment obtained from an Auth request or payment
+    /// after a CapturePreAuth request
     /// </summary>
     public class TipAdjustAuthRequest : BaseRequest
     {
@@ -190,21 +242,12 @@ namespace com.clover.remotepay.sdk
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to OnTipAdjustAuthResponse
     /// </summary>
     public class TipAdjustAuthResponse : BaseResponse
     {
         public string PaymentId { get; set; }
-        public long Amount { get; set; }
-        public bool Success { get; set; }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ConfigErrorResponse : BaseResponse
-    {
-        public string message { get; set; }
+        public long TipAmount { get; set; }
     }
 
     /// <summary>
@@ -212,67 +255,64 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public abstract class TransactionRequest : BaseRequest
     {
-        public long Amount { get; set; }
+        public bool DisablePrinting { get; set; }
         public bool CardNotPresent { get; set; }
-        public long? CardEntryMethod { get; set; }
+        public bool? DisableRestartTransactionOnFail { get; set; }
+        public long Amount { get; set; }
+        public long? CardEntryMethods { get; set; }
         public VaultedCard VaultedCard { get; set; }
-        public string ExternalPaymentId { get; set; } 
-        //public string EmployeeID { get; set; } // optional TODO: Revisit
+        public string ExternalId { get; set; } 
 
-        public abstract PayIntent.TransactionType Type { get; } // what type of transaction is this
+        public PayIntent.TransactionType Type { get; set; } 
     }
+
     /// <summary>
     /// 
     /// </summary>
-    public class TransactionResponse : BaseResponse
+    public class TransactionStartResponse : BaseResponse
     {
-
+        public TransactionStartResponse()
+        {
+            this.ExternalId = null;
+        }
+        public string ExternalId { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// This request should be used for a Sale call.
     /// </summary>
     public class SaleRequest : TransactionRequest
     {
 
         public SaleRequest() 
         {
+            this.Type = PayIntent.TransactionType.PAYMENT;
             DisableCashback = false;
             DisablePrinting = false;
-            DisableTip = false;
             DisableRestartTransactionOnFail = false;
         }
-        public override PayIntent.TransactionType Type
-        {
-            get
-            {
-                return PayIntent.TransactionType.PAYMENT;
-            }
-        }
+        public bool? DisableTipOnScreen { get; set; } // 
         public long? TaxAmount { get; set; }
         public long? TippableAmount { get; set; } // the amount that tip should be calculated on
         public long? TipAmount { get; set; }
         public bool DisableCashback { get; set; } // 
-        public bool DisableTip { get; set; } // if the merchant account is
-        public bool DisablePrinting { get; set; }
-        public bool DisableRestartTransactionOnFail { get; set; }
         public bool? AllowOfflinePayment { get; set; }
         public bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to an OnSaleResponse
     /// </summary>
-    public class SaleResponse : TransactionResponse
+    public class SaleResponse : PaymentResponse
     {
-        public Payment Payment { get; set; }
-        public Signature2 Signature { get; set; } // optional
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to VerifySignatureRequest. This must 
+    /// also be used to either accept or reject a signature as requested
+    /// from the clover device.
     /// </summary>
-    public class SignatureVerifyRequest
+    public class VerifySignatureRequest
     {
         public virtual void Accept() { }
         public virtual void Reject() { }
@@ -281,7 +321,7 @@ namespace com.clover.remotepay.sdk
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to request the voiding of a payment
     /// </summary>
     public class VoidPaymentRequest : BaseRequest
     {
@@ -293,137 +333,84 @@ namespace com.clover.remotepay.sdk
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to OnVoidPaymentResopnse
     /// </summary>
-    public class VoidPaymentResponse : TransactionResponse
+    public class VoidPaymentResponse : BaseResponse
     {
         public string PaymentId { get; set; }
-        public string TransactionNumber { get; set; } //optional?
-        public string ResponseCode { get; set; } //optional?
-        public string ResponseText { get; set; } //optional?
-    }
-
-
-    /// <summary>
-    /// Request used to void a transaction, where no response was received. 
-    /// </summary>
-    public class VoidTransactionRequest : BaseRequest
-    {
-        public Guid OriginalRequestUUID { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// This should be used to request a manual refund via the ManualRefund method
     /// </summary>
-    public class VoidTransactionResponse : TransactionResponse
+    public class ManualRefundRequest : TransactionRequest
     {
-
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ManualRefundRequest : BaseRequest
-    {
+        public ManualRefundRequest()
+        {
+            this.Type = PayIntent.TransactionType.CREDIT;
+        }
         public long Amount { get; set; }
-        public long? CardEntryMethod { get; set; }
+        public long? CardEntryMethods { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// The object passed in to OnManualRefundResponse
     /// </summary>
-    public class ManualRefundResponse : TransactionResponse
+    public class ManualRefundResponse : BaseResponse
     {
         public Credit Credit { get; set; }
-        public string TransactionNumber { get; set; }
-        public string ResponseCode { get; set; }
-        public string ResponseText { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// This request should be used to make a payment request
+    /// using the RefundPayment method
     /// </summary>
     public class RefundPaymentRequest : BaseRequest
     {
+        public bool FullRefund { get; set; }
         public string OrderId { get; set; }
         public string PaymentId { get; set; }
         public long Amount { get; set; } // optional
     }
 
     /// <summary>
-    /// 
+    /// Object passed in to OnRefundPaymentResponse
     /// </summary>
     public class RefundPaymentResponse : BaseResponse
     {
         public string OrderId { get; set; }
         public string PaymentId { get; set; }
-        public Refund RefundObj { get; set; }
-        public string Message { get; set; }
-
-        //public TxState Code { get; set; }// BaseResponse.Case is a string, so won't serialize
+        public Refund Refund { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Pased in to OnTipAdded, when an on-screen tip
+    /// is selected
     /// </summary>
-    public class PingRequest : BaseRequest
+    public class TipAdded : BaseResponse
     {
-        public long Timestamp { get; set; }
+
+        /**
+        * Initialize the values for this.
+        * @private
+        */
+        public TipAdded()
+        {
+        }
+        /// <summary>
+        /// Tip amount
+        /// </summary>
+        public long TipAmount { get; set; }
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    public class PingResponse : BaseResponse
-    {
-        public long RequestTime { get; set; }
-        public long ResponseTime { get; set; }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DisplayMessageRequest
-    {
-        public string Message { get; set; }
-    }
-
-    /// <summary>
-    /// 
+    /// The request used to show the receipt options screen
     /// </summary>
     public class DisplayPaymentReceiptOptionsRequest : BaseRequest
     {
-        // TODO: add flags for options? SMS = false; EMAIL = true; PRINT = true; etc.
         public string OrderID { get; set; }
         public string PaymentID { get; set; }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DisplayRefundReceiptOptionsRequest : BaseRequest
-    {
-        // TODO: add flags for options? SMS = false; EMAIL = true; PRINT = true; etc.
-        public string OrderID { get; set; }
-        public string RefundID { get; set; }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DisplayCreditReceiptOptionsRequest : BaseRequest
-    {
-        // TODO: add flags for options? SMS = false; EMAIL = true; PRINT = true; etc.
-        public string OrderID { get; set; }
-        public string CreditID { get; set; }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DisplayReceiptOptionsResponse : BaseResponse
-    {
-
-    }
 
 }

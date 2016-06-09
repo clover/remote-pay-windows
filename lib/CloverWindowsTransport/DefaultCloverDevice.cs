@@ -23,6 +23,7 @@ using com.clover.remote.order;
 using com.clover.remote.order.operation;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace com.clover.remotepay.transport
 {
@@ -60,6 +61,12 @@ namespace com.clover.remotepay.transport
         {
             deviceObservers.ForEach(x => x.onDeviceError(code, message));
         }
+
+        /// <summary>
+        /// This handles parsing the generic message and figuring
+        /// out which handler should be used for processing
+        /// </summary>
+        /// <param name="message">The message.</param>
         public void onMessage(string message)
         {
 #if DEBUG
@@ -67,17 +74,17 @@ namespace com.clover.remotepay.transport
 #endif
             //CloverTransportObserver
             // Deserialize the message object to a real object, and figure
-            RemoteMessage rMessage = JsonUtils.deserialize<RemoteMessage>(message);
+            RemoteMessage rMessage = JsonUtils.deserializeSDK<RemoteMessage>(message);
             switch (rMessage.method)
             {
                 case Methods.BREAK:
                     break;
                 case Methods.CASHBACK_SELECTED:
-                    CashbackSelectedMessage cbsMessage = JsonUtils.deserialize<CashbackSelectedMessage>(rMessage.payload);
+                    CashbackSelectedMessage cbsMessage = JsonUtils.deserializeSDK<CashbackSelectedMessage>(rMessage.payload);
                     notifyObserversCashbackSelected(cbsMessage);
                     break;
                 case Methods.DISCOVERY_RESPONSE:
-                    DiscoveryResponseMessage drMessage = JsonUtils.deserialize<DiscoveryResponseMessage>(rMessage.payload);
+                    DiscoveryResponseMessage drMessage = JsonUtils.deserializeSDK<DiscoveryResponseMessage>(rMessage.payload);
                     deviceInfo.name = drMessage.name;
                     deviceInfo.serial = drMessage.serial;
                     deviceInfo.model = drMessage.model;
@@ -87,78 +94,67 @@ namespace com.clover.remotepay.transport
                     notifyObserversFinishCancel();
                     break;
                 case Methods.FINISH_OK:
-                    FinishOkMessage fokmsg = JsonUtils.deserialize<FinishOkMessage>(rMessage.payload);
-                    if (null!= fokmsg.payment) fokmsg.paymentObj = JsonUtils.deserialize<Payment>(fokmsg.payment);
-                    if (null != fokmsg.credit) fokmsg.creditObj = JsonUtils.deserialize<Credit>(fokmsg.credit);
-                    //if (null != fokmsg.refund) fokmsg.refundObj = parseRefund(fokmsg.refund); //not currently implemented, uses REFUND_RESPONSE
+                    FinishOkMessage fokmsg = JsonUtils.deserializeSDK<FinishOkMessage>(rMessage.payload);
                     notifyObserversFinishOk(fokmsg);
                     break;
                 case Methods.KEY_PRESS:
-                    KeyPressMessage kpm = JsonUtils.deserialize<KeyPressMessage>(rMessage.payload);
+                    KeyPressMessage kpm = JsonUtils.deserializeSDK<KeyPressMessage>(rMessage.payload);
                     notifyObserversKeyPressed(kpm);
                     break;
                 case Methods.ORDER_ACTION_RESPONSE:
                     break;
                 case Methods.PARTIAL_AUTH:
-                    PartialAuthMessage partialAuth = JsonUtils.deserialize<PartialAuthMessage>(rMessage.payload);
+                    PartialAuthMessage partialAuth = JsonUtils.deserializeSDK<PartialAuthMessage>(rMessage.payload);
                     notifyObserversPartialAuth(partialAuth);
                     break;
                 case Methods.PAYMENT_VOIDED:
-                    //VoidPaymentMessage vpMessage = JsonUtils.deserialize<VoidPaymentMessage>(rMessage.payload);
-                    //Payment payment = JsonUtils.deserialize<Payment>(vpMessage.payment);
-                    //notifyObserversPaymentVoided(payment, vpMessage.voidReason);
                     // this seems to only gets called if a Signature is "Canceled" on the device
                     break;
                 case Methods.TIP_ADDED:
-                    TipAddedMessage tipMessage = JsonUtils.deserialize<TipAddedMessage>(rMessage.payload);
+                    TipAddedMessage tipMessage = JsonUtils.deserializeSDK<TipAddedMessage>(rMessage.payload);
                     notifyObserversTipAdded(tipMessage);
                     break;
                 case Methods.TX_START_RESPONSE:
+                    TxStartResponseMessage txsrm = JsonUtils.deserializeSDK<TxStartResponseMessage>(rMessage.payload);
+                    notifyObserversTxStartResponse(txsrm);
                     break;
                 case Methods.TX_STATE:
-                    TxStateMessage txStateMsg = JsonUtils.deserialize<TxStateMessage>(rMessage.payload);
+                    TxStateMessage txStateMsg = JsonUtils.deserializeSDK<TxStateMessage>(rMessage.payload);
                     notifyObserversTxState(txStateMsg);
                     break;
                 case Methods.UI_STATE:
-                    UiStateMessage uiStateMsg = JsonUtils.deserialize<UiStateMessage>(rMessage.payload);
+                    UiStateMessage uiStateMsg = JsonUtils.deserializeSDK<UiStateMessage>(rMessage.payload);
                     notifyObserversUiState(uiStateMsg);
                     break;
                 case Methods.VERIFY_SIGNATURE:
-                    VerifySignatureMessage vsigMsg = JsonUtils.deserialize<VerifySignatureMessage>(rMessage.payload);
-                    if (null != vsigMsg.payment) vsigMsg.paymentObj = JsonUtils.deserialize<Payment>(vsigMsg.payment);
+                    VerifySignatureMessage vsigMsg = JsonUtils.deserializeSDK<VerifySignatureMessage>(rMessage.payload);
                     notifyObserversVerifySignature(vsigMsg);
                     break;
                 case Methods.REFUND_RESPONSE:
-                    RefundResponseMessage refRespMsg = JsonUtils.deserialize<RefundResponseMessage>(rMessage.payload);
-                    notifyObserversPaymentRefundResponse(refRespMsg);
+                    RefundResponseMessage refRespMsg = JsonUtils.deserializeSDK<RefundResponseMessage>(rMessage.payload);
+                    notifyObserversRefundPaymentResponse(refRespMsg);
                     break;
                 case Methods.TIP_ADJUST_RESPONSE:
-                    TipAdjustResponseMessage tipAdjustMsg = JsonUtils.deserialize<TipAdjustResponseMessage>(rMessage.payload);
+                    TipAdjustResponseMessage tipAdjustMsg = JsonUtils.deserializeSDK<TipAdjustResponseMessage>(rMessage.payload);
                     notifyObserversTipAdjusted(tipAdjustMsg);
                     break;
                 case Methods.REFUND_REQUEST:
                     //Outbound no-op
                     break;
                 case Methods.VAULT_CARD_RESPONSE:
-                    VaultCardResponseMessage vcrMsg = JsonUtils.deserialize<VaultCardResponseMessage>(rMessage.payload);
-                    if(vcrMsg.card != null)
-                    {
-                        vcrMsg.cardObj = JsonUtils.deserialize<VaultedCard>(vcrMsg.card);
-                    }
+                    VaultCardResponseMessage vcrMsg = JsonUtils.deserializeSDK<VaultCardResponseMessage>(rMessage.payload);
                     notifyObserversVaultCardResponse(vcrMsg);
                     break;
                 case Methods.CAPTURE_PREAUTH_RESPONSE:
-                    CaptureAuthResponseMessage carMsg = JsonUtils.deserialize<CaptureAuthResponseMessage>(rMessage.payload);
+                    CapturePreAuthResponseMessage carMsg = JsonUtils.deserializeSDK<CapturePreAuthResponseMessage>(rMessage.payload);
                     notifyObserversCapturePreAuthResponse(carMsg);
                     break;
                 case Methods.CLOSEOUT_RESPONSE:
-                    CloseoutResponseMessage crMsg = JsonUtils.deserialize<CloseoutResponseMessage>(rMessage.payload);
-                    if (null != crMsg.batch) crMsg.batchObj = parseBatch(crMsg.batch);
+                    CloseoutResponseMessage crMsg = JsonUtils.deserializeSDK<CloseoutResponseMessage>(rMessage.payload);
                     notifyObserversCloseoutResponse(crMsg);
                     break;
                 case Methods.DISCOVERY_REQUEST:
                     //Outbound no-op
-
                     break;
                 case Methods.ORDER_ACTION_ADD_DISCOUNT:
                     //Outbound no-op
@@ -229,88 +225,26 @@ namespace com.clover.remotepay.transport
                 case Methods.VAULT_CARD:
                     //Outbound no-op
                     break;
-
             }
-            // out what to do with it.
         }
 
-        private Batch parseBatch(string batchString)
+        public void notifyObserversRefundPaymentResponse(RefundResponseMessage rrm)
         {
-            // the refund has serverTotals and cardTotals, with the array as a value of elements,
-            // need to remove the elements and set the value of elements
-            // to the value of serverTotals and cardTotals
-            JObject mainobject = JsonConvert.DeserializeObject<JObject>(batchString);
-            JObject jobject = ((JObject)mainobject.GetValue("batchDetails"));
-
-            JObject serverTotals = ((JObject)jobject.GetValue("serverTotals"));
-            if (serverTotals != null)
-            {
-                // playing parsing games. bean assumes no "elements" element, so we will just replace it.
-                // convert {serverTotals:{elements:[A,B,C]}} to {serverTotals:[A,B,C]}
-                JArray elements = (JArray)serverTotals.GetValue("elements");
-                serverTotals.Replace(elements);
-            }
-            JObject cardTotals = ((JObject)jobject.GetValue("cardTotals"));
-            if (cardTotals != null)
-            {
-                // playing parsing games. bean assumes no "elements" element, so we will just replace it.
-                // convert {cardTotals:{elements:[A,B,C]}} to {cardTotals:[A,B,C]}
-                JArray elements = (JArray)cardTotals.GetValue("elements");
-                cardTotals.Replace(elements);
-            }
-
-            string modifiedBatch = JsonConvert.SerializeObject(jobject);
-            Batch batch = JsonUtils.deserialize<Batch>(modifiedBatch);
-            return batch;
-        }
-        private Refund parseRefund(string refundString)
-        {
-            // the refund has taxableAmountRates, with the array as a value of elements,
-            // need to remove the elements and set the value of elements
-            // to the value of taxableAmountRates
-            JObject jobject = JsonConvert.DeserializeObject<JObject>(refundString);
-            JObject taxableAmountRates = ((JObject)jobject.GetValue("taxableAmountRates"));
-            if (taxableAmountRates != null)
-            {
-                // playing parsing games. bean assumes no "elements" element, so we will just replace it.
-                // convert {taxableAmountRates:{elements:[A,B,C]}} to {taxableAmountRates:[A,B,C]}
-                JArray elements = (JArray)taxableAmountRates.GetValue("elements");
-                taxableAmountRates.Replace(elements);
-            }
-
-            string modifiedRefund = JsonConvert.SerializeObject(jobject);
-            Refund refund = JsonUtils.deserialize<Refund>(modifiedRefund);
-            return refund;
-        }
-        //---------------------------------------------------
-        /// <summary>
-        /// this is for a payment refund
-        /// </summary>
-        /// <param name="rrm"></param>
-        public void notifyObserversPaymentRefundResponse(RefundResponseMessage rrm)
-        {
-
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
                 bw.DoWork += new DoWorkEventHandler(
                 delegate (object o, DoWorkEventArgs args)
                 {
-                    string refundString = rrm.refund;
-                    Refund refund = null;
-                    if (refundString != null)
-                    {
-                        refund = parseRefund(refundString);
-                    }
-                    observer.onPaymentRefundResponse(rrm.orderId, rrm.paymentId, refund, rrm.code, rrm.message);
+                    observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message);
                 });
                 bw.RunWorkerAsync();
             }
         }
         public void notifyObserversTipAdjusted(TipAdjustResponseMessage tarm)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
@@ -326,7 +260,7 @@ namespace com.clover.remotepay.transport
         {
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onVaultCardResponse(vcrm);
                 }
@@ -337,21 +271,20 @@ namespace com.clover.remotepay.transport
         {
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onDeviceReady(drMessage);
-                    //observer.onDiscoveryResponse(drMessage);
                 }
             });
             bw.RunWorkerAsync();
         }
-        public void notifyObserversCapturePreAuthResponse(CaptureAuthResponseMessage carm)
+        public void notifyObserversCapturePreAuthResponse(CapturePreAuthResponseMessage carm)
         {
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
-                    observer.onCaptureAuthResponse(carm);
+                    observer.onCapturePreAuthResponse(carm.paymentId, carm.amount, carm.tipAmount, carm.status, carm.reason);
                 }
             });
             bw.RunWorkerAsync();
@@ -360,17 +293,16 @@ namespace com.clover.remotepay.transport
         {
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
-                    Batch batch = JsonConvert.DeserializeObject<Batch>(crm.batch);
-                    observer.onCloseoutResponse(crm.status, crm.reason, batch);
+                    observer.onCloseoutResponse(crm.status, crm.reason, crm.batch);
                 }
             });
             bw.RunWorkerAsync();
         }
         public void notifyObserversKeyPressed(KeyPressMessage keyPress)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
@@ -386,7 +318,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversCashbackSelected(CashbackSelectedMessage cbSelected)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
@@ -402,7 +334,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversTipAdded(TipAddedMessage tipAdded)
         {
-            foreach(CloverDeviceObserver observer in deviceObservers)
+            foreach(ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
@@ -416,9 +348,25 @@ namespace com.clover.remotepay.transport
             }
         }
 
+        public void notifyObserversTxStartResponse(TxStartResponseMessage txsrm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                BackgroundWorker bw = new BackgroundWorker();
+                // what to do in the background thread
+                bw.DoWork += new DoWorkEventHandler(
+                delegate (object o, DoWorkEventArgs args)
+                {
+                    BackgroundWorker b = o as BackgroundWorker;
+                    observer.onTxStartResponse(txsrm.result, txsrm.externalId);
+                });
+                bw.RunWorkerAsync();
+            }
+        }
+
         public void notifyObserversPartialAuth(PartialAuthMessage partialAuth)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
@@ -434,7 +382,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPaymentVoided(Payment payment, VoidReason reason)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
@@ -450,16 +398,16 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversVerifySignature(VerifySignatureMessage verifySigMsg)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
-                observer.onVerifySignature(verifySigMsg.paymentObj, verifySigMsg.signature);
+                observer.onVerifySignature(verifySigMsg.payment, verifySigMsg.signature);
             }
         }
 
 
         public void notifyObserversUiState(UiStateMessage uiStateMsg)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 observer.onUiState(uiStateMsg.uiState, uiStateMsg.uiText, uiStateMsg.uiDirection, uiStateMsg.inputOptions);
             }
@@ -468,7 +416,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversTxState(TxStateMessage txStateMsg)
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 observer.onTxState(txStateMsg.txState);
             }
@@ -476,7 +424,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversFinishCancel()
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 observer.onFinishCancel();
             }
@@ -484,19 +432,23 @@ namespace com.clover.remotepay.transport
         public void notifyObserversFinishOk(FinishOkMessage msg)
 
         {
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 if (msg.payment != null)
                 {
-                    observer.onFinishOk(msg.paymentObj, msg.signature);
+                    observer.onFinishOk(msg.payment, msg.signature);
                 }
                 else if (msg.credit != null)
                 {
-                    observer.onFinishOk(msg.creditObj);
+                    observer.onFinishOk(msg.credit);
                 }
                 else if (msg.refund != null)
                 {
-                    observer.onFinishOk(msg.refundObj);
+                    observer.onFinishOk(msg.refund);
+                }
+                else
+                {
+                    Console.WriteLine("Don't know what to do with this Finish OK message: " + JsonUtils.serialize(msg));
                 }
             }
         }
@@ -506,6 +458,12 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new PaymentReceiptMessage(orderId, paymentId));
         }
 
+        public override void doLogMessages(LogLevelEnum logLevel, Dictionary<string, string> messages)
+        {
+            sendObjectMessage(new LogMessage(logLevel, messages));
+        }
+
+        /*
         public override void doShowRefundReceiptScreen(string orderId, string refundId)
         {
             sendObjectMessage(new RefundReceiptMessage(orderId, refundId));
@@ -515,7 +473,7 @@ namespace com.clover.remotepay.transport
         {
             sendObjectMessage(new CreditReceiptMessage(orderId, creditId));
         }
-
+        */
         public override void doKeyPress(KeyPress keyPress)
         {
             sendObjectMessage(new KeyPressMessage(keyPress));
@@ -531,7 +489,7 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new Message(Methods.SHOW_WELCOME_SCREEN));
         }
 
-        public override void doSignatureVerified(Payment payment, bool verified)
+        public override void doVerifySignature(Payment payment, bool verified)
         {
             sendObjectMessage(new SignatureVerifiedMessage(payment, verified));
         }
@@ -571,9 +529,9 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new TipAdjustAuthMessage(orderId, paymentId, amount));
         }
 
-        public override void doCaptureAuth(string paymentID, long amount, long tipAmount)
+        public override void doCapturePreAuth(string paymentID, long amount, long tipAmount)
         {
-            sendObjectMessage(new CaptureAuthMessage(paymentID, amount, tipAmount));
+            sendObjectMessage(new CapturePreAuthMessage(paymentID, amount, tipAmount));
         }
 
         public override void doPrintText(List<string> textLines)
@@ -593,11 +551,17 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(ipm);
         }
 
+        public override void doPrintImageURL(string urlString)
+        {
+            ImagePrintMessage ipm = new ImagePrintMessage();
+            ipm.urlString = urlString;
+            sendObjectMessage(ipm);
+        }
 
         public override void doVoidPayment(Payment payment, VoidReason reason)
         {
             VoidPaymentMessage vpm = new VoidPaymentMessage();
-            vpm.paymentObj = payment;
+            vpm.payment = payment;
             vpm.voidReason = reason;
             sendObjectMessage(vpm);
 
@@ -611,9 +575,9 @@ namespace com.clover.remotepay.transport
             bw.RunWorkerAsync();
         }
 
-        public override void doPaymentRefund(string orderId, string paymentId, long amount)
+        public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund)
         {
-            sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount));
+            sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund));
         }
 
         public override void doDiscoveryRequest()
@@ -636,9 +600,11 @@ namespace com.clover.remotepay.transport
                 message.method, MessageTypes.COMMAND, message, this.packageName, remoteSourceSDK, remoteApplicationID
             );
 
-            string msg = JsonUtils.serialize(remoteMessage);
-            // string msg = JsonConvert.SerializeObject(remoteMessage, new JsonConverter[] { new StringEnumConverter() });
+            string msg = JsonUtils.serializeSDK(remoteMessage);
             transport.sendMessage(msg);
+#if DEBUG
+            Console.WriteLine("Sent message: " + msg);
+#endif
         }
 
     }

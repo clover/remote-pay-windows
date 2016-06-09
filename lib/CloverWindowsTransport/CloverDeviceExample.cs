@@ -48,8 +48,6 @@ namespace com.clover.remotepay.transport
             ConsoleKeyInfo info;
             do
             {
-                // Go do a discovery request
-                
                 // Wait for user input..
                 info = Console.ReadKey();
 

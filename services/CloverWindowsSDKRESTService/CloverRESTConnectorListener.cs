@@ -16,22 +16,15 @@ using com.clover.remotepay.sdk;
 using com.clover.remotepay.transport;
 using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Xml.Serialization;
-using System.ServiceModel.Web;
 
 namespace CloverWindowsSDKREST
 {
-    public class CloverRESTConnectorListener : CloverConnectorListener
+    public class CloverRESTConnectorListener : ICloverConnectorListener
     {
-        //public Fleck.IWebSocketConnection WebSocket { get; set; }
         public RestClient RestClient { get; set; }
         public string Status { get; internal set; }
-        //public WebServiceHost Host { get; internal set; }
+        private MerchantInfo MerchantInfo { get; set; }
 
         public CloverRESTConnectorListener()
         {
@@ -48,12 +41,12 @@ namespace CloverWindowsSDKREST
             Send("/PreAuthResponse", Serialize(response));
         }
 
-        public void OnAuthCaptureResponse(CaptureAuthResponse response)
+        public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
         {
-            Send("/CaptureAuthResponse", Serialize(response));
+            Send("/CapturePreAuthResponse", Serialize(response));
         }
 
-        public void OnAuthTipAdjustResponse(TipAdjustAuthResponse response)
+        public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
             Send("/TipAdjustAuthResponse", Serialize(response));
         }
@@ -67,22 +60,19 @@ namespace CloverWindowsSDKREST
         {
             Status = "Connected";
             Send("/DeviceConnected", null);
-            //Console.WriteLine("Host: ${0}", Host.State);
         }
 
         public void OnDeviceDisconnected()
         {
             Status = "Disconnected";
             Send("/DeviceDisconnected", null);
-            //Console.WriteLine("Host: ${0}", Host.State);
-            //Console.WriteLine(Host.Description.Endpoints);
         }
 
-        public void OnDeviceReady()
+        public void OnDeviceReady(MerchantInfo merchantInfo)
         {
             Status = "Ready";
-            Send("/DeviceReady", null);
-            //Console.WriteLine("Host: ${0}", Host.State);
+            this.MerchantInfo = merchantInfo;
+            Send("/DeviceReady", Serialize(merchantInfo));
         }
 
         public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
@@ -100,16 +90,6 @@ namespace CloverWindowsSDKREST
             Send("/DeviceError", Serialize(deviceErrorEvent));
         }
 
-        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
-        {
-            Send("/DisplayreceiptOptionsResponse", Serialize(response));
-        }
-
-        public void OnError(Exception e)
-        {
-            Send("/Error", e.Message);
-        }
-
         public void OnManualRefundResponse(ManualRefundResponse response)
         {
             Send("/ManualRefundResponse", Serialize(response));
@@ -125,19 +105,14 @@ namespace CloverWindowsSDKREST
             Send("/SaleResponse", Serialize(response));
         }
 
-        public void OnSignatureVerifyRequest(SignatureVerifyRequest request)
+        public void OnVerifySignatureRequest(VerifySignatureRequest request)
         {
-            Send("/SignatureVerifyRequest", Serialize(request));
+            Send("/VerifySignatureRequest", Serialize(request));
         }
 
         public void OnVoidPaymentResponse(VoidPaymentResponse response)
         {
             Send("/VoidPaymentResponse", Serialize(response));
-        }
-
-        public void OnVoidTransactionResponse(VoidTransactionResponse response)
-        {
-            Send("/VoidTransactionResponse", Serialize(response));
         }
 
         public void OnTipAdded(com.clover.remotepay.transport.TipAddedMessage message)
@@ -150,18 +125,13 @@ namespace CloverWindowsSDKREST
             Send("/VaultCardResponse", Serialize(message));
         }
 
-        public void OnConfigError(ConfigErrorResponse ceResponse)
-        {
-            Send("/ConfigErrorResponse", Serialize(ceResponse));
-        }
-
         public void ResendStatus()
         {
             switch (Status)
             {
                 case "Ready":
                     {
-                        this.OnDeviceReady();
+                        this.OnDeviceReady(MerchantInfo);
                         break;
                     }
                 case "Disconnected" :
@@ -181,40 +151,23 @@ namespace CloverWindowsSDKREST
         private object Serialize(object obj) 
         {
             return obj;
-            /*
-            XmlSerializer serializer = new XmlSerializer(obj.GetType());
-            MemoryStream ms = new MemoryStream();
-
-            serializer.Serialize(ms, obj);
-            ms.Position = 0;
-            var sr = new StreamReader(ms);
-            var myStr = sr.ReadToEnd();
-            ms.Close();
-            sr.Close();
-            */
-
-            //var myStr = JsonUtils.serialize(obj);
-            //return myStr;
         }
 
         private void Send(string endpoint, object msg)
         {
-            //Console.WriteLine(msg.ToString());
             if (RestClient != null)
             {
                 RestRequest request = new RestRequest(endpoint, Method.POST);
                 if (msg != null)
                 {
-                    //Console.WriteLine("sending: " + msg + " to " + endpoint);
-                    request.AddJsonBody(msg);
+                    string payload = JsonUtils.serialize(msg);
+                    request.AddParameter("application/json", payload, ParameterType.RequestBody);
                 }
                 else
                 {
                     request.AddJsonBody("");
                 }
                 request.RequestFormat = DataFormat.Json;
-                //IRestResponse response = RestClient.Execute(request);
-                //Console.WriteLine("response: " + response.ResponseStatus);
                 
                 var asyncHandle = RestClient.ExecuteAsync(request, response =>
                 {
@@ -225,8 +178,6 @@ namespace CloverWindowsSDKREST
 #if DEBUG
                     Console.WriteLine(response.StatusCode + " for " + endpoint + " with payload: " + request.Parameters[0].ToString());
 #endif
-                    //Console.WriteLine("Send to Callback");
-                    // don't care about a response
                 });
 
             }

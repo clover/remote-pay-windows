@@ -16,6 +16,7 @@ using com.clover.remotepay.sdk;
 using com.clover.remotepay.transport;
 using Grapevine.Server;
 using System;
+using Microsoft.Win32;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -32,7 +33,7 @@ namespace CloverWindowsSDKREST
 {
     class CloverRESTService : ServiceBase
     {
-        public static string SERVICE_NAME = "Clover Mini REST Service";
+        public static string SERVICE_NAME = "Clover Connector REST Service";
 
         CloverRESTServer server;
         //WebServiceHost host = null;
@@ -105,27 +106,19 @@ namespace CloverWindowsSDKREST
                 listenAddress = "http://127.0.0.1:8181/";
                 listenAddress = "8181";
             }
-            else
-            {
-                //listenAddress = "http://127.0.0.1:" + listenAddress + "/";
-            }
-            //Uri baseAddress = new Uri(listenAddress);
 
-            //Service service = new Service();
             ServiceEndpoints endpoints = new ServiceEndpoints();
 
             string callbackEndpoint = null;
             if (!argsMap.TryGetValue("/C", out callbackEndpoint))
             {
-                callbackEndpoint = "http://127.0.0.1:8182/CloverCallback";
+                callbackEndpoint = "http://localhost:8182/CloverCallback";
             }
 
             server = new CloverRESTServer("localhost", listenAddress, "http");// "127.0.0.1", listenAddress, "http");
-
             CloverRESTConnectorListener connectorListener = new CloverRESTConnectorListener();
             Console.WriteLine("callback endpoint: " + callbackEndpoint);
             connectorListener.RestClient = new RestSharp.RestClient(callbackEndpoint);
-            //service.CloverConnector.AddCloverConnectorListener(connectorListener);
             server.ForwardToClientListener = connectorListener;
             string webSocketEndpoint = null;
             if(argsMap.TryGetValue("/L", out webSocketEndpoint))
@@ -136,26 +129,68 @@ namespace CloverWindowsSDKREST
                 }
                 string hostname = tokens[0];
                 int port = int.Parse(tokens[1]);
-                server.CloverConnector = new CloverConnector(new WebSocketCloverDeviceConfiguration(hostname, port, "Clover Example", Debug, Timer), connectorListener);
+                server.CloverConnector = new CloverConnector(new WebSocketCloverDeviceConfiguration(hostname, port, getPOSNameAndVersion(), Debug, Timer));
             }
             else
             {
-                server.CloverConnector = new CloverConnector(new USBCloverDeviceConfiguration(null, "Clover Example", Debug, Timer), connectorListener);
+                server.CloverConnector = new CloverConnector(new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer));
             }
-
+            server.CloverConnector.InitializeConnection();
+            server.CloverConnector.AddCloverConnectorListener(connectorListener);
             StartRESTListener();
             server.OnAfterStart += new ToggleServerHandler(this.OnServerStart);
             server.OnStop += new ToggleServerHandler(this.OnServerStop);
         }
 
+        private String getPOSNameAndVersion()
+        {
+            string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
+            String name = "unset";
+            String version = "unset";
+            try
+            {
+                Object rName = Registry.GetValue(REG_KEY, "ExternalPOSName", "unset");
+                Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
+                name = rName.ToString(); 
+                version = rVersion.ToString();
+            } catch (Exception e)
+            {
+                EventLog.WriteEntry(SERVICE_NAME, e.Message);
+            }
+            // not needed if the target Platform in the build is set to x86. The previous key path will resolve to the WOW6443Node as needed
+            /*
+            if (name.Equals("unset"))
+            {
+                REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
+                try
+                {
+                    Object rName = Registry.GetValue(REG_KEY, "ExternalPOSName", "unset");
+                    Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
+                    name = rName.ToString();
+                    version = rVersion.ToString();
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.EventLog.WriteEntry(SERVICE_NAME, e.Message);
+                }
+            }
+            */
+            if (name.Equals("unset") || version.Equals("unset"))
+            {
+                EventLog.WriteEntry(SERVICE_NAME, "POS Name or Version is not correctly set.  The service will not run until they are appropriately intialized.");
+                throw new Exception("Invalid external POS name or version. The REST service cannot run without correctly configured <ExternalPOSName> and <ExternalPOSVersion> registry keys.");
+            }
+            EventLog.WriteEntry(SERVICE_NAME, "POS Name:Version from registry = " + name + ":" + version);
+            return name + ":" + version;
+        }
         private void OnServerStart()
         {
-            System.Diagnostics.EventLog.WriteEntry(SERVICE_NAME, "Opened...");
+            EventLog.WriteEntry(SERVICE_NAME, "Opened...");
         }
 
         private void OnServerStop()
         {
-            System.Diagnostics.EventLog.WriteEntry(SERVICE_NAME, "Closed...");
+            EventLog.WriteEntry(SERVICE_NAME, "Closed...");
         }
 
 
@@ -177,14 +212,14 @@ namespace CloverWindowsSDKREST
 
     class WSCloverConnector : CloverConnector
     {
-        public static WSCloverConnector operator +(WSCloverConnector connector, CloverConnectorListener connectorListener)
+        public static WSCloverConnector operator +(WSCloverConnector connector, ICloverConnectorListener connectorListener)
         {
             connector.AddCloverConnectorListener(connectorListener);
             return connector;
         }
-        public static WSCloverConnector operator -(WSCloverConnector connector, CloverConnectorListener connectorListener)
+        public static WSCloverConnector operator -(WSCloverConnector connector, ICloverConnectorListener connectorListener)
         {
-            //connector.RemoveCloverConnectorListener(connectorListener);
+            connector.RemoveCloverConnectorListener(connectorListener);
             return connector;
         }
 
@@ -201,19 +236,19 @@ namespace CloverWindowsSDKREST
             }
         }
 
-        public void AcceptSignature(SignatureVerifyRequest request)
+        public void AcceptSignature(VerifySignatureRequest request)
         {
             if (Device != null)
             {
-                Device.doSignatureVerified(request.Payment, true);
+                Device.doVerifySignature(request.Payment, true);
             }
         }
 
-        public void RejectSignature(SignatureVerifyRequest request)
+        public void RejectSignature(VerifySignatureRequest request)
         {
             if (Device != null)
             {
-                Device.doSignatureVerified(request.Payment, false);
+                Device.doVerifySignature(request.Payment, false);
             }
         }
     }

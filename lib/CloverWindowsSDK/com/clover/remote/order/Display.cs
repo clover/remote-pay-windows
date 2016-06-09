@@ -64,7 +64,7 @@ namespace com.clover.remote.order
         public string binName { get; set; }
         public string userData { get; set; }
         public ListWrapper<DisplayDiscount> discounts { get; set; }
-        public string dicountAmount { get; set; }
+        public string discountAmount { get; set; }
         public Boolean exchanged { get; set; }
         public string exchangedAmount { get; set; }
         public ListWrapper<DisplayModification> modifications { get; set; }
@@ -232,7 +232,6 @@ namespace com.clover.remote.order
     public class ListWrapper<T>
     {
         public List<T> elements { get; set; }
-        private Type ListType;
 
         public ListWrapper()
         {
@@ -259,34 +258,4 @@ namespace com.clover.remote.order
 
     }
 
-/*
-    public class ListWrapper {
-        public ArrayList elements { get; set; }
-        private Type ListType;
-
-        public ListWrapper()
-        {
-            elements = new ArrayList();
-        }
-        
-        public void Add(object obj)
-        {
-            this.addElement(obj);
-        }
-        public void addElement(object obj)
-        {
-            this.elements.Add(obj);
-        }
-
-        public void Remove(object obj)
-        {
-            this.removeElement(obj);
-        }
-        public void removeElement(object obj)
-        {
-            this.elements.Remove(obj);
-        }
-
-    }
-*/
 }

@@ -83,14 +83,14 @@ namespace CloverWindowsSDKREST
         public PreAuthResponse PreAuthResponse { get; set; }
     }
 
-    [XmlRoot(ElementName = "OnAuthCaptureResponse")]
-    public class OnAuthCaptureResponse
+    [XmlRoot(ElementName = "OnCapturePreAuthResponse")]
+    public class OnCapturePreAuthResponse
     {
-        public CaptureAuthResponse CaptureAuthResponse { get; set; }
+        public CapturePreAuthResponse CapturePreAuthResponse { get; set; }
     }
 
-    [XmlRoot(ElementName = "OnAuthTipAdjustResponse")]
-    public class OnAuthTipAdjustResponse
+    [XmlRoot(ElementName = "OnTipAdjustAuthResponse")]
+    public class OnTipAdjustAuthResponse
     {
         public TipAdjustAuthResponse TipAdjustAuthResponse { get; set; }
     }
@@ -107,22 +107,16 @@ namespace CloverWindowsSDKREST
         public VoidPaymentResponse VoidPaymentResponse { get; set; }
     }
 
-    [XmlRoot(ElementName = "OnVoidTransactionResponse")]
-    public class OnVoidTransactionResponse
-    {
-        public VoidTransactionResponse VoidTransactionResponse { get; set; }
-    }
-
     [XmlRoot(ElementName = "OnSaleResponse")]
     public class OnSaleResponse
     {
         public SaleResponse SaleResponse { get; set; }
     }
 
-    [XmlRoot(ElementName = "OnSignatureVerifyRequest")]
-    public class OnSignatureVerifyRequest
+    [XmlRoot(ElementName = "OnVerifySignatureRequest")]
+    public class OnVerifySignatureRequest
     {
-        public SignatureVerifyRequest SignatureVerifyRequest { get; set; }
+        public VerifySignatureRequest VerifySignatureRequest { get; set; }
     }
 
     [XmlRoot(ElementName = "OnManualRefundResponse")]
@@ -141,18 +135,6 @@ namespace CloverWindowsSDKREST
     public class OnVaultCardResponse
     {
         public VaultCardResponse VaultCardResponse { get; set; }
-    }
-
-    [XmlRoot(ElementName="OnDisplayReceiptOptionsResponse")]
-    public class OnDisplayReceiptOptionsResponse
-    {
-        public DisplayReceiptOptionsResponse DisplayReceiptOptionsResponse { get; set; }
-    }
-
-    [XmlRoot(ElementName = "OnError")]
-    public class OnError
-    {
-
     }
 
     [XmlRoot(ElementName = "OnDeviceError")]

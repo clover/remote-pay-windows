@@ -16,48 +16,39 @@ using com.clover.remotepay.sdk;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.ServiceModel;
-using System.ServiceModel.Description;
-using System.ServiceModel.Web;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace com.clover.remotepay.transport.remote
 {
+    /// <summary>
+    /// manages/start/stops the REST server used
+    /// to listen for callback messages
+    /// </summary>
     class CallbackController
     {
 
-        CloverCallbackService cloverCallbackService;
+        ICloverConnector connector { get; set; }
+        CloverRESTServer restServer;
+        List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
 
         public CallbackController(ICloverConnector cloverConnector)
         {
-            cloverCallbackService = new CloverCallbackService(cloverConnector);
+            connector = cloverConnector;
         }
         public void init(RestClient restClient)
         {
-            Uri baseAddress = new Uri("http://127.0.0.1:8182/");
-            using (WebServiceHost host = new WebServiceHost(cloverCallbackService, baseAddress))
+            restServer = new CloverRESTServer("localhost", "8182", "http");
+            restServer.CloverConnector = connector;
+            listeners.ForEach(listener => restServer.AddCloverConnectorListener(listener));
+            listeners.Clear();
             {
-
-                
-                //Service.CloverConnector = new CloverConnector(new USBCloverDeviceConfiguration(null));
-                //Service.CloverConnector.AddCloverConnectorListener(new CloverRESTConnectorListener());
-
-
-                ServiceEndpoint ep = host.AddServiceEndpoint(typeof(ICloverCallbackService), new WebHttpBinding(), "CloverCallback");
-                ServiceBehaviorAttribute sba = host.Description.Behaviors.Find<ServiceBehaviorAttribute>();
-                sba.InstanceContextMode = InstanceContextMode.Single;
-                //ServiceDebugBehavior stp = host.Description.Behaviors.Find<ServiceDebugBehavior>();
-                //stp.HttpHelpPageEnabled = false;
 
                 try
                 {
-                    host.Open();
+                    restServer.Start();
                 }
-                catch(AddressAccessDeniedException exception)
+                catch(Exception)
                 {
                     MessageBox.Show("Couldn't open callback listener service. Are you running as administrator?");
                 }
@@ -73,42 +64,37 @@ namespace com.clover.remotepay.transport.remote
                     }
                     else
                     {
-                        // can look at response or wait for callback
+                        // response is ok, so should process
                     }
                 });
 
-                System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
-                //TODO: send test message, discovery, anything to see if someone is listening.
-                //ccListener.OnDeviceReady();// once the service is up, without sending a ping, we must assume it's ready because http stateless
-
-
-                
-
-
-
-                /*
-                foreach (ServiceEndpoint se in host.Description.Endpoints)
-                {
-                    Console.WriteLine("Address: {0}, Binding: {1}, Contract: {2}",
-                        se.Address,
-                        se.Binding.Name,
-                        se.Contract.Name);
-                }
-
-
-                Console.WriteLine("The service is ready at {0}", baseAddress);
-                Console.WriteLine("Press <Enter> to stop the service.");
-                Console.ReadLine();
-
-                // Close the ServiceHost.
-                host.Close();
-                */
             }
         }
 
-        internal void AddListener(CloverConnectorListener connectorListener)
+        internal void AddListener(ICloverConnectorListener connectorListener)
         {
-            cloverCallbackService.AddListener(connectorListener);
+            
+            if(restServer != null)
+            {
+                restServer.AddCloverConnectorListener(connectorListener);
+            }
+            else
+            {
+                listeners.Add(connectorListener);
+            }
+        }
+
+        internal void Shutdown()
+        {
+            try
+            {
+                restServer.Stop();
+                restServer = null;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

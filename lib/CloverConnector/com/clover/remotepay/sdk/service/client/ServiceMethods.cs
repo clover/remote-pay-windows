@@ -13,14 +13,10 @@
 // limitations under the License.
 
 using com.clover.remote.order;
-using com.clover.remotepay.transport;
-using com.clover.remotepay.sdk;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 
 /// <summary>
@@ -37,7 +33,7 @@ namespace com.clover.remotepay.sdk.service.client {
     [XmlRoot(ElementName = "VaultCard")]
     public class VaultCard
     {
-        public int? CardEntryMethod { get; set; }
+        public int? CardEntryMethods { get; set; }
     }
 
     [XmlRoot(ElementName = "PrintText")]
@@ -56,6 +52,7 @@ namespace com.clover.remotepay.sdk.service.client {
     public class PrintImage
     {
         public string Bitmap { get; set; }
+        public string Url { get; set; }
 
         public System.Drawing.Bitmap GetBitmap()
         {
@@ -70,29 +67,29 @@ namespace com.clover.remotepay.sdk.service.client {
 
     }
 
-    [XmlRoot(ElementName = "DisplayOrderLineItemAdded")]
-    public class DisplayOrderLineItemAdded
+    [XmlRoot(ElementName = "LineItemAddedToDisplayOrder")]
+    public class LineItemAddedToDisplayOrder
     {
         public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
         public DisplayLineItem DisplayLineItem { get; set; }
     }
 
-    [XmlRoot(ElementName = "DisplayOrderLineItemRemoved")]
-    public class DisplayOrderLineItemRemoved
+    [XmlRoot(ElementName = "LineItemRemovedFromDisplayOrder")]
+    public class LineItemRemovedFromDisplayOrder
     {
         public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
         public DisplayLineItem DisplayLineItem { get; set; }
     }
 
-    [XmlRoot(ElementName = "DisplayOrderDiscountAdded")]
-    public class DisplayOrderDiscountAdded
+    [XmlRoot(ElementName = "DiscountAddedToDisplayOrder")]
+    public class DiscountAddedToDisplayOrder
     {
         public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
         public DisplayDiscount DisplayDiscount { get; set; }
     }
 
-    [XmlRoot(ElementName = "DisplayOrderDiscountRemoved")]
-    public class DisplayOrderDiscountRemoved
+    [XmlRoot(ElementName = "DiscountRemovedFromDisplayOrder")]
+    public class DiscountRemovedFromDisplayOrder
     {
         public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
         public DisplayDiscount DisplayDiscount { get; set; }
