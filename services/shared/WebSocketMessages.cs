@@ -16,7 +16,6 @@ using com.clover.remote.order;
 using com.clover.remotepay.sdk;
 using com.clover.remotepay.sdk.service.client;
 using com.clover.remotepay.transport;
-using System;
 
 /// <summary>
 /// Contains a set of classes to simplify using the Windows WebSocket service by providing
@@ -24,7 +23,6 @@ using System;
 /// </summary>
 namespace com.clover.sdk.remote.websocket
 {
-
     public class ServicePayloadConstants
     {
         public const string PROP_METHOD = "method";
@@ -42,31 +40,28 @@ namespace com.clover.sdk.remote.websocket
         PreAuth,
         Cancel,
         Break,
-        CaptureAuth,
+        CapturePreAuth,
         TipAdjustAuth,
         VoidPayment,
         RefundPayment,
         ManualRefund,
         Closeout,
         DisplayPaymentReceiptOptions,
-        DisplayRefundReceiptOptions,
-        DisplayCreditReceiptOptions,
         PrintText,
         PrintImage,
+        PrintImageFromURL,
         OpenCashDrawer,
         ShowMessage,
         ShowWelcomeScreen,
         ShowThankYouScreen,
-        DisplayOrder,
-        DisplayOrderLineItemAdded,
-        DisplayOrderLineItemRemoved,
-        DisplayOrderDiscountAdded,
-        DisplayOrderDiscountRemoved,
+        ShowDisplayOrder,
+        LineItemAddedToDisplayOrder,
+        LineItemRemovedFromDisplayOrder,
+        DiscountAddedToDisplayOrder,
+        DiscountRemovedFromDisplayOrder,
         InvokeInputOption,
         AcceptSignature,
         RejectSignature,
-        //CaptureAuth, // TODO: implement
-        // responses & callbacks
         DeviceActivityStart,
         DeviceActivityEnd,
         DeviceDisconnected,
@@ -77,17 +72,17 @@ namespace com.clover.sdk.remote.websocket
         SaleResponse,
         AuthResponse,
         PreAuthResponse,
-        CaptureAuthResponse,
+        CapturePreAuthResponse,
         CloseoutResponse,
         TipAdjustAuthResponse,
         RefundPaymentResponse,
         ManualRefundResponse,
         VoidPaymentResponse,
         TipAdded,
-        SignatureVerifyRequest,
+        VerifySignatureRequest,
         VaultCard,
         VaultCardResponse,
-        ConfigErrorResponse
+        LogMessage
     }
 
     public class WebSocketMessage<T>
@@ -139,9 +134,9 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
-    public class CaptureAuthRequestMessage : WebSocketMessage<CaptureAuthRequest>
+    public class CapturePreAuthRequestMessage : WebSocketMessage<CapturePreAuthRequest>
     {
-        public CaptureAuthRequestMessage() : base(WebSocketMethod.CaptureAuth)
+        public CapturePreAuthRequestMessage() : base(WebSocketMethod.CapturePreAuth)
         {
         }
     }
@@ -181,18 +176,6 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
-    public class DisplayRefundReceiptOptionsRequestMessage : WebSocketMessage<object>
-    {
-        public DisplayRefundReceiptOptionsRequestMessage() : base(WebSocketMethod.DisplayRefundReceiptOptions)
-        {
-        }
-    }
-    public class DisplayCreditReceiptOptionsRequestMessage : WebSocketMessage<object>
-    {
-        public DisplayCreditReceiptOptionsRequestMessage() : base(WebSocketMethod.DisplayCreditReceiptOptions)
-        {
-        }
-    }
     public class PrintTextRequestMessage : WebSocketMessage<PrintText>
     {
         public PrintTextRequestMessage() : base(WebSocketMethod.PrintText)
@@ -202,6 +185,12 @@ namespace com.clover.sdk.remote.websocket
     public class PrintImageRequestMessage : WebSocketMessage<PrintImage>
     {
         public PrintImageRequestMessage() : base(WebSocketMethod.PrintImage)
+        {
+        }
+    }
+    public class PrintImageFromURLRequestMessage : WebSocketMessage<PrintImage>
+    {
+        public PrintImageFromURLRequestMessage() : base(WebSocketMethod.PrintImageFromURL)
         {
         }
     }
@@ -231,31 +220,31 @@ namespace com.clover.sdk.remote.websocket
     }
     public class DisplayOrderRequestMessage : WebSocketMessage<DisplayOrder>
     {
-        public DisplayOrderRequestMessage() : base(WebSocketMethod.DisplayOrder)
+        public DisplayOrderRequestMessage() : base(WebSocketMethod.ShowDisplayOrder)
         {
         }
     }
-    public class DisplayOrderLineItemAddedRequestMessage : WebSocketMessage<DisplayOrderLineItemAdded>
+    public class LineItemAddedToDisplayOrderRequestMessage : WebSocketMessage<LineItemAddedToDisplayOrder>
     {
-        public DisplayOrderLineItemAddedRequestMessage() : base(WebSocketMethod.DisplayOrderLineItemAdded)
+        public LineItemAddedToDisplayOrderRequestMessage() : base(WebSocketMethod.LineItemAddedToDisplayOrder)
         {
         }
     }
-    public class DisplayOrderLineItemRemovedRequestMessage : WebSocketMessage<DisplayOrderLineItemRemoved>
+    public class LineItemRemovedFromDisplayOrderRequestMessage : WebSocketMessage<LineItemRemovedFromDisplayOrder>
     {
-        public DisplayOrderLineItemRemovedRequestMessage() : base(WebSocketMethod.DisplayOrderLineItemRemoved)
+        public LineItemRemovedFromDisplayOrderRequestMessage() : base(WebSocketMethod.LineItemRemovedFromDisplayOrder)
         {
         }
     }
-    public class DisplayOrderDiscountAddedRequestMessage : WebSocketMessage<DisplayOrderDiscountAdded>
+    public class DiscountAddedToDisplayOrderRequestMessage : WebSocketMessage<DiscountAddedToDisplayOrder>
     {
-        public DisplayOrderDiscountAddedRequestMessage() : base(WebSocketMethod.DisplayOrderDiscountAdded)
+        public DiscountAddedToDisplayOrderRequestMessage() : base(WebSocketMethod.DiscountAddedToDisplayOrder)
         {
         }
     }
-    public class DisplayOrderDiscountRemovedRequestMessage : WebSocketMessage<DisplayOrderDiscountRemoved>
+    public class DiscountRemovedFromDisplayOrderRequestMessage : WebSocketMessage<DiscountRemovedFromDisplayOrder>
     {
-        public DisplayOrderDiscountRemovedRequestMessage() : base(WebSocketMethod.DisplayOrderDiscountRemoved)
+        public DiscountRemovedFromDisplayOrderRequestMessage() : base(WebSocketMethod.DiscountRemovedFromDisplayOrder)
         {
         }
     }
@@ -265,13 +254,13 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
-    public class AcceptSignatureRequestMessage : WebSocketMessage<SignatureVerifyRequest>
+    public class AcceptSignatureRequestMessage : WebSocketMessage<VerifySignatureRequest>
     {
         public AcceptSignatureRequestMessage() : base(WebSocketMethod.AcceptSignature)
         {
         }
     }
-    public class RejectSignatureRequestMessage : WebSocketMessage<SignatureVerifyRequest>
+    public class RejectSignatureRequestMessage : WebSocketMessage<VerifySignatureRequest>
     {
         public RejectSignatureRequestMessage() : base(WebSocketMethod.RejectSignature)
         {
@@ -280,6 +269,12 @@ namespace com.clover.sdk.remote.websocket
     public class VaultCardRequestMessage : WebSocketMessage<VaultCardMessage>
     {
         public VaultCardRequestMessage() : base(WebSocketMethod.VaultCard)
+        {
+        }
+    }
+    public class LogMessageRequestMessage : WebSocketMessage<LogMessage>
+    {
+        public LogMessageRequestMessage() : base(WebSocketMethod.LogMessage)
         {
         }
     }
@@ -319,15 +314,9 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
-    public class OnDeviceErrorMessage : WebSocketMessage<CloverDeviceErrorEvent>
+    public class OnDeviceErrorMessage : WebSocketMessage<remotepay.sdk.CloverDeviceErrorEvent>
     {
         public OnDeviceErrorMessage() : base(WebSocketMethod.DeviceError)
-        {
-        }
-    }
-    public class OnError : WebSocketMessage<Exception>
-    {
-        public OnError() : base(WebSocketMethod.Error)
         {
         }
     }
@@ -386,31 +375,23 @@ namespace com.clover.sdk.remote.websocket
         }
     }
     
-    public class OnAuthCaptureResponseMessage : WebSocketMessage<CaptureAuthResponse>
+    public class OnCapturePreAuthResponseMessage : WebSocketMessage<CapturePreAuthResponse>
     {
-        public OnAuthCaptureResponseMessage() : base(WebSocketMethod.CaptureAuthResponse)
+        public OnCapturePreAuthResponseMessage() : base(WebSocketMethod.CapturePreAuthResponse)
         {
         }
     }
 
-    public class OnAuthTipAdjustResponseMessage : WebSocketMessage<TipAdjustAuthResponse>
+    public class OnTipAdjustAuthResponseMessage : WebSocketMessage<TipAdjustAuthResponse>
     {
-        public OnAuthTipAdjustResponseMessage() : base(WebSocketMethod.TipAdjustAuthResponse)
+        public OnTipAdjustAuthResponseMessage() : base(WebSocketMethod.TipAdjustAuthResponse)
         {
         }
     }
-    public class OnSignatureVerifyRequestMessage : WebSocketMessage<SignatureVerifyRequest>
+    public class OnVerifySignatureRequestMessage : WebSocketMessage<VerifySignatureRequest>
     {
-        public OnSignatureVerifyRequestMessage() : base(WebSocketMethod.SignatureVerifyRequest)
+        public OnVerifySignatureRequestMessage() : base(WebSocketMethod.VerifySignatureRequest)
         {
         }
     }
-
-    public class OnConfigErrorMessage : WebSocketMessage<ConfigErrorResponse>
-    {
-        public OnConfigErrorMessage() : base(WebSocketMethod.ConfigErrorResponse)
-        {
-        }
-    }
-
 }

@@ -44,7 +44,7 @@ namespace com.clover.remotepay.transport
 
         }
 
-        public override void doPaymentRefund(string orderId, string paymentId, long amount)
+        public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund)
         {
             notifyObserversUiState(new UiStateMessage(UiState.RECEIPT_OPTIONS, "Customer is selecting receipt type.", UiDirection.ENTER, new InputOption[0]));
             Console.WriteLine("Received UiStateMessage: RECEIPT_OPTIONS Customer is selecting receipt type. Enter");
@@ -79,8 +79,7 @@ namespace com.clover.remotepay.transport
             }
             refund.id = Guid.NewGuid().ToString();
             FinishOkMessage okMsg = new FinishOkMessage();
-            okMsg.refundObj = refund;
-            okMsg.refund = JsonUtils.serialize(refund);
+            okMsg.refund = refund;
             notifyObserversFinishOk(okMsg);
             Console.WriteLine("Received FINISH_OK: " + okMsg.refund);
         }
@@ -97,7 +96,7 @@ namespace com.clover.remotepay.transport
                 TempObjectMap.Add(paymentId, tempPayment);
             }
             Console.WriteLine("Received TIP_ADJUST_RESONSE: " + JsonUtils.serialize(tarm));
-            foreach (CloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
@@ -110,7 +109,7 @@ namespace com.clover.remotepay.transport
             }
         }
 
-        public override void doCaptureAuth(string paymentID, long amount, long tipAmount)
+        public override void doCapturePreAuth(string paymentID, long amount, long tipAmount)
         {
             throw new NotImplementedException();
         }
@@ -146,7 +145,7 @@ namespace com.clover.remotepay.transport
                 bw.DoWork += new DoWorkEventHandler(
                 delegate (object o, DoWorkEventArgs args)
                 {
-                    foreach (CloverDeviceObserver observer in deviceObservers)
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
                     {
                         observer.onPaymentVoided(payment, reason);
                     }
@@ -162,7 +161,7 @@ namespace com.clover.remotepay.transport
             bw.DoWork += new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onVaultCardResponse(vcrm);
                 }
@@ -177,9 +176,9 @@ namespace com.clover.remotepay.transport
             bw.DoWork += new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
-                    observer.onVerifySignature(verifySigMsg.paymentObj, verifySigMsg.signature);
+                    observer.onVerifySignature(verifySigMsg.payment, verifySigMsg.signature);
                 }
             });
             bw.RunWorkerAsync();
@@ -193,7 +192,7 @@ namespace com.clover.remotepay.transport
             bw.DoWork += new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onUiState(uiStateMsg.uiState, uiStateMsg.uiText, uiStateMsg.uiDirection, uiStateMsg.inputOptions);
                 }
@@ -209,7 +208,7 @@ namespace com.clover.remotepay.transport
             bw.DoWork += new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onTxState(txStateMsg.txState);
                 }
@@ -224,7 +223,7 @@ namespace com.clover.remotepay.transport
             bw.DoWork += new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onFinishCancel();
                 }
@@ -238,19 +237,15 @@ namespace com.clover.remotepay.transport
             bw.DoWork += new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     if (msg.payment != null)
                     {
-                        observer.onFinishOk(msg.paymentObj, msg.signature);
+                        observer.onFinishOk(msg.payment, msg.signature);
                     }
                     else if (msg.credit != null)
                     {
-                        observer.onFinishOk(msg.creditObj);
-                    }
-                    else if (msg.refund != null)
-                    {
-                        observer.onFinishOk(msg.refundObj);
+                        observer.onFinishOk(msg.credit);
                     }
                 }
             });
@@ -263,7 +258,7 @@ namespace com.clover.remotepay.transport
             bw.DoWork += new DoWorkEventHandler(
             delegate(object o, DoWorkEventArgs args)
             {
-                foreach (CloverDeviceObserver observer in deviceObservers)
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onCloseoutResponse(ResultStatus.SUCCESS, "", null);
                 }
@@ -285,13 +280,22 @@ namespace com.clover.remotepay.transport
             //TODO: implement
         }
 
+        public override void doPrintImageURL(string urlString)
+        {
+            //TODO: implement
+        }
+
+        public override void doLogMessages(LogLevelEnum loglevel, Dictionary<string, string> messages)
+        {
+            //TODO: implement
+        }
 
         public override void doShowPaymentReceiptScreen(string orderId, string paymentId)
         {
             //sendObjectMessage(new Message(Methods.SHOW_PAYMENT_RECEIPT_OPTIONS));
         }
 
-
+        /*
         public override void doShowRefundReceiptScreen(string orderId, string refundId)
         {
             //sendObjectMessage(new Message(Methods.SHOW_REFUND_RECEIPT_OPTIONS));
@@ -301,6 +305,7 @@ namespace com.clover.remotepay.transport
         {
             //sendObjectMessage(new Message(Methods.SHOW_CREDIT_RECEIPT_OPTIONS));
         }
+        */
 
         public override void doShowThankYouScreen()
         {
@@ -312,7 +317,7 @@ namespace com.clover.remotepay.transport
             //sendObjectMessage(new Message(Methods.SHOW_WELCOME_SCREEN));
         }
 
-        public override void doSignatureVerified(Payment payment, bool verified)
+        public override void doVerifySignature(Payment payment, bool verified)
         {
             if(verified)
             {
@@ -328,10 +333,9 @@ namespace com.clover.remotepay.transport
                     Console.WriteLine("Received UiStateMessage: RECEIPT_OPTIONS Customer is selecting receipt type. Exit");
 
                     FinishOkMessage msg = new FinishOkMessage();
-                    msg.payment = JsonUtils.serialize(payment);
-                    msg.paymentObj = payment;
-                    msg.paymentObj.order = new Reference();
-                    msg.paymentObj.order.id = "abc123";
+                    msg.payment = payment;
+                    msg.payment.order = new Reference();
+                    msg.payment.order.id = "abc123";
                     notifyObserversFinishOk(msg);
                     Console.WriteLine("Received FINISH_OK: " + msg.payment);
                 });
@@ -399,12 +403,11 @@ namespace com.clover.remotepay.transport
                             payment.order.id = order.id;
                         }
                         FinishOkMessage okMsg = new FinishOkMessage();
-                        okMsg.paymentObj = payment;
                         payment.cardTransaction = new CardTransaction();
                         payment.cardTransaction.last4 = "0123";
                         payment.cardTransaction.token = "1234567890123456";
                         TempObjectMap.Add(payment.id, payment);
-                        okMsg.payment = JsonUtils.serialize(payment);
+                        okMsg.payment = payment;
                         notifyObserversFinishOk(okMsg);
                         Console.WriteLine("Received FINISH_OK: " + okMsg.payment);
                     }
@@ -444,7 +447,7 @@ namespace com.clover.remotepay.transport
                         TempObjectMap.Add(payment.id, payment);
                         VerifySignatureMessage msg = new VerifySignatureMessage();
                         msg.signature = sig;
-                        msg.paymentObj = payment;
+                        msg.payment = payment;
                         notifyObserversVerifySignature(msg);
                         Console.WriteLine("Received VerifySignatureMessage: " + JsonUtils.serialize(msg));
 
@@ -472,10 +475,9 @@ namespace com.clover.remotepay.transport
                     credit.amount = payIntent.amount;
                     credit.id = Guid.NewGuid().ToString();
                     FinishOkMessage okMsg = new FinishOkMessage();
-                    okMsg.creditObj = credit;
                     credit.cardTransaction = new CardTransaction();
                     credit.cardTransaction.last4 = "0123";
-                    okMsg.credit = JsonUtils.serialize(credit);
+                    okMsg.credit = credit;
                     TempObjectMap.Add(credit.id, credit);
                     notifyObserversFinishOk(okMsg);
                     Console.WriteLine("Received FinishOkMessage: FINISH_OK");
@@ -552,8 +554,7 @@ namespace com.clover.remotepay.transport
                 card.expirationDate = "1218";
                 card.last4 = "4321";
                 card.token = "1234567890123456";
-                vcrm.card = JsonUtils.serialize(card);
-                vcrm.cardObj = card;
+                vcrm.card = card;
                 notifyObserversCardVaulted(vcrm);
                 Console.WriteLine("Received VaultCardResponse Message: " + JsonUtils.serialize(vcrm));
             });
@@ -567,7 +568,7 @@ namespace com.clover.remotepay.transport
 
         public void onDeviceError(int code, string message)
         {
-            foreach (CloverDeviceObserver devOvs in deviceObservers)
+            foreach (ICloverDeviceObserver devOvs in deviceObservers)
             {
                 devOvs.onDeviceError(code, message);
             }

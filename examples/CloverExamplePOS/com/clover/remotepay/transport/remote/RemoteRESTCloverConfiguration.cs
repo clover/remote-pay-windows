@@ -13,12 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace com.clover.remotepay.transport.remote
 {
+    /// <summary>
+    /// Configuration object used for initializing the
+    /// RemoteRESTCloverConnector, which is primarly
+    /// used as an example and for testing and validation
+    /// </summary>
     class RemoteRESTCloverConfiguration : CloverDeviceConfiguration
     {
         private string hostname;

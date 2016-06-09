@@ -140,6 +140,7 @@ namespace com.clover.remotepay.transport
         }
 
         public string png { get; set; }
+        public string urlString { get; set; }
     }
 
     public class FinishCancelMessage : Message
@@ -160,12 +161,9 @@ namespace com.clover.remotepay.transport
 
     public class FinishOkMessage : Message
     {
-        public Payment paymentObj { get; set; }
-        public string payment { get; set; }
-        public Credit creditObj { get; set; }
-        public string credit { get; set; }
-        public Refund refundObj { get; set; }
-        public string refund { get; set; }
+        public Payment payment { get; set; }
+        public Credit credit { get; set; }
+        public Refund refund { get; set; }
         public Signature2 signature { get; set; }
 
         public FinishOkMessage()
@@ -189,11 +187,21 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class TxStartResponseMessage : Message
+    {
+        public Order order { get; set; }
+        public TxStartResponseResult result { get; set; }
+        public string externalId { get; set; }
+
+        public TxStartResponseMessage() : base(Methods.TX_START_RESPONSE)
+        {
+        }
+    }
+
     public class VerifySignatureMessage : Message
     {
 
-        public string payment { get; set; }
-        public Payment paymentObj { get; set; }
+        public Payment payment { get; set; }
         public Signature2 signature { get; set; }
 
         public VerifySignatureMessage()
@@ -256,16 +264,20 @@ namespace com.clover.remotepay.transport
     {
         public string orderId { get; set; }
         public string paymentId { get; set; }
-        public long amount { get; set; }
+        public long? amount { get; set; }
+        public bool? fullRefund { get; set; }
         
-        public RefundRequestMessage() : base(Methods.REFUND_REQUEST) { }
+        public RefundRequestMessage() : base(Methods.REFUND_REQUEST, 2)
+        {
 
-        public RefundRequestMessage(string oid, string pid, long amt )
-            : base(Methods.REFUND_REQUEST)
+        }
+
+        public RefundRequestMessage(string oid, string pid, long? amt, bool? fullRefund)       : base(Methods.REFUND_REQUEST, 2)
         {
             this.orderId = oid;
             this.paymentId = pid;
             this.amount = amt;
+            this.fullRefund = fullRefund;
         }
     }
 
@@ -299,13 +311,13 @@ namespace com.clover.remotepay.transport
         }
     }
 
-    public class CaptureAuthMessage : Message
+    public class CapturePreAuthMessage : Message
     {
         public string paymentId { get; set; }
         public long amount { get; set; }
         public long tipAmount { get; set; }
 
-        public CaptureAuthMessage(string paymentID, long amount, long tipAmount) : base(Methods.CAPTURE_PREAUTH)
+        public CapturePreAuthMessage(string paymentID, long amount, long tipAmount) : base(Methods.CAPTURE_PREAUTH)
         {
             this.paymentId = paymentID;
             this.amount = amount;
@@ -313,12 +325,12 @@ namespace com.clover.remotepay.transport
         }
     }
 
-    public class CaptureAuthResponseMessage : CaptureAuthMessage
+    public class CapturePreAuthResponseMessage : CapturePreAuthMessage
     {
         public ResultStatus status { get; set; }
         public string reason { get; set; }
 
-        public CaptureAuthResponseMessage(ResultStatus status, string reason, string paymentID, long amount, long tipAmount) : base(paymentID, amount, tipAmount)
+        public CapturePreAuthResponseMessage(ResultStatus status, string reason, string paymentID, long amount, long tipAmount) : base(paymentID, amount, tipAmount)
         {
             this.status = status;
             this.reason = reason;
@@ -330,22 +342,42 @@ namespace com.clover.remotepay.transport
     /// </summary>
     public class RefundResponseMessage : Message
     {
-        public string orderId { get; set; }
-        public string paymentId { get; set; }
-        public string refund { get; set; }
+        /// <summary>
+        /// Unique identifier for a order
+        /// </summary>
+        public String orderId { get; set; }
+        /// <summary>
+        /// Unique identifier for a payment
+        /// </summary>
+        public String paymentId { get; set; }
+        /// <summary>
+        /// The refund
+        /// </summary>
+        public com.clover.sdk.v3.payments.Refund refund { get; set; }
+        /// <summary>
+        /// Detail code if an error is encountered
+        /// </summary>
+        public ResponseReasonCode? reason { get; set; }
+        /// <summary>
+        /// Detail message
+        /// </summary>
+        public String message { get; set; }
+        /// <summary>
+        /// Transaction state (success|fail)
+        /// </summary>
         public TxState code { get; set; }
-        public string message { get; set; }
 
         public RefundResponseMessage() : base(Methods.REFUND_RESPONSE) { }
 
-        public RefundResponseMessage(string oid, string pid, Refund refund, TxState state, string msg)
+        public RefundResponseMessage(string oid, string pid, Refund refund, TxState state, string msg, ResponseReasonCode reason)
             : base(Methods.REFUND_RESPONSE)
         {
             this.orderId = oid;
             this.paymentId = pid;
-            this.refund = JsonUtils.serialize(refund);
+            this.refund = refund;
             this.code = state;
             this.message = msg;
+            this.reason = reason;
         }
     }
     public class UiStateMessage : Message
@@ -370,22 +402,8 @@ namespace com.clover.remotepay.transport
     /// </summary>
     public class VoidPaymentMessage : Message
     {
-        public string payment;
-        public VoidReason voidReason;
-        private Payment _paymentObj;
-
-        public Payment paymentObj
-        {
-            set
-            {
-                _paymentObj = value;
-                payment = JsonUtils.serialize(value);
-            }
-            get
-            {
-                return _paymentObj;
-            }
-        }
+        public VoidReason voidReason { get; set; }
+        public Payment payment { get; set; }
 
         public VoidPaymentMessage() : base(Methods.VOID_PAYMENT)
         {
@@ -416,8 +434,7 @@ namespace com.clover.remotepay.transport
 
     public class VaultCardResponseMessage : Message
     {
-        public string card { get; set; }
-        public VaultedCard cardObj { get; set; }
+        public VaultedCard card { get; set; }
         public string reason { get; set; }
         public ResultStatus status { get; set; }
 
@@ -464,21 +481,7 @@ namespace com.clover.remotepay.transport
     {
         public ResultStatus status { get; set; }
         public string reason { get; set; }
-        public string batch { get; set; }
-        private Batch _batchObj;
-        public Batch batchObj
-        {
-            set
-            {
-                _batchObj = value;
-                batch = JsonUtils.serialize(value);
-            }
-            get
-            {
-                return _batchObj;
-            }
-        }
-
+        public Batch batch { get; set; }
 
 
         public CloseoutResponseMessage() : base(Methods.CLOSEOUT_RESPONSE)
@@ -503,13 +506,13 @@ namespace com.clover.remotepay.transport
     public class SignatureVerifiedMessage : Message
     {
 
-        public string payment;
+        public Payment payment;
         public bool verified;
 
-        public SignatureVerifiedMessage(Payment paymentObj, bool verified)
+        public SignatureVerifiedMessage(Payment payment, bool verified)
             :base(Methods.SIGNATURE_VERIFIED)
-                { 
-            this.payment = JsonUtils.serialize(paymentObj);
+                {
+            this.payment = payment;
             this.verified = verified;
         }
     }
@@ -563,6 +566,21 @@ namespace com.clover.remotepay.transport
     }
 
     /// <summary>
+    /// Message used when logging from a remote source to the Clover device.
+    /// </summary
+    public class LogMessage : Message
+    {
+        public LogLevelEnum logLevel;
+        public Dictionary<String, String> messages;
+
+        public LogMessage(LogLevelEnum logLevel, Dictionary<String, String> messages) : base(Methods.LOG_MESSAGE)
+        {
+            this.logLevel = logLevel;
+            this.messages = messages;
+        }
+    }
+
+    /// <summary>
     /// The top level protocol message 
     /// </summary
     public class RemoteMessage
@@ -591,4 +609,14 @@ namespace com.clover.remotepay.transport
             return msg;
         }
     }
+    public enum LogLevelEnum
+    {
+        VERBOSE, DEBUG, INFO, WARN, ERROR
+    }
+
+    public enum TxStartResponseResult
+    {
+        SUCCESS, ORDER_MODIFIED, ORDER_LOAD, FAIL, DUPLICATE
+    }
+
 }

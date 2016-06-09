@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
-
 namespace com.clover.remotepay.sdk
 {
     /// <summary>
@@ -42,86 +41,39 @@ namespace com.clover.remotepay.sdk
         public static readonly InputOption CANCEL_INPUT_OPTION = new InputOption(KeyPress.ESC, "Cancel");
 
         protected CloverDevice Device;
+        protected CloverDeviceConfiguration Config;
+        protected SDKInfo _SDKInfo = new SDKInfo();
+        public SDKInfo SDKInfo
+        {
+            get { return _SDKInfo; }
+            private set { _SDKInfo = value; }
+        }
 
-        List<CloverConnectorListener> listeners = new List<CloverConnectorListener>();
+        List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
 
         private MerchantInfo merchantInfo { get; set; }
         private InnerDeviceObserver deviceObserver { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int CardEntryMethod
-        {
-            get; set;
-        }
+        // to hold the default value of CardEntryMethod
+        private int CardEntryMethod { get; set; }
 
-
-        /// <summary>
-        /// set to true to disable printing on the Clover Mini
-        /// </summary>
-        public bool DisablePrinting { get; set; }
-
-        /// <summary>
-        /// set to true to disable cashback on the Clover Mini
-        /// </summary>
-        public bool DisableCashBack { get; set; }
-
-        /// <summary>
-        /// set to true to disable tip on the Clover Mini
-        /// </summary>
-        public bool DisableTip { get; set; }
-
-        /// <summary>
-        /// set to true, so when a transaction fails the Clover Mini returns to the welcome screen,
-        /// otherwise it restarts the payment transaction
-        /// </summary>
-        public bool DisableRestartTransactionOnFail { get; set; }
 
         /// <summary>
         /// set to true, so that when request responses are processed, the Clover Mini
         /// won't show default messages/ThankYou/Welcome screens.  Set to false
         /// to allow the default message flow that is built into the CloverConnector.
         /// </summary>
-        public bool DisableDefaultDeviceScreenFlow { get; set; }
-        
+        bool DisableDefaultDeviceScreenFlow { get; set; }
+
         //keep a last request
         private Object lastRequest;
 
-        bool? AllowOfflinePayment { get; set; }
-
-        bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
-
-        /// <summary>
-        /// overload the + operator to add a new listener
-        /// </summary>
-        /// <param name="connector"></param>
-        /// <param name="connectorListener"></param>
-        /// <returns></returns>
-        public static CloverConnector operator +(CloverConnector connector, CloverConnectorListener connectorListener)
-        {
-            connector.AddCloverConnectorListener(connectorListener);
-            return connector;
-        }
-
-        public void AddCloverConnectorListener(CloverConnectorListener connectorListener)
+        public void AddCloverConnectorListener(ICloverConnectorListener connectorListener)
         {
             listeners.Add(connectorListener);
         }
 
-        /// <summary>
-        /// overload the - operator to remove a listener
-        /// </summary>
-        /// <param name="connector"></param>
-        /// <param name="connectorListener"></param>
-        public static CloverConnector operator -(CloverConnector connector, CloverConnectorListener connectorListener)
-        {
-            connector.RemoveCloverConnectorListener(connectorListener);
-
-            return connector;
-        }
-
-        public void RemoveCloverConnectorListener(CloverConnectorListener connectorListener)
+        public void RemoveCloverConnectorListener(ICloverConnectorListener connectorListener)
         {
             listeners.Remove(connectorListener);
         }
@@ -139,39 +91,28 @@ namespace com.clover.remotepay.sdk
         /// </param>
         public CloverConnector(CloverDeviceConfiguration config) : this()
         {
-            Initialize(config);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="config"></param>
-        /// <param name="connectorListener"></param>
-        public CloverConnector(CloverDeviceConfiguration config, CloverConnectorListener connectorListener) : this()
-        {
-            AddCloverConnectorListener(connectorListener);
-            Initialize(config);
+            Config = config;
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
+            _SDKInfo.Name = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description;
+            _SDKInfo.Version = (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
+                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
         }
 
         /// <summary>
         /// Initialize the connector with a given configuration
         /// </summary>
-        /// <param name="config">A CloverDeviceConfiguration object; TestDeviceConfiguration can be used for testing</param>
-        public void Initialize(CloverDeviceConfiguration config) {
+        public void InitializeConnection()
+        {
             merchantInfo = new MerchantInfo();
             deviceObserver = new InnerDeviceObserver(this);
 
-            DisableCashBack = false;
-            DisablePrinting = false;
-            DisableRestartTransactionOnFail = false;
-            DisableTip = false;
             DisableDefaultDeviceScreenFlow = false;
 
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(
                 delegate (object o, DoWorkEventArgs args)
                 {
-                    Device = CloverDeviceFactory.Get(config);
+                    Device = CloverDeviceFactory.Get(Config);
                     Device.Subscribe(deviceObserver);
                 });
             bw.RunWorkerAsync();
@@ -182,36 +123,60 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request">A SaleRequest object containing basic information needed for the transaction</param>
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
-        public int Sale(SaleRequest request)
+        public void Sale(SaleRequest request)
         {
-            //payment, finishOK(payment), finishCancel, onPaymentVoided
-            if(Device == null)
+            lastRequest = request;
+            if (Device == null)
             {
-                return -1;
+                deviceObserver.onFinishCancel(ResponseCode.ERROR,
+                                              "Device Connection Error",
+                                              "In Sale : SaleRequest - The Clover device is not connected.");
+                return;
             }
-            if (request == null) { throw new InvalidDataException("In Sale : SaleRequest - Object cannot be null. "); }
-            if (request.Amount == 0) { throw new InvalidDataException("In Sale : SaleRequest - Amount cannot be zero. " + request); }
+            if (request == null)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                  "Request Validation Error",
+                                  "In Sale : SaleRequest - The request that was passed in for processing is empty.");
+                return;
+            }
+            if (String.IsNullOrEmpty(request.ExternalId))
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In Sale : SaleRequest - The request ExternalId cannot be null or blank. Original Request = " + request);
+                return;
+            }
+            if (request.Amount == 0)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In Sale : SaleRequest - The request amount cannot be zero. Original Request = " + request);
+                return;
+            }
             if (request.VaultedCard != null && !merchantInfo.supportsVaultCards)
             {
-                deviceObserver.onConfigError("In Sale : SaleRequest - Vault Card support is not offered by the merchant configured gateway. " + request);
-                return -1;
+                deviceObserver.onFinishCancel(ResponseCode.UNSUPPORTED,
+                                              "Merchant Configuration Validation Error",
+                                              "In Sale : SaleRequest - Vault Card support is not offered by the merchant configured gateway. Original Request = " + request);
+                return;
             }
-            lastRequest = request;
             PayIntent payIntent = new PayIntent();
+            payIntent.externalPaymentId = request.ExternalId;
             payIntent.transactionType = PayIntent.TransactionType.PAYMENT;
-            payIntent.remotePrint = DisablePrinting;
-            payIntent.isDisableCashBack = DisableCashBack;
-            payIntent.cardEntryMethods = request.CardEntryMethod.HasValue ? request.CardEntryMethod.Value : CardEntryMethod;
+            payIntent.remotePrint = request.DisablePrinting;
+            payIntent.isDisableCashBack = request.DisableCashback;
+            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = request.TipAmount.HasValue ? request.TipAmount.Value : 0;
             payIntent.taxAmount = request.TaxAmount;
             payIntent.tippableAmount = request.TippableAmount;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.isCardNotPresent = request.CardNotPresent;
-            payIntent.allowOfflinePayment = request.AllowOfflinePayment == null ? AllowOfflinePayment: request.AllowOfflinePayment;
-            payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt == null ? ApproveOfflinePaymentWithoutPrompt : request.ApproveOfflinePaymentWithoutPrompt;
-            Device.doTxStart(payIntent, null, false);
-            return 0;
+            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
+            payIntent.allowOfflinePayment = request.AllowOfflinePayment;
+            payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt;
+            Device.doTxStart(payIntent, null, request.DisableTipOnScreen.HasValue ? request.DisableTipOnScreen.Value : false);
         }
 
         /// <summary>
@@ -219,11 +184,14 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int AcceptSignature(SignatureVerifyRequest request)
+        public void AcceptSignature(VerifySignatureRequest request)
         {
-            if (request == null) { throw new InvalidDataException("In AcceptSignature : SignatureVerifyRequest object cannot be null. "); }
-            Device.doSignatureVerified(request.Payment, true);
-            return 0;
+            if (request == null)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In AcceptSignature : VerifySignatureRequest object cannot be null. "));
+                return;
+            }
+            Device.doVerifySignature(request.Payment, true);
         }
 
         /// <summary>
@@ -231,11 +199,14 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int RejectSignature(SignatureVerifyRequest request)
+        public void RejectSignature(VerifySignatureRequest request)
         {
-            if (request == null) { throw new InvalidDataException("In RejectSignature : SignatureVerifyRequest object cannot be null. "); }
-            Device.doSignatureVerified(request.Payment, false);
-            return 0;
+            if (request == null)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In RejectSignature : VerifySignatureRequest object cannot be null. "));
+                return;
+            }
+            Device.doVerifySignature(request.Payment, false);
         }
 
         /// <summary>
@@ -246,30 +217,58 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int Auth(AuthRequest request)
+        public void Auth(AuthRequest request)
         {
+            lastRequest = request;
             if (Device == null)
             {
-                return -1;
+                deviceObserver.onFinishCancel(ResponseCode.ERROR,
+                                              "Device Connection Error",
+                                              "In Auth : AuthRequest - The Clover device is not connected.");
+                return;
             }
-            if (request == null) { throw new InvalidDataException("In Auth : AuthRequest - Object cannot be null. "); }
-            if (request.Amount == 0) { throw new InvalidDataException("In Auth : AuthRequest - Amount cannot be zero. " + request); }
-            if (request.VaultedCard != null && !merchantInfo.supportsVaultCards) { throw new InvalidDataException("In Auth : AuthRequest - Vault Card support is not offered by the merchant configured gateway. " + request); }
-            lastRequest = request;
+            if (request == null)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                  "Request Validation Error",
+                                  "In Auth : AuthRequest - The request that was passed in for processing is empty.");
+                return;
+            }
+            if (String.IsNullOrEmpty(request.ExternalId))
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In Auth : AuthRequest - The request ExternalId cannot be null or blank. Original Request = " + request);
+                return;
+            }
+            if (request.Amount == 0)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In Auth : AuthRequest - The request amount cannot be zero. Original Request = " + request);
+                return;
+            }
+            if (request.VaultedCard != null && !merchantInfo.supportsVaultCards)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.UNSUPPORTED,
+                                              "Merchant Configuration Validation Error",
+                                              "In Auth : AuthRequest - Vault Card support is not offered by the merchant configured gateway. Original Request = " + request);
+                return;
+            }
             PayIntent payIntent = new PayIntent();
-            payIntent.transactionType = request.IsPreAuth ? PayIntent.TransactionType.AUTH : PayIntent.TransactionType.PAYMENT;
-            payIntent.remotePrint = DisablePrinting;
-            payIntent.isDisableCashBack = DisableCashBack;
-            payIntent.cardEntryMethods = request.CardEntryMethod.HasValue ? request.CardEntryMethod.Value : CardEntryMethod;
+            payIntent.externalPaymentId = request.ExternalId;
+            payIntent.transactionType = request.Type;
+            payIntent.remotePrint = request.DisablePrinting;
+            payIntent.isDisableCashBack = request.DisableCashback;
+            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
-            payIntent.tippableAmount = request.TippableAmount;
             payIntent.isCardNotPresent = request.CardNotPresent;
-            payIntent.allowOfflinePayment = request.AllowOfflinePayment == null ? AllowOfflinePayment : request.AllowOfflinePayment;
-            payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt == null ? ApproveOfflinePaymentWithoutPrompt : request.ApproveOfflinePaymentWithoutPrompt;
+            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
+            payIntent.allowOfflinePayment = request.AllowOfflinePayment;
+            payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt;
             Device.doTxStart(payIntent, null, true);
-            return 0;
         }
 
         /// <summary>
@@ -277,27 +276,55 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int PreAuth(PreAuthRequest request)
+        public void PreAuth(PreAuthRequest request)
         {
+            lastRequest = request;
             if (Device == null)
             {
-                return -1;
+                deviceObserver.onFinishCancel(ResponseCode.ERROR,
+                                              "Device Connection Error",
+                                              "In PreAuth : PreAuthRequest - The Clover device is not connected.");
+                return;
             }
-            if (request == null) { throw new InvalidDataException("In PreAuth : PreAuthRequest - Object cannot be null. "); }
-            if (request.Amount == 0) { throw new InvalidDataException("In PreAuth : PreAuthRequest - Amount cannot be zero. " + request); }
-            if (request.VaultedCard != null && !merchantInfo.supportsVaultCards) { throw new InvalidDataException("In PreAuth : PreAuthRequest - Vault Card support is not offered by the merchant configured gateway. " + request); }
-            lastRequest = request;
+            if (request == null)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.ERROR,
+                                              "Request Validation Error",
+                                              "In PreAuth : PreAuthRequest - The request that was passed in for processing is empty.");
+                return;
+            }
+            if (String.IsNullOrEmpty(request.ExternalId))
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In PreAuth : PreAuthRequest - The request ExternalId cannot be null or blank. Original Request = " + request);
+                return;
+            }
+            if (request.Amount == 0)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.ERROR,
+                                              "Request Validation Error",
+                                              "In PreAuth : PreAuthRequest - The request amount cannot be zero. Original Request = " + request);
+                return;
+            }
+            if (request.VaultedCard != null && !merchantInfo.supportsVaultCards)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.UNSUPPORTED,
+                                              "Merchant Configuration Validation Error",
+                                              "In PreAuth : PreAuthRequest - Vault Card support is not offered by the merchant configured gateway. Original Request = " + request);
+                return;
+            }
             PayIntent payIntent = new PayIntent();
+            payIntent.externalPaymentId = request.ExternalId;
             payIntent.transactionType = PayIntent.TransactionType.AUTH;
-            payIntent.remotePrint = DisablePrinting;
-            payIntent.isDisableCashBack = DisableCashBack;
-            payIntent.cardEntryMethods = request.CardEntryMethod.HasValue ? request.CardEntryMethod.Value : CardEntryMethod;
+            payIntent.remotePrint = request.DisablePrinting;
+            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
             payIntent.isCardNotPresent = request.CardNotPresent;
+            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
             Device.doTxStart(payIntent, null, true);
-            return 0;
         }
 
         /// <summary>
@@ -305,23 +332,37 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int CaptureAuth(CaptureAuthRequest request)
+        public void CapturePreAuth(CapturePreAuthRequest request)
         {
-            if(Device == null)
+            if (Device == null)
             {
-                return -1;
+                deviceObserver.onCapturePreAuthResponse(ResponseCode.ERROR,
+                                                        "Device Connection Error",
+                                                        "In CapturePreAuth : CapturePreAuthRequest - The Clover device is not connected.");
+                return;
             }
-            if (request != null)
+            if (request == null)
             {
-                if (request.TipAmount >= 0 && !merchantInfo.supportsPreAuths)
-                {
-                    deviceObserver.onConfigError("In CaptureAuth : CaptureAuthRequest - Capture Auth is not supported by the merchant configured gateway. ");
-                    return -1;
-                }
-                Device.doCaptureAuth(request.PaymentID, request.Amount, request.TipAmount);
-                return 0;
+                deviceObserver.onCapturePreAuthResponse(ResponseCode.FAIL,
+                                                        "Request Validation Error",
+                                                        "In CapturePreAuth : CapturePreAuthRequest - The request that was passed in for processing is empty.");
+                return;
             }
-            return -1;
+            if (request.Amount == 0)
+            {
+                deviceObserver.onCapturePreAuthResponse(ResponseCode.FAIL,
+                                                        "Request Validation Error",
+                                                        "In CapturePreAuth : CapturePreAuthRequest - The Request amount cannot be zero. Original Request = " + request);
+                return;
+            }
+            if (request.TipAmount >= 0 && !merchantInfo.supportsPreAuths)
+            {
+                deviceObserver.onCapturePreAuthResponse(ResponseCode.UNSUPPORTED,
+                                                        "Merchant Configuration Validation Error",
+                                                        "In CapturePreAuth : CapturePreAuthRequest - Capture PreAuth is not supported by the merchant configured gateway. Original Request = " + request);
+                return;
+            }
+            Device.doCapturePreAuth(request.PaymentID, request.Amount, request.TipAmount);
         }
 
         /// <summary>
@@ -329,23 +370,44 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int TipAdjustAuth(TipAdjustAuthRequest request)
+        public void TipAdjustAuth(TipAdjustAuthRequest request)
         {
             if (Device == null)
             {
-                return -1;
+                deviceObserver.onAuthTipAdjusted(ResponseCode.ERROR,
+                                                 "Device Connection Error",
+                                                 "In TipAdjustAuth : TipAdjustAuthRequest - The Clover device is not connected.");
+                return;
             }
-            if (request == null) { throw new InvalidDataException("In TipAdjustAuth : TipAdjustAuthRequest object cannot be null. "); }
-            if (request.PaymentID == null) { throw new InvalidDataException("In TipAdjustAuth : TipAdjustAuthRequest PaymentID cannot be null. " + request); }
-            if (!(request.TipAmount >= 0)) { throw new InvalidDataException("In TipAdjustAuth : TipAdjustAuthRequest TipAmount cannot be less than zero. " + request); }
+            if (request == null)
+            {
+                deviceObserver.onAuthTipAdjusted(ResponseCode.FAIL,
+                                                 "Request Validation Error",
+                                                 "In TipAdjustAuth : TipAdjustAuthRequest - The request that was passed in for processing is empty.");
+                return;
+            }
+            if (request.PaymentID == null)
+            {
+                deviceObserver.onAuthTipAdjusted(ResponseCode.FAIL,
+                                                 "Request Validation Error",
+                                                 "In TipAdjustAuth : TipAdjustAuthRequest PaymentID cannot be empty. " + request);
+                return;
+            }
+            if (request.TipAmount < 0)
+            {
+                deviceObserver.onAuthTipAdjusted(ResponseCode.FAIL,
+                                                        "Request Validation Error",
+                                                        "In TipAdjustAuth : TipAdjustAuthRequest TipAmount cannot be less than zero. " + request);
+                return;
+            }
             if (!merchantInfo.supportsTipAdjust)
             {
-                deviceObserver.onConfigError("In TipAdjustAuth : TipAdjustAuthRequest - Tip Adjust is not supported by the merchant configured gateway. " + request);
-                return -1;
+                deviceObserver.onAuthTipAdjusted(ResponseCode.UNSUPPORTED,
+                                                        "Merchant Configuration Validation Error",
+                                                        "In TipAdjustAuth : TipAdjustAuthRequest - Tip Adjust is not supported by the merchant configured gateway. " + request);
+                return;
             }
-            lastRequest = request;
             Device.doTipAdjustAuth(request.OrderID, request.PaymentID, request.TipAmount);
-            return 0;
         }
 
         /// <summary>
@@ -354,15 +416,29 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request">A VoidRequest object containing basic information needed to void the transaction</param>
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
-        public int VoidPayment(VoidPaymentRequest request) // SaleResponse is a Transaction? or create a Transaction from a SaleResponse
+        public void VoidPayment(VoidPaymentRequest request) // SaleResponse is a Transaction? or create a Transaction from a SaleResponse
         {
             if (Device == null)
             {
-                return -1;
+                deviceObserver.onPaymentVoided(ResponseCode.ERROR,
+                                               "Device Connection Error",
+                                               "In VoidPayment : VoidPaymentRequest - The Clover device is not connected.");
+                return;
             }
-            if (request == null) { throw new InvalidDataException("In VoidPayment : VoidPaymentRequest object cannot be null. "); }
-            if (request.PaymentId == null) { throw new InvalidDataException("In VoidPayment : VoidPaymentRequest PaymentId cannot be null. " + request); }
-            lastRequest = request;
+            if (request == null)
+            {
+                deviceObserver.onPaymentVoided(ResponseCode.FAIL,
+                                                 "Request Validation Error",
+                                                 "In VoidPayment : VoidPaymentRequest - The request that was passed in for processing is empty.");
+                return;
+            }
+            if (request.PaymentId == null)
+            {
+                deviceObserver.onPaymentVoided(ResponseCode.FAIL,
+                                                 "Request Validation Error",
+                                                 "In VoidPayment : VoidPaymentRequest PaymentId cannot be empty. " + request);
+                return;
+            }
             Payment payment = new Payment();
             payment.id = request.PaymentId;
             payment.order = new Reference();
@@ -371,17 +447,6 @@ namespace com.clover.remotepay.sdk
             payment.employee.id = request.EmployeeId;
             VoidReason reason = (VoidReason)Enum.Parse(typeof(VoidReason), request.VoidReason, true);
             Device.doVoidPayment(payment, reason);
-            return 0;
-        }
-
-        /// <summary>
-        /// called when requesting a payment be voided when only the request UUID is available
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public int VoidTransaction(VoidTransactionRequest request)
-        {
-            return 0;
         }
 
         /// <summary>
@@ -389,18 +454,57 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int RefundPayment(RefundPaymentRequest request)
+        public void RefundPayment(RefundPaymentRequest request)
         {
             if (Device == null)
             {
-                return -1;
+                RefundPaymentResponse prr = new RefundPaymentResponse();
+                prr.Refund = null;
+                prr.Success = false;
+                prr.Result = ResponseCode.ERROR;
+                prr.Reason = "Device Connection Error";
+                prr.Message = "In RefundPayment : RefundPaymentRequest - The Clover device is not connected.";
+                deviceObserver.lastPRR = prr;
+                deviceObserver.onFinishCancel();
+                return;
             }
-            if (request == null) { throw new InvalidDataException("In RefundPayment : RefundPaymentRequest object cannot be null. "); }
-            if (request.PaymentId == null) { throw new InvalidDataException("In RefundPayment : RefundPaymentRequest PaymentId cannot be null. " + request); }
-            if (request.Amount < 0) { throw new InvalidDataException("In RefundPayment : RefundPaymentRequest Amount cannot be a negative amount. " + request); }
-            lastRequest = request;
-            Device.doPaymentRefund(request.OrderId, request.PaymentId, request.Amount);
-            return 0;
+            if (request == null)
+            {
+                RefundPaymentResponse prr = new RefundPaymentResponse();
+                prr.Refund = null;
+                prr.Success = false;
+                prr.Result = ResponseCode.FAIL;
+                prr.Reason = "Request Validation Error";
+                prr.Message = "In RefundPayment : RefundPaymentRequest - The request that was passed in for processing is empty.";
+                deviceObserver.lastPRR = prr;
+                deviceObserver.onFinishCancel();
+                return;
+            }
+            if (request.PaymentId == null)
+            {
+                RefundPaymentResponse prr = new RefundPaymentResponse();
+                prr.Refund = null;
+                prr.Success = false;
+                prr.Result = ResponseCode.FAIL;
+                prr.Reason = "Request Validation Error";
+                prr.Message = "In RefundPayment : RefundPaymentRequest PaymentID cannot be empty. " + request;
+                deviceObserver.lastPRR = prr;
+                deviceObserver.onFinishCancel();
+                return;
+            }
+            if (request.Amount <= 0 && request.FullRefund == false)
+            {
+                RefundPaymentResponse prr = new RefundPaymentResponse();
+                prr.Refund = null;
+                prr.Success = false;
+                prr.Result = ResponseCode.FAIL;
+                prr.Reason = "Request Validation Error";
+                prr.Message = "In RefundPayment : RefundPaymentRequest Amount must be greater than zero when FullRefund is set to false. " + request;
+                deviceObserver.lastPRR = prr;
+                deviceObserver.onFinishCancel();
+                return;
+            }
+            Device.doRefundPayment(request.OrderId, request.PaymentId, request.Amount, request.FullRefund);
         }
 
         /// <summary>
@@ -408,63 +512,90 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request">A ManualRefundRequest object</param>
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
-        public int ManualRefund(ManualRefundRequest request) // NakedRefund is a Transaction, with just negative amount
+        public void ManualRefund(ManualRefundRequest request) // NakedRefund is a Transaction, with just negative amount
         {
             //payment, finishOK(credit), finishCancel, onPaymentVoided
+            lastRequest = request;
             if (Device == null)
             {
-                return -1;
+                deviceObserver.onFinishCancel(ResponseCode.ERROR,
+                                              "Device Connection Error",
+                                              "In ManualRefund : ManualRefundRequest - The Clover device is not connected.");
+                return;
             }
-            if (request == null) { throw new InvalidDataException("In ManualRefund : ManualRefundRequest - Object cannot be null. "); }
-            if (request.Amount == 0) { throw new InvalidDataException("In ManualRefund : ManualRefundRequest - Amount cannot be null. " + request); }
+            if (request == null)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In ManualRefund : ManualRefundRequest - The request that was passed in for processing is empty.");
+                return;
+            }
+            if (String.IsNullOrEmpty(request.ExternalId))
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In ManualRefund : ManualRefundRequest - The request ExternalId cannot be null or blank. Original Request = " + request);
+                return;
+            }
+            if (request.Amount < 0)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.FAIL,
+                                              "Request Validation Error",
+                                              "In ManualRefund : ManualRefundRequest Amount must be greater than zero. " + request);
+                return;
+            }
             if (!merchantInfo.supportsManualRefunds)
             {
-                deviceObserver.onConfigError("In ManualRefund : ManualRefundRequest - Manual refunds are not supported by the merchant configured gateway.");
-                return -1;
+                deviceObserver.onFinishCancel(ResponseCode.UNSUPPORTED,
+                                              "Merchant Configuration Error",
+                                              "In ManualRefund: ManualRefundRequest - Manual refunds are not supported by the merchant configured gateway." + request);
+                return;
             }
-            lastRequest = request;
+            if (request.VaultedCard != null && !merchantInfo.supportsVaultCards)
+            {
+                deviceObserver.onFinishCancel(ResponseCode.UNSUPPORTED,
+                                              "Merchant Configuration Validation Error",
+                                              "In ManualRefund : RefundRequest - Vault Card support is not offered by the merchant configured gateway. Original Request = " + request);
+                return;
+            }
+
             PayIntent payIntent = new PayIntent();
-            payIntent.cardEntryMethods = request.CardEntryMethod.HasValue ? request.CardEntryMethod.Value : CardEntryMethod;
+            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
             payIntent.amount = -Math.Abs(request.Amount);
             payIntent.transactionType = PayIntent.TransactionType.CREDIT;
+            payIntent.externalPaymentId = request.ExternalId;
+            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
+            payIntent.remotePrint = request.DisablePrinting;
+            payIntent.vaultedCard = request.VaultedCard;
             Device.doTxStart(payIntent, null, true);
-            return 0;
         }
-
-        /*public int SendCancel(SendCancelRequest request)
-        {
-            return 0;
-        }*/
 
         /// <summary>
         /// Send a request to the server to closeout all orders.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public int Closeout(CloseoutRequest request)
+        public void Closeout(CloseoutRequest request)
         {
-            Device.doCloseout(request.allowOpenTabs, request.batchId); // TODO: pass in request UUID so it can be returned with CloseoutResponse
-            return 0;
+            Device.doCloseout(request.AllowOpenTabs, request.BatchId); // TODO: pass in request UUID so it can be returned with CloseoutResponse
         }
 
         /// <summary>
         /// Send a request to the mini to reset.  This can be used if the device gets into a non-recoverable state.
         /// </summary>
         /// <returns></returns>
-        public int ResetDevice()
+        public void ResetDevice()
         {
-            Device.doResetDevice(); 
-            return 0;
+            Device.doResetDevice();
         }
 
         /// <summary>
         /// Cancels the device from waiting for payment card
         /// </summary>
         /// <returns></returns>
-        public int Cancel()
+        public void Cancel()
         {
             InvokeInputOption(CANCEL_INPUT_OPTION);
-            return 0;
         }
 
         /// <summary>
@@ -472,16 +603,19 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public int PrintText(List<string> messages)
+        public void PrintText(List<string> messages)
         {
-            if(Device == null)
+            if (Device == null)
             {
-                return -1;
+                return;
             }
-            if (messages == null) { throw new InvalidDataException("In PrintText : message list cannot be null. "); }
+            if (messages == null)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In PrintText : message list cannot be null. "));
+                return;
+            }
 
             Device.doPrintText(messages);
-            return 0;
         }
 
         /// <summary>
@@ -489,16 +623,15 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns></returns>
-        public int PrintImage(Bitmap bitmap) //Bitmap img
+        public void PrintImage(Bitmap bitmap) //Bitmap img
         {
-            if (bitmap == null) { throw new InvalidDataException("In PrintImage : Bitmap object cannot be null. "); }
+            if (bitmap == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In PrintImage : Bitmap object cannot be null. ")); }
             MemoryStream ms = new MemoryStream();
             bitmap.Save(ms, ImageFormat.Png);
             byte[] imgBytes = ms.ToArray();
             string base64Image = Convert.ToBase64String(imgBytes);
 
             Device.doPrintImage(base64Image);
-            return 0;
         }
 
         /// <summary>
@@ -506,17 +639,17 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public int ShowMessage(string message)
+        public void ShowMessage(string message)
         {
-            return ShowOnDevice(message);
+            ShowOnDevice(message);
         }
 
         /// <summary>
         /// Return the device to the Welcome Screen
         /// </summary>
-        public int ShowWelcomeScreen()
+        public void ShowWelcomeScreen()
         {
-            return ShowOnDevice(showWelcomeScreen: true);
+            ShowOnDevice(showWelcomeScreen: true);
         }
 
         /// <summary>
@@ -532,7 +665,7 @@ namespace com.clover.remotepay.sdk
         /// where it makes sense to display some combination of message/thankyou/welcome screens with 
         /// configurable timing between them
         /// </summary>
-        private int ShowOnDevice(string msg = null, Int32 milliSecondsTimeoutForMsg = 0, bool showThankYouScreen = false, Int32 milliSecondsTimeoutForThankYou = 0, bool showWelcomeScreen = false)
+        private void ShowOnDevice(string msg = null, Int32 milliSecondsTimeoutForMsg = 0, bool showThankYouScreen = false, Int32 milliSecondsTimeoutForThankYou = 0, bool showWelcomeScreen = false)
         {
             if (Device != null)
             {
@@ -566,31 +699,33 @@ namespace com.clover.remotepay.sdk
                     );
                     bgWorker.RunWorkerAsync();
                 }
-                return 0;
-            } else
+                return;
+            }
+            else
             {
-                return -1;
+                return;
             }
         }
 
         /// <summary>
         /// Vault Card information and payment token
         /// </summary>
-        public int VaultCard(int? CardEntryMethods)
+        public void VaultCard(int? CardEntryMethods)
         {
             if (Device == null)
             {
-                return -1;
+                return;
             }
 
             if (!merchantInfo.supportsVaultCards)
             {
-                deviceObserver.onConfigError("In VaultCard : Vaulting a card is not supported by the merchant configured gateway.");
-                return -1;
+                deviceObserver.onVaultCardResponse(ResponseCode.UNSUPPORTED,
+                                                  "Merchant Configuration Error",
+                                                  "In VaultCard: - Vault card is not supported by the merchant configured gateway.");
+                return;
             }
 
             Device.doVaultCard(CardEntryMethods.HasValue ? CardEntryMethods.Value : CardEntryMethod);
-            return 0;
         }
 
         /// <summary>
@@ -598,31 +733,9 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void DisplayPaymentReceiptOptions(string orderId, string paymentId)
         {
-            if(Device != null)
+            if (Device != null)
             {
                 Device.doShowPaymentReceiptScreen(orderId, paymentId);
-            }
-        }
-
-        /// <summary>
-        /// Show the customer facing receipt option screen for the specified Refund.
-        /// </summary>
-        public void DisplayRefundReceiptOptions(string orderId, string refundId)
-        {
-            if (Device != null)
-            {
-                Device.doShowRefundReceiptScreen(orderId, refundId);
-            }
-        }
-
-        /// <summary>
-        /// Show the customer facing receipt option screen for the specified Credit.
-        /// </summary>
-        public void DisplayCreditReceiptOptions(string orderId, string creditId)
-        {
-            if (Device != null)
-            {
-                Device.doShowCreditReceiptScreen(orderId, creditId);
             }
         }
 
@@ -631,9 +744,13 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void OpenCashDrawer(String reason)
         {
-            if(Device != null)
+            if (Device != null)
             {
-                if (reason == null) { throw new InvalidDataException("In OpenCashDrawer : Reason string cannot be null. "); }
+                if (reason == null)
+                {
+                    OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In OpenCashDrawer : Reason string cannot be null. "));
+                    return;
+                }
                 Device.doOpenCashDrawer(reason);
             }
         }
@@ -642,11 +759,15 @@ namespace com.clover.remotepay.sdk
         /// Show the DisplayOrder on the device. Replaces the existing DisplayOrder on the device.
         /// </summary>
         /// <param name="order"></param>
-        public void DisplayOrder(DisplayOrder order)
+        public void ShowDisplayOrder(DisplayOrder order)
         {
-            if(Device != null)
+            if (Device != null)
             {
-                if (order == null) { throw new InvalidDataException("In DisplayOrder : DisplayOrder object cannot be null. "); }
+                if (order == null)
+                {
+                    OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In DisplayOrder : DisplayOrder object cannot be null. "));
+                    return;
+                }
                 Device.doOrderUpdate(order, null);
             }
         }
@@ -656,15 +777,15 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="order"></param>
         /// <param name="lineItem"></param>
-        public void DisplayOrderLineItemAdded(DisplayOrder order, DisplayLineItem lineItem)
+        public void LineItemAddedToDisplayOrder(DisplayOrder order, DisplayLineItem lineItem)
         {
-            if (order == null) { throw new InvalidDataException("In DisplayOrderLineItemAdded : DisplayOrder object cannot be null. "); }
-            if (order.id == null) { throw new InvalidDataException("In DisplayOrderLineItemAdded : DisplayOrder id cannot be null. " + order); }
-            if (lineItem == null) { throw new InvalidDataException("In DisplayOrderLineItemAdded : DisplayLineItem object cannot be null. "); }
+            if (order == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In LineItemAddedToDisplayOrder : DisplayOrder object cannot be null. ")); }
+            if (order.id == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In LineItemAddedToDisplayOrder : DisplayOrder id cannot be null. " + order)); }
+            if (lineItem == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In LineItemAddedToDisplayOrder : DisplayLineItem object cannot be null. ")); }
             LineItemsAddedOperation liao = new LineItemsAddedOperation();
             liao.orderId = order.id;
-            liao.addId(lineItem.id);  
-            if(Device != null)
+            liao.addId(lineItem.id);
+            if (Device != null)
             {
                 Device.doOrderUpdate(order, liao);
             }
@@ -675,16 +796,16 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="order"></param>
         /// <param name="lineItem"></param>
-        public void DisplayOrderLineItemRemoved(DisplayOrder order, DisplayLineItem lineItem)
+        public void LineItemRemovedFromDisplayOrder(DisplayOrder order, DisplayLineItem lineItem)
         {
-            if (order == null) { throw new InvalidDataException("In DisplayOrderLineItemRemoved : DisplayOrder object cannot be null. "); }
-            if (order.id == null) { throw new InvalidDataException("In DisplayOrderLineItemRemoved : DisplayOrder id cannot be null. " + order); }
-            if (lineItem == null) { throw new InvalidDataException("In DisplayOrderLineItemRemoved : DisplayLineItem object cannot be null. "); }
+            if (order == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In LineItemRemovedFromDisplayOrder : DisplayOrder object cannot be null. ")); }
+            if (order.id == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In LineItemRemovedFromDisplayOrder : DisplayOrder id cannot be null. " + order)); }
+            if (lineItem == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In LineItemRemovedFromDisplayOrder : DisplayLineItem object cannot be null. ")); }
             LineItemsDeletedOperation lido = new LineItemsDeletedOperation();
             lido.orderId = order.id;
             lido.addId(lineItem.id);
 
-            if(Device != null)
+            if (Device != null)
             {
                 Device.doOrderUpdate(order, lido);
             }
@@ -696,16 +817,16 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="order"></param>
         /// <param name="discount"></param>
-        public void DisplayOrderDiscountAdded(DisplayOrder order, DisplayDiscount discount)
+        public void DiscountAddedToDisplayOrder(DisplayOrder order, DisplayDiscount discount)
         {
-            if (order == null) { throw new InvalidDataException("In DisplayOrderDiscountAdded : DisplayOrder object cannot be null. "); }
-            if (order.id == null) { throw new InvalidDataException("In DisplayOrderDiscountAdded : DisplayOrder id cannot be null. " + order); }
-            if (discount == null) { throw new InvalidDataException("In DisplayOrderDiscountAdded : DisplayLineItem object cannot be null. "); }
+            if (order == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In DiscountAddedToDisplayOrder : DisplayOrder object cannot be null. ")); }
+            if (order.id == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In DiscountAddedToDisplayOrder : DisplayOrder id cannot be null. " + order)); }
+            if (discount == null) { OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In DiscountAddedToDisplayOrder : DisplayLineItem object cannot be null. ")); }
             DiscountsAddedOperation dao = new DiscountsAddedOperation();
             dao.orderId = order.id;
             dao.addId(discount.id);
 
-            if(Device != null)
+            if (Device != null)
             {
                 Device.doOrderUpdate(order, dao);
             }
@@ -717,13 +838,13 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="order"></param>
         /// <param name="discount"></param>
-        public void DisplayOrderDiscountRemoved(DisplayOrder order, DisplayDiscount discount)
+        public void DiscountRemovedFromDisplayOrder(DisplayOrder order, DisplayDiscount discount)
         {
             DiscountsDeletedOperation dao = new DiscountsDeletedOperation();
             dao.orderId = order.id;
             dao.addId(discount.id);
 
-            if(Device != null)
+            if (Device != null)
             {
                 Device.doOrderUpdate(order, dao);
             }
@@ -733,30 +854,22 @@ namespace com.clover.remotepay.sdk
         /// Remove the DisplayOrder from the device.
         /// </summary>
         /// <param name="order"></param>
-        public void DisplayOrderDelete(DisplayOrder order)
+        public void RemoveDisplayOrder(DisplayOrder order)
         {
             OrderDeletedOperation dao = new OrderDeletedOperation();
             dao.id = order.id;
-            if(Device != null)
+            if (Device != null)
             {
                 Device.doOrderUpdate(order, dao);
             }
+            ShowWelcomeScreen();
         }
 
-
-        /// <summary>
-        /// return the Merchant object for the Merchant configured for the Clover Mini
-        /// </summary>
-        /// <returns></returns>
-        public void GetMerchantInfo()
-        {
-
-        }
 
         // TODO: should we call through, repurpose or remove?
         public void Dispose()
         {
-            if(Device != null)
+            if (Device != null)
             {
                 Device.Dispose();
             }
@@ -773,13 +886,33 @@ namespace com.clover.remotepay.sdk
                 Device.doKeyPress(io.keyPress);
             }
         }
-        
 
-        private class InnerDeviceObserver : CloverDeviceObserver
+        public void PrintImageFromURL(string ImgURL)
         {
-            private RefundPaymentResponse lastPRR;
+            Device.doPrintImageURL(ImgURL);
+        }
 
-            class SVR : SignatureVerifyRequest
+        public T GetEnumFromString<T>(string stringValue, bool isCaseInsensitive = false) where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, "ArgumentException: T must be an enumerated type"));
+                return default(T);
+            }
+            return (T)Enum.Parse(typeof(T), stringValue, isCaseInsensitive);
+        }
+
+        public void OnDeviceError(CloverDeviceErrorEvent ee)
+        {
+            listeners.ForEach(listener => listener.OnDeviceError(ee));
+        }
+
+
+        private class InnerDeviceObserver : ICloverDeviceObserver
+        {
+            public RefundPaymentResponse lastPRR;
+            private CloverDeviceEvent lastStartEvent = null;
+            class SVR : VerifySignatureRequest
             {
                 CloverDevice _Device;
 
@@ -790,12 +923,12 @@ namespace com.clover.remotepay.sdk
 
                 public override void Accept()
                 {
-                    _Device.doSignatureVerified(Payment, true);
+                    _Device.doVerifySignature(Payment, true);
                 }
 
                 public override void Reject()
                 {
-                    _Device.doSignatureVerified(Payment, false);
+                    _Device.doVerifySignature(Payment, false);
                 }
             }
 
@@ -818,12 +951,11 @@ namespace com.clover.remotepay.sdk
             {
                 this.cloverConnector.merchantInfo = new MerchantInfo(drm);
                 cloverConnector.ShowOnDevice(showWelcomeScreen: true);
-                cloverConnector.listeners.ForEach(listener => listener.OnDeviceReady());
-
+                cloverConnector.listeners.ForEach(listener => listener.OnDeviceReady(this.cloverConnector.merchantInfo));
             }
             public void onDeviceError(int code, string message)
             {
-                cloverConnector.listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(code, message)));
+                cloverConnector.listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, code, message)));
             }
 
             public void onTxState(TxState txState)
@@ -831,24 +963,51 @@ namespace com.clover.remotepay.sdk
                 //Console.WriteLine("onTxTstate: " + txState.ToString());
             }
 
-            public void onPartialAuth(long partialAmount)
-            {
-                //TODO: Implement
-                cloverConnector.ShowOnDevice(msg: "CloverConnector.onPartialAuth() is not yet implemented!!!!");
-            }
-
             public void onTipAdded(long tip)
             {
                 cloverConnector.listeners.ForEach(listener => listener.OnTipAdded(new TipAddedMessage(tip)));
             }
 
-            public void onAuthTipAdjusted(string paymentId, long amount, bool success)
+            public void onPartialAuth(long amount)
+            {
+                // not implemented yet
+            }
+
+            public void onAuthTipAdjusted(string paymentId,
+                                          long tipAmount,
+                                          bool success)
+
             {
                 TipAdjustAuthResponse taar = new TipAdjustAuthResponse();
                 taar.PaymentId = paymentId;
-                taar.Amount = amount;
+                taar.TipAmount = tipAmount;
                 taar.Success = success;
-                cloverConnector.listeners.ForEach(listener => listener.OnAuthTipAdjustResponse(taar));
+                if (success)
+                {
+                    taar.Result = ResponseCode.SUCCESS;
+                }
+                else
+                {
+                    taar.Result = ResponseCode.FAIL;
+                }
+                taar.Reason = "Failure";
+                taar.Message = "TipAdjustAuth failed to process for payment ID: " + paymentId;
+                cloverConnector.listeners.ForEach(listener => listener.OnTipAdjustAuthResponse(taar));
+            }
+
+            public void onAuthTipAdjusted(ResponseCode responseCode,
+                                          String reason = null,
+                                          String message = null)
+
+            {
+                TipAdjustAuthResponse taar = new TipAdjustAuthResponse();
+                taar.PaymentId = null;
+                taar.TipAmount = 0;
+                taar.Success = responseCode == ResponseCode.SUCCESS;
+                taar.Result = responseCode;
+                taar.Reason = reason;
+                taar.Message = message;
+                cloverConnector.listeners.ForEach(listener => listener.OnTipAdjustAuthResponse(taar));
             }
 
             public void onCashbackSelected(long cashbackAmount)
@@ -863,35 +1022,49 @@ namespace com.clover.remotepay.sdk
                 cloverConnector.ShowOnDevice(msg: "CloverConnector.onKeyPressed() is not yet implemented!!!!");
             }
 
-            public void onPaymentRefundResponse(string orderId, string paymentId, Refund refund, TxState code, string msg)
+            public void onRefundPaymentResponse(Refund refund, String orderId, String paymentId, TxState code, string msg)
             {
                 RefundPaymentResponse prr = new RefundPaymentResponse();
+                prr.Refund = refund;
                 prr.OrderId = orderId;
                 prr.PaymentId = paymentId;
-                prr.RefundObj = refund;
-                prr.Code = code.ToString();
-                prr.Message = msg;
-                lastPRR = prr;
-                cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(prr));
+                prr.Success = code == TxState.SUCCESS;
                 if (code == TxState.SUCCESS)
                 {
-                    cloverConnector.ShowOnDevice(showThankYouScreen: true, 
-                                                 milliSecondsTimeoutForThankYou: 3000, 
-                                                 showWelcomeScreen: true);
+                    prr.Result = ResponseCode.SUCCESS;
                 }
-                
+                else 
+                {
+                    prr.Result = ResponseCode.FAIL;
+                }
+                prr.Message = msg;
+                lastPRR = prr;
+                // Don't send the response to the listeners just yet.  We need to wait
+                // until the FinishOK or FinishCancel are received to notify the listeners,
+                // so that logic is there instead.  Also, wait to send any instructions to
+                // the device.
             }
 
             public void onCloseoutResponse(ResultStatus status, string reason, Batch batch)
             {
                 CloseoutResponse cr = new CloseoutResponse();
-                cr.Code = status.ToString();
-                cr.status = status;
-                cr.reason = reason;
-                cr.batch = batch;
+                cr.Success = status == ResultStatus.SUCCESS;
+                if (cr.Success)
+                {
+                    cr.Result = ResponseCode.SUCCESS;
+                }
+                else
+                {
+                    if (status == ResultStatus.FAIL)
+                    {
+                        cr.Result = ResponseCode.FAIL;
+                    }
+                }
+
+                cr.Reason = reason;
+                cr.Batch = batch;
 
                 cloverConnector.listeners.ForEach(listener => listener.OnCloseoutResponse(cr));
-                cloverConnector.ShowOnDevice(showWelcomeScreen: true);
             }
 
             public void onUiState(UiState uiState, String uiText, UiDirection uiDirection, params InputOption[] inputOptions)
@@ -902,35 +1075,27 @@ namespace com.clover.remotepay.sdk
                 deviceEvent.Message = uiText;
                 if (uiDirection == UiDirection.ENTER)
                 {
+                    lastStartEvent = deviceEvent;
                     cloverConnector.listeners.ForEach(listener => listener.OnDeviceActivityStart(deviceEvent));
                 }
                 else if (uiDirection == UiDirection.EXIT)
                 {
-                    cloverConnector.listeners.ForEach(listener => listener.OnDeviceActivityEnd(deviceEvent));
-                    if (deviceEvent.EventState == CloverDeviceEvent.DeviceEventState.RECEIPT_OPTIONS)
+                    // because we can get events out of order, need to make sure we don't wipe out the wrong Options
+                    if (lastStartEvent != null && lastStartEvent.EventState.Equals(deviceEvent.EventState))
                     {
-                        // this is a catch all, for situations where the 
-                        // device displays the receipt options panel after
-                        // the main processing is complete.  The pay display
-                        // usually sets off the spinner after actions, so it
-                        // is up to the caller to reset the display as desired.
-                        cloverConnector.ShowOnDevice(showThankYouScreen: true, 
-                                                     milliSecondsTimeoutForThankYou: 3000, 
-                                                     showWelcomeScreen: true);
+                        cloverConnector.listeners.ForEach(listener => listener.OnDeviceActivityEnd(deviceEvent));
+                        lastStartEvent = null;
                     }
                 }
-
             }
 
             public void onFinishOk(Payment payment, Signature2 signature2)
             {
-                cloverConnector.ShowOnDevice(showThankYouScreen: true,
-                                             milliSecondsTimeoutForThankYou: 3000,
-                                             showWelcomeScreen: true);
                 if (cloverConnector.lastRequest is PreAuthRequest)
                 {
                     PreAuthResponse response = new PreAuthResponse();
-                    response.Code = TransactionResponse.SUCCESS;
+                    response.Success = true;
+                    response.Result = ResponseCode.SUCCESS;
                     response.Payment = payment;
                     response.Signature = signature2;
                     cloverConnector.listeners.ForEach(listener => listener.OnPreAuthResponse(response));
@@ -939,7 +1104,8 @@ namespace com.clover.remotepay.sdk
                 else if (cloverConnector.lastRequest is AuthRequest)
                 {
                     AuthResponse response = new AuthResponse();
-                    response.Code = TransactionResponse.SUCCESS;
+                    response.Success = true;
+                    response.Result = ResponseCode.SUCCESS;
                     response.Payment = payment;
                     response.Signature = signature2;
                     cloverConnector.listeners.ForEach(listener => listener.OnAuthResponse(response));
@@ -948,94 +1114,119 @@ namespace com.clover.remotepay.sdk
                 else if (cloverConnector.lastRequest is SaleRequest)
                 {
                     SaleResponse response = new SaleResponse();
-                    response.Code = TransactionResponse.SUCCESS;
+                    response.Success = true;
+                    response.Result = ResponseCode.SUCCESS;
                     response.Payment = payment;
                     response.Signature = signature2;
                     cloverConnector.listeners.ForEach(listener => listener.OnSaleResponse(response));
                     cloverConnector.lastRequest = null;
                 }
+                else if (cloverConnector.lastRequest == null)
+                {
+                    cloverConnector.ShowOnDevice(showWelcomeScreen: true);
+                    return;
+                }
+                else
+                {
+                    cloverConnector.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "Failed to pair this response. " + payment));
+                }
+                cloverConnector.ShowOnDevice(showThankYouScreen: true,
+                                             milliSecondsTimeoutForThankYou: 3000,
+                                             showWelcomeScreen: true);
             }
 
             public void onFinishOk(Credit credit)
             {
                 ManualRefundResponse response = new ManualRefundResponse();
-                response.Code = TransactionResponse.SUCCESS;
+                response.Success = true;
+                response.Result = ResponseCode.SUCCESS;
                 response.Credit = credit;
                 cloverConnector.listeners.ForEach(listener => listener.OnManualRefundResponse(response));
-                cloverConnector.ShowOnDevice(showThankYouScreen: true, 
-                                             milliSecondsTimeoutForThankYou: 3000, 
+                cloverConnector.ShowOnDevice(showThankYouScreen: true,
+                                             milliSecondsTimeoutForThankYou: 3000,
                                              showWelcomeScreen: true);
+                cloverConnector.lastRequest = null;
             }
 
-            public void onFinishOk(Refund refund) // this is currently unused.  See onPaymentRefundResponse()
+            public void onFinishOk(Refund refund)
             {
-                return;  // ignore this message, as the PaymentRefundResponse() is doing the correct logic
+                cloverConnector.ShowOnDevice(showWelcomeScreen: true);
 
-                /*cloverConnector.lastRequest = null;
-                if (lastPRR == null || !lastPRR.RefundObj.id.Equals(refund.id))
+                cloverConnector.lastRequest = null;
+                RefundPaymentResponse lastRefundResponse = lastPRR;
+                lastPRR = null;
+
+                if (lastRefundResponse != null)
                 {
-                    lastPRR = new RefundPaymentResponse();
-                    lastPRR.OrderId = (refund.orderRef != null) ? refund.orderRef.id : null;
-                    lastPRR.PaymentId = (refund.payment != null) ? refund.payment.id : null;
-                    lastPRR.RefundObj = refund;
-                    lastPRR.Code = TxState.SUCCESS.ToString();
-                    cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(lastPRR));
+                    if (lastRefundResponse.Refund.id.Equals(refund.id))
+                    {
+                        cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(lastRefundResponse));
+                    }
+                    else
+                    {
+                        Console.WriteLine("The last PaymentRefundResponse has a different ID than this refund in finishOk");
+                    }
                 }
-                cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(lastPRR));
-                cloverConnector.ShowOnDevice(showThankYouScreen: true, 
-                                             milliSecondsTimeoutForThankYou: 3000, 
-                                             showWelcomeScreen: true);
-                */
+                else
+                {
+                    Console.WriteLine("Shouldn't get an onFinishOk without having gotten an onPaymentRefund!");
+                }
             }
 
             public void onFinishCancel()
             {
+                onFinishCancel(ResponseCode.CANCEL, null, null);
+            }
+
+            public void onFinishCancel(ResponseCode result = ResponseCode.CANCEL, String reason = null, String message = null)
+            {
                 if (cloverConnector.lastRequest is PreAuthRequest)
                 {
-                    PreAuthResponse preAuthResponse = new PreAuthResponse();
-                    preAuthResponse.Code = TransactionResponse.CANCEL;
-                    cloverConnector.listeners.ForEach(listener => listener.OnPreAuthResponse(preAuthResponse));
+                    PreAuthResponse response = new PreAuthResponse();
+                    response.Success = false;
+                    response.Result = result;
+                    response.Reason = reason != null ? reason : "Request Cancelled";
+                    response.Message = message != null ? message : "PreAuth Request cancelled by user";
+                    cloverConnector.listeners.ForEach(listener => listener.OnPreAuthResponse(response));
+                    cloverConnector.lastRequest = null;
                 }
                 else if (cloverConnector.lastRequest is AuthRequest)
                 {
-                    AuthResponse authResponse = new AuthResponse();
-                    authResponse.Code = TransactionResponse.CANCEL;
-                    cloverConnector.listeners.ForEach(listener => listener.OnAuthResponse(authResponse));
+                    AuthResponse response = new AuthResponse();
+                    response.Success = false;
+                    response.Result = result;
+                    response.Reason = reason != null ? reason : "Request Cancelled";
+                    response.Message = message != null ? message : "Auth Request cancelled by user";
+                    cloverConnector.listeners.ForEach(listener => listener.OnAuthResponse(response));
+                    cloverConnector.lastRequest = null;
                 }
                 else if (cloverConnector.lastRequest is SaleRequest)
                 {
-                    SaleResponse saleResponse = new SaleResponse();
-                    saleResponse.Payment = null;
-                    saleResponse.Code = TransactionResponse.CANCEL;
-                    cloverConnector.listeners.ForEach(listener => listener.OnSaleResponse(saleResponse));
+                    SaleResponse response = new SaleResponse();
+                    response.Payment = null;
+                    response.Success = false;
+                    response.Result = result;
+                    response.Reason = reason != null ? reason : "Request Cancelled";
+                    response.Message = message != null ? message : "Sale Request cancelled by user";
+                    cloverConnector.listeners.ForEach(listener => listener.OnSaleResponse(response));
+                    cloverConnector.lastRequest = null;
                 }
-                else if(cloverConnector.lastRequest is ManualRefundRequest)
+                else if (cloverConnector.lastRequest is ManualRefundRequest)
                 {
                     cloverConnector.lastRequest = null;
-                    ManualRefundResponse refundResponse = new ManualRefundResponse();
-                    refundResponse.Code = TransactionResponse.CANCEL;
-                    cloverConnector.listeners.ForEach(listener => listener.OnManualRefundResponse(refundResponse));
-                }
-                else if (cloverConnector.lastRequest is RefundPaymentRequest)
-                {
+                    ManualRefundResponse response = new ManualRefundResponse();
+                    response.Success = false;
+                    response.Result = result;
+                    response.Reason = reason != null ? reason : "Request Cancelled";
+                    response.Message = message != null ? message : "Manual Refund Request cancelled by user";
+                    cloverConnector.listeners.ForEach(listener => listener.OnManualRefundResponse(response));
                     cloverConnector.lastRequest = null;
-                    RefundPaymentResponse refundPaymentResponse = new RefundPaymentResponse();
-                    refundPaymentResponse.Code = TransactionResponse.CANCEL;
-                    cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(refundPaymentResponse));
                 }
-                cloverConnector.ShowOnDevice(msg: "The transaction was cancelled.", 
-                                             milliSecondsTimeoutForMsg: 3000, 
-                                             showThankYouScreen: true, 
-                                             milliSecondsTimeoutForThankYou: 3000, 
-                                             showWelcomeScreen: true);
-            }
-
-            public void onConfigError(string errorMessage)
-            {
-                ConfigErrorResponse ceResponse = new ConfigErrorResponse();
-                ceResponse.Code = BaseResponse.ERROR;
-                ceResponse.message = errorMessage;
-                cloverConnector.listeners.ForEach(listener => listener.OnConfigError(ceResponse));
+                else if (lastPRR is RefundPaymentResponse)
+                {
+                    cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(lastPRR));
+                    lastPRR = null;
+                }
             }
 
             public void onVerifySignature(Payment payment, Signature2 signature)
@@ -1043,83 +1234,174 @@ namespace com.clover.remotepay.sdk
                 SVR request = new SVR(cloverConnector.Device);
                 request.Signature = signature;
                 request.Payment = payment;
-                cloverConnector.listeners.ForEach(listener => listener.OnSignatureVerifyRequest(request));
+                cloverConnector.listeners.ForEach(listener => listener.OnVerifySignatureRequest(request));
             }
 
             public void onPaymentVoided(Payment payment, VoidReason reason)
             {
                 VoidPaymentResponse response = new VoidPaymentResponse();
-                response.Code = TransactionResponse.SUCCESS;
+                response.Success = true;
+                response.Result = ResponseCode.SUCCESS;
+                response.Reason = reason.ToString();
                 response.PaymentId = payment.id;
-                response.TransactionNumber = (payment.cardTransaction != null) ? payment.cardTransaction.transactionNo : "";
-                response.ResponseCode = payment.result.GetTypeCode().ToString(); //TODO: verify this value
 
                 cloverConnector.listeners.ForEach(listener => listener.OnVoidPaymentResponse(response));
-                cloverConnector.ShowOnDevice(msg:  "The transaction was voided.", 
-                                             milliSecondsTimeoutForMsg: 3000, 
-                                             showThankYouScreen: true, 
-                                             milliSecondsTimeoutForThankYou: 3000, 
+                cloverConnector.ShowOnDevice(msg: "The transaction was voided.",
+                                             milliSecondsTimeoutForMsg: 3000,
+                                             showThankYouScreen: true,
+                                             milliSecondsTimeoutForThankYou: 3000,
                                              showWelcomeScreen: true);
             }
 
-            public void onTxStartResponse(bool success)
+            //For Error/Fail scenarios that don't have a Payment object to send back
+            public void onPaymentVoided(ResponseCode result, String reason = null, String message = null)
             {
-                Console.WriteLine("Tx Started? " + success);
+                VoidPaymentResponse response = new VoidPaymentResponse();
+                response.Success = false;
+                response.Result = result;
+                response.Reason = reason != null ? reason : result.ToString();
+                response.Message = message != null ? message : "No extended information provided.";
+                response.PaymentId = null;
+                cloverConnector.listeners.ForEach(listener => listener.OnVoidPaymentResponse(response));
             }
 
             public void onVaultCardResponse(VaultCardResponseMessage vcrm)
             {
                 VaultCardResponse vcr = new VaultCardResponse();
-                vcr.Card = vcrm.cardObj;
-                vcr.Status = vcrm.status;
+                vcr.Card = vcrm.card;
+                vcr.Success = vcrm.status == ResultStatus.SUCCESS;
                 vcr.Reason = vcrm.reason;
-                vcr.Code = vcrm.status.ToString();
                 cloverConnector.listeners.ForEach(listener => listener.OnVaultCardResponse(vcr));
                 cloverConnector.ShowOnDevice(showWelcomeScreen: true);
             }
 
-            public void onCaptureAuthResponse(CaptureAuthResponseMessage carm)
+            //For Error/Fail scenarios where a valid Card object does not exist
+            public void onVaultCardResponse(ResponseCode result, String reason = null, String message = null)
             {
-                CaptureAuthResponse car = new CaptureAuthResponse();
-                car.paymentId = carm.paymentId;
-                car.amount = carm.amount;
-                car.Code = carm.status.ToString();
-                car.tipAmount = carm.tipAmount;
-                cloverConnector.listeners.ForEach(listener => listener.OnAuthCaptureResponse(car));
+                VaultCardResponse vcr = new VaultCardResponse();
+                vcr.Card = null;
+                vcr.Success = false;
+                vcr.Reason = reason;
+                vcr.Message = message;
+                cloverConnector.listeners.ForEach(listener => listener.OnVaultCardResponse(vcr));
                 cloverConnector.ShowOnDevice(showWelcomeScreen: true);
             }
-        }
 
-        private class MerchantInfo
-        {
-            public MerchantInfo() {
-                supportsManualRefunds = true;
-                supportsTipAdjust = true;
-                supportsVaultCards = true;
-                supportsPreAuths = true;
-                merchantID = "";
-                merchantMId = "";
-                merchantName = "";
-            }
-            public MerchantInfo(DiscoveryResponseMessage drm)
+            public void onCapturePreAuthResponse(String paymentId,
+                                                 long amount,
+                                                 long tipAmount, 
+                                                 ResultStatus status,
+                                                 string reason)
             {
-                supportsManualRefunds = drm.supportsManualRefund;
-                supportsTipAdjust = drm.supportsTipAdjust;
-                supportsVaultCards = drm.supportsMultiPayToken;
-                supportsPreAuths = drm.supportsTipAdjust;
-                merchantID = drm.merchantId;
-                merchantMId = drm.merchantMId;
-                merchantName = drm.merchantName;
+                CapturePreAuthResponse car = new CapturePreAuthResponse();
+                car.Success = status.Equals(ResultStatus.SUCCESS);
+                car.Result = car.Success ? ResponseCode.SUCCESS : ResponseCode.FAIL;
+                car.Reason = reason;
+                car.PaymentId = paymentId;
+                car.Amount = amount;
+                car.TipAmount = tipAmount;
+                cloverConnector.listeners.ForEach(listener => listener.OnCapturePreAuthResponse(car));
+                cloverConnector.ShowOnDevice(showWelcomeScreen: true);
             }
 
-            public String merchantID { get; set; }
-            public String merchantName { get; set; }
-            public String merchantMId { get; set; }
+            //For Error/Fail scenarios where a payment was never processed
+            public void onCapturePreAuthResponse(ResponseCode responseCode,
+                                                 String reason = null,
+                                                 String message = null)
+            {
+                CapturePreAuthResponse car = new CapturePreAuthResponse();
+                car.Success = responseCode == ResponseCode.SUCCESS;
+                car.Result = responseCode;
+                car.Reason = reason != null ? reason : responseCode.ToString();
+                car.Message = message != null ? message : "No extended information provided.";
+                car.PaymentId = null;
+                car.Amount = 0;
+                car.TipAmount = 0;
+                cloverConnector.listeners.ForEach(listener => listener.OnCapturePreAuthResponse(car));
+                cloverConnector.ShowOnDevice(showWelcomeScreen: true);
+            }
 
-            public bool supportsPreAuths { get; set; }
-            public bool supportsVaultCards { get; set; }
-            public bool supportsManualRefunds { get; set; }
-            public bool supportsTipAdjust { get; set; }
+            public void onTxStartResponse(TxStartResponseResult result, string externalId)
+            {
+                bool success = result.Equals(TxStartResponseResult.SUCCESS) ? true : false;
+                if (success)
+                {
+                    return;  //move it along folks, nothing to see here
+                }
+                bool duplicate = result.Equals(TxStartResponseResult.DUPLICATE);
+                try
+                {
+
+                    if (cloverConnector.lastRequest is PreAuthRequest)
+                    {
+                        PreAuthResponse response = new PreAuthResponse();
+                        if (duplicate)
+                        {
+                            response.Result = ResponseCode.CANCEL;
+                            response.Reason = result.ToString();
+                            response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
+                        }
+                        else
+                        {
+                            response.Result = ResponseCode.FAIL;
+                            response.Reason = result.ToString();
+                        }
+                        cloverConnector.listeners.ForEach(listener => listener.OnPreAuthResponse(response));
+                    }
+                    else if (cloverConnector.lastRequest is AuthRequest)
+                    {
+                        AuthResponse response = new AuthResponse();
+                        if (duplicate)
+                        {
+                            response.Result = ResponseCode.CANCEL;
+                            response.Reason = result.ToString();
+                            response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
+                        }
+                        else
+                        {
+                            response.Result = ResponseCode.FAIL;
+                            response.Reason = result.ToString();
+                        }
+                        cloverConnector.listeners.ForEach(listener => listener.OnAuthResponse(response));
+                    }
+                    else if (cloverConnector.lastRequest is SaleRequest)
+                    {
+                        SaleResponse response = new SaleResponse();
+                        if (duplicate)
+                        {
+                            response.Result = ResponseCode.CANCEL;
+                            response.Reason = result.ToString();
+                            response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
+                        }
+                        else
+                        {
+                            response.Result = ResponseCode.FAIL;
+                            response.Reason = result.ToString();
+                        }
+                        cloverConnector.listeners.ForEach(listener => listener.OnSaleResponse(response));
+                    }
+                    else if (cloverConnector.lastRequest is ManualRefundRequest)
+                    {
+                        ManualRefundResponse response = new ManualRefundResponse();
+                        if (duplicate)
+                        {
+                            response.Result = ResponseCode.CANCEL;
+                            response.Reason = result.ToString();
+                            response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
+                        }
+                        else
+                        {
+                            response.Result = ResponseCode.FAIL;
+                            response.Reason = result.ToString();
+                        }
+                        cloverConnector.listeners.ForEach(listener => listener.OnManualRefundResponse(response));
+                    }
+                }
+                finally
+                {
+                    cloverConnector.lastRequest = null;
+                }
+            }
         }
     }
 }

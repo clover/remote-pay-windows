@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\CloverConnector.XML</DocumentationFile>
     <RegisterForComInterop>false</RegisterForComInterop>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -49,9 +50,10 @@
   <ItemGroup>
     <Compile Include="com\clover\remotepay\sdk\CloverConnector.cs" />
     <Compile Include="com\clover\remotepay\sdk\CloverEvents.cs" />
-    <Compile Include="com\clover\remotepay\sdk\CloverListeners.cs" />
+    <Compile Include="com\clover\remotepay\sdk\ExternalIDUtil.cs" />
     <Compile Include="com\clover\remotepay\sdk\ICloverConnector.cs" />
-    <Compile Include="com\clover\remotepay\sdk\ListenerList.cs" />
+    <Compile Include="com\clover\remotepay\sdk\ICloverConnectorListener.cs" />
+    <Compile Include="com\clover\remotepay\sdk\MerchantInfo.cs" />
     <Compile Include="com\clover\remotepay\sdk\service\client\ServiceMethods.cs" />
     <Compile Include="com\clover\remotepay\sdk\TransactionBeans.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

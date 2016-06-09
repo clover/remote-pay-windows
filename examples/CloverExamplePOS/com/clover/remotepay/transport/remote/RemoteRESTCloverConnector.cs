@@ -13,168 +13,159 @@
 // limitations under the License.
 
 using com.clover.remotepay.sdk;
-using com.clover.remotepay.transport.remote;
+using com.clover.remote.order;
+using com.clover.remotepay.sdk.service.client;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using com.clover.remote.order;
 using System.IO;
 using System.Drawing.Imaging;
-using com.clover.remotepay.sdk.service.client;
-using com.clover.remotepay.data;
 
 namespace com.clover.remotepay.transport.remote
 {
+    /// <summary>
+    /// Custom ICloverConnector that talks to the 
+    /// Clover Connector REST Service. This wouldn't normally
+    /// be used because it is in .NET, and it would normally
+    /// make more sense to use the DLL directly in .NET
+    /// </summary>
     public class RemoteRESTCloverConnector : ICloverConnector
     {
         RestClient restClient = new RestClient("http://localhost:8181/Clover");
-
+        CloverDeviceConfiguration Config;
         CallbackController callbackService { get; set; }
         public RemoteRESTCloverConnector(CloverDeviceConfiguration config)
         {
-            Thread workerThread = new Thread(DoWork);
-            workerThread.IsBackground = true;
-
-            callbackService = new CallbackController(this);
-            workerThread.Start();
-
-            CardEntryMethod = CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT | CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE | CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
+            _SDKInfo = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description + ":"
+                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
+                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
+            Config = config;
         }
-
-        public void DoWork()
+        public void InitializeConnection()
         {
-            callbackService.init(restClient);
-            
-            // call GetStatus to see if the service is connected...
-           
-        }
+            if (callbackService == null)
+            {
+                callbackService = new CallbackController(this);
+                callbackService.init(restClient);
 
+                CardEntryMethod = CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT | CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE | CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
+
+                listeners.ForEach(listener => callbackService.AddListener(listener));
+            }
+        }
+        string _SDKInfo;
+        public string SDKInfo
+        {
+            get
+            {
+                return this._SDKInfo;
+            }
+        }
         public int CardEntryMethod { get; set; }
         public bool DisablePrinting { get; set; }
-        public bool DisableCashBack { get; set;}
+        public bool DisableCashBack { get; set; }
         public bool DisableTip { get; set; }
         public bool DisableRestartTransactionOnFail { get; set; }
 
-        List<CloverConnectorListener> listeners = new List<CloverConnectorListener>();
+        List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
         private CloverDeviceConfiguration config;
 
-        public void AddCloverConnectorListener(CloverConnectorListener connectorListener)
+        public void AddCloverConnectorListener(ICloverConnectorListener connectorListener)
         {
             listeners.Add(connectorListener);
-            callbackService.AddListener(connectorListener);
+            if (callbackService != null)
+            {
+                callbackService.AddListener(connectorListener);
+            }
         }
 
-        public void RemoveCloverConnectorListener(CloverConnectorListener connectorListener)
+        public void RemoveCloverConnectorListener(ICloverConnectorListener connectorListener)
         {
             listeners.Remove(connectorListener);
         }
 
-        public int Sale(SaleRequest request)
+        public void Sale(SaleRequest request)
         {
             Send("/Sale", request);
-            return 0;
         }
 
-        public int AcceptSignature(SignatureVerifyRequest request)
+        public void AcceptSignature(VerifySignatureRequest request)
         {
             Send("/AcceptSignature", request);
-            return 0;
         }
 
-        public int RejectSignature(SignatureVerifyRequest request)
+        public void RejectSignature(VerifySignatureRequest request)
         {
             Send("/RejectSignature", request);
-            return 0;
         }
 
-        public int Auth(AuthRequest request)
+        public void Auth(AuthRequest request)
         {
             Send("/Auth", request);
-            return 0;
         }
 
-        public int PreAuth(PreAuthRequest request)
+        public void PreAuth(PreAuthRequest request)
         {
             Send("/PreAuth", request);
-            return 0;
         }
 
-        public int CaptureAuth(CaptureAuthRequest request)
+        public void CapturePreAuth(CapturePreAuthRequest request)
         {
-            Send("/CaptureAuth", request);
-            return 0;
+            Send("/CapturePreAuth", request);
         }
 
-        public int TipAdjustAuth(TipAdjustAuthRequest request)
+        public void TipAdjustAuth(TipAdjustAuthRequest request)
         {
             Send("/TipAdjustAuth", request);
-            return 0;
         }
 
-        public int VoidPayment(VoidPaymentRequest request)
+        public void VoidPayment(VoidPaymentRequest request)
         {
             Send("/VoidPayment", request);
-            return 0;
         }
 
-        public int VoidTransaction(VoidTransactionRequest request)
-        {
-            Send("/VoidTransaction", request);
-            return 0;
-        }
-
-        public int RefundPayment(RefundPaymentRequest request)
+        public void RefundPayment(RefundPaymentRequest request)
         {
             Send("/RefundPayment", request);
-            return 0;
         }
 
-        public int ManualRefund(ManualRefundRequest request)
+        public void ManualRefund(ManualRefundRequest request)
         {
             Send("/ManualRefund", request);
-            return 0;
         }
 
-        public int VaultCard(int? CardEntryMethods)
+        public void VaultCard(int? CardEntryMethods)
         {
             VaultCard vc = new VaultCard();
-            vc.CardEntryMethod = CardEntryMethods;
+            vc.CardEntryMethods = CardEntryMethods;
             Send("/VaultCard", vc);
-            return 0;
         }
 
-        public int Closeout(CloseoutRequest request)
+        public void Closeout(CloseoutRequest request)
         {
             Send("/Closeout", request);
-            return 0;
         }
 
-        public int ResetDevice()
+        public void ResetDevice()
         {
             Send("/ResetDevice", null);
-            return 0;
         }
 
-        public int Cancel()
+        public void Cancel()
         {
             Send("/Cancel", null);
-            return 0;
         }
 
-        public int PrintText(List<string> messages)
+        public void PrintText(List<string> messages)
         {
             PrintText pt = new PrintText();
             pt.Messages = messages;
             Send("/PrintText", pt);
-            return 0;
         }
 
-        public int PrintImage(System.Drawing.Bitmap bitmap)
+        public void PrintImage(System.Drawing.Bitmap bitmap)
         {
             MemoryStream ms = new MemoryStream();
             bitmap.Save(ms, ImageFormat.Png);
@@ -184,21 +175,18 @@ namespace com.clover.remotepay.transport.remote
             PrintImage pi = new PrintImage();
             pi.Bitmap = base64Image;
             Send("/PrintImage", pi);
-            return 0;
         }
 
-        public int ShowMessage(string message)
+        public void ShowMessage(string message)
         {
             ShowMessage msg = new ShowMessage();
             msg.Message = message;
             Send("/ShowMessage", msg);
-            return 0;
         }
 
-        public int ShowWelcomeScreen()
+        public void ShowWelcomeScreen()
         {
             Send("/ShowWelcomeScreen", null);
-            return 0;
         }
 
         public void ShowThankYouScreen()
@@ -214,22 +202,6 @@ namespace com.clover.remotepay.transport.remote
             Send("/DisplayPaymentReceiptOptions", req);
         }
 
-        public void DisplayRefundReceiptOptions(string orderId, string refundId)
-        {
-            DisplayRefundReceiptOptionsRequest req = new DisplayRefundReceiptOptionsRequest();
-            req.OrderID = orderId;
-            req.RefundID = refundId;
-            Send("/DisplayRefundReceiptOptions", req);
-        }
-
-        public void DisplayCreditReceiptOptions(string orderId, string creditId)
-        {
-            DisplayCreditReceiptOptionsRequest req = new DisplayCreditReceiptOptionsRequest();
-            req.OrderID = orderId;
-            req.CreditID = creditId;
-            Send("/DisplayCreditReceiptOptions", req);
-        }
-
         public void OpenCashDrawer(string reason)
         {
             OpenCashDrawer ocd = new OpenCashDrawer();
@@ -237,56 +209,47 @@ namespace com.clover.remotepay.transport.remote
             Send("/OpenCashDrawer", ocd);
         }
 
-        public void DisplayOrder(global::com.clover.remote.order.DisplayOrder order)
+        public void ShowDisplayOrder(DisplayOrder order)
         {
-            Send("/DisplayOrder", order);            
+            Send("/DisplayOrder", order);
         }
 
-        public void DisplayOrderLineItemAdded(global::com.clover.remote.order.DisplayOrder order, DisplayLineItem lineItem)
+        public void LineItemAddedToDisplayOrder(DisplayOrder order, DisplayLineItem lineItem)
         {
-            DisplayOrderLineItemAdded dolia = new DisplayOrderLineItemAdded();
+            LineItemAddedToDisplayOrder dolia = new LineItemAddedToDisplayOrder();
             dolia.DisplayOrder = order;
             dolia.DisplayLineItem = lineItem;
-            Send("/DisplayOrderLineItemAdded", dolia);
+            Send("/LineItemAddedToDisplayOrder", dolia);
         }
 
-        public void DisplayOrderLineItemRemoved(global::com.clover.remote.order.DisplayOrder order, DisplayLineItem lineItem)
+        public void LineItemRemovedFromDisplayOrder(DisplayOrder order, DisplayLineItem lineItem)
         {
-            DisplayOrderLineItemRemoved dolia = new DisplayOrderLineItemRemoved();
+            LineItemRemovedFromDisplayOrder dolia = new LineItemRemovedFromDisplayOrder();
             dolia.DisplayOrder = order;
             dolia.DisplayLineItem = lineItem;
-            Send("/DisplayOrderLineItemRemoved", dolia);
+            Send("/LineItemRemovedFromDisplayOrder", dolia);
         }
 
-        public void DisplayOrderDiscountAdded(global::com.clover.remote.order.DisplayOrder order, DisplayDiscount discount)
+        public void DiscountAddedToDisplayOrder(DisplayOrder order, DisplayDiscount discount)
         {
-            DisplayOrderDiscountAdded doda = new DisplayOrderDiscountAdded();
+            DiscountAddedToDisplayOrder doda = new DiscountAddedToDisplayOrder();
             doda.DisplayOrder = order;
             doda.DisplayDiscount = discount;
-            Send("/DisplayOrderDiscountAdded", doda);   
+            Send("/DiscountAddedToDisplayOrder", doda);
         }
 
-        public void DisplayOrderDiscountRemoved(global::com.clover.remote.order.DisplayOrder order, DisplayDiscount discount)
+        public void DiscountRemovedFromDisplayOrder(DisplayOrder order, DisplayDiscount discount)
         {
-            DisplayOrderDiscountRemoved doda = new DisplayOrderDiscountRemoved();
+            DiscountRemovedFromDisplayOrder doda = new DiscountRemovedFromDisplayOrder();
             doda.DisplayOrder = order;
             doda.DisplayDiscount = discount;
-            Send("/DisplayOrderDiscountRemoved", doda);  
+            Send("/DiscountRemovedFromDisplayOrder", doda);
         }
 
-        public void DisplayOrderDelete(global::com.clover.remote.order.DisplayOrder order)
-        {
-            
-        }
-
-        public void GetMerchantInfo()
-        {
-            
-        }
 
         public void Dispose()
         {
-            
+            callbackService.Shutdown();
         }
 
         public void InvokeInputOption(global::com.clover.remotepay.transport.InputOption io)
@@ -294,26 +257,40 @@ namespace com.clover.remotepay.transport.remote
             Send("/InvokeInputOption", io);
         }
 
-        public int Send(string target, object payload)
+        public void Send(string target, object payload)
         {
             IRestRequest restRequest = new RestRequest(target, Method.POST);
-            restRequest.AddJsonBody(payload);
-            restRequest.RequestFormat = DataFormat.Json;
+            string payloadMessage = JsonUtils.serialize(payload);
+#if DEBUG
+            Console.WriteLine("Sending: " + target + " JSON: " + payloadMessage);
+#endif
+            restRequest.AddParameter("application/json", payloadMessage, ParameterType.RequestBody);
             restClient.ExecuteAsync(restRequest, response =>
             {
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    Console.WriteLine(response.ResponseStatus + " : " + response.StatusCode + " : " + response.ErrorMessage);
+                    Console.WriteLine(response.ResponseStatus + " : " + response.StatusCode + " : " + response.ErrorMessage + " => " + response.Content);
                 }
             });
-            return 0;
         }
 
-        public class RESTSigVerRequestHandler : SignatureVerifyRequest
+        public void PrintImageFromURL(string ImgURL)
         {
-            SignatureVerifyRequest svr;
+            PrintImage pi = new PrintImage();
+            pi.Url = ImgURL;
+            Send("/PrintImageFromURL", pi);
+        }
+
+        public void RemoveDisplayOrder(DisplayOrder displayOrder)
+        {
+            ShowWelcomeScreen();
+        }
+
+        public class RESTSigVerRequestHandler : VerifySignatureRequest
+        {
+            VerifySignatureRequest svr;
             RemoteRESTCloverConnector restCloverConnector;
-            public RESTSigVerRequestHandler(RemoteRESTCloverConnector cloverConnector, SignatureVerifyRequest request)
+            public RESTSigVerRequestHandler(RemoteRESTCloverConnector cloverConnector, VerifySignatureRequest request)
             {
                 restCloverConnector = cloverConnector;
                 svr = request;

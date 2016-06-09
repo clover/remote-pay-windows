@@ -54,7 +54,6 @@ namespace CloverExamplePOS
                 Pen borderPen = new Pen(Color.FromArgb(255, 128, 128, 128));
                 borderPen.Width = 1;
                 Rectangle border = new Rectangle(new Point(0, 0), new Size((int)(Signature.width * scale), (int)(Signature.height * scale)));
-                //e.Graphics.DrawRectangle(borderPen, border);
 
                 // draw X
                 int xWidth = (int)(Signature.width * .1 * .6 * scale);

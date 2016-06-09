@@ -13,27 +13,28 @@
 // limitations under the License.
 
 using com.clover.remotepay.sdk;
+using com.clover.remote.order;
+using com.clover.sdk.remote.websocket;
+using com.clover.remotepay.sdk.service.client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using com.clover.remote.order;
 using System.Drawing;
-using WebSocket4Net;
-using SuperSocket.ClientEngine;
-using com.clover.remotepay.transport.remote;
-using com.clover.remotepay.data;
-using com.clover.sdk.remote.websocket;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using com.clover.remotepay.sdk.service.client;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Threading;
 using System.ComponentModel;
+using WebSocket4Net;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace com.clover.remotepay.transport.remote
 {
+    /// <summary>
+    /// Custom ICloverConnector that talks to the 
+    /// Clover Connector WebSocket Service. This wouldn't normally
+    /// be used because it is in .NET, and it would normally
+    /// make more sense to use the DLL directly in .NET
+    /// </summary>
     public class RemoteWebSocketCloverConnector : ICloverConnector
     {
         public int CardEntryMethod { get; set; }
@@ -41,34 +42,37 @@ namespace com.clover.remotepay.transport.remote
         public bool DisablePrinting { get; set; }
         public bool DisableRestartTransactionOnFail { get; set; }
         public bool DisableTip { get; set; }
+        string _SDKInfo;
+        public string SDKInfo
+        {
+            get
+            {
+                return this._SDKInfo;
+            }
+        }
 
-        List<CloverConnectorListener> listeners = new List<CloverConnectorListener>();
+        List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
         private CloverDeviceConfiguration config;
 
         WebSocket websocket;
         string hostname = "localhost";
         int port = 8889;
 
-        //CloverConnector cloverConnector { get; set; }
-        //RemoteWebSocketCloverConnectorListener cloverConnectorListener { get; set; }
-
         public RemoteWebSocketCloverConnector()
         {
-            //cloverConnectorListener = new RemoteWebSocketCloverConnectorListener();
-            //cloverConnector = new CloverConnector(new USBCloverDeviceConfiguration(null), cloverConnectorListener);
-            init();
         }
 
         public RemoteWebSocketCloverConnector(CloverDeviceConfiguration config)
         {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
+            _SDKInfo = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description + ":"
+                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
+                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
             this.config = config;
             port = ((RemoteWebSocketCloverConfiguration)config).port;
             hostname = "localhost";// force this for now..
-            //cloverConnectorListener = new RemoteWebSocketCloverConnectorListener();
-            init();
         }
-
-        private void init()
+        public void InitializeConnection()
         {
             CardEntryMethod = CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT | CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE | CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
             websocket = new WebSocket("ws://" + hostname + ":" + port + "/");
@@ -78,6 +82,7 @@ namespace com.clover.remotepay.transport.remote
             websocket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocket_MessageReceived);
             websocket.Open();
         }
+
         private void websocket_Opened(object sender, EventArgs e)
         {
             Console.WriteLine("WebSocket connection open");
@@ -92,7 +97,6 @@ namespace com.clover.remotepay.transport.remote
         private void websocket_Closed(object sender, EventArgs e)
         {
             Console.WriteLine("WebSocket connection closed");
-            //websocket.Dispose();
 #if DEBUG
             System.GC.Collect();
 #endif
@@ -115,23 +119,23 @@ namespace com.clover.remotepay.transport.remote
             {
                 jsonObj = (JObject)JsonConvert.DeserializeObject(e.Message);
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Console.WriteLine(exc.Message + " => " + e.Message);
-                listeners.ForEach(listener => listener.OnError(exc));
+                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, exc.Message + " => " + e.Message)));
                 return;
             }
-            
+
             JToken method = jsonObj.GetValue(ServicePayloadConstants.PROP_METHOD);
-            if(method == null)
+            if (method == null)
             {
-                listeners.ForEach(listener => listener.OnError(new NullReferenceException("Invalid message: " + e.Message)));
+                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "Invalid message: " + e.Message)));
                 return;
             }
             JObject payload = (JObject)jsonObj.GetValue(ServicePayloadConstants.PROP_PAYLOAD);
             WebSocketMethod wsm = (WebSocketMethod)Enum.Parse(typeof(WebSocketMethod), method.ToString());
 
-            switch(wsm)
+            switch (wsm)
             {
                 case WebSocketMethod.DeviceActivityStart:
                     {
@@ -163,14 +167,15 @@ namespace com.clover.remotepay.transport.remote
                     }
                 case WebSocketMethod.DeviceReady:
                     {
-                        listeners.ForEach(listener => listener.OnDeviceReady());
+                        MerchantInfo merchantInfo = JsonUtils.deserialize<MerchantInfo>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnDeviceReady(merchantInfo));
                         break;
                     }
-                case WebSocketMethod.SignatureVerifyRequest:
+                case WebSocketMethod.VerifySignatureRequest:
                     {
-                        SignatureVerifyRequest svr = JsonUtils.deserialize<SignatureVerifyRequest>(payload.ToString());
+                        VerifySignatureRequest svr = JsonUtils.deserialize<VerifySignatureRequest>(payload.ToString());
                         WebSocketSigVerRequestHandler handler = new WebSocketSigVerRequestHandler(this, svr);
-                        listeners.ForEach(listener => listener.OnSignatureVerifyRequest(handler));
+                        listeners.ForEach(listener => listener.OnVerifySignatureRequest(handler));
                         break;
                     }
                 case WebSocketMethod.SaleResponse:
@@ -189,6 +194,12 @@ namespace com.clover.remotepay.transport.remote
                     {
                         AuthResponse ar = JsonUtils.deserialize<AuthResponse>(payload.ToString());
                         listeners.ForEach(listener => listener.OnAuthResponse(ar));
+                        break;
+                    }
+                case WebSocketMethod.CapturePreAuthResponse:
+                    {
+                        CapturePreAuthResponse ar = JsonUtils.deserialize<CapturePreAuthResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnCapturePreAuthResponse(ar));
                         break;
                     }
                 case WebSocketMethod.RefundPaymentResponse:
@@ -212,7 +223,7 @@ namespace com.clover.remotepay.transport.remote
                 case WebSocketMethod.TipAdjustAuthResponse:
                     {
                         TipAdjustAuthResponse taar = JsonUtils.deserialize<TipAdjustAuthResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnAuthTipAdjustResponse(taar));
+                        listeners.ForEach(listener => listener.OnTipAdjustAuthResponse(taar));
                         break;
                     }
                 case WebSocketMethod.VaultCardResponse:
@@ -230,111 +241,94 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-
-        public void AddCloverConnectorListener(CloverConnectorListener connectorListener)
+        public void AddCloverConnectorListener(ICloverConnectorListener connectorListener)
         {
             listeners.Add(connectorListener);
         }
 
-        public void RemoveCloverConnectorListener(CloverConnectorListener connectorListener)
+        public void RemoveCloverConnectorListener(ICloverConnectorListener connectorListener)
         {
             listeners.Remove(connectorListener);
         }
 
-        public int AcceptSignature(SignatureVerifyRequest request)
+        public void AcceptSignature(VerifySignatureRequest request)
         {
-            if(websocket != null)
+            if (websocket != null)
             {
                 AcceptSignatureRequestMessage message = new AcceptSignatureRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int RejectSignature(SignatureVerifyRequest request)
+        public void RejectSignature(VerifySignatureRequest request)
         {
             if (websocket != null)
             {
                 RejectSignatureRequestMessage message = new RejectSignatureRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int Auth(AuthRequest request)
+        public void Auth(AuthRequest request)
         {
-            if(websocket != null)
+            if (websocket != null)
             {
                 AuthRequestMessage message = new AuthRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int PreAuth(PreAuthRequest request)
+        public void PreAuth(PreAuthRequest request)
         {
             if (websocket != null)
             {
                 PreAuthRequestMessage message = new PreAuthRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int Cancel()
+        public void Cancel()
         {
-            if(websocket != null)
+            if (websocket != null)
             {
                 websocket.Send(JsonUtils.serialize(new CancelRequestMessage()));
-                return 0;
             }
-            return -1;
         }
 
-        public int CaptureAuth(CaptureAuthRequest request)
+        public void CapturePreAuth(CapturePreAuthRequest request)
         {
-            if(websocket != null)
+            if (websocket != null)
             {
-                CaptureAuthRequestMessage message = new CaptureAuthRequestMessage();
+                CapturePreAuthRequestMessage message = new CapturePreAuthRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int VaultCard(int? CardEntryMethods)
+        public void VaultCard(int? CardEntryMethods)
         {
-            if(websocket != null)
+            if (websocket != null)
             {
                 VaultCardRequestMessage message = new VaultCardRequestMessage();
                 message.payload = new VaultCardMessage(CardEntryMethods);
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int Closeout(CloseoutRequest request)
+        public void Closeout(CloseoutRequest request)
         {
             if (websocket != null)
             {
                 CloseoutRequestMessage message = new CloseoutRequestMessage();
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public void DisplayOrder(DisplayOrder order)
+        public void ShowDisplayOrder(DisplayOrder order)
         {
             if (websocket != null)
             {
@@ -344,26 +338,12 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-        public void DisplayOrderDelete(DisplayOrder order)
-        {
-            /*
-            if (websocket != null)
-            {
-                DisplayOrderDeleteRequestMessage message = new DisplayOrderDeleteRequestMessage();
-                message.payload = order;
-                websocket.Send(JsonUtils.serialize(message));
-                return 0;
-            }
-            return -1;
-            */
-        }
-
-        public void DisplayOrderDiscountAdded(DisplayOrder order, DisplayDiscount discount)
+        public void DiscountAddedToDisplayOrder(DisplayOrder order, DisplayDiscount discount)
         {
             if (websocket != null)
             {
-                DisplayOrderDiscountAddedRequestMessage message = new DisplayOrderDiscountAddedRequestMessage();
-                DisplayOrderDiscountAdded payload = new DisplayOrderDiscountAdded();
+                DiscountAddedToDisplayOrderRequestMessage message = new DiscountAddedToDisplayOrderRequestMessage();
+                DiscountAddedToDisplayOrder payload = new DiscountAddedToDisplayOrder();
                 payload.DisplayDiscount = discount;
                 payload.DisplayOrder = order;
                 message.payload = payload;
@@ -371,12 +351,12 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-        public void DisplayOrderDiscountRemoved(DisplayOrder order, DisplayDiscount discount)
+        public void DiscountRemovedFromDisplayOrder(DisplayOrder order, DisplayDiscount discount)
         {
             if (websocket != null)
             {
-                DisplayOrderDiscountRemovedRequestMessage message = new DisplayOrderDiscountRemovedRequestMessage();
-                DisplayOrderDiscountRemoved payload = new DisplayOrderDiscountRemoved();
+                DiscountRemovedFromDisplayOrderRequestMessage message = new DiscountRemovedFromDisplayOrderRequestMessage();
+                DiscountRemovedFromDisplayOrder payload = new DiscountRemovedFromDisplayOrder();
                 payload.DisplayDiscount = discount;
                 payload.DisplayOrder = order;
                 message.payload = payload;
@@ -384,12 +364,12 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-        public void DisplayOrderLineItemAdded(DisplayOrder order, DisplayLineItem lineItem)
+        public void LineItemAddedToDisplayOrder(DisplayOrder order, DisplayLineItem lineItem)
         {
-            if(websocket != null)
+            if (websocket != null)
             {
-                DisplayOrderLineItemAddedRequestMessage message = new DisplayOrderLineItemAddedRequestMessage();
-                DisplayOrderLineItemAdded payload = new DisplayOrderLineItemAdded();
+                LineItemAddedToDisplayOrderRequestMessage message = new LineItemAddedToDisplayOrderRequestMessage();
+                LineItemAddedToDisplayOrder payload = new LineItemAddedToDisplayOrder();
                 payload.DisplayLineItem = lineItem;
                 payload.DisplayOrder = order;
                 message.payload = payload;
@@ -397,17 +377,22 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-        public void DisplayOrderLineItemRemoved(DisplayOrder order, DisplayLineItem lineItem)
+        public void LineItemRemovedFromDisplayOrder(DisplayOrder order, DisplayLineItem lineItem)
         {
             if (websocket != null)
             {
-                DisplayOrderLineItemRemovedRequestMessage message = new DisplayOrderLineItemRemovedRequestMessage();
-                DisplayOrderLineItemRemoved payload = new DisplayOrderLineItemRemoved();
+                LineItemRemovedFromDisplayOrderRequestMessage message = new LineItemRemovedFromDisplayOrderRequestMessage();
+                LineItemRemovedFromDisplayOrder payload = new LineItemRemovedFromDisplayOrder();
                 payload.DisplayLineItem = lineItem;
                 payload.DisplayOrder = order;
                 message.payload = payload;
                 websocket.Send(JsonUtils.serialize(message));
             }
+        }
+
+        public void RemoveDisplayOrder(DisplayOrder displayOrder)
+        {
+            ShowWelcomeScreen();
         }
 
         public void DisplayPaymentReceiptOptions(String orderId, String paymentId)
@@ -418,32 +403,6 @@ namespace com.clover.remotepay.transport.remote
                 DisplayPaymentReceiptOptionsRequest req = new DisplayPaymentReceiptOptionsRequest();
                 req.OrderID = orderId;
                 req.PaymentID = paymentId;
-                message.payload = req;
-                websocket.Send(JsonUtils.serialize(message));
-            }
-        }
-
-        public void DisplayRefundReceiptOptions(String orderId, String refundId)
-        {
-            if (websocket != null)
-            {
-                DisplayRefundReceiptOptionsRequestMessage message = new DisplayRefundReceiptOptionsRequestMessage();
-                DisplayRefundReceiptOptionsRequest req = new DisplayRefundReceiptOptionsRequest();
-                req.OrderID = orderId;
-                req.RefundID = refundId;
-                message.payload = req;
-                websocket.Send(JsonUtils.serialize(message));
-            }
-        }
-
-        public void DisplayCreditReceiptOptions(String orderId, String creditId)
-        {
-            if (websocket != null)
-            {
-                DisplayCreditReceiptOptionsRequestMessage message = new DisplayCreditReceiptOptionsRequestMessage();
-                DisplayCreditReceiptOptionsRequest req = new DisplayCreditReceiptOptionsRequest();
-                req.OrderID = orderId;
-                req.CreditID = creditId;
                 message.payload = req;
                 websocket.Send(JsonUtils.serialize(message));
             }
@@ -461,7 +420,7 @@ namespace com.clover.remotepay.transport.remote
 
         public void InvokeInputOption(InputOption io)
         {
-            if(websocket != null)
+            if (websocket != null)
             {
                 InvokeInputOptionRequestMessage message = new InvokeInputOptionRequestMessage();
                 message.payload = io;
@@ -469,16 +428,14 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-        public int ManualRefund(ManualRefundRequest request)
+        public void ManualRefund(ManualRefundRequest request)
         {
             if (websocket != null)
             {
                 ManualRefundRequestMessage message = new ManualRefundRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
         public void OpenCashDrawer(string reason)
@@ -490,7 +447,7 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-        public int PrintImage(Bitmap bitmap)
+        public void PrintImage(Bitmap bitmap)
         {
             if (websocket != null)
             {
@@ -505,12 +462,10 @@ namespace com.clover.remotepay.transport.remote
                 pi.Bitmap = base64Image; // serialize image to string..
                 message.payload = pi;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int PrintText(List<string> messages)
+        public void PrintText(List<string> messages)
         {
             if (websocket != null)
             {
@@ -519,36 +474,31 @@ namespace com.clover.remotepay.transport.remote
                 pt.Messages = messages;
                 message.payload = pt;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int RefundPayment(RefundPaymentRequest request)
+        public void RefundPayment(RefundPaymentRequest request)
         {
             if (websocket != null)
             {
                 RefundPaymentRequestMessage message = new RefundPaymentRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
-                return 0;
             }
-            return -1;
         }
 
-        public int Sale(SaleRequest request)
+        public void Sale(SaleRequest request)
         {
-            if(websocket != null)
+            if (websocket != null)
             {
                 SaleRequestMessage message = new SaleRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
 
             }
-            return 0;
         }
 
-        public int ShowMessage(string message)
+        public void ShowMessage(string message)
         {
             if (websocket != null)
             {
@@ -559,7 +509,6 @@ namespace com.clover.remotepay.transport.remote
 
                 websocket.Send(JsonUtils.serialize(msg));
             }
-            return 0;
         }
 
         public void ShowThankYouScreen()
@@ -570,16 +519,15 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
-        public int ShowWelcomeScreen()
+        public void ShowWelcomeScreen()
         {
-            if(websocket != null)
+            if (websocket != null)
             {
                 websocket.Send(JsonUtils.serialize(new ShowWelcomeScreenRequestMessage()));
             }
-            return 0;
         }
 
-        public int TipAdjustAuth(TipAdjustAuthRequest request)
+        public void TipAdjustAuth(TipAdjustAuthRequest request)
         {
             if (websocket != null)
             {
@@ -587,10 +535,9 @@ namespace com.clover.remotepay.transport.remote
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
             }
-            return 0;
         }
 
-        public int VoidPayment(VoidPaymentRequest request)
+        public void VoidPayment(VoidPaymentRequest request)
         {
             if (websocket != null)
             {
@@ -599,44 +546,54 @@ namespace com.clover.remotepay.transport.remote
                 websocket.Send(JsonUtils.serialize(message));
 
             }
-            return 0;
         }
 
-        public int VoidTransaction(VoidTransactionRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int ResetDevice()
+        public void ResetDevice()
         {
             if (websocket != null)
             {
                 websocket.Send(JsonUtils.serialize(new BreakRequestMessage()));
-                return 0;
             }
-            return -1;
-        }
-    }
-
-    public class WebSocketSigVerRequestHandler : SignatureVerifyRequest
-    {
-        SignatureVerifyRequest svr;
-        RemoteWebSocketCloverConnector WSCloverConnector;
-        public WebSocketSigVerRequestHandler(RemoteWebSocketCloverConnector cloverConnector, SignatureVerifyRequest request)
-        {
-            WSCloverConnector = cloverConnector;
-            svr = request;
-            Payment = request.Payment;
-            Signature = request.Signature;
-        }
-        public override void Accept()
-        {
-            WSCloverConnector.AcceptSignature(svr);
         }
 
-        public override void Reject()
+        public void initializeConnection()
         {
-            WSCloverConnector.RejectSignature(svr);
+            throw new NotImplementedException();
+        }
+
+        public void PrintImageFromURL(string ImgURL)
+        {
+            if (websocket != null)
+            {
+                PrintImageFromURLRequestMessage msg = new PrintImageFromURLRequestMessage();
+                sdk.service.client.PrintImage payload = new sdk.service.client.PrintImage();
+                payload.Url = ImgURL;
+                msg.payload = payload;
+
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public class WebSocketSigVerRequestHandler : VerifySignatureRequest
+        {
+            VerifySignatureRequest svr;
+            RemoteWebSocketCloverConnector WSCloverConnector;
+            public WebSocketSigVerRequestHandler(RemoteWebSocketCloverConnector cloverConnector, VerifySignatureRequest request)
+            {
+                WSCloverConnector = cloverConnector;
+                svr = request;
+                Payment = request.Payment;
+                Signature = request.Signature;
+            }
+            public override void Accept()
+            {
+                WSCloverConnector.AcceptSignature(svr);
+            }
+
+            public override void Reject()
+            {
+                WSCloverConnector.RejectSignature(svr);
+            }
         }
     }
 }

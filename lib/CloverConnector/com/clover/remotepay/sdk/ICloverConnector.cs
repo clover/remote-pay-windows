@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+// Copyright (C) 2016 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,69 +13,55 @@
 // limitations under the License.
 
 using com.clover.remote.order;
-using com.clover.remotepay.data;
-using com.clover.sdk.v3.payments;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 namespace com.clover.remotepay.sdk
 {
     /// <summary>
-    /// 
+    /// Interface to define the available methods to send requests to 
+    /// a connected Clover device.
     /// </summary>
     public interface ICloverConnector
     {
         /// <summary>
-        /// define the card entry methods supported by the CloverMini
+        /// Starts communication with the device.  This is called after the connector is created and listeners are added to the connector.
         /// </summary>
-        int CardEntryMethod { get; set; }
+        void InitializeConnection();
 
         /// <summary>
-        /// set to true to disable printing on the Clover Mini
+        /// Adds a clover connector listener.
         /// </summary>
-         bool DisablePrinting { get; set; }
+        /// <param name="connectorListener">The connector listener.</param>
+        void AddCloverConnectorListener(ICloverConnectorListener connectorListener);
 
         /// <summary>
-        /// set to true to disable cashback on the Clover Mini
+        /// Removes a clover connector listener.
         /// </summary>
-         bool DisableCashBack { get; set; }
-
-        /// <summary>
-        /// set to true to disable tip on the Clover Mini
-        /// </summary>
-         bool DisableTip { get; set; }
-
-        /// <summary>
-        /// set to true, so when a transaction fails the Clover Mini returns to the welcome screen,
-        /// otherwise it restarts the payment transaction
-        /// </summary>
-         bool DisableRestartTransactionOnFail { get; set; }
-
-         void AddCloverConnectorListener(CloverConnectorListener connectorListener);
-         void RemoveCloverConnectorListener(CloverConnectorListener connectorListener);
+        /// <param name="connectorListener">The connector listener.</param>
+        void RemoveCloverConnectorListener(ICloverConnectorListener connectorListener);
 
         /// <summary>
         /// Sale method, aka "purchase"
         /// </summary>
         /// <param name="request">A SaleRequest object containing basic information needed for the transaction</param>
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
-        int Sale(SaleRequest request);
+        void Sale(SaleRequest request);
 
         /// <summary>
         /// If signature is captured during a Sale, this method accepts the signature as entered
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        int AcceptSignature(SignatureVerifyRequest request);
+        void AcceptSignature(VerifySignatureRequest request);
 
         /// <summary>
         /// If signature is captured during a Sale, this method rejects the signature as entered
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        int RejectSignature(SignatureVerifyRequest request);
+        void RejectSignature(VerifySignatureRequest request);
 
 
         /// <summary>
@@ -83,28 +69,28 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-         int Auth(AuthRequest request);
+        void Auth(AuthRequest request);
 
         /// <summary>
         /// Auth method to obtain an Auth or Pre-Auth, based on the AuthRequest IsPreAuth flag
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        int PreAuth(PreAuthRequest request);
+        void PreAuth(PreAuthRequest request);
 
         /// <summary>
         /// Capture a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        int CaptureAuth(CaptureAuthRequest request);
+        void CapturePreAuth(CapturePreAuthRequest request);
 
         /// <summary>
         /// Adjust the tip for a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-         int TipAdjustAuth(TipAdjustAuthRequest request);
+        void TipAdjustAuth(TipAdjustAuthRequest request);
 
         /// <summary>
         /// Void a transaction, given a previously used order ID and/or payment ID
@@ -112,15 +98,7 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request">A VoidRequest object containing basic information needed to void the transaction</param>
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
-         int VoidPayment(VoidPaymentRequest request);
-
-
-        /// <summary>
-        /// called when requesting a payment be voided when only the request UUID is available
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-         int VoidTransaction(VoidTransactionRequest request);
+        void VoidPayment(VoidPaymentRequest request);
 
 
         /// <summary>
@@ -128,7 +106,7 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-         int RefundPayment(RefundPaymentRequest request);
+        void RefundPayment(RefundPaymentRequest request);
 
 
         /// <summary>
@@ -136,58 +114,58 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request">A ManualRefundRequest object</param>
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
-         int ManualRefund(ManualRefundRequest request); // NakedRefund is a Transaction, with just negative amount
+        void ManualRefund(ManualRefundRequest request); // NakedRefund is a Transaction, with just negative amount
 
         /// <summary>
         /// Vault card, used to get payment token
         /// </summary>
         /// 
-        int VaultCard(int? CardEntryMethods);
+        void VaultCard(int? CardEntryMethods);
 
         /// <summary>
         /// Cancels the device from waiting for a payment card.
         /// </summary>
         /// <returns></returns>
-        int Cancel();
+        void Cancel();
 
         /// <summary>
         /// Send a request to the server to closeout all orders.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        int Closeout(CloseoutRequest request);
+        void Closeout(CloseoutRequest request);
 
         /// <summary>
         /// Send a request to the server to reset the Clover device.
         /// </summary>
         /// <returns></returns>
-        int ResetDevice();
+        void ResetDevice();
 
         /// <summary>
         /// Print simple lines of text to the Clover Mini printer
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
-        int PrintText(List<string> messages);
+        void PrintText(List<string> messages);
 
         /// <summary>
         /// Print an image on the Clover Mini printer
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns></returns>
-        int PrintImage(Bitmap bitmap); //Bitmap img
+        void PrintImage(Bitmap bitmap); //Bitmap img
 
         /// <summary>
         /// Show a message on the Clover Mini screen
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        int ShowMessage(string message);
+        void ShowMessage(string message);
 
         /// <summary>
         /// Return the device to the Welcome Screen
         /// </summary>
-        int ShowWelcomeScreen();
+        void ShowWelcomeScreen();
 
         /// <summary>
         /// Show the thank you screen on the device
@@ -200,16 +178,6 @@ namespace com.clover.remotepay.sdk
         void DisplayPaymentReceiptOptions(String orderId, String paymentId);
 
         /// <summary>
-        /// Show the customer facing receipt option screen for the specified refund.
-        /// </summary>
-        void DisplayRefundReceiptOptions(String orderId, String refundId);
-
-        /// <summary>
-        /// Show the customer facing receipt option screen for the specified credit.
-        /// </summary>
-        void DisplayCreditReceiptOptions(String orderId, String creditId);
-
-        /// <summary>
         /// Will trigger cash drawer to open that is connected to Clover Mini
         /// </summary>
         void OpenCashDrawer(String reason);
@@ -218,21 +186,21 @@ namespace com.clover.remotepay.sdk
         /// Show the DisplayOrder on the device. Replaces the existing DisplayOrder on the device.
         /// </summary>
         /// <param name="order"></param>
-        void DisplayOrder(DisplayOrder order);
+        void ShowDisplayOrder(DisplayOrder order);
 
         /// <summary>
         /// Notify the device of a DisplayLineItem being added to a DisplayOrder
         /// </summary>
         /// <param name="order"></param>
         /// <param name="lineItem"></param>
-        void DisplayOrderLineItemAdded(DisplayOrder order, DisplayLineItem lineItem);
+        void LineItemAddedToDisplayOrder(DisplayOrder order, DisplayLineItem lineItem);
 
         /// <summary>
         /// Notify the device of a DisplayLineItem being removed from a DisplayOrder
         /// </summary>
         /// <param name="order"></param>
         /// <param name="lineItem"></param>
-        void DisplayOrderLineItemRemoved(DisplayOrder order, DisplayLineItem lineItem);
+        void LineItemRemovedFromDisplayOrder(DisplayOrder order, DisplayLineItem lineItem);
 
         /// <summary>
         /// Notify device of a discount being added to the order. 
@@ -240,7 +208,7 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="order"></param>
         /// <param name="discount"></param>
-        void DisplayOrderDiscountAdded(DisplayOrder order, DisplayDiscount discount);
+        void DiscountAddedToDisplayOrder(DisplayOrder order, DisplayDiscount discount);
 
         /// <summary>
         /// Notify the device that a discount was removed from the order.
@@ -248,25 +216,28 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="order"></param>
         /// <param name="discount"></param>
-        void DisplayOrderDiscountRemoved(DisplayOrder order, DisplayDiscount discount);
+        void DiscountRemovedFromDisplayOrder(DisplayOrder order, DisplayDiscount discount);
 
         /// <summary>
         /// Remove the DisplayOrder from the device.
         /// </summary>
         /// <param name="order"></param>
-        void DisplayOrderDelete(DisplayOrder order);
+        void RemoveDisplayOrder(DisplayOrder order);
 
+
+        // 
+        void Dispose();
 
         /// <summary>
-        /// return the Merchant object for the Merchant configured for the Clover Mini
+        /// Invoke the InputOption as sent in the DeviceActivityStart callback
         /// </summary>
-        /// <returns></returns>
-        //void GetMerchantInfo();
+        /// <param name="io"></param>
+        void InvokeInputOption(transport.InputOption io);
 
-        // TODO: should we call through, repurpose or remove?
-         void Dispose();
-
-
-         void InvokeInputOption(transport.InputOption io);
+        /// <summary>
+        /// Print an image from a url
+        /// </summary>
+        /// <param name="ImgURL"></param>
+        void PrintImageFromURL(String ImgURL);
     }
 }

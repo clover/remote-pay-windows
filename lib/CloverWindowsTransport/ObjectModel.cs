@@ -51,6 +51,7 @@ namespace com.clover.remotepay.transport
         public Boolean remotePrint { get; set; }
         public string transactionNo { get; set; }
         public Boolean isForceSwipePinEntry { get; set; }
+        public bool? disableRestartTransactionWhenFailed { get; set; }
         private static readonly String BUNDLE_KEY_ACTION = "a";
         public bool? allowOfflinePayment { get; set; }
         public bool? approveOfflinePaymentWithoutPrompt { get; set; }
@@ -117,6 +118,7 @@ namespace com.clover.remotepay.transport
             public int y;
         }
     }
+    public enum ResponseReasonCode {ORDER_NOT_FOUND, PAYMENT_NOT_FOUND, FAIL}
     public enum TxState { START, SUCCESS, FAIL }
     
     public enum UiState {

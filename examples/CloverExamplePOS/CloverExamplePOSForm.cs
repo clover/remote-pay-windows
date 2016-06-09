@@ -19,10 +19,7 @@ using System.Threading;
 using System.Windows.Forms;
 using com.clover.remotepay.sdk;
 using com.clover.remotepay.transport;
-using com.clover.remotepay.data;
 using com.clover.remotepay.transport.remote;
-using System.ComponentModel;
-using System.Drawing.Imaging;
 using System.IO;
 using com.clover.remote.order;
 using com.clover.sdk.v3.payments;
@@ -30,21 +27,25 @@ using com.clover.sdk.v3.payments;
 
 namespace CloverExamplePOS
 {
-    public partial class CloverExamplePOSForm : Form, CloverConnectorListener
+    public partial class CloverExamplePOSForm : Form, ICloverConnectorListener
     {
         ICloverConnector cloverConnector;
         Store Store;
         SynchronizationContext uiThread;
-
         DisplayOrder DisplayOrder;
         Dictionary<POSLineItem, DisplayLineItem> posLineItemToDisplayLineItem = new Dictionary<POSLineItem, DisplayLineItem>();
         POSLineItem SelectedLineItem = null;
+        bool Connected = false;
+
 
         private Dictionary<string, object> TempObjectMap = new Dictionary<string, object>();
 
         string OriginalFormTitle;
         enum ClientTab { ORDER, ORDERLIST, REFUND, TEST }
         private Boolean _suspendUpdateOrderUI = false;
+
+        // hold a default value for the card entry method
+        public int CardEntryMethod { get; private set; }
 
         public void SubscribeToStoreChanges(Store store)
         {
@@ -68,7 +69,22 @@ namespace CloverExamplePOS
             {
                 new StartupForm(this).Show();
             }, null);
-            
+
+        }
+
+        private void AppShutdown(object sender, EventArgs e)
+        {
+            if (cloverConnector != null)
+            {
+                try
+                {
+                    cloverConnector.Dispose();
+                }
+                catch (Exception)
+                {
+                    cloverConnector = null;
+                }
+            }
         }
 
         private void ExamplePOSForm_Load(object sender, EventArgs e)
@@ -78,6 +94,9 @@ namespace CloverExamplePOS
             RegisterTabs.ItemSize = new Size(0, 1);
             RegisterTabs.SizeMode = TabSizeMode.Fixed;
             // done hiding tabs
+
+            // register for app shutdown
+            Application.ApplicationExit += new EventHandler(this.AppShutdown);
 
             OriginalFormTitle = this.Text;
 
@@ -205,7 +224,7 @@ namespace CloverExamplePOS
 
         public void PreAuthListChanged(POSPayment payment, Store.PreAuthAction action)
         {
-            if(action == Store.PreAuthAction.ADDED)
+            if (action == Store.PreAuthAction.ADDED)
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.Tag = payment;
@@ -216,11 +235,11 @@ namespace CloverExamplePOS
 
                 PreAuthListView.Items.Add(lvi);
             }
-            else if(action == Store.PreAuthAction.REMOVED)
+            else if (action == Store.PreAuthAction.REMOVED)
             {
-                foreach(ListViewItem lvi in PreAuthListView.Items)
+                foreach (ListViewItem lvi in PreAuthListView.Items)
                 {
-                    if(lvi.Tag.Equals(payment))
+                    if (lvi.Tag.Equals(payment))
                     {
                         PreAuthListView.Items.Remove(lvi);
                         break;
@@ -238,7 +257,7 @@ namespace CloverExamplePOS
         private void PayButtonCard_Click(object sender, EventArgs e)
         {
             object obj = ((MenuItem)sender).Tag;
-            if(obj is POSCard)
+            if (obj is POSCard)
             {
                 Pay((POSCard)obj);
             }
@@ -258,6 +277,7 @@ namespace CloverExamplePOS
             newOrderBtn.Enabled = false;
 
             SaleRequest request = new SaleRequest();
+            request.ExternalId = ExternalIDUtil.GenerateRandomString(13);
 
             // Card Entry methods
             int CardEntry = 0;
@@ -266,7 +286,7 @@ namespace CloverExamplePOS
             CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
             CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
 
-            request.CardEntryMethod = CardEntry;
+            request.CardEntryMethods = CardEntry;
             request.CardNotPresent = CardNotPresentCheckbox.Checked;
             request.Amount = Store.CurrentOrder.Total;
             request.TipAmount = 0;
@@ -284,29 +304,34 @@ namespace CloverExamplePOS
             {
                 request.VaultedCard = new com.clover.sdk.v3.payments.VaultedCard();
                 request.VaultedCard.cardholderName = card.Name;
-                request.VaultedCard.first6 = ""+card.First6;
-                request.VaultedCard.last4 = ""+card.Last4;
+                request.VaultedCard.first6 = "" + card.First6;
+                request.VaultedCard.last4 = "" + card.Last4;
                 request.VaultedCard.expirationDate = card.Month + "" + card.Year;
                 request.VaultedCard.token = card.Token;
             }
-            
-            if(Store.CurrentOrder.TippableAmount != Store.CurrentOrder.Total)
+
+            if (Store.CurrentOrder.TippableAmount != Store.CurrentOrder.Total)
             {
                 request.TippableAmount = Store.CurrentOrder.TippableAmount;
             }
-            if(cloverConnector.Sale(request)  < 0)
-            {
-                PaymentReset();
-            }
+            cloverConnector.Sale(request);
         }
+
         public void OnSaleResponse(SaleResponse response)
         {
-            if (TransactionResponse.SUCCESS.ToString().Equals(response.Code))
+            if (response.Success)
             {
-                //cloverConnector.ShowThankYouScreen();
-                Store.CurrentOrder.Status = POSOrder.OrderStatus.CLOSED;
                 POSPayment payment = new POSPayment(response.Payment.id, response.Payment.order.id, response.Payment.employee.id, response.Payment.amount, response.Payment.tipAmount, response.Payment.cashbackAmount);
-                payment.PaymentStatus = POSPayment.Status.PAID;
+                if (response.IsAuth) //Tip Adjustable
+                {
+                    Store.CurrentOrder.Status = POSOrder.OrderStatus.AUTHORIZED;
+                    payment.PaymentStatus = POSPayment.Status.AUTHORIZED;
+                }
+                else
+                {
+                    Store.CurrentOrder.Status = POSOrder.OrderStatus.CLOSED;
+                    payment.PaymentStatus = POSPayment.Status.PAID;
+                }
                 Store.CurrentOrder.AddPayment(payment);
 
                 uiThread.Send(delegate (object state)
@@ -316,38 +341,22 @@ namespace CloverExamplePOS
                         ShowCashBackForm(payment.CashBackAmount);
                     }
                     RegisterTabs.SelectedIndex = 0;
-                    PaymentReset();
                     NewOrder();
                 }, null);
-
-                /*BackgroundWorker bgWorker = new BackgroundWorker();
-                bgWorker.DoWork += new DoWorkEventHandler(
-                    delegate (object o, DoWorkEventArgs args)
-                    {
-                        Thread.Sleep(3000);// wait for 3 seconds, then switch to the welcome screen unless the next order has items
-                        if(Store.CurrentOrder.Items.Count == 0)
-                        {
-                            cloverConnector.ShowWelcomeScreen();
-                        }
-                    }
-                ); 
-
-                bgWorker.RunWorkerAsync();
-                */
             }
-            else if (TransactionResponse.FAIL.ToString().Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.FAIL))
             {
                 uiThread.Send(delegate (object state)
                 {
-                    AlertForm.Show(this, "Failure", "Card authentication failed or was declined.");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
-            else if (TransactionResponse.CANCEL.ToString().Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.CANCEL))
             {
                 uiThread.Send(delegate (object state)
                 {
-                    AlertForm.Show(this, "Canceled", "User canceled transaction");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
@@ -378,13 +387,13 @@ namespace CloverExamplePOS
         private void preAuthFormClosing(object sender, FormClosingEventArgs args)
         {
             POSPayment payment = ((PreAuthListForm)sender).selectedPayment;
-            if(payment != null)
+            if (payment != null)
             {
-                CaptureAuthRequest captureAuthRequest = new CaptureAuthRequest();
+                CapturePreAuthRequest captureAuthRequest = new CapturePreAuthRequest();
                 captureAuthRequest.PaymentID = payment.PaymentID;
                 captureAuthRequest.Amount = Store.CurrentOrder.Total;
                 captureAuthRequest.TipAmount = 0;
-                cloverConnector.CaptureAuth(captureAuthRequest);
+                cloverConnector.CapturePreAuth(captureAuthRequest);
             }
         }
 
@@ -412,7 +421,8 @@ namespace CloverExamplePOS
                 autoResizeColumns(cardsListView);
                 uiThread.Send(delegate (object state)
                 {
-                    if (SaleButton.ContextMenu.MenuItems[0].Enabled == false) {
+                    if (SaleButton.ContextMenu.MenuItems[0].Enabled == false)
+                    {
                         SaleButton.ContextMenu.MenuItems[0].Enabled = true;
                         AuthButton.ContextMenu.MenuItems[0].Enabled = true;
                     }
@@ -437,11 +447,6 @@ namespace CloverExamplePOS
         public void ShowCashBackForm(long Amount)
         {
             AlertForm.Show(this, "Cash Back", "Cash Back " + (Amount / 100.0).ToString("C2"));
-        }
-
-        private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         //////////////// Auth methods /////////////
@@ -475,6 +480,7 @@ namespace CloverExamplePOS
 
             AuthRequest request = new AuthRequest();
             request.Amount = Store.CurrentOrder.Total;
+            request.ExternalId = ExternalIDUtil.GenerateRandomString(13);
 
             // Card Entry methods
             long CardEntry = 0;
@@ -483,7 +489,7 @@ namespace CloverExamplePOS
             CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
             CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
 
-            request.CardEntryMethod = CardEntry;
+            request.CardEntryMethods = CardEntry;
             request.CardNotPresent = CardNotPresentCheckbox.Checked;
             if (!offlineDefault.Checked)
             {
@@ -502,35 +508,28 @@ namespace CloverExamplePOS
                 request.VaultedCard.expirationDate = card.Month + "" + card.Year;
                 request.VaultedCard.token = card.Token;
             }
-
-            if (cloverConnector.Auth(request) < 0)
-            {
-                PaymentReset();
-            }
+            cloverConnector.Auth(request);
         }
 
         public void OnAuthResponse(AuthResponse response)
         {
-            if (TransactionResponse.SUCCESS.ToString().Equals(response.Code))
+            if (response.Success)
             {
-                
-                if(Result.AUTH.Equals(response.Payment.result)) //deprecated, but remains for backward compatibility
+                if (Result.SUCCESS.Equals(response.Payment.result))
                 {
-                    uiThread.Send(delegate (object state) {
-                        AlertForm.Show(this, "Card Authorized", "Payment was Pre-Authorized");
-                        POSPayment preAuth = new POSPayment(response.Payment.id, response.Payment.order.id, null, response.Payment.amount);
-                        Store.AddPreAuth(preAuth);
-
-                    }, null);
-                }
-                else if(Result.SUCCESS.Equals(response.Payment.result))
-                {
-                    //cloverConnector.ShowThankYouScreen();
-                    Store.CurrentOrder.Status = POSOrder.OrderStatus.AUTHORIZED;
                     POSPayment payment = new POSPayment(response.Payment.id, response.Payment.order.id, response.Payment.employee.id, response.Payment.amount, response.Payment.tipAmount, response.Payment.cashbackAmount);
-                    payment.PaymentStatus = POSPayment.Status.AUTHORIZED;
-                    Store.CurrentOrder.AddPayment(payment);
+                    if (response.IsAuth)
+                    {
+                        Store.CurrentOrder.Status = POSOrder.OrderStatus.AUTHORIZED;
+                        payment.PaymentStatus = POSPayment.Status.AUTHORIZED;
+                    }
+                    else
+                    {
+                        Store.CurrentOrder.Status = POSOrder.OrderStatus.CLOSED;
+                        payment.PaymentStatus = POSPayment.Status.PAID;
+                    }
 
+                    Store.CurrentOrder.AddPayment(payment);
                     uiThread.Send(delegate (object state)
                     {
                         if (payment.CashBackAmount > 0)
@@ -538,39 +537,23 @@ namespace CloverExamplePOS
                             ShowCashBackForm(payment.CashBackAmount);
                         }
                         RegisterTabs.SelectedIndex = 0;
-                        PaymentReset();
                         NewOrder();
                     }, null);
-
-                    /*BackgroundWorker bgWorker = new BackgroundWorker();
-                    bgWorker.DoWork += new DoWorkEventHandler(
-                        delegate (object o, DoWorkEventArgs args)
-                        {
-                            Thread.Sleep(3000);// wait for 3 seconds, then switch to the welcome screen unless the next order has items
-                        if (Store.CurrentOrder.Items.Count == 0)
-                            {
-                                cloverConnector.ShowWelcomeScreen();
-                            }
-                        }
-                    );
-
-                    bgWorker.RunWorkerAsync();
-                    */
                 }
             }
-            else if (TransactionResponse.FAIL.ToString().Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.FAIL))
             {
                 uiThread.Send(delegate (object state)
                 {
-                    AlertForm.Show(this, "Authentication Error", "Card authentication failed or was declined");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
-            else if (TransactionResponse.CANCEL.ToString().Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.CANCEL))
             {
                 uiThread.Send(delegate (object state)
                 {
-                    AlertForm.Show(this, "Transaction Canceled", "User canceled transaction.");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
@@ -587,6 +570,7 @@ namespace CloverExamplePOS
 
             PreAuthRequest request = new PreAuthRequest();
             request.Amount = Store.CurrentOrder.Total;
+            request.ExternalId = ExternalIDUtil.GenerateRandomString(13);
 
             // Card Entry methods
             long CardEntry = 0;
@@ -595,7 +579,7 @@ namespace CloverExamplePOS
             CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
             CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
 
-            request.CardEntryMethod = CardEntry;
+            request.CardEntryMethods = CardEntry;
             request.CardNotPresent = CardNotPresentCheckbox.Checked;
             if (card != null)
             {
@@ -606,16 +590,12 @@ namespace CloverExamplePOS
                 request.VaultedCard.expirationDate = card.Month + "" + card.Year;
                 request.VaultedCard.token = card.Token;
             }
-
-            if (cloverConnector.PreAuth(request) < 0)
-            {
-                PaymentReset();
-            }
+            cloverConnector.PreAuth(request);
         }
 
         public void OnPreAuthResponse(PreAuthResponse response)
         {
-            if (TransactionResponse.SUCCESS.ToString().Equals(response.Code))
+            if (response.Success)
             {
 
                 if (Result.AUTH.Equals(response.Payment.result))
@@ -628,42 +608,37 @@ namespace CloverExamplePOS
                     }, null);
                 }
             }
-            else if (TransactionResponse.FAIL.ToString().Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.FAIL))
             {
                 uiThread.Send(delegate (object state)
                 {
-                    AlertForm.Show(this, "Authentication Error", "Card authentication failed or was declined");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
-            else if (TransactionResponse.CANCEL.ToString().Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.CANCEL))
             {
                 uiThread.Send(delegate (object state)
                 {
-                    AlertForm.Show(this, "Transaction Canceled", "User canceled transaction.");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
         }
 
-        private void CaptureButton_Click(object sender, EventArgs e)
+        public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
         {
-
-        }
-
-        public void OnAuthCaptureResponse(CaptureAuthResponse response)
-        {
-            if("SUCCESS".Equals(response.Code))
+            if (response.Success)
             {
-                foreach(POSPayment preAuth in Store.PreAuths)
+                foreach (POSPayment preAuth in Store.PreAuths)
                 {
-                    if(preAuth.PaymentID.Equals(response.paymentId))
+                    if (preAuth.PaymentID.Equals(response.PaymentId))
                     {
                         uiThread.Send(delegate (object state) {
                             Store.CurrentOrder.Status = POSOrder.OrderStatus.AUTHORIZED;
                             preAuth.PaymentStatus = POSPayment.Status.AUTHORIZED;
-                            preAuth.Amount = response.amount;
-                            preAuth.TipAmount = response.tipAmount;
+                            preAuth.Amount = response.Amount;
+                            preAuth.TipAmount = response.TipAmount;
                             Store.CurrentOrder.AddOrderPayment(preAuth);
 
                             NewOrder();
@@ -677,28 +652,23 @@ namespace CloverExamplePOS
             else
             {
                 uiThread.Send(delegate (object state) {
-                    AlertForm.Show(this, "Error", "Error capturing payment for Pre Auth");
+                    AlertForm.Show(this, response.Reason, response.Message);
                 }, null);
-                
+
             }
         }
 
-        private void AdjustTipButton_Click(object sender, EventArgs e)
+        public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
-
-        }
-
-        public void OnAuthTipAdjustResponse(TipAdjustAuthResponse response)
-        {
-            if(response.Success)
+            if (response.Success)
             {
                 POSOrder order = Store.GetOrder(response.PaymentId);
-                order.ModifyTipAmount(response.PaymentId, response.Amount);
+                order.ModifyTipAmount(response.PaymentId, response.TipAmount);
             }
             else
             {
                 uiThread.Send(delegate (object state) {
-                    AlertForm.Show(this, "Error", "Tip adjust failed,");
+                    AlertForm.Show(this, response.Reason, response.Message);
                 }, null);
             }
         }
@@ -716,17 +686,17 @@ namespace CloverExamplePOS
         }
         public void OnCloseoutResponse(CloseoutResponse response)
         {
-            if(response != null && response.status == ResultStatus.SUCCESS)
+            if (response != null && response.Success)
             {
                 uiThread.Send(delegate (object state) {
-                    AlertForm.Show(this, "Batch Closed", "Batch " + response.batch.id + " was successfully processed.");
+                    AlertForm.Show(this, "Batch Closed", "Batch " + response.Batch.id + " was successfully processed.");
                 }, null);
 
             }
-            if (response != null && response.status == ResultStatus.FAIL)
+            if (response != null && response.Result.Equals(ResponseCode.FAIL))
             {
                 uiThread.Send(delegate (object state) {
-                    AlertForm.Show(this, "Close Attempt Failed", "Reason: " + response.reason + ".");
+                    AlertForm.Show(this, "Close Attempt Failed", "Reason: " + response.Reason + ".");
                 }, null);
 
             }
@@ -775,7 +745,7 @@ namespace CloverExamplePOS
             {
                 foreach (POSExchange payment in order.Payments)
                 {
-                    if(payment.PaymentID == response.PaymentId)
+                    if (payment.PaymentID == response.PaymentId)
                     {
                         ((POSPayment)payment).PaymentStatus = POSPayment.Status.VOIDED;
                         order.Status = POSOrder.OrderStatus.OPEN; //re-open order for editing/payment
@@ -783,33 +753,23 @@ namespace CloverExamplePOS
                         break;
                     }
                 }
-                if(voided)
+                if (voided)
                 {
                     break;
                 }
             }
             uiThread.Send(delegate (object state) {
                 VoidButton.Enabled = false;
-                PaymentRefundButton.Enabled = false;
+                RefundPaymentButton.Enabled = false;
             }, null);
 
         }
-
-        private void VoidTransactionButton_Click(object sender, EventArgs e)
-        {
-            VoidTransactionRequest request = new VoidTransactionRequest();
-            cloverConnector.VoidTransaction(new VoidTransactionRequest());
-        }
-        public void OnVoidTransactionResponse(VoidTransactionResponse response)
-        {
-
-        }
-
 
         //////////////// Manual Refund methods /////////////
         private void ManualRefundButton_Click(object sender, EventArgs e)
         {
             ManualRefundRequest request = new ManualRefundRequest();
+            request.ExternalId = ExternalIDUtil.GenerateRandomString(13);
             request.Amount = int.Parse(RefundAmount.Text);
 
             // Card Entry methods
@@ -819,14 +779,14 @@ namespace CloverExamplePOS
             CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
             CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
 
-            request.CardEntryMethod = CardEntry;
+            request.CardEntryMethods = CardEntry;
 
             cloverConnector.ManualRefund(request);
         }
         public void OnManualRefundResponse(ManualRefundResponse response)
         {
 
-            if (TransactionResponse.SUCCESS.Equals(response.Code))
+            if (response.Success)
             {
                 uiThread.Send(delegate (object state) {
                     ListViewItem lvi = new ListViewItem();
@@ -847,23 +807,23 @@ namespace CloverExamplePOS
 
                     RefundAmount.Text = "";
                     ManualRefundButton.Enabled = false;
-                    ManualRefundReceiptButton.Enabled = false;
+                    //ManualRefundReceiptButton.Enabled = false;
 
                     TransactionsListView.Items.Add(lvi);
                     autoResizeColumns(TransactionsListView);
                 }, null);
             }
-            else if (TransactionResponse.FAIL.Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.FAIL))
             {
                 uiThread.Send(delegate (object state) {
-                    AlertForm.Show(this, "Fail", "Manual card refund transaction failed.");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
-            else if (TransactionResponse.CANCEL.Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.CANCEL))
             {
                 uiThread.Send(delegate (object state) {
-                    AlertForm.Show(this, "Canceled", "User canceled transaction.");
+                    AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
@@ -872,43 +832,30 @@ namespace CloverExamplePOS
 
         private void TransactionsListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (TransactionsListView.SelectedItems.Count == 1)
-            {
-                ManualRefundReceiptButton.Enabled = true;
-            }
-            else
-            {
-                ManualRefundReceiptButton.Enabled = false;
-            }
+
         }
 
 
         private void ManualRefundReceiptButton_Click(object sender, EventArgs e)
         {
-            if (TransactionsListView.SelectedItems.Count == 1)
-            {
-                if (TransactionsListView.SelectedItems[0].Tag is POSManualRefund)
-                {
-                    POSManualRefund manualRefund = ((POSManualRefund)TransactionsListView.SelectedItems[0].Tag);
-                    cloverConnector.DisplayCreditReceiptOptions(manualRefund.OrderID, manualRefund.CreditID);
-                }
-            }
+            AlertForm.Show(this, "More to come...", "This function is not yet implemented.");
         }
 
 
 
         //////////////// Payment Refund methods /////////////
-        private void PaymentRefundButton_Click(object sender, EventArgs e)
+        private void RefundPaymentButton_Click(object sender, EventArgs e)
         {
             RefundPaymentRequest request = new RefundPaymentRequest();
-            
+
             if (OrderPaymentsView.SelectedItems.Count == 1)
             {
                 POSPayment payment = ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag);
                 request.PaymentId = payment.PaymentID;
                 POSOrder order = (POSOrder)OrdersListView.SelectedItems[0].Tag;
                 request.OrderId = payment.OrderID;
-                request.Amount = 0;  // This will cause the device to refund the entire amount, including tips
+                request.Amount = 0;
+                request.FullRefund = true; 
                 TempObjectMap.Clear();
                 TempObjectMap.Add(payment.PaymentID, order);
                 cloverConnector.RefundPayment(request);
@@ -917,22 +864,26 @@ namespace CloverExamplePOS
         public void OnRefundPaymentResponse(RefundPaymentResponse response)
         {
 
-            if (TxState.SUCCESS.ToString().Equals(response.Code))
+            if (response.Success)
             {
-                string paymentID = response.RefundObj.payment.id;
-
-                if(paymentID != null)
+                string paymentID = response.PaymentId;
+                string employeeID = null;
+                if (paymentID != null)
                 {
                     uiThread.Send(delegate (object state) {
 
                         object orderObj = null;
-                        
-                        TempObjectMap.TryGetValue(response.PaymentId, out orderObj);
-                        if(orderObj != null)
-                        {
-                            TempObjectMap.Remove(response.PaymentId);
 
-                            POSRefund refund = new POSRefund(response.RefundObj.id, response.PaymentId, response.OrderId, null, response.RefundObj.amount);
+                        TempObjectMap.TryGetValue(paymentID, out orderObj);
+                        if (orderObj != null)
+                        {
+                            TempObjectMap.Remove(paymentID);
+                            if (response.Refund.employee != null)
+                            {
+                                employeeID = response.Refund.employee.id;
+                            }
+
+                            POSRefund refund = new POSRefund(response.Refund.id, response.PaymentId, response.OrderId, employeeID, response.Refund.amount);
 
                             ((POSOrder)orderObj).Status = POSOrder.OrderStatus.OPEN; //re-open order for editing/payment
                             ((POSOrder)orderObj).AddRefund(refund);
@@ -948,9 +899,8 @@ namespace CloverExamplePOS
                 {
                     AlertForm.Show(this, "Error", "Couldn't find paymentID");
                 }
-                //cloverConnector.ShowWelcomeScreen();
             }
-            else if (TxState.FAIL.ToString().Equals(response.Code))
+            else if (response.Result.Equals(ResponseCode.FAIL))
             {
                 uiThread.Send(delegate (object state) {
                     AlertForm.Show(this, "Error", response.Message);
@@ -965,11 +915,6 @@ namespace CloverExamplePOS
             //TODO: cloverConnector.ChooseReceipt(orderID, paymentID);
         }
 
-        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
-        {
-
-        }
-
         ////////////////// CloverDeviceLister Methods //////////////////////
 
         public void OnDeviceConnected()
@@ -979,14 +924,14 @@ namespace CloverExamplePOS
             }, null);
         }
 
-        public void OnDeviceReady()
+        public void OnDeviceReady(MerchantInfo merchantInfo)
         {
             uiThread.Send(delegate (object state) {
                 ConnectStatusLabel.Text = "Connected";
-                if(DisplayOrder.lineItems.elements.Count > 0)
+                Connected = true;
+                if (DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
                 {
                     UpdateDisplayOrderTotals();
-                    cloverConnector.DisplayOrder(DisplayOrder);
                 }
                 PaymentReset();
             }, null);
@@ -998,11 +943,12 @@ namespace CloverExamplePOS
             {
                 uiThread.Send(delegate (object state) {
                     ConnectStatusLabel.Text = "Disconnected";
+                    Connected = false;
                     PaymentReset();
                 }, null);
-                
+
             }
-            catch(Exception e)
+            catch (Exception)
             {
                 // uiThread is gone on shutdown
             }
@@ -1011,7 +957,7 @@ namespace CloverExamplePOS
 
 
 
-        ////////////////// CloverDeviceLister Methods //////////////////////
+        ////////////////// CloverDeviceListener Methods //////////////////////
         public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
         {
             uiThread.Send(delegate (object state) {
@@ -1034,7 +980,7 @@ namespace CloverExamplePOS
                         b.Click += getHandler(io);
                         UIStateButtonPanel.Controls.Add(b);
                     }
-                    
+
                 }
                 UIStateButtonPanel.Parent.PerformLayout();
                 DeviceCurrentStatus.Text = deviceEvent.Message;
@@ -1051,7 +997,7 @@ namespace CloverExamplePOS
                     DeviceCurrentStatus.Text = " ";
                 }, null);
             }
-            catch(Exception e)
+            catch (Exception)
             {
                 // if UI goes away, uiThread may be disposed
             }
@@ -1072,26 +1018,31 @@ namespace CloverExamplePOS
         /// Handle a request from the Clover device to verify a signature
         /// </summary>
         /// <param name="request"></param>
-        public void OnSignatureVerifyRequest(SignatureVerifyRequest request)
+        public void OnVerifySignatureRequest(VerifySignatureRequest request)
         {
-            CloverExamplePOSForm parentForm = this;
-            uiThread.Send(delegate (object state)
+            if (autoApproveSigYes.Checked)
             {
-                SignatureForm sigForm = new SignatureForm(parentForm);
-                sigForm.SignatureVerifyRequest = request;
-                sigForm.Show();
-            }, null);
-            
+                request.Accept();
+            }
+            else {
+                CloverExamplePOSForm parentForm = this;
+                uiThread.Send(delegate (object state)
+                {
+                    SignatureForm sigForm = new SignatureForm(parentForm);
+                    sigForm.VerifySignatureRequest = request;
+                    sigForm.Show();
+                }, null);
+            }
         }
 
 
 
-        public void OnError(Exception e)
+        public void OnDeviceError(Exception e)
         {
             uiThread.Send(delegate (object state) {
-                AlertForm.Show(this, "Error", e.Message);
+                AlertForm.Show(this, e.GetType().ToString(), e.Message);
             }, null);
-            
+
         }
 
         ////////////////// CloverTipListener Methods //////////////////////
@@ -1123,13 +1074,13 @@ namespace CloverExamplePOS
                 displayLineItem.price = (lineItem.Item.Price / 100.0).ToString("C2");
                 DisplayOrder.addDisplayLineItem(displayLineItem);
                 UpdateDisplayOrderTotals();
-                cloverConnector.DisplayOrderLineItemAdded(DisplayOrder, displayLineItem);
+                cloverConnector.LineItemAddedToDisplayOrder(DisplayOrder, displayLineItem);
             }
             else
             {
                 displayLineItem.quantity = lineItem.Quantity.ToString();
                 UpdateDisplayOrderTotals();
-                cloverConnector.DisplayOrder(DisplayOrder);
+                cloverConnector.ShowDisplayOrder(DisplayOrder);
             }
         }
 
@@ -1149,20 +1100,20 @@ namespace CloverExamplePOS
             DisplayDiscount.amount = Decimal.Divide(discount.Value(Store.CurrentOrder.PreDiscountSubTotal), 100).ToString("C2");
             DisplayDiscount.percentage = (discount.PercentageOff * 100).ToString("###");
 
-            // our business rules say only 1 order discount
-            while(DisplayOrder.discounts.elements.Count > 0)
+            // our example POS business rules say only 1 order discount
+            while (DisplayOrder.discounts.elements.Count > 0)
             {
                 DisplayDiscount RemovedDisplayDiscount = (DisplayDiscount)DisplayOrder.discounts.elements[0];
                 DisplayOrder.discounts.Remove(RemovedDisplayDiscount);
                 UpdateDisplayOrderTotals();
-                cloverConnector.DisplayOrderDiscountRemoved(DisplayOrder, RemovedDisplayDiscount);
+                cloverConnector.DiscountRemovedFromDisplayOrder(DisplayOrder, RemovedDisplayDiscount);
             }
 
-            if(discount.Value(1000) != 0)
+            if (discount.Value(1000) != 0)
             {
                 DisplayOrder.addDisplayDiscount(DisplayDiscount);
                 UpdateDisplayOrderTotals();
-                cloverConnector.DisplayOrderDiscountAdded(DisplayOrder, DisplayDiscount);
+                cloverConnector.DiscountAddedToDisplayOrder(DisplayOrder, DisplayDiscount);
             }
             Store.NewDiscount = false; //enables reapplication of a discount during UpdateDisplayOrderTotals() calls
         }
@@ -1176,9 +1127,9 @@ namespace CloverExamplePOS
             // This block of code handles reapplying an existing order discount when new items are added or removed
             // If this method call is the result of a new discount being applied or removed, then this logic should be bypassed
             // as it is already handled as part of the add/remove discount logic
-            if (Store.CurrentOrder.Discount != null && !Store.NewDiscount) 
+            if (Store.CurrentOrder.Discount != null && !Store.NewDiscount)
             {
-                ReapplyOrderDiscount(Store.CurrentOrder.Discount); 
+                ReapplyOrderDiscount(Store.CurrentOrder.Discount);
             }
         }
 
@@ -1189,18 +1140,18 @@ namespace CloverExamplePOS
             DisplayDiscount.amount = Decimal.Divide(discount.Value(Store.CurrentOrder.PreDiscountSubTotal), 100).ToString("C2");
             DisplayDiscount.percentage = (discount.PercentageOff * 100).ToString("###");
 
-            // our business rules say only 1 order discount
+            // our example POS business rules say only 1 order discount
             while (DisplayOrder.discounts.elements.Count > 0)
             {
                 DisplayDiscount RemovedDisplayDiscount = (DisplayDiscount)DisplayOrder.discounts.elements[0];
                 DisplayOrder.discounts.Remove(RemovedDisplayDiscount);
-                cloverConnector.DisplayOrderDiscountRemoved(DisplayOrder, RemovedDisplayDiscount);
+                cloverConnector.DiscountRemovedFromDisplayOrder(DisplayOrder, RemovedDisplayDiscount);
             }
 
             if (discount.Value(1000) != 0)
             {
                 DisplayOrder.addDisplayDiscount(DisplayDiscount);
-                cloverConnector.DisplayOrderDiscountAdded(DisplayOrder, DisplayDiscount);
+                cloverConnector.DiscountAddedToDisplayOrder(DisplayOrder, DisplayDiscount);
             }
 
         }
@@ -1228,16 +1179,15 @@ namespace CloverExamplePOS
             DisplayOrder.title = Guid.NewGuid().ToString();
             posLineItemToDisplayLineItem.Clear();
 
-            if(cloverConnector != null)
-            {
-                cloverConnector.ShowWelcomeScreen();
-            }
-
             StoreItems.Enabled = true;
             TabControl.Enabled = true;
 
             RegisterTabs.SelectedIndex = 0;
             TabControl.SelectedIndex = 0;
+            if (Connected)
+            {
+                cloverConnector.ShowWelcomeScreen(); //This will make sure that the customer sees a
+            }                                        //Welcome screen anytime a new order is initiated.
         }
 
         private void RebuildOrderOnDevice()
@@ -1263,7 +1213,7 @@ namespace CloverExamplePOS
                 }
             }
             UpdateDisplayOrderTotals();
-            cloverConnector.DisplayOrder(DisplayOrder);
+            cloverConnector.ShowDisplayOrder(DisplayOrder);
             _suspendUpdateOrderUI = false;
         }
 
@@ -1326,7 +1276,18 @@ namespace CloverExamplePOS
 
         private void TabControl_SelectedIndexChanged(Object sender, EventArgs ev)
         {
-           OrdersListViewRefresh();
+            if (TabControl.SelectedIndex == 0) // Register Tab
+            {
+                if (DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
+                {
+                    cloverConnector.ShowDisplayOrder(DisplayOrder);
+                }
+                UpdateOrderUI();
+            }
+            else if (TabControl.SelectedIndex == 1) // Orders Tab
+            {
+                OrdersListViewRefresh();
+            }
         }
 
         private void RefreshSelectedOrderData()
@@ -1371,13 +1332,13 @@ namespace CloverExamplePOS
                         OrdersListView.Items.Add(lvi);
                     }
                 }
-                PaymentRefundButton.Enabled = false;
+                RefundPaymentButton.Enabled = false;
                 VoidButton.Enabled = false;
                 TipAdjustButton.Enabled = false;
                 OpenOrder_Button.Enabled = false;
                 ShowReceiptButton.Enabled = false;
             }
-            else if(TabControl.SelectedIndex == 3)
+            else if (TabControl.SelectedIndex == 3)
             {
                 cardsListView.Items.Clear();
                 foreach (POSCard card in Store.Cards)
@@ -1391,7 +1352,7 @@ namespace CloverExamplePOS
 
         private void OrdersListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PaymentRefundButton.Enabled = false;
+            RefundPaymentButton.Enabled = false;
             VoidButton.Enabled = false;
             TipAdjustButton.Enabled = false;
             OpenOrder_Button.Enabled = false;
@@ -1464,9 +1425,9 @@ namespace CloverExamplePOS
             StoreItems.Enabled = true;
             TabControl.Enabled = true;
 
-            if(DisplayOrder.lineItems.elements.Count > 0)
+            if (DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
             {
-                cloverConnector.DisplayOrder(DisplayOrder);
+                cloverConnector.ShowDisplayOrder(DisplayOrder);
             }
 
             UpdateOrderUI();
@@ -1481,21 +1442,21 @@ namespace CloverExamplePOS
         {
             if (OrderPaymentsView.SelectedIndices.Count == 1 && OrderPaymentsView.SelectedItems[0].Tag is POSRefund)
             {
-                ShowReceiptButton.Enabled = true;
+                // ShowReceiptButton.Enabled = true;
             }
             else
             {
                 if (OrderPaymentsView.SelectedIndices.Count == 1 && (OrderPaymentsView.SelectedItems[0].Tag is POSPayment) && (((POSPayment)OrderPaymentsView.SelectedItems[0].Tag).PaymentStatus == POSPayment.Status.PAID || ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag).PaymentStatus == POSPayment.Status.AUTHORIZED))
                 {
                     VoidButton.Enabled = true;
-                    PaymentRefundButton.Enabled = true;
+                    RefundPaymentButton.Enabled = true;
                     ShowReceiptButton.Enabled = true;
 
                 }
                 else
                 {
                     VoidButton.Enabled = false;
-                    PaymentRefundButton.Enabled = false;
+                    RefundPaymentButton.Enabled = false;
                     ShowReceiptButton.Enabled = false;
                 }
             }
@@ -1518,13 +1479,6 @@ namespace CloverExamplePOS
                 e.Handled = true;
             }
 
-            // only allow one decimal point
-            if ((e.KeyChar == '.')/* && ((sender as TextBox).Text.IndexOf('.') > -1)*/)
-            {
-                e.Handled = true;
-            }
-
-
             int result = 0;
             if (!int.TryParse(RefundAmount.Text, out result))
             {
@@ -1540,7 +1494,7 @@ namespace CloverExamplePOS
 
         private void ExamplePOSForm_Closed(object sender, FormClosedEventArgs e)
         {
-            if(cloverConnector != null)
+            if (cloverConnector != null)
             {
                 cloverConnector.ShowWelcomeScreen(); // this may not fire, if the queue is processed before Exit();
             }
@@ -1567,7 +1521,7 @@ namespace CloverExamplePOS
             ItemQuantityTextbox.Text = "" + SelectedLineItem.Quantity;
             UpdateDisplayOrderTotals();
             posLineItemToDisplayLineItem[SelectedLineItem].quantity = "" + SelectedLineItem.Quantity;
-            cloverConnector.DisplayOrder(DisplayOrder);
+            cloverConnector.ShowDisplayOrder(DisplayOrder);
             UpdateOrderUI();
         }
 
@@ -1583,7 +1537,7 @@ namespace CloverExamplePOS
                 ItemQuantityTextbox.Text = "" + SelectedLineItem.Quantity;
                 UpdateDisplayOrderTotals();
                 posLineItemToDisplayLineItem[SelectedLineItem].quantity = "" + SelectedLineItem.Quantity;
-                cloverConnector.DisplayOrder(DisplayOrder);
+                cloverConnector.ShowDisplayOrder(DisplayOrder);
                 UpdateOrderUI();
             }
         }
@@ -1599,7 +1553,7 @@ namespace CloverExamplePOS
             DisplayLineItem dli = posLineItemToDisplayLineItem[SelectedLineItem];
             DisplayOrder.removeDisplayLineItem(dli);
             UpdateDisplayOrderTotals();
-            cloverConnector.DisplayOrderLineItemRemoved(DisplayOrder, dli);
+            cloverConnector.LineItemRemovedFromDisplayOrder(DisplayOrder, dli);
             RegisterTabs.SelectedIndex = 0;
         }
 
@@ -1616,7 +1570,7 @@ namespace CloverExamplePOS
             discount.amount = (SelectedLineItem.Discount.Value(SelectedLineItem.Item) * SelectedLineItem.Quantity / 100.0).ToString("C2");
 
             UpdateDisplayOrderTotals();
-            cloverConnector.DisplayOrder(DisplayOrder);
+            cloverConnector.ShowDisplayOrder(DisplayOrder);
 
             DiscountButton.Enabled = false;
             UpdateOrderUI();
@@ -1630,7 +1584,7 @@ namespace CloverExamplePOS
 
         public void InitializeConnector(CloverDeviceConfiguration config)
         {
-            if(cloverConnector != null)
+            if (cloverConnector != null)
             {
                 cloverConnector.RemoveCloverConnectorListener(this);
 
@@ -1642,26 +1596,30 @@ namespace CloverExamplePOS
             if (config is RemoteRESTCloverConfiguration)
             {
                 cloverConnector = new RemoteRESTCloverConnector(config);
+                cloverConnector.InitializeConnection();
             }
-            else if(config is RemoteWebSocketCloverConfiguration)
+            else if (config is RemoteWebSocketCloverConfiguration)
             {
                 cloverConnector = new RemoteWebSocketCloverConnector(config);
+                cloverConnector.InitializeConnection();
             }
             else
             {
                 cloverConnector = new CloverConnector(config);
+                cloverConnector.InitializeConnection();
             }
-            
+
 
             cloverConnector.AddCloverConnectorListener(this);
 
             //UI cleanup
             this.Text = OriginalFormTitle + " - " + config.getName();
+            CardEntryMethod = 34567;
 
-            ManualEntryCheckbox.Checked = (cloverConnector.CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_MANUAL) == CloverConnector.CARD_ENTRY_METHOD_MANUAL;
-            MagStripeCheckbox.Checked = (cloverConnector.CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE) == CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE;
-            ChipCheckbox.Checked = (cloverConnector.CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT) == CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT;
-            ContactlessCheckbox.Checked = (cloverConnector.CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS) == CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
+            ManualEntryCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_MANUAL) == CloverConnector.CARD_ENTRY_METHOD_MANUAL;
+            MagStripeCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE) == CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE;
+            ChipCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT) == CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT;
+            ContactlessCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS) == CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
         }
 
         private void PrintTextButton_Click(object sender, EventArgs e)
@@ -1673,6 +1631,7 @@ namespace CloverExamplePOS
 
         private void BrowseImageButton_Click(object sender, EventArgs e)
         {
+            PrintURLTextBox.Clear();
             OpenFileDialog open = new OpenFileDialog();
 
             open.Filter = "Image Files(*.jpg, *.jpeg, *.gif, *.bmp, *.png)|*.jpg; *.jpeg; *.gif; *.bmp; *.png";
@@ -1684,11 +1643,11 @@ namespace CloverExamplePOS
                     Bitmap img = (Bitmap)Bitmap.FromFile(filename);
                     PrintImage.Image = img;
                 }
-                catch (FileNotFoundException fnfe)
+                catch (FileNotFoundException)
                 {
                     AlertForm.Show(this, "Invalid file", "Invalid file: " + filename);
                 }
-                catch (ArgumentException ae)
+                catch (ArgumentException)
                 {
                     AlertForm.Show(this, "Invalid Image", "Invalid Image file");
                 }
@@ -1697,7 +1656,20 @@ namespace CloverExamplePOS
 
         private void PrintImageButton_Click(object sender, EventArgs e)
         {
-            if (PrintImage.Image != null && PrintImage.Image is Bitmap)
+            if (PrintURLTextBox.Text != null && PrintURLTextBox.Text != "")
+            {
+                try
+                {
+                    PrintImage.Load(PrintURLTextBox.Text);
+                }
+                catch (Exception ex)
+                {
+                    AlertForm.Show(this, "Invalid Image", ex.Message);
+                    return;
+                }
+                cloverConnector.PrintImageFromURL(PrintURLTextBox.Text);
+            }
+            else if (PrintImage.Image != null && PrintImage.Image is Bitmap)
             {
                 cloverConnector.PrintImage((Bitmap)PrintImage.Image);
             }
@@ -1725,10 +1697,6 @@ namespace CloverExamplePOS
                 {
                     POSPayment payment = ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag);
                     cloverConnector.DisplayPaymentReceiptOptions(payment.OrderID, payment.PaymentID);
-                } else
-                {
-                    POSRefund refund = ((POSRefund)OrderPaymentsView.SelectedItems[0].Tag);
-                    cloverConnector.DisplayRefundReceiptOptions(refund.OrderID, refund.RefundID);
                 }
             }
         }
@@ -1748,24 +1716,6 @@ namespace CloverExamplePOS
             cloverConnector.Cancel();
         }
 
-
-        /*private void TestDeviceMenuItem_Click(object sender, EventArgs e)
-        {
-            InitializeConnector(TestConfig);
-        }
-
-        private void CloverMiniUSBMenuItem_Click(object sender, EventArgs e)
-        {
-            InitializeConnector(USBConfig);
-        }
-
-        private void cloverRESTServiceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InitializeConnector(RestConfig);
-        }*/
-
-
-
         /// <summary>
         /// Used to get a handler for an InputOption that may be sent during a UI Event
         /// </summary>
@@ -1773,7 +1723,7 @@ namespace CloverExamplePOS
         /// <returns></returns>
         public EventHandler getHandler(InputOption io)
         {
-            return new EventHandler(delegate(object sender, EventArgs args)
+            return new EventHandler(delegate (object sender, EventArgs args)
             {
                 cloverConnector.InvokeInputOption(io);
             });
@@ -1794,7 +1744,7 @@ namespace CloverExamplePOS
                         int tipAmount = int.Parse(tipValue);
                         TipAdjustAuthRequest taRequest = new TipAdjustAuthRequest();
 
-                        if(OrderPaymentsView.SelectedItems.Count == 1)
+                        if (OrderPaymentsView.SelectedItems.Count == 1)
                         {
                             POSPayment posPayment = OrderPaymentsView.SelectedItems[0].Tag as POSPayment;
 
@@ -1806,7 +1756,7 @@ namespace CloverExamplePOS
                         }
 
                     }
-                    catch(Exception ex)
+                    catch (Exception)
                     {
                         AlertForm.Show(this, "Invalid Value", "Invalid tip amount: " + tipValue + " Format of 625 expected.");
                     }
@@ -1823,7 +1773,7 @@ namespace CloverExamplePOS
             CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
             CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
 
-            cloverConnector.CardEntryMethod = CardEntry;
+            CardEntryMethod = CardEntry;
             if (ManualEntryCheckbox.Checked)
                 CardNotPresentCheckbox.Enabled = true;
             else
@@ -1847,7 +1797,7 @@ namespace CloverExamplePOS
         public void OnVaultCardResponse(VaultCardResponse vcResponse)
         {
             String screenResponseMsg = "";
-            if(vcResponse.Status == ResultStatus.SUCCESS && vcResponse.Card.token != null)
+            if (vcResponse.Success && vcResponse.Card.token != null)
             {
                 POSCard posCard = new POSCard();
                 posCard.Name = vcResponse.Card.cardholderName;
@@ -1864,18 +1814,12 @@ namespace CloverExamplePOS
                     screenResponseMsg = "Card" + vcResponse.Card.first6 + "xxxxxx" + vcResponse.Card.last4 + " was added";
                     AlertForm.Show(this, "Card Vaulted", screenResponseMsg);
                 }, null);
-                /*cloverConnector.ShowMessage(screenResponseMsg);
-                Thread.Sleep(3000);// wait for 3 seconds
-                cloverConnector.ShowThankYouScreen();
-                Thread.Sleep(2000);// wait for 2 seconds
-                cloverConnector.ShowWelcomeScreen(); 
-                */
             }
             else
             {
                 uiThread.Send(delegate (object state)
                 {
-                    if (vcResponse.Status == ResultStatus.SUCCESS)
+                    if (vcResponse.Success)
                     {
                         screenResponseMsg = "Card token was not populated by the payment gateway.  This card cannot be saved.";
                     }
@@ -1884,12 +1828,7 @@ namespace CloverExamplePOS
                     }
                     AlertForm.Show(this, screenResponseMsg, vcResponse.Reason);
                 }, null);
-                /*cloverConnector.ShowMessage(screenResponseMsg);
-                Thread.Sleep(4000);// wait for 4 seconds
-                cloverConnector.ShowWelcomeScreen();
-                */
             }
-
         }
 
         public void OrderChanged(POSOrder order, POSOrder.OrderChangeTarget target)
@@ -1962,41 +1901,13 @@ namespace CloverExamplePOS
             }
         }
 
-        /* Deprecated method for handling a PreAuth Request 
-        // This will still work, but any new/revised code
-        // should use the PreAuthRequest/PreAuthResponse
-        // coding examples
-        
-        private void PreAuthButton_Click(object sender, EventArgs e)
-        {
-            AuthRequest authRequest = new AuthRequest();
-            authRequest.IsPreAuth = true;
-            authRequest.Amount = 5000;
-
-            cloverConnector.Auth(authRequest);
-        } 
-        */
-
         private void PreAuthButton_Click(object sender, EventArgs e)
         {
             PreAuthRequest preAuthRequest = new PreAuthRequest();
-            preAuthRequest.Amount = 5000;
+            preAuthRequest.ExternalId = ExternalIDUtil.GenerateRandomString(13);
+            preAuthRequest.Amount = 5000; // for the example app, always do $50
 
             cloverConnector.PreAuth(preAuthRequest);
         }
-
-        public void OnConfigError(ConfigErrorResponse ceResponse)
-        {
-            uiThread.Send(delegate (object state)
-            {
-                AlertForm.Show(this, "Merchant Configuration Error", ceResponse.message);
-            }, null);
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

@@ -12,60 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using com.clover.remote.order;
+
 using com.clover.remotepay.sdk;
-using com.clover.remotepay.sdk.service.client;
 using com.clover.remotepay.transport;
 using com.clover.sdk.remote.websocket;
 using Fleck;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.ServiceProcess;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
+using System.Linq;
+using System.Diagnostics;
 
 namespace CloverWindowsSDKWebSocketService
 {
     public class CloverWebSocketService : ServiceBase
     {
 
-        public static readonly string SERVICE_NAME = "Clover Mini Web Socket Service";
+        public static readonly string SERVICE_NAME = "Clover Connector WebSocket Service";
 
-        WSCloverConnector cloverConnector = null;
+        CloverConnector cloverConnector = null;
         List<IWebSocketConnection> clientConnections = new List<IWebSocketConnection>();
         CloverWebSocketConnectorListener connectorListener = new CloverWebSocketConnectorListener();
-
-        /*private const string STATUS = "Status";
-        private const string SALE = "Sale";
-        private const string AUTH = "Auth";
-        private const string CANCEL = "Cancel";
-        private const string CAPTURE_AUTH = "CaptureAuth";
-        private const string TIP_ADJUST_AUTH = "TipAdjustAuth";
-        private const string VOID_PAYMENT = "VoidPayment";
-        private const string REFUND_PAYMENT = "RefundPayment";
-        private const string MANUAL_REFUND = "ManualRefund";
-        private const string CLOSEOUT = "Closeout";
-        private const string DISPLAY_RECEIPT_OPTIONS = "DisplayReceiptOptions";
-        private const string PRINT_TEXT = "PrintText";
-        private const string PRINT_IMAGE = "PrintImage";
-        private const string OPEN_CASH_DRAWER = "OpenCashDrawer";
-        private const string SHOW_MESSAGE = "ShowMessage";
-        private const string SHOW_WELCOME_SCREEN = "ShowWelcomeScreen";
-        private const string SHOW_THANK_YOU_SCREEN = "ShowThankYouScreen";
-        private const string DISPLAY_ORDER = "DisplayOrder";
-        private const string DISPLAY_ORDER_LINE_ITEM_ADDED = "DisplayOrderLineItemAdded";
-        private const string DISPLAY_ORDER_LINE_ITEM_REMOVED = "DisplayOrderLineItemRemoved";
-        private const string DISPLAY_ORDER_DISCOUNT_ADDED = "DisplayOrderDiscountAdded";
-        private const string DISPLAY_ORDER_DISCOUNT_REMOVED = "DisplayOrderDiscountRemoved";
-        // these are extensions to the default CloverConnector
-        private const string INVOKE_INPUT_OPTION = "InvokeInputOption";
-        private const string ACCEPT_SIGNATURE = "AcceptSignature";
-        private const string REJECT_SIGNATURE = "RejectSignature";*/
+        private bool Debug = false;
+        private int Timer = 3;
 
         WebSocketServer server = null;
 
@@ -86,6 +60,41 @@ namespace CloverWindowsSDKWebSocketService
         protected override void OnStart(string[] args)
         {
             base.OnStart(args);
+            string logSource = "_TransportEventLog";
+            if (!EventLog.SourceExists(logSource))
+                EventLog.CreateEventSource(logSource, logSource);
+
+            EventLogTraceListener myTraceListener = new EventLogTraceListener(logSource);
+
+            // Add the event log trace listener to the collection.
+            Trace.Listeners.Add(myTraceListener);
+            if (args.Length > 0)
+            {
+                if (((ICollection<string>)args).Contains("-debug"))
+                {
+                    Debug = true;
+                }
+
+                if (((ICollection<string>)args).Any(a => a.Contains("-timer")))
+                {
+                    IEnumerable<string> timerStrings = ((ICollection<string>)args).Where(a => a.Contains("-timer"));
+                    if (timerStrings.Count() == 1)
+                    {
+                        try
+                        {
+                            string timerString = timerStrings.First();
+                            int index = timerString.IndexOf('=');
+                            string timerSeconds = timerString.Substring(index + 1);
+                            Timer = Convert.ToInt32(timerSeconds);
+                        }
+                        catch (Exception e)
+                        {
+                            Timer = 1;
+                            EventLog.WriteEntry(SERVICE_NAME, "Error parsing the -timer command line argument.  Setting timer to 1 second.");
+                        }
+                    }
+                }
+            }
 
             //load args in to dictionary
             Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -115,7 +124,7 @@ namespace CloverWindowsSDKWebSocketService
                         if (clientConnections[0].IsAvailable)
                         {
                             socket.Close();
-                            connectorListener.OnError(new Exception("Another client is already connected"));
+                            connectorListener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, "Another client is already connected"));
                             return;
                         }
                     }
@@ -124,19 +133,12 @@ namespace CloverWindowsSDKWebSocketService
 
                     connectorListener.WebSocket = sendSocket;
                     connectorListener.SendConnectionStatus();
-                    // send the connection status when connected...
-                    //JObject retObj = new JObject();
-                    //retObj.Add("Status", connectorListener.CurrentConnectionStatus);
-                    //socket.Send(retObj.ToString());
                 };
                 socket.OnClose = () =>
                 {
                     clientConnections.Remove(socket);
                     Console.WriteLine("Close!");
                     connectorListener.WebSocket = null;
-                    //cloverConnector -= connectorListener;
-                    //cloverConnector.Dispose();
-                    //cloverConnector = null;
                 };
                 socket.OnMessage = message =>
                 {
@@ -198,21 +200,29 @@ namespace CloverWindowsSDKWebSocketService
                                 {
                                     string base64Img = ((JObject)payload).GetValue("Bitmap").Value<string>();
                                     byte[] imgBytes = Convert.FromBase64String(base64Img);
-
                                     MemoryStream ms = new MemoryStream();
                                     ms.Write(imgBytes, 0, imgBytes.Length);
                                     Bitmap bp = new Bitmap(ms);
                                     ms.Close();
-
                                     cloverConnector.PrintImage(bp);
+                                    break;
+                                }
+                            case WebSocketMethod.PrintImageFromURL:
+                                {
+                                    string url = ((JObject)payload).GetValue("Url").Value<string>();
+                                    cloverConnector.PrintImageFromURL(url);
                                     break;
                                 }
                             case WebSocketMethod.Auth:
                                 {
-                                    //JObject jobj = (JObject)Request.GetValue("SaleRequest");
-                                    //SaleRequest saleRequest = JsonUtils.deserialize<SaleRequest>(jobj.ToString());
                                     AuthRequest authRequest = JsonUtils.deserialize<AuthRequest>(payload.ToString());
                                     cloverConnector.Auth(authRequest);
+                                    break;
+                                }
+                            case WebSocketMethod.PreAuth:
+                                {
+                                    PreAuthRequest preAuthRequest = JsonUtils.deserialize<PreAuthRequest>(payload.ToString());
+                                    cloverConnector.PreAuth(preAuthRequest);
                                     break;
                                 }
                             case WebSocketMethod.TipAdjustAuth:
@@ -221,42 +231,38 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.TipAdjustAuth(tipAdjustRequest);
                                     break;
                                 }
+                            case WebSocketMethod.CapturePreAuth:
+                                {
+                                    CapturePreAuthRequest capturePreAuthRequest = JsonUtils.deserialize<CapturePreAuthRequest>(payload.ToString());
+                                    cloverConnector.CapturePreAuth(capturePreAuthRequest);
+                                    break;
+                                }
                             case WebSocketMethod.Sale:
                                 {
-                                    //JObject jobj = (JObject)Request.GetValue("SaleRequest");
-                                    //SaleRequest saleRequest = JsonUtils.deserialize<SaleRequest>(jobj.ToString());
                                     SaleRequest saleRequest = JsonUtils.deserialize<SaleRequest>(payload.ToString());
                                     cloverConnector.Sale(saleRequest);
                                     break;
                                 }
                             case WebSocketMethod.InvokeInputOption:
                                 {
-                                    //JObject jobj = (JObject)Request.GetValue("InputOption");
-                                    //InputOption io = JsonUtils.deserialize<InputOption>(jobj.ToString());
                                     InputOption io = JsonUtils.deserialize<InputOption>(payload.ToString());
-                                    cloverConnector.ExecuteInputOption(io);
+                                    cloverConnector.InvokeInputOption(io);
                                     break;
                                 }
                             case WebSocketMethod.VoidPayment:
                                 {
-                                    //JObject obj = (JObject)Request.GetValue("VoidPaymentRequest");
-                                    //VoidPaymentRequest request = JsonUtils.deserialize<VoidPaymentRequest>(obj.ToString());
                                     VoidPaymentRequest request = JsonUtils.deserialize<VoidPaymentRequest>(payload.ToString());
                                     cloverConnector.VoidPayment(request);
                                     break;
                                 }
                             case WebSocketMethod.ManualRefund:
                                 {
-                                    //JObject obj = (JObject)Request.GetValue("ManualRefundRequest");
-                                    //ManualRefundRequest mrr = JsonUtils.deserialize<ManualRefundRequest>(obj.ToString());
                                     ManualRefundRequest mrr = JsonUtils.deserialize<ManualRefundRequest>(payload.ToString());
                                     cloverConnector.ManualRefund(mrr);
                                     break;
                                 }
                             case WebSocketMethod.RefundPayment :
                                 {
-                                    //JObject obj = (JObject)Request.GetValue("RefundPaymentRequest");
-                                    //RefundPaymentRequest request = JsonUtils.deserialize<RefundPaymentRequest>(obj.ToString());
                                     RefundPaymentRequest request = JsonUtils.deserialize<RefundPaymentRequest>(payload.ToString());
                                     cloverConnector.RefundPayment(request);
                                     break;
@@ -267,75 +273,57 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.DisplayPaymentReceiptOptions(request.OrderID, request.PaymentID);
                                     break;
                                 }
-                            case WebSocketMethod.DisplayRefundReceiptOptions:
+                            case WebSocketMethod.ShowDisplayOrder:
                                 {
-                                    DisplayRefundReceiptOptionsRequest request = JsonUtils.deserialize<DisplayRefundReceiptOptionsRequest>(payload.ToString());
-                                    cloverConnector.DisplayRefundReceiptOptions(request.OrderID, request.RefundID);
-                                    break;
-                                }
-                            case WebSocketMethod.DisplayCreditReceiptOptions:
-                                {
-                                    DisplayCreditReceiptOptionsRequest request = JsonUtils.deserialize<DisplayCreditReceiptOptionsRequest>(payload.ToString());
-                                    cloverConnector.DisplayCreditReceiptOptions(request.OrderID, request.CreditID);
-                                    break;
-                                }
-                            case WebSocketMethod.DisplayOrder:
-                                {
-                                    //JObject obj = (JObject)Request.GetValue("DisplayOrder");
-                                    //com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
                                     com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(payload.ToString());
-                                    cloverConnector.DisplayOrder(displayOrder);
+                                    cloverConnector.ShowDisplayOrder(displayOrder);
                                     break;
                                 }
-                            case WebSocketMethod.DisplayOrderLineItemAdded:
+                            case WebSocketMethod.LineItemAddedToDisplayOrder:
                                 {
                                     JObject obj = (JObject)payload.GetValue("DisplayOrder");
                                     com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
                                     obj = (JObject)payload.GetValue("DisplayLineItem");
                                     com.clover.remote.order.DisplayLineItem displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayLineItem>(obj.ToString());
-                                    cloverConnector.DisplayOrderLineItemAdded(displayOrder, displayOrderLineItem);
+                                    cloverConnector.LineItemAddedToDisplayOrder(displayOrder, displayOrderLineItem);
                                     break;
                                 }
-                            case WebSocketMethod.DisplayOrderLineItemRemoved:
+                            case WebSocketMethod.LineItemRemovedFromDisplayOrder:
                                 {
                                     JObject obj = (JObject)payload.GetValue("DisplayOrder");
                                     com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
                                     obj = (JObject)payload.GetValue("DisplayLineItem");
                                     com.clover.remote.order.DisplayLineItem displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayLineItem>(obj.ToString());
-                                    cloverConnector.DisplayOrderLineItemRemoved(displayOrder, displayOrderLineItem);
+                                    cloverConnector.LineItemRemovedFromDisplayOrder(displayOrder, displayOrderLineItem);
                                     break;
                                 }
-                            case WebSocketMethod.DisplayOrderDiscountAdded:
+                            case WebSocketMethod.DiscountAddedToDisplayOrder:
                                 {
                                     JObject obj = (JObject)payload.GetValue("DisplayOrder");
                                     com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
                                     obj = (JObject)payload.GetValue("DisplayDiscount");
                                     com.clover.remote.order.DisplayDiscount displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayDiscount>(obj.ToString());
-                                    cloverConnector.DisplayOrderDiscountAdded(displayOrder, displayOrderLineItem);
+                                    cloverConnector.DiscountAddedToDisplayOrder(displayOrder, displayOrderLineItem);
                                     break;
                                 }
-                            case WebSocketMethod.DisplayOrderDiscountRemoved:
+                            case WebSocketMethod.DiscountRemovedFromDisplayOrder:
                                 {
                                     JObject obj = (JObject)payload.GetValue("DisplayOrder");
                                     com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
                                     obj = (JObject)payload.GetValue("DisplayDiscount");
                                     com.clover.remote.order.DisplayDiscount displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayDiscount>(obj.ToString());
-                                    cloverConnector.DisplayOrderDiscountRemoved(displayOrder, displayOrderLineItem);
+                                    cloverConnector.DiscountRemovedFromDisplayOrder(displayOrder, displayOrderLineItem);
                                     break;
                                 }
                             case WebSocketMethod.AcceptSignature:
                                 {
-                                    //JObject obj = (JObject)Request.GetValue("SignatureVerifyRequest");
-                                    //WSSignatureVerifyRequest svr = JsonUtils.deserialize<WSSignatureVerifyRequest>(obj.ToString());
-                                    WSSignatureVerifyRequest svr = JsonUtils.deserialize<WSSignatureVerifyRequest>(payload.ToString());
+                                    WSVerifySignatureRequest svr = JsonUtils.deserialize<WSVerifySignatureRequest>(payload.ToString());
                                     cloverConnector.AcceptSignature(svr);
                                     break;
                                 }
                             case WebSocketMethod.RejectSignature:
                                 {
-                                    //JObject obj = (JObject)Request.GetValue("SignatureVerifyRequest");
-                                    //WSSignatureVerifyRequest svr = JsonUtils.deserialize<WSSignatureVerifyRequest>(obj.ToString());
-                                    WSSignatureVerifyRequest svr = JsonUtils.deserialize<WSSignatureVerifyRequest>(payload.ToString());
+                                    WSVerifySignatureRequest svr = JsonUtils.deserialize<WSVerifySignatureRequest>(payload.ToString());
                                     cloverConnector.RejectSignature(svr);
                                     break;
                                 }
@@ -357,10 +345,6 @@ namespace CloverWindowsSDKWebSocketService
                                     break;
                                 }
                         }
-
-                        //Console.WriteLine("received message: " + msg.GetType());
-                        //                        Console.WriteLine("received message: " + message);
-                        //                        socket.Send("Echo: " + message);
                     }
                     catch (InvalidOperationException ioe)
                     {
@@ -372,10 +356,6 @@ namespace CloverWindowsSDKWebSocketService
                         Console.WriteLine(e.Message);
                         socket.Send("Error Parsing: " + message);
                     }
-                    
-
-
-                    //cloverConnector.
                 };
             };
 
@@ -385,8 +365,6 @@ namespace CloverWindowsSDKWebSocketService
 
         private void InitializeConnector(Dictionary<string, string> parameters)
         {
-
-
             string protocol;
             string port;
 
@@ -444,7 +422,7 @@ namespace CloverWindowsSDKWebSocketService
                     {
                         throw new InvalidDataException("Invalid port. must be between 1 and 65535");
                     }
-                    config = new WebSocketCloverDeviceConfiguration(lanHostname, lanPort);
+                    config = new WebSocketCloverDeviceConfiguration(lanHostname, lanPort, getPOSNameAndVersion(), Debug, Timer);
                 }
                 catch (FormatException fe)
                 {
@@ -453,10 +431,55 @@ namespace CloverWindowsSDKWebSocketService
             }
             else
             {
-                config = new USBCloverDeviceConfiguration(null);
+                config = new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer);
             }
 
-            cloverConnector = new WSCloverConnector(config, connectorListener);
+            cloverConnector = new CloverConnector(config);
+            cloverConnector.InitializeConnection();
+            cloverConnector.AddCloverConnectorListener(connectorListener);
+        }
+
+        private String getPOSNameAndVersion()
+        {
+            string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
+            String name = "unset";
+            String version = "unset";
+            try
+            {
+                Object rName = Registry.GetValue(REG_KEY, "ExternalPOSName", "unset");
+                Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
+                name = rName.ToString();
+                version = rVersion.ToString();
+            }
+            catch (Exception e)
+            {
+                EventLog.WriteEntry(SERVICE_NAME, e.Message);
+            }
+            // not needed if the target Platform in the build is set to x86. The previous key path will resolve to the WOW6443Node as needed
+            /*
+            if (name.Equals("unset"))
+            {
+                REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
+                try
+                {
+                    Object rName = Registry.GetValue(REG_KEY, "ExternalPOSName", "unset");
+                    Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
+                    name = rName.ToString();
+                    version = rVersion.ToString();
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.EventLog.WriteEntry(SERVICE_NAME, e.Message);
+                }
+            }
+            if (name.Equals("unset") || version.Equals("unset"))
+            {
+                System.Diagnostics.EventLog.WriteEntry(SERVICE_NAME, "POS Name or Version is not correctly set.  The service will not run until they are appropriately intialized.");
+                throw new Exception("Invalid external POS name or version. The REST service cannot run without correctly configured <ExternalPOSName> and <ExternalPOSVersion> registry keys.");
+            }
+            */
+            EventLog.WriteEntry(SERVICE_NAME, "POS Name:Version from registry = " + name + ":" + version);
+            return name + ":" + version;
         }
 
         protected override void OnStop()
@@ -468,62 +491,16 @@ namespace CloverWindowsSDKWebSocketService
         private T Deserialize<T>(String msg) 
         {
             T obj = JsonUtils.deserialize<T> (msg);
-            //XmlSerializer serializer = new XmlSerializer(typeof(T));
-            //T obj = (T)serializer.Deserialize(new StringReader(msg));
             return obj;
         }
     }
 
-
-
     /// <summary>
-    /// Becuase SignatureVerifyRequest is abstract, need a concreate class to instantiate
+    /// VerifySignatureRequest is abstract, need a concreate class to instantiate
     /// </summary>
-    class WSSignatureVerifyRequest : SignatureVerifyRequest
+    class WSVerifySignatureRequest : VerifySignatureRequest
     {
         public override void Accept() { }
         public override void Reject() { }
-    }
-
-    class WSCloverConnector : CloverConnector
-    {
-        public static WSCloverConnector operator +(WSCloverConnector connector, CloverConnectorListener connectorListener)
-        {
-            connector.AddCloverConnectorListener(connectorListener);
-            return connector;
-        }
-        public static WSCloverConnector operator -(WSCloverConnector connector, CloverConnectorListener connectorListener)
-        {
-            //connector.RemoveCloverConnectorListener(connectorListener);
-            return connector;
-        }
-
-        public WSCloverConnector(CloverDeviceConfiguration config, CloverConnectorListener listener) : base(config, listener)
-        {
-        }
-
-        public void ExecuteInputOption(InputOption inputOption)
-        {
-            if (Device != null)
-            {
-                Device.doKeyPress(inputOption.keyPress);
-            }
-        }
-
-        public void AcceptSignature(SignatureVerifyRequest request)
-        {
-            if (Device != null)
-            {
-                Device.doSignatureVerified(request.Payment, true);
-            }
-        }
-
-        public void RejectSignature(SignatureVerifyRequest request)
-        {
-            if (Device != null)
-            {
-                Device.doSignatureVerified(request.Payment, false);
-            }
-        }
     }
 }

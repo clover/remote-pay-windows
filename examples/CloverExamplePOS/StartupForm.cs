@@ -14,33 +14,28 @@
 
 using com.clover.remotepay.transport.remote;
 using com.clover.remotepay.transport;
-using com.clover.remotepay.transport.remote;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+using Microsoft.Win32;
 using System.Windows.Forms;
 
 namespace CloverExamplePOS
 {
+    
     public partial class StartupForm : OverlayForm
     {
+        private static readonly string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
         CloverDeviceConfiguration selectedConfig;
 
-        CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", "CloverExamplePOS", false, 1);
+        CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", "CloverExamplePOS:1.0.0", false, 1);
         CloverDeviceConfiguration TestConfig = new TestCloverDeviceConfiguration();
-        CloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("10.0.1.193", 14285, "CloverExamplePOS", false, 1);
-        CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, "CloverExamplePOS", false, 1);
+        CloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("10.0.1.193", 14285, "CloverExamplePOS:1.0.0", false, 1);
+        CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, "CloverExamplePOS:1.0.0", false, 1);
         CloverDeviceConfiguration RemoteWebSocketConfig = new RemoteWebSocketCloverConfiguration("localhost", 8889);
 
         public StartupForm(Form tocover) : base(tocover)
         {
             InitializeComponent();
-            //base.OnLoad(null);
         }
 
 
@@ -48,12 +43,73 @@ namespace CloverExamplePOS
         private void StartupDialog_Load(object sender, EventArgs e)
         {
             // populate the combo box
+
+            Object IsSDK = Registry.GetValue(REG_KEY, "IsSDK", 0);
+            Object IsREST = Registry.GetValue(REG_KEY, "IsREST", 0);
+            Object IsWS = Registry.GetValue(REG_KEY, "IsWebSocket", 0);
+
+            bool isSdkInstalled = false;
+            bool isRESTInstalled = false;
+            bool isWSInstalled = false;
+
+            // IsSDK
+            try
+            {
+                isSdkInstalled = ((int)IsSDK == 1);
+            }
+            catch (InvalidCastException ice)
+            {
+                isSdkInstalled = false;
+            }
+            catch (NullReferenceException nre)
+            {
+                isSdkInstalled = false;
+            }
+            // isREST
+            try
+            {
+                isRESTInstalled = ((int)IsREST == 1);
+            }
+            catch (InvalidCastException ice)
+            {
+                isRESTInstalled = false;
+            }
+            catch (NullReferenceException nre)
+            {
+                isRESTInstalled = false;
+            }
+            // isWS
+            try
+            {
+                isWSInstalled = ((int)IsWS == 1);
+            }
+            catch (InvalidCastException ice)
+            {
+                isWSInstalled = false;
+            }
+            catch (NullReferenceException nre)
+            {
+                isWSInstalled = false;
+            }
+
             var dataSource = new List<ConfigWrapper>();
-            dataSource.Add(new ConfigWrapper("USB Device", USBConfig));
+            if (isSdkInstalled || (!isRESTInstalled && !isWSInstalled))
+            {
+                dataSource.Add(new ConfigWrapper("Clover Connector USB", USBConfig));
+            }
+            if (isRESTInstalled)
+            {
+                dataSource.Add(new ConfigWrapper("Clover Connector REST service", RestConfig));
+            }
+            if (isWSInstalled)
+            {
+                dataSource.Add(new ConfigWrapper("Clover Connector Web Socket service", RemoteWebSocketConfig));
+            }
+            
+            dataSource.Add(new ConfigWrapper("Network Pay Display (Development Only)", WebSocketConfig));
             dataSource.Add(new ConfigWrapper("Emulator", TestConfig));
-            dataSource.Add(new ConfigWrapper("Web Socket (Device)", WebSocketConfig));
-            dataSource.Add(new ConfigWrapper("REST Service (local)", RestConfig));
-            dataSource.Add(new ConfigWrapper("Web Socket Service (local)", RemoteWebSocketConfig));
+
+
 
             ConnectionType.DataSource = dataSource;
             ConnectionType.DisplayMember = "Description";
@@ -113,10 +169,8 @@ namespace CloverExamplePOS
                 string[] tokens = val.Split(' ');
                 if (tokens.Length == 1)
                 {
-                    //TODO: validate IP and port
                     int port = Int32.Parse(tokens[0]);
                     selectedConfig = new RemoteWebSocketCloverConfiguration("localhost", port);
-                    //InitializeConnector(WebSocketConfig);
                 }
                 ((CloverExamplePOSForm)this.Owner).InitializeConnector(selectedConfig);
                 this.Close();
@@ -141,11 +195,9 @@ namespace CloverExamplePOS
                 string[] tokens = val.Split(':');
                 if (tokens.Length == 2)
                 {
-                    //TODO: validate IP and port
                     string ip = tokens[0];
                     int port = Int32.Parse(tokens[1]);
                     selectedConfig = new WebSocketCloverDeviceConfiguration(ip, port, "CloverExamplePOS", false, 1);
-                    //InitializeConnector(WebSocketConfig);
                 }
                 ((CloverExamplePOSForm)this.Owner).InitializeConnector(selectedConfig);
                 this.Close();

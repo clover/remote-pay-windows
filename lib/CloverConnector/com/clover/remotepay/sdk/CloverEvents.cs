@@ -247,18 +247,25 @@ namespace com.clover.remotepay.sdk
         //     No error.
         public static int Ok = 0;
 
+        public enum CloverDeviceErrorType
+        { COMMUNICATION_ERROR,
+          VALIDATION_ERROR,
+          EXCEPTION
+        }
+
         public CloverDeviceErrorEvent()
         {
 
         }
-        public CloverDeviceErrorEvent(int code, string msg)
+        public CloverDeviceErrorEvent(CloverDeviceErrorType errorType, int code, string msg)
         {
+            ErrorType = errorType;
             Code = code;
             Message = msg;
         }
 
+        public CloverDeviceErrorType ErrorType { get; set; }
         public int Code { get; set; }
         public string Message { get; set; }
     }
-
 }

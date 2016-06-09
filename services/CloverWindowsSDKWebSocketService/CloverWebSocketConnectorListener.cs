@@ -24,9 +24,11 @@ using System.Xml.Serialization;
 
 namespace CloverWindowsSDKWebSocketService
 {
-    class CloverWebSocketConnectorListener : CloverConnectorListener
+    class CloverWebSocketConnectorListener : ICloverConnectorListener
     {
         public Fleck.IWebSocketConnection WebSocket { get; set; }
+        public MerchantInfo MerchantInfo { get; private set; }
+
         public string CurrentConnectionStatus = "Disconnected";
 
         public void OnAuthResponse(AuthResponse response)
@@ -43,16 +45,16 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(preAuthResponse));
         }
 
-        public void OnAuthCaptureResponse(CaptureAuthResponse response)
+        public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
         {
-            OnAuthCaptureResponseMessage authCaptureResponse = new OnAuthCaptureResponseMessage();
+            OnCapturePreAuthResponseMessage authCaptureResponse = new OnCapturePreAuthResponseMessage();
             authCaptureResponse.payload = response;
             WebSocket.Send(Serialize(authCaptureResponse));
         }
 
-        public void OnAuthTipAdjustResponse(TipAdjustAuthResponse response)
+        public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
-            OnAuthTipAdjustResponseMessage tipAdjustResponse = new OnAuthTipAdjustResponseMessage();
+            OnTipAdjustAuthResponseMessage tipAdjustResponse = new OnTipAdjustAuthResponseMessage();
             tipAdjustResponse.payload = response;
             WebSocket.Send(Serialize(tipAdjustResponse));
         }
@@ -76,15 +78,17 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(new OnDeviceDisconnectedMessage()));
         }
 
-        public void OnDeviceReady()
+        public void OnDeviceReady(MerchantInfo merchantInfo)
         {
             CurrentConnectionStatus = "Ready";
-            WebSocket.Send(Serialize(new OnDeviceReadyMessage()));
+            this.MerchantInfo = merchantInfo;
+            OnDeviceReadyMessage message = new OnDeviceReadyMessage();
+            message.payload = merchantInfo;
+            WebSocket.Send(Serialize(message));
         }
 
         public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
         {
-            //XmlSerializer serializer = new XmlSerializer(typeof(OnDeviceActivityEndMessage));
             OnDeviceActivityEndMessage method = new OnDeviceActivityEndMessage();
             method.payload = deviceEvent;
             string messageContent = Serialize(method);
@@ -104,17 +108,6 @@ namespace CloverWindowsSDKWebSocketService
             OnDeviceErrorMessage deviceError = new OnDeviceErrorMessage();
             deviceError.payload = deviceErrorEvent;
             WebSocket.Send(Serialize(deviceError));
-        }
-
-        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
-        {
-            // TODO: don't think this weill ever get called
-        }
-
-        public void OnError(Exception e)
-        {
-            OnError onError = new OnError();
-            WebSocket.Send(Serialize(onError));
         }
 
         public void OnManualRefundResponse(ManualRefundResponse response)
@@ -138,11 +131,11 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(onSaleResponse));
         }
 
-        public void OnSignatureVerifyRequest(SignatureVerifyRequest request)
+        public void OnVerifySignatureRequest(VerifySignatureRequest request)
         {
-            OnSignatureVerifyRequestMessage onSignatureVerifyRequest = new OnSignatureVerifyRequestMessage();
-            onSignatureVerifyRequest.payload = request;
-            WebSocket.Send(Serialize(onSignatureVerifyRequest));
+            OnVerifySignatureRequestMessage onVerifySignatureRequest = new OnVerifySignatureRequestMessage();
+            onVerifySignatureRequest.payload = request;
+            WebSocket.Send(Serialize(onVerifySignatureRequest));
         }
 
         public void OnVoidPaymentResponse(VoidPaymentResponse response)
@@ -152,19 +145,8 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(voidPaymentResponse));
         }
 
-        public void OnVoidTransactionResponse(VoidTransactionResponse response)
-        {
-            // not implemented
-            /*
-            OnVoidTransactionResponseMessage voidTransactionResponse = new OnVoidTransactionResponseMessage();
-            voidTransactionResponse.payload = response;
-            WebSocket.Send(Serialize(voidTransactionResponse));
-            */
-        }
-
         public void OnTipAdded(com.clover.remotepay.transport.TipAddedMessage message)
         {
-            //XmlSerializer serializer = new XmlSerializer(typeof(OnTipAdded));
             OnTipAddedMessage method = new OnTipAddedMessage();
             method.payload = message;
             string messageContent = Serialize(method);
@@ -190,34 +172,14 @@ namespace CloverWindowsSDKWebSocketService
             }
             else if ("Ready".Equals(CurrentConnectionStatus))
             {
-                OnDeviceReady();
+                OnDeviceReady(this.MerchantInfo);
             }
         }
 
         private string Serialize(object obj) 
         {
-            /*
-            XmlSerializer serializer = new XmlSerializer(obj.GetType());
-            MemoryStream ms = new MemoryStream();
-
-            serializer.Serialize(ms, obj);
-            ms.Position = 0;
-            var sr = new StreamReader(ms);
-            var myStr = sr.ReadToEnd();
-            ms.Close();
-            sr.Close();
-            */
-
             var myStr = JsonUtils.serialize(obj);
             return myStr;
-        }
-
-        public void OnConfigError(ConfigErrorResponse ceResponse)
-        {
-            OnConfigErrorMessage configErrorResponse = new OnConfigErrorMessage();
-            configErrorResponse.payload = ceResponse;
-            WebSocket.Send(Serialize(configErrorResponse));
-
         }
     }
 }

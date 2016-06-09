@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using com.clover.remotepay.transport;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace com.clover.remotepay.transport.remote
 {
+    /// <summary>
+    /// Configuration object used for initializing the
+    /// RemoteWebSocketCloverConnector, which is primarly
+    /// used as an example and for testing and validation
+    /// </summary>
     class RemoteWebSocketCloverConfiguration : WebSocketCloverDeviceConfiguration
     {
         public RemoteWebSocketCloverConfiguration(string hostname, int port) : base(hostname, port)

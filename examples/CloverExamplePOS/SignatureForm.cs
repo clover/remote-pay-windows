@@ -26,9 +26,9 @@ namespace CloverExamplePOS
 {
     public partial class SignatureForm : OverlayForm
     {
-        private SignatureVerifyRequest signatureVerifyRequest;
+        private VerifySignatureRequest signatureVerifyRequest;
 
-        public SignatureVerifyRequest SignatureVerifyRequest {
+        public VerifySignatureRequest VerifySignatureRequest {
             get {
                 return signatureVerifyRequest;
             }
@@ -48,17 +48,14 @@ namespace CloverExamplePOS
 
         private void AcceptButton_Click(object sender, EventArgs e)
         {
-            POSCard storedCard = new POSCard();
-            //storedCard.First6 = First6TextBox.Text;
-            //storedCard.Name = CustomerName.Text;
             this.Dispose();
-            SignatureVerifyRequest.Accept();
+            VerifySignatureRequest.Accept();
         }
 
         private void RejectButton_Click(object sender, EventArgs e)
         {
             this.Dispose();
-            SignatureVerifyRequest.Reject();
+            VerifySignatureRequest.Reject();
         }
     }
 }
