@@ -24,6 +24,15 @@ Please report back to us any questions/comments/concerns.
 
 ### Version 1.0.0.0RC1 (Release Candidate)
 
+There are now four separate installers:
+  CloverRESTServiceSetup.exe - Installer for the REST Service Connector only
+  CloverSDKSetup.exe - Installer that will lay down the dll, REST Service or WebSocket Service
+                       Connectors, along with the optional ExamplePOS application for testing/
+					   reference.
+  CloverUSBDriverSetup.exe - Clover device USB Driver installation only (automatically installed
+                             with the other installers)
+  CloverWebSocketServiceSetup.exe - Installer for the WebSocket Service Connector only
+  
 ICloverConnector
 * Added InitializeConnection method that needs to be called directly after creation
   of the CloverConnector and prior to attempting to send any actions to the device
