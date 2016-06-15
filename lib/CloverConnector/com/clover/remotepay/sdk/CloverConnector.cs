@@ -989,9 +989,9 @@ namespace com.clover.remotepay.sdk
                 else
                 {
                     taar.Result = ResponseCode.FAIL;
+                    taar.Reason = "Failure";
+                    taar.Message = "TipAdjustAuth failed to process for payment ID: " + paymentId;
                 }
-                taar.Reason = "Failure";
-                taar.Message = "TipAdjustAuth failed to process for payment ID: " + paymentId;
                 cloverConnector.listeners.ForEach(listener => listener.OnTipAdjustAuthResponse(taar));
             }
 
