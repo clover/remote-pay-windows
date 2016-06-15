@@ -4,21 +4,21 @@ Current version: 1.0.0.0RC1
 
 ## Overview
 
-This SDK provides an API with which to allow your Windows-based Point-of-Sale (POS) system to interface with a Clover® Mini device (https://www.clover.com/pos-hardware/mini)
+This SDK provides an API to allow your Windows-based Point-of-Sale (POS) system to interface with a Clover® Mini device (https://www.clover.com/pos-hardware/mini)
 
 The API is currently distributed in three class libraries
 
 1. CloverConnector is the high-level API with methods like `Sale()`, `VoidTransaction()`, `ManualRefund()`, etc.
-2. CloverWindowsSDK contains classes that map to standard Clover objects such as `Payment`, `CardTransaction`, `Order`, etc.  These objects will match those defined in  [clover-android-sdk](https://github.com/clover/clover-android-sdk) and the objects returned by the [Clover REST API](https://www.clover.com/api_docs)
+2. CloverWindowsSDK contains classes that map to standard Clover objects such as `Payment`, `CardTransaction`, `Order`, etc.  These objects will match those defined in  [clover-android-sdk](https://github.com/clover/clover-android-sdk) and the objects returned by the [Clover REST API](https://www.clover.com/api_docs).
 3. CloverWindowsTransport contains functionality to interface with a Clover Mini device via USB or via LAN (WebSocket connection). You may also simulate a Clover device (`CloverTestDevice`) so no connectivity is required.
 
 The libraries currently require .NET 4.0 or higher, and are supported on Windows POSReady 2009, Windows 7 and Windows 8.
 
-An example project (CloverExamplePOS) is provided to demonstrate how to interact with the APIs.  To open this, please use Visual Studio and open `Clover.sln`
+An example project (CloverExamplePOS) is provided to demonstrate how to interact with the APIs.  To open this, please use Visual Studio and open `Clover.sln`.
 
 An installer is now available under the 'Releases' tab, which will automatically install the appropriate drivers needed to connect to Clover Mini.
 
-Please report back to us any questions/comments/concerns.
+Please report back to us any questions/comments/concerns, by emailing semi-integrations@clover.com. 
 
 ## Release Notes
 
@@ -27,8 +27,7 @@ Please report back to us any questions/comments/concerns.
 There are now four separate installers:
   * CloverRESTServiceSetup.exe - Installer for the REST Service Connector only
   * CloverSDKSetup.exe - Installer that will lay down the dll, REST Service or WebSocket Service
-                         Connectors, along with the optional ExamplePOS application for testing/
-	                     reference.
+                         Connectors, along with the optional ExamplePOS application for testing.
   * CloverUSBDriverSetup.exe - Clover device USB Driver installation only (automatically installed
                                with the other installers)
   * CloverWebSocketServiceSetup.exe - Installer for the WebSocket Service Connector only
@@ -40,24 +39,24 @@ ICloverConnector
 * Removed VoidTransaction
 * Changed all device action API calls to return void
 * Method Name/Signature Changes
-  * Changed SignatureVerifyRequest to VerifySignatureRequest
-  * Changed CaptureAuth to CapturePreAuth
-  * Changed CaptureAuthRequest to CapturePreAuthRequest
-  * Changed DisplayOrder to ShowDisplayOrder
-  * Changed DisplayOrderLineItemAdded to LineItemAddedToDisplayOrder (method arg order change)
-  * Changed DisplayOrderLineItemRemoved to LineItemRemovedFromDisplayOrder (method arg order change)
-  * Changed DisplayOrderDiscountAdded to DiscountAddedToDisplayOrder (method arg order change)
-  * Changed DisplayOrderDiscountRemoved to DiscountRemovedFromDisplayOrder (method arg order change)
-  * Changed DisplayOrderDelete to RemoveDisplayOrder
+  * Changed SignatureVerifyRequest to VerifySignatureRequest.
+  * Changed CaptureAuth to CapturePreAuth.
+  * Changed CaptureAuthRequest to CapturePreAuthRequest.
+  * Changed DisplayOrder to ShowDisplayOrder.
+  * Changed DisplayOrderLineItemAdded to LineItemAddedToDisplayOrder (method arg order change).
+  * Changed DisplayOrderLineItemRemoved to LineItemRemovedFromDisplayOrder (method arg order change).
+  * Changed DisplayOrderDiscountAdded to DiscountAddedToDisplayOrder (method arg order change).
+  * Changed DisplayOrderDiscountRemoved to DiscountRemovedFromDisplayOrder (method arg order change).
+  * Changed DisplayOrderDelete to RemoveDisplayOrder.
   * Behavior change for RefundPaymentRequest.  In the prior versions, a value of zero for the amount
     field would trigger a refund of the full payment amount.  With the 1.0 version, passing zero
     in the amount field will trigger a validation failure.  Use FullRefund:boolean to specify a 
     full refund amount. NOTE: This will attempt to refund the original (full) payment amount,
-    not the remaining amount, in a partial refund scenario.
-  * CloverConnecter now requires ApplicationId to be set via configuration/installation of the 
+    not the remaining amount, in a partial refund scenario. 
+  * CloverConnecter now requires ApplicationId to be set via configuration/installation of the third party application. This is provided as part of the device configuration that is passed in during the creation of the CloverConnector. 
   * SaleRequest, AuthRequest, PreAuthRequest and ManualRefund require ExternalId to be set.
     * ExternalId should be unique per transaction request and will prevent the Clover device
-      from re-processing the last transaction
+      from re-processing the last transaction.
 
 ICloverConnectorListener
 * Method Name/Signature Changes
@@ -69,7 +68,7 @@ ICloverConnectorListener
   * Changed SignatureVerifyRequest to VerifySignatureRequest
   * Changed OnAuthTipAdjustResponse to OnTipAdjustAuthResponse
   * Changed OnDeviceReady to pass back the MerchantInfo
-  * Removed OnConfigError
+  * Removed OnConfigError. In this release, if a merchant attempts to perform an operation that their account is not configured to support (e.g. vaulting a card), then the SDK will call back with a failed transaction and an UNSUPPORTED result. 
   * All Response Messages now return the following:​
     * Success:boolean
     * Result:enum [SUCCESS|FAIL|CANCEL|ERROR|UNSUPPORTED]
@@ -105,16 +104,16 @@ REST Service
      * Changed /CaptureAuthResponse to /CapturePreAuthResponse
 
 ### Version 0.6
-* Add Closeout method support, which allows the initiation of an account closeout for any pending authorizations
+* Add Closeout method support, which allows the initiation of an account closeout for any pending authorizations.
 * Add extended validation of requests based on merchant/gateway configuration.  Passes back a new ConfigErrorResponse message for any related validation errors.
 * Add PreAuth method to replace deprecated process of setting isPreAuth flag in an Auth request.  
-* Changes to aid in the stability of the local REST service 
-* Changes to usb transport code to aid in stability of the connection between the Clover device and the SDK transport
-* Add message field to the RefundResponse message to provide extended information on error responses
-* Add logging ability for the local REST service to aid in tracking/debugging of request/response message processing
-* Add onDeviceError methods for capturing communication issues detected by the transport layer during request/response message processing
-* Add new flags to enable/disable taking payments in an Offline mode, should gateway connectivity be interrupted  
-* 0.6 Installer can be downloaded here - [CloverSDKSetup.exe](https://github.com/clover/remote-pay-windows/releases/download/release-0.6/CloverSDKSetup.exe)
+* Changes to aid in the stability of the local REST service.
+* Changes to usb transport code to aid in stability of the connection between the Clover device and the SDK transport.
+* Add message field to the RefundResponse message to provide extended information on error responses.
+* Add logging ability for the local REST service to aid in tracking/debugging of request/response message processing.
+* Add onDeviceError methods for capturing communication issues detected by the transport layer during request/response message processing.
+* Add new flags to enable/disable taking payments in an Offline mode, should gateway connectivity be interrupted.  
+* 0.6 Installer can be downloaded here - [CloverSDKSetup.exe](https://github.com/clover/remote-pay-windows/releases/download/release-0.6/CloverSDKSetup.exe).
 
 ### Version 0.5
 * Add VaultCard method which prompts for card information on the Clover device to be captured for later use with Sale/Auth VaultedCard functionality
@@ -156,6 +155,3 @@ REST Service
 
 * Initial release
 
-##Disclaimer
-
-This is a beta release and will not be supported long term. There may be breaking changes in the general release, which is coming soon. 
