@@ -1,6 +1,6 @@
 # Clover SDK for Windows PoS Integration
 
-Current version: 1.0.0.0RC1
+Current version: 1.0.0.0
 
 ## Overview
 
@@ -22,18 +22,18 @@ Please report back to us any questions/comments/concerns, by emailing semi-integ
 
 ## Release Notes
 
-### Version 1.0.0.0RC1 (Release Candidate)
+### Version 1.0.0.0
 
 There are now four separate installers:
 #####For Development:
-  * CloverRESTServiceSetup.exe - Installer for the REST Service Connector only
+  * CloverSDKSetup.exe - Installer that will lay down the dll, REST Clover Connector Service or WebSocket Clover Connector Service, along with the optional ExamplePOS application and source for testing.
+  
  
 #####For Deployment: 
-  * CloverSDKSetup.exe - Installer that will lay down the dll, REST Service or WebSocket Service
-                         Connectors, along with the optional ExamplePOS application for testing.
   * CloverUSBDriverSetup.exe - Clover device USB Driver installation only (automatically installed
                                with the other installers)
-  * CloverWebSocketServiceSetup.exe - Installer for the WebSocket Service Connector only
+  * CloverRESTServiceSetup.exe - Installer for the REST Clover Connector Service only
+  * CloverWebSocketServiceSetup.exe - Installer for the WebSocket Clover Connector Service only
   
 
 ICloverConnector
