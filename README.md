@@ -10,7 +10,7 @@ The API is currently distributed in three class libraries
 
 1. CloverConnector is the high-level API with methods like `Sale()`, `VoidTransaction()`, `ManualRefund()`, etc.
 2. CloverWindowsSDK contains classes that map to standard Clover objects such as `Payment`, `CardTransaction`, `Order`, etc.  These objects will match those defined in  [clover-android-sdk](https://github.com/clover/clover-android-sdk) and the objects returned by the [Clover REST API](https://www.clover.com/api_docs).
-3. CloverWindowsTransport contains functionality to interface with a Clover Mini device via USB or via LAN (WebSocket connection). You may also simulate a Clover device (`CloverTestDevice`) so no connectivity is required.
+3. CloverWindowsTransport contains functionality to interface with a Clover Mini device via USB. You may also simulate a Clover device (`CloverTestDevice`) so no connectivity is required.
 
 The libraries currently require .NET 4.0 or higher, and are supported on Windows POSReady 2009, Windows 7 and Windows 8.
 
@@ -134,7 +134,7 @@ REST Service
 * SaleRequest now accepts a VaultedCard object, which allows for completion of a transaction using multi-pay token
 * An installer ([CloverSDKSetup.exe](https://github.com/clover/remote-pay-windows/releases/download/release-0.5/CloverSDKSetup.exe)) is now available, which automatically installs appropriate USB drivers for Clover Mini; this has been tested on Windows 7 and above
 * In addition to the .NET class libraries, there is now an option to connect to a WebSocket service or REST service (with socket callbacks) from the Windows PC.  This was added to provide better support for programming/integration environments other than .NET
-* CloverExamplePOS application has been enhanced to allow testing with USB, LAN, REST service or WebSocket service, or an in-memory/mock 'test device'
+* CloverExamplePOS application has been enhanced to allow testing with USB, REST service or WebSocket service, or an in-memory/mock 'test device'
 
 ### Version 0.3
 * Add properties to CloverConnector: DisablePrinting, DisableCashBack, DisableTip, and DisableRestartTransactionOnFail
