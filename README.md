@@ -20,6 +20,8 @@ An installer is now available under the 'Releases' tab, which will automatically
 
 Please report back to us any questions/comments/concerns, by emailing semi-integrations@clover.com. 
 
+For more developer documentation and information about the Semi-Integration program, please visit our [semi-integration developer documents] (https://docs.clover.com/build/integration-overview-requirements/). 
+
 ## Release Notes
 
 ### Version 1.0.0.0
