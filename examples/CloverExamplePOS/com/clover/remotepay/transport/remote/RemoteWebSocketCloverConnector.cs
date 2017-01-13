@@ -26,9 +26,11 @@ using System.ComponentModel;
 using WebSocket4Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using com.clover.sdk.v3.payments;
 
 namespace com.clover.remotepay.transport.remote
 {
+
     /// <summary>
     /// Custom ICloverConnector that talks to the 
     /// Clover Connector WebSocket Service. This wouldn't normally
@@ -37,6 +39,13 @@ namespace com.clover.remotepay.transport.remote
     /// </summary>
     public class RemoteWebSocketCloverConnector : ICloverConnector
     {
+        private bool _isReady = false;
+
+        public bool IsReady
+        {
+            get { return _isReady; }
+            set { }
+        }
         public int CardEntryMethod { get; set; }
         public bool DisableCashBack { get; set; }
         public bool DisablePrinting { get; set; }
@@ -86,6 +95,7 @@ namespace com.clover.remotepay.transport.remote
         private void websocket_Opened(object sender, EventArgs e)
         {
             Console.WriteLine("WebSocket connection open");
+            _isReady = true;
             websocket.Send(JsonUtils.serialize(new StatusRequestMessage()));
         }
 
@@ -100,6 +110,7 @@ namespace com.clover.remotepay.transport.remote
 #if DEBUG
             System.GC.Collect();
 #endif
+            _isReady = false;
             BackgroundWorker bg = new BackgroundWorker();
             bg.DoWork += (object s, DoWorkEventArgs dwea) =>
             {
@@ -232,10 +243,64 @@ namespace com.clover.remotepay.transport.remote
                         listeners.ForEach(listener => listener.OnVaultCardResponse(vcr));
                         break;
                     }
+                case WebSocketMethod.ReadCardDataResponse:
+                    {
+                        ReadCardDataResponse rcdr = JsonUtils.deserialize<ReadCardDataResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnReadCardDataResponse(rcdr));
+                        break;
+                    }
                 case WebSocketMethod.CloseoutResponse:
                     {
                         CloseoutResponse cr = JsonUtils.deserialize<CloseoutResponse>(payload.ToString());
                         listeners.ForEach(listener => listener.OnCloseoutResponse(cr));
+                        break;
+                    }
+                case WebSocketMethod.ConfirmPaymentRequest:
+                    {
+                        ConfirmPaymentRequest cpr = JsonUtils.deserialize<ConfirmPaymentRequest>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnConfirmPaymentRequest(cpr));
+                        break;
+                    }
+                case WebSocketMethod.RetrievePendingPaymentsResponse:
+                    {
+                        RetrievePendingPaymentsResponse rppr = JsonUtils.deserialize<RetrievePendingPaymentsResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnRetrievePendingPaymentsResponse(rppr));
+                        break;
+                    }
+                case WebSocketMethod.PrintManualRefundDeclinedReceipt:
+                    {
+                        PrintManualRefundDeclineReceiptMessage pmrdrm = JsonUtils.deserialize<PrintManualRefundDeclineReceiptMessage>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnPrintManualRefundDeclineReceipt(pmrdrm));
+                        break;
+                    }
+                case WebSocketMethod.PrintManualRefundReceipt:
+                    {
+                        PrintManualRefundReceiptMessage pmrrm = JsonUtils.deserialize<PrintManualRefundReceiptMessage>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnPrintManualRefundReceipt(pmrrm));
+                        break;
+                    }
+                case WebSocketMethod.PrintPaymentDeclinedReceipt:
+                    {
+                        PrintPaymentDeclineReceiptMessage ppdrm = JsonUtils.deserialize<PrintPaymentDeclineReceiptMessage>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnPrintPaymentDeclineReceipt(ppdrm));
+                        break;
+                    }
+                case WebSocketMethod.PrintPaymentMerchantCopyReceipt:
+                    {
+                        PrintPaymentMerchantCopyReceiptMessage ppmcrm = JsonUtils.deserialize<PrintPaymentMerchantCopyReceiptMessage>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnPrintPaymentMerchantCopyReceipt(ppmcrm));
+                        break;
+                    }
+                case WebSocketMethod.PrintPaymentReceipt:
+                    {
+                        PrintPaymentReceiptMessage pprm = JsonUtils.deserialize<PrintPaymentReceiptMessage>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnPrintPaymentReceipt(pprm));
+                        break;
+                    }
+                case WebSocketMethod.PrintPaymentRefundReceipt:
+                    {
+                        PrintRefundPaymentReceiptMessage prprm = JsonUtils.deserialize<PrintRefundPaymentReceiptMessage>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnPrintRefundPaymentReceipt(prprm));
                         break;
                     }
             }
@@ -315,6 +380,16 @@ namespace com.clover.remotepay.transport.remote
             {
                 VaultCardRequestMessage message = new VaultCardRequestMessage();
                 message.payload = new VaultCardMessage(CardEntryMethods);
+                websocket.Send(JsonUtils.serialize(message));
+            }
+        }
+
+        public void ReadCardData(ReadCardDataRequest request)
+        {
+            if (websocket != null)
+            {
+                ReadCardDataRequestMessage message = new ReadCardDataRequestMessage();
+                message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
             }
         }
@@ -527,6 +602,15 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
+
+        public void RetrievePendingPayments()
+        {
+            if (websocket != null)
+            {
+                websocket.Send(JsonUtils.serialize(new RetrievePendingPaymentsRequestMessage()));
+            }
+        }
+
         public void TipAdjustAuth(TipAdjustAuthRequest request)
         {
             if (websocket != null)
@@ -571,6 +655,33 @@ namespace com.clover.remotepay.transport.remote
                 msg.payload = payload;
 
                 websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public void AcceptPayment(Payment payment)
+        {
+            if (websocket != null)
+            {
+                AcceptPaymentRequestMessage msg = new AcceptPaymentRequestMessage();
+                sdk.AcceptPayment ap = new sdk.AcceptPayment();
+                ap.Payment = payment;
+                msg.payload = ap;
+                websocket.Send(JsonUtils.serialize(msg));
+
+            }
+        }
+
+        public void RejectPayment(Payment payment, Challenge challenge)
+        {
+            if (websocket != null)
+            {
+                RejectPaymentRequestMessage msg = new RejectPaymentRequestMessage();
+                sdk.RejectPayment rp = new sdk.RejectPayment();
+                rp.Payment = payment;
+                rp.Challenge = challenge;
+                msg.payload = rp;
+                websocket.Send(JsonUtils.serialize(msg));
+
             }
         }
 

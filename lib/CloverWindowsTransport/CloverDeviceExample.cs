@@ -26,7 +26,7 @@ namespace com.clover.remotepay.transport
             new CaptureLog();
 
             CloverDeviceConfiguration configuration =
-                new USBCloverDeviceConfiguration("ThisWillBeTheDeviceId (possibly)");
+                new USBCloverDeviceConfiguration("ThisWillBeTheDeviceId (possibly)", "com.clover.remotepay.transport.example.CloverDeviceExample", false, 1);
             CloverDevice device = CloverDeviceFactory.Get(configuration);
 
             device.Subscribe(new CloverListener(device));

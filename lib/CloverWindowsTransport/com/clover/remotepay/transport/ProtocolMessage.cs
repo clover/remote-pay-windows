@@ -59,9 +59,11 @@ namespace com.clover.remotepay.transport
         public readonly String serial;
         public readonly String model;
         public readonly bool ready;
+        public readonly bool supportsAcknowledgement;
         public readonly bool supportsTipAdjust;
         public readonly bool supportsManualRefund;
         public readonly bool supportsMultiPayToken;
+        public readonly bool supportsRemoteConfirmation;
         public DiscoveryResponseMessage(String merchantId, 
                                         String merchantName, 
                                         String merchantMId,
@@ -69,9 +71,11 @@ namespace com.clover.remotepay.transport
                                         String serial, 
                                         String model, 
                                         Boolean ready,
+                                        Boolean? supportsAcknowledgement,
                                         Boolean? supportsTipAdjust, 
                                         Boolean? supportsManualRefund,
-                                        Boolean? supportsMultiPayToken)
+                                        Boolean? supportsMultiPayToken,
+                                        Boolean? supportsRemoteConfirmation)
             : base(Methods.DISCOVERY_RESPONSE)
         {
             this.merchantId = merchantId;
@@ -81,9 +85,11 @@ namespace com.clover.remotepay.transport
             this.serial = serial;
             this.model = model;
             this.ready = ready;
+            this.supportsAcknowledgement = supportsAcknowledgement.HasValue ? supportsAcknowledgement.Value : false;
             this.supportsTipAdjust = supportsTipAdjust.HasValue ? supportsTipAdjust.Value : true;
             this.supportsManualRefund = supportsManualRefund.HasValue ? supportsManualRefund.Value : true;
             this.supportsMultiPayToken = supportsMultiPayToken.HasValue ? supportsMultiPayToken.Value : true;
+            this.supportsRemoteConfirmation = supportsRemoteConfirmation.HasValue ? supportsRemoteConfirmation.Value : false;
         }
     }
     public class PaymentReceiptMessage : Message
@@ -444,6 +450,27 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class ReadCardDataMessage : Message
+    {
+        public readonly PayIntent payIntent;
+        public ReadCardDataMessage(PayIntent PayIntentIn) : base(Methods.CARD_DATA)
+        {
+            this.payIntent = PayIntentIn;
+        }
+    }
+
+    public class ReadCardDataResponseMessage : Message
+    {
+        public CardData cardData { get; set; }
+        public string reason { get; set; }
+        public ResultStatus status { get; set; }
+
+        public ReadCardDataResponseMessage() : base(Methods.CARD_DATA_RESPONSE)
+        {
+
+        }
+    }
+
     public class OpenCashDrawerMessage : Message
     {
         public String reason { get; set; }
@@ -485,6 +512,37 @@ namespace com.clover.remotepay.transport
 
 
         public CloseoutResponseMessage() : base(Methods.CLOSEOUT_RESPONSE)
+        {
+        }
+    }
+
+    public class ConfirmPaymentMessage : Message
+    {
+        public Payment payment { get; set; }
+        public List<Challenge> challenges { get; set; }
+
+        public ConfirmPaymentMessage(Payment payment, List<Challenge> challenges) : base(Methods.CONFIRM_PAYMENT_MESSAGE)
+        {
+            this.payment = payment;
+            this.challenges = challenges;
+        }
+    }
+
+    public class PaymentConfirmedMessage : Message
+    {
+        public Payment payment { get; set; }
+
+        public PaymentConfirmedMessage() : base(Methods.PAYMENT_CONFIRMED)
+        {
+        }
+    }
+
+    public class PaymentRejectedMessage : Message
+    {
+        public Payment payment { get; set; }
+        public Challenge challenge { get; set; }
+
+        public PaymentRejectedMessage() : base(Methods.PAYMENT_REJECTED)
         {
         }
     }
@@ -580,6 +638,94 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class RetrievePendingPaymentsMessage : Message
+    {
+        public RetrievePendingPaymentsMessage() : base(Methods.RETRIEVE_PENDING_PAYMENTS)
+        {
+
+        }
+    }
+
+    public class RetrievePendingPaymentsResponseMessage : Message
+    {
+        public ResultStatus status { get; set; }
+        public string message { get; set; }
+        public List<PendingPaymentEntry> pendingPaymentEntries { get; set; }
+
+        public RetrievePendingPaymentsResponseMessage() : base(Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE)
+        {
+
+        }
+    }
+
+    public class AcknowledgementMessage : Message
+    {
+        public string sourceMessageId { get; set; }
+
+        public AcknowledgementMessage() : base(Methods.ACK)
+        {
+
+        }
+    }
+
+    public class CreditPrintMessage : Message
+    {
+        public Credit credit { get; set; }
+        public CreditPrintMessage() : base(Methods.PRINT_CREDIT)
+        {
+
+        }
+    }
+
+    public class DeclineCreditPrintMessage : Message
+    {
+        public Credit credit { get; set; }
+        public String reason { get; set; }
+        public DeclineCreditPrintMessage() : base(Methods.PRINT_CREDIT_DECLINE)
+        {
+
+        }
+    }
+
+    public class PaymentPrintMessage : Message
+    {
+        public Payment payment { get; set; }
+        public Order order { get; set; }
+        public PaymentPrintMessage() : base(Methods.PRINT_PAYMENT)
+        {
+
+        }
+    }
+
+    public class DeclinePaymentPrintMessage : Message
+    {
+        public Payment payment { get; set; }
+        public String reason { get; set; }
+        public DeclinePaymentPrintMessage() : base(Methods.PRINT_PAYMENT_DECLINE)
+        {
+
+        }
+    }
+
+    public class PaymentPrintMerchantCopyMessage : Message
+    {
+        public Payment payment { get; set; }
+        public PaymentPrintMerchantCopyMessage() : base(Methods.PRINT_PAYMENT_MERCHANT_COPY)
+        {
+
+        }
+    }
+
+    public class RefundPaymentPrintMessage : Message
+    {
+        public Payment payment { get; set; }
+        public Refund refund { get; set; }
+        public Order order { get; set; }
+        public RefundPaymentPrintMessage() : base(Methods.REFUND_PRINT_PAYMENT)
+        {
+
+        }
+    }
     /// <summary>
     /// The top level protocol message 
     /// </summary
@@ -606,7 +752,14 @@ namespace com.clover.remotepay.transport
             msg.packageName = packageName;
             msg.remoteSourceSDK = remoteSourceSDK;
             msg.remoteApplicationID = remoteApplicationID;
+            msg.id = nextID();
             return msg;
+        }
+
+        private static long _id = 0;
+        private static string nextID()
+        {
+            return (++_id).ToString();
         }
     }
     public enum LogLevelEnum

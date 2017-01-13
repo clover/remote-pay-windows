@@ -29,16 +29,18 @@ namespace com.clover.remotepay.transport.remote
         private bool enableLogging = false;
         private int pingSleepSeconds = 1;
 
-        public RemoteRESTCloverConfiguration(string host, int port)
+        public RemoteRESTCloverConfiguration(string host, int port, String remoteApplicationId) : this(host, port, remoteApplicationId, false, 1)
         {
-            this.hostname = host;
-            this.port = port;
         }
 
         public RemoteRESTCloverConfiguration(string host, int port, string remoteApplicationID, bool enableLogging, int pingSleepSeconds)
         {
             this.hostname = host;
             this.port = port;
+            if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
+            {
+                throw new ArgumentException("remoteApplicatoinID is required");
+            }
             this.remoteApplicationID = remoteApplicationID;
             this.enableLogging = enableLogging;
             this.pingSleepSeconds = pingSleepSeconds;

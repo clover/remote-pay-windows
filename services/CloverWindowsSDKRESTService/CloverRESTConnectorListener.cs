@@ -110,6 +110,11 @@ namespace CloverWindowsSDKREST
             Send("/VerifySignatureRequest", Serialize(request));
         }
 
+        public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
+        {
+            Send("/ConfirmPaymentRequest", Serialize(request));
+        }
+
         public void OnVoidPaymentResponse(VoidPaymentResponse response)
         {
             Send("/VoidPaymentResponse", Serialize(response));
@@ -123,6 +128,46 @@ namespace CloverWindowsSDKREST
         public void OnVaultCardResponse(VaultCardResponse message)
         {
             Send("/VaultCardResponse", Serialize(message));
+        }
+
+        public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse message)
+        {
+            Send("/RetrievePendingPaymentsResponse", Serialize(message));
+        }
+
+        public void OnReadCardDataResponse(ReadCardDataResponse message)
+        {
+            Send("/ReadCardDataResponse", Serialize(message));
+        }
+
+        public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
+        {
+            Send("/PrintManualRefundReceipt", Serialize(printManualRefundReceiptMessage));
+        }
+
+        public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage)
+        {
+            Send("/PrintManualRefundDeclineReceipt", Serialize(printManualRefundDeclineReceiptMessage));
+        }
+
+        public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage)
+        {
+            Send("/PrintPaymentReceipt", Serialize(printPaymentReceiptMessage));
+        }
+
+        public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage)
+        {
+            Send("/PrintPaymentDeclineReceipt", Serialize(printPaymentDeclineReceiptMessage));
+        }
+
+        public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage)
+        {
+            Send("/PrintPaymentMerchantCopyReceipt", Serialize(printPaymentMerchantCopyReceiptMessage));
+        }
+
+        public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
+        {
+            Send("/PrintRefundPaymentReceipt", Serialize(printRefundPaymentReceiptMessage));
         }
 
         public void ResendStatus()

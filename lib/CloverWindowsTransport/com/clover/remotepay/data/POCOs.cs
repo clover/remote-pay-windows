@@ -23,6 +23,7 @@ namespace com.clover.remotepay.data
     public enum Methods
     {
         AAA_NULL,
+        ACK,
         CLOSEOUT_RESPONSE,
         CLOSEOUT_REQUEST,
         CAPTURE_PREAUTH_RESPONSE,
@@ -73,7 +74,14 @@ namespace com.clover.remotepay.data
         ORDER_ACTION_RESPONSE,
         VAULT_CARD,
         VAULT_CARD_RESPONSE,
-        LOG_MESSAGE
+        CARD_DATA,
+        CARD_DATA_RESPONSE,
+        LOG_MESSAGE,
+        CONFIRM_PAYMENT_MESSAGE,
+        PAYMENT_CONFIRMED,
+        PAYMENT_REJECTED,
+        RETRIEVE_PENDING_PAYMENTS,
+        RETRIEVE_PENDING_PAYMENTS_RESPONSE
     }
 
     public enum MessageTypes

@@ -29,6 +29,7 @@ namespace com.clover.remotepay.sdk
         public bool supportsVaultCards { get; set; }
         public bool supportsManualRefunds { get; set; }
         public bool supportsTipAdjust { get; set; }
+        public bool supportsRemoteConfirmation { get; set; }
 
         /// <summary>
         /// 
@@ -39,6 +40,7 @@ namespace com.clover.remotepay.sdk
             supportsTipAdjust = true;
             supportsVaultCards = true;
             supportsPreAuths = true;
+            supportsRemoteConfirmation = false;
             merchantID = "";
             merchantMId = "";
             merchantName = "";
@@ -58,6 +60,7 @@ namespace com.clover.remotepay.sdk
             supportsTipAdjust = drm.supportsTipAdjust;
             supportsVaultCards = drm.supportsMultiPayToken;
             supportsPreAuths = drm.supportsTipAdjust;
+            supportsRemoteConfirmation = drm.supportsRemoteConfirmation;
             merchantID = drm.merchantId;
             merchantMId = drm.merchantMId;
             merchantName = drm.merchantName;
@@ -66,6 +69,7 @@ namespace com.clover.remotepay.sdk
             Device.Name = drm.name;
             Device.Serial = drm.serial;
             Device.Model = drm.model;
+            Device.SupportsAcks = drm.supportsAcknowledgement;
         }
 
     }
@@ -89,6 +93,11 @@ namespace com.clover.remotepay.sdk
         /// The model identifier of the device
         /// </summary>
         public String Model { get; set; }
+
+        /// <summary>
+        /// Remote pay version supports message acks
+        /// </summary>
+        public bool SupportsAcks { get; set; }
     }
     /// <summary>
     /// Descriptive information about this SDK

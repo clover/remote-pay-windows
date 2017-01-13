@@ -13,15 +13,18 @@
 // limitations under the License.
 
 using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace com.clover.remotepay.sdk
 {
     /// <summary>
     /// Used for generating a unique string of the length specified
+    /// Uses the linear congruential generator (LCG) algorithm
+    /// in conjunction with the .NET RNGCryptoServiceProvider class.
     /// </summary>
     public static class ExternalIDUtil
     {
-        static Random randomGenerator = new Random();
         /// <summary>
         /// Generates the random string.
         /// </summary>
@@ -29,9 +32,25 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public static string GenerateRandomString(int length)
         {
-            byte[] randomBytes = new byte[randomGenerator.Next(length)];
-            randomGenerator.NextBytes(randomBytes);
-            return Convert.ToBase64String(randomBytes);
+            int maxSize = length;
+            int minSize = 10;
+            char[] chars = new char[62];
+            string a;
+            a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            chars = a.ToCharArray();
+            int size = maxSize;
+            byte[] data = new byte[1];
+            RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
+            crypto.GetNonZeroBytes(data);
+            size = maxSize;
+            data = new byte[size];
+            crypto.GetNonZeroBytes(data);
+            StringBuilder result = new StringBuilder(size);
+            foreach (byte b in data)
+            {
+                result.Append(chars[b % (chars.Length - 1)]);
+            }
+            return result.ToString();
         }
     }
 }

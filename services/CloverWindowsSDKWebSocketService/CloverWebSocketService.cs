@@ -27,6 +27,8 @@ using System.IO;
 using System.ServiceProcess;
 using System.Linq;
 using System.Diagnostics;
+using com.clover.sdk.v3.payments;
+using com.clover.remotepay.sdk.service.client;
 
 namespace CloverWindowsSDKWebSocketService
 {
@@ -184,6 +186,11 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.Cancel();
                                     break;
                                 }
+                            case WebSocketMethod.Break:
+                                {
+                                    cloverConnector.ResetDevice();
+                                    break;
+                                }
                             case WebSocketMethod.PrintText:
                                 {
                                     JArray messages = (JArray)payload.GetValue("Messages");
@@ -279,42 +286,6 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.ShowDisplayOrder(displayOrder);
                                     break;
                                 }
-                            case WebSocketMethod.LineItemAddedToDisplayOrder:
-                                {
-                                    JObject obj = (JObject)payload.GetValue("DisplayOrder");
-                                    com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
-                                    obj = (JObject)payload.GetValue("DisplayLineItem");
-                                    com.clover.remote.order.DisplayLineItem displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayLineItem>(obj.ToString());
-                                    cloverConnector.LineItemAddedToDisplayOrder(displayOrder, displayOrderLineItem);
-                                    break;
-                                }
-                            case WebSocketMethod.LineItemRemovedFromDisplayOrder:
-                                {
-                                    JObject obj = (JObject)payload.GetValue("DisplayOrder");
-                                    com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
-                                    obj = (JObject)payload.GetValue("DisplayLineItem");
-                                    com.clover.remote.order.DisplayLineItem displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayLineItem>(obj.ToString());
-                                    cloverConnector.LineItemRemovedFromDisplayOrder(displayOrder, displayOrderLineItem);
-                                    break;
-                                }
-                            case WebSocketMethod.DiscountAddedToDisplayOrder:
-                                {
-                                    JObject obj = (JObject)payload.GetValue("DisplayOrder");
-                                    com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
-                                    obj = (JObject)payload.GetValue("DisplayDiscount");
-                                    com.clover.remote.order.DisplayDiscount displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayDiscount>(obj.ToString());
-                                    cloverConnector.DiscountAddedToDisplayOrder(displayOrder, displayOrderLineItem);
-                                    break;
-                                }
-                            case WebSocketMethod.DiscountRemovedFromDisplayOrder:
-                                {
-                                    JObject obj = (JObject)payload.GetValue("DisplayOrder");
-                                    com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(obj.ToString());
-                                    obj = (JObject)payload.GetValue("DisplayDiscount");
-                                    com.clover.remote.order.DisplayDiscount displayOrderLineItem = JsonUtils.deserialize<com.clover.remote.order.DisplayDiscount>(obj.ToString());
-                                    cloverConnector.DiscountRemovedFromDisplayOrder(displayOrder, displayOrderLineItem);
-                                    break;
-                                }
                             case WebSocketMethod.AcceptSignature:
                                 {
                                     WSVerifySignatureRequest svr = JsonUtils.deserialize<WSVerifySignatureRequest>(payload.ToString());
@@ -327,16 +298,39 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.RejectSignature(svr);
                                     break;
                                 }
+                            case WebSocketMethod.ConfirmPayment:
+                                {
+                                    AcceptPayment acceptPayment = JsonUtils.deserialize<AcceptPayment>(payload.ToString());
+                                    cloverConnector.AcceptPayment(acceptPayment.Payment);
+                                    break;
+                                }
+                            case WebSocketMethod.RejectPayment:
+                                {
+                                    RejectPayment rp = JsonUtils.deserialize<RejectPayment>(payload.ToString());
+                                    cloverConnector.RejectPayment(rp.Payment, rp.Challenge);
+                                    break;
+                                }
                             case WebSocketMethod.VaultCard:
                                 {
                                     VaultCardMessage vcm = JsonUtils.deserialize<VaultCardMessage>(payload.ToString());
                                     cloverConnector.VaultCard(vcm.cardEntryMethods);
                                     break;
                                 }
+                            case WebSocketMethod.ReadCardData:
+                                {
+                                    ReadCardDataRequest request = JsonUtils.deserialize<ReadCardDataRequest>(payload.ToString());
+                                    cloverConnector.ReadCardData(request);
+                                    break;
+                                }
                             case WebSocketMethod.Closeout:
                                 {
                                     CloseoutRequest cr = new CloseoutRequest();
                                     cloverConnector.Closeout(cr);
+                                    break;
+                                }
+                            case WebSocketMethod.RetrievePendingPayments:
+                                {
+                                    cloverConnector.RetrievePendingPayments();
                                     break;
                                 }
                             default:

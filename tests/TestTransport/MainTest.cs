@@ -13,7 +13,7 @@ namespace TestTransport
         static void Main(string[] args)
         {
 
-            CloverDeviceConfiguration config = new USBCloverDeviceConfiguration("__deviceID__");
+            CloverDeviceConfiguration config = new USBCloverDeviceConfiguration("__deviceID__", "com.clover.TestTransport", true, 1);
             CloverConnector cloverConnector = new CloverConnector(config);
             cloverConnector.InitializeConnection();
             TestConnectorListener connListener = new TestConnectorListener(cloverConnector);
@@ -67,8 +67,9 @@ namespace TestTransport
             line2.price = "$4.68";
             line2.quantity = "2";
             line2.unitPrice = "$2.34";
+            order.addDisplayLineItem(line2);
 
-            cloverConnector.LineItemAddedToDisplayOrder(order, line2);
+            cloverConnector.ShowDisplayOrder(order);
 
         }
 
@@ -145,7 +146,7 @@ namespace TestTransport
         }
     }
 
-    class TestConnectorListener : ICloverConnectorListener
+    class TestConnectorListener : DefaultCloverConnectorListener
     {
         CloverConnector cloverConnector { get; set; }
         public Boolean hasResponse { get; set; }
@@ -157,7 +158,7 @@ namespace TestTransport
         public Boolean ready { get; set; }
 
 
-        public TestConnectorListener(CloverConnector cc)
+        public TestConnectorListener(CloverConnector cc):base(cc)
         {
             hasResponse = false;
             manualRefundResponse = null;
@@ -167,21 +168,21 @@ namespace TestTransport
             this.cloverConnector = cc;
         }
 
-        public void OnManualRefundResponse(ManualRefundResponse response)
+        public override void OnManualRefundResponse(ManualRefundResponse response)
         {
             System.Console.WriteLine("Manual Refund Response:" + response.Credit.amount);
             this.manualRefundResponse = response;
             this.hasResponse = true;
         }
 
-        public void OnRefundPaymentResponse(RefundPaymentResponse response)
+        public override void OnRefundPaymentResponse(RefundPaymentResponse response)
         {
             System.Console.WriteLine("Refund Payment Response:" + response.Refund.amount);
             this.refundPaymentResponse = response;
             this.hasResponse = true;
         }
 
-        public void OnVoidPaymentResponse(VoidPaymentResponse response)
+        public override void OnVoidPaymentResponse(VoidPaymentResponse response)
         {
             System.Console.WriteLine("Void Response: " + response.Result);
             //this.cloverConnector.Voids.Remove(this);
@@ -190,7 +191,7 @@ namespace TestTransport
             this.hasResponse = true;
         }
 
-        public void OnSaleResponse(SaleResponse response)
+        public override void OnSaleResponse(SaleResponse response)
         {
             System.Console.WriteLine("BlockableSaleResponse: " + response.Result);
             //this.cloverConnector.Sales.Remove(this);
@@ -199,83 +200,10 @@ namespace TestTransport
             this.hasResponse = true;
         }
 
-        public void OnDeviceConnected()
+        public override void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
         {
-            this.connected = true;
-
+            this.cloverConnector.AcceptPayment(request.Payment);
         }
-
-        public void OnDeviceDisconnected()
-        {
-            this.connected = false;
-            this.ready = false;
-        }
-
-        public void OnDeviceReady(MerchantInfo merchantInfo)
-        {
-            this.ready = true;
-        }
-
-        public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnPreAuthResponse(PreAuthResponse response)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnAuthResponse(AuthResponse response)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnVerifySignatureRequest(VerifySignatureRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnCloseoutResponse(CloseoutResponse response)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnTipAdded(TipAddedMessage message)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnVaultCardResponse(VaultCardResponse response)
-        {
-            throw new NotImplementedException();
-        }
-        public void OnDeviceError(Exception e)
-        {
-            throw new NotImplementedException();
-        }
-
-
     }
 
 }
