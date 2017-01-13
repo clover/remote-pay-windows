@@ -36,7 +36,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>clover.ico</ApplicationIcon>
+    <ApplicationIcon>clover-256rgb.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Grapevine">
@@ -63,6 +63,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfirmPaymentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfirmPaymentForm.Designer.cs">
+      <DependentUpon>ConfirmPaymentForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AlertForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,6 +147,9 @@
     <Compile Include="VaultedCardListForm.Designer.cs">
       <DependentUpon>VaultedCardListForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ConfirmPaymentForm.resx">
+      <DependentUpon>ConfirmPaymentForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AlertForm.resx">
       <DependentUpon>AlertForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -219,6 +228,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="clover-256rgb.ico" />
     <Content Include="clover.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

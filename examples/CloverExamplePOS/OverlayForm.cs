@@ -94,7 +94,7 @@ namespace CloverExamplePOS
             // 
             // OverlayForm
             // 
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(400, 350);
             this.Name = "OverlayForm";
             this.Load += new System.EventHandler(this.OverlayForm_Load);
             this.ResumeLayout(false);

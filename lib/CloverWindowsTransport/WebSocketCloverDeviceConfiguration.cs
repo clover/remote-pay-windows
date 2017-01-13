@@ -24,17 +24,20 @@ namespace com.clover.remotepay.transport
         public Int32 port;
         public string remoteApplicationID;
         public bool enableLogging = false;
-        public int pingSleepSeconds = 0;
+        public int pingSleepSeconds = 1;
 
-        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port)
+        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, String remoteApplicationID) : this(hostname, port, remoteApplicationID, false, 1)
         {
-            this.hostname = hostname;
-            this.port = port;
+
         }
         public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, string remoteApplicationID, bool enableLogging, int pingSleepSeconds)
         {
             this.hostname = hostname;
             this.port = port;
+            if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
+            {
+                throw new ArgumentException("remoteApplicatoinID is required");
+            }
             this.remoteApplicationID = remoteApplicationID;
             this.enableLogging = enableLogging;
             this.pingSleepSeconds = pingSleepSeconds;

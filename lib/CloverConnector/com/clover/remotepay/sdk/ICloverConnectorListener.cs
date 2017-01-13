@@ -63,6 +63,11 @@ namespace com.clover.remotepay.sdk
         /// <param name="request">The request.</param>
         void OnVerifySignatureRequest(VerifySignatureRequest request);
         /// <summary>
+        /// Called when a confirm payment request is sent from the Clover device.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        void OnConfirmPaymentRequest(ConfirmPaymentRequest request);
+        /// <summary>
         /// Called when a closeout response is sent from the Clover device.
         /// </summary>
         /// <param name="response">The response.</param>
@@ -110,6 +115,54 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="response">The response.</param>
         void OnVaultCardResponse(VaultCardResponse response);
+        /// <summary>
+        /// Called when a retrieve pending payments response is sent from the Clover device.
+        /// </summary>
+        /// <param name="response"></param>
+        void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response);
+        /// <summary>
+        /// Called when a retrieve card data response is sent from the Clover device.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        void OnReadCardDataResponse(ReadCardDataResponse response);
+
+        ///<summary>
+        /// Will only be called if disablePrinting = true on the Sale, Auth, PreAuth or ManualRefund Request
+        /// Called when a user requests to print a receipt for a ManualRefund
+        /// </summary>
+        /// <param name="printManualRefundReceiptMessage"></param>
+        void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage);
+
+        /// <summary>
+        /// Will only be called if disablePrinting = true on the Sale, Auth, PreAuth or ManualRefund Request
+        /// Called when a user requests to print a receipt for a declined ManualRefund
+        /// </summary>
+        void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage);
+
+        /// <summary>
+        /// Will only be called if disablePrinting = true on the Sale, Auth, PreAuth or ManualRefund Request
+        /// Called when a user requests to print a receipt for a payment
+        /// </summary>
+        void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage);
+
+        /// <summary>
+        /// Will only be called if disablePrinting = true on the Sale, Auth, PreAuth or ManualRefund Request
+        /// Called when a user requests to print a receipt for a declined payment
+        /// </summary>
+        void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage);
+
+        /// <summary>
+        /// Will only be called if disablePrinting = true on the Sale, Auth, PreAuth or ManualRefund Request
+        /// Called when a user requests to print a merchant copy of a payment receipt
+        /// </summary>
+        void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage);
+
+        /// <summary>
+        /// Will only be called if disablePrinting = true on the Sale, Auth, PreAuth or ManualRefund Request
+        /// Called when a user requests to print a receipt for a payment refund
+        /// </summary>
+        void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage);
+
     }
 
     /// <summary>
@@ -118,109 +171,146 @@ namespace com.clover.remotepay.sdk
     ///  by simply overriding the appropriate listener method(s) needed
     ///  for testing a particular remote call.
     /// </summary>
-    public class DefaultCloverConnectorListener : ICloverConnectorListener
+    public abstract class DefaultCloverConnectorListener : ICloverConnectorListener
     {
         ICloverConnector cloverConnector;
-        bool _isReady = false;
 
         public DefaultCloverConnectorListener(ICloverConnector cloverConnector)
         {
             this.cloverConnector = cloverConnector;
         }
 
-        public void OnVaultCardResponse(VaultCardResponse response)
+        public virtual void OnVaultCardResponse(VaultCardResponse response)
         {
 
         }
 
-        public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
+        public virtual void OnReadCardDataResponse(ReadCardDataResponse response)
         {
 
         }
 
-        public void OnAuthResponse(AuthResponse response)
+        public virtual void OnCapturePreAuthResponse(CapturePreAuthResponse response)
         {
 
         }
 
-        public void OnPreAuthResponse(PreAuthResponse response)
+        public virtual void OnAuthResponse(AuthResponse response)
         {
 
         }
 
-        public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
+        public virtual void OnPreAuthResponse(PreAuthResponse response)
         {
 
         }
 
-        public void OnCloseoutResponse(CloseoutResponse response)
+        public virtual void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
 
         }
 
-        public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
+        public virtual void OnCloseoutResponse(CloseoutResponse response)
         {
 
         }
 
-        public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
+        public virtual void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
         {
 
         }
 
-        public void OnDeviceConnected()
-        {
-            _isReady = false;
-        }
-
-        public void OnDeviceDisconnected()
-        {
-            _isReady = false;
-        }
-
-        public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
+        public virtual void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
         {
 
         }
 
-        public void OnDeviceReady(MerchantInfo merchantInfo)
+        public virtual void OnDeviceConnected()
         {
-            _isReady = true;
+            
         }
 
-        public void OnManualRefundResponse(ManualRefundResponse response)
+        public virtual void OnDeviceDisconnected()
         {
-
+            
         }
 
-        public void OnRefundPaymentResponse(RefundPaymentResponse response)
-        {
-
-        }
-
-        public void OnSaleResponse(SaleResponse response)
+        public virtual void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
         {
 
         }
 
-        public void OnVerifySignatureRequest(VerifySignatureRequest request)
+        public virtual void OnDeviceReady(MerchantInfo merchantInfo)
+        {
+            
+        }
+
+        public virtual void OnManualRefundResponse(ManualRefundResponse response)
         {
 
         }
 
-        public void OnVoidPaymentResponse(VoidPaymentResponse response)
+        public virtual void OnRefundPaymentResponse(RefundPaymentResponse response)
         {
 
         }
 
-        public void OnTipAdded(TipAddedMessage message)
+        public virtual void OnSaleResponse(SaleResponse response)
         {
 
         }
 
-        public bool IsReady()
+        public virtual void OnVerifySignatureRequest(VerifySignatureRequest request)
         {
-            return _isReady;
+
         }
+
+        public abstract void OnConfirmPaymentRequest(ConfirmPaymentRequest request);
+
+        public virtual void OnVoidPaymentResponse(VoidPaymentResponse response)
+        {
+
+        }
+
+        public virtual void OnTipAdded(TipAddedMessage message)
+        {
+
+        }
+
+        public virtual void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
+        {
+
+        }
+
+        public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
+        {
+
+        }
+
+        public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage)
+        {
+
+        }
+
+        public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage)
+        {
+
+        }
+
+        public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage)
+        {
+
+        }
+
+        public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage)
+        {
+
+        }
+
+        public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
+        {
+
+        }
+
     }
 }

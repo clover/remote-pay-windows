@@ -36,7 +36,7 @@ namespace CloverWindowsSDKREST
             serviceInstaller.StartType = ServiceStartMode.Automatic;
             serviceInstaller.DisplayName = CloverRESTService.SERVICE_NAME;
             serviceInstaller.ServiceName = CloverRESTService.SERVICE_NAME;
-            serviceInstaller.Description = "Provides a REST Service wrapper for the Clover SDK";
+            serviceInstaller.Description = "Provides a REST Service wrapper for the Clover Connector";
 
             this.Installers.Add(processInstaller);
             this.Installers.Add(serviceInstaller);

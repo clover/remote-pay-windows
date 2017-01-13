@@ -24,12 +24,19 @@ using com.clover.remote.order.operation;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Threading;
 
 namespace com.clover.remotepay.transport
 {
     public class DefaultCloverDevice : CloverDevice, CloverTransportObserver
     {
         private RefundResponseMessage lastRefundResponseMessage { get; set; }
+
+        // Used to halt auto-accept of signature when payment confirmation is requested.
+        private ManualResetEventSlim paymentConfirmationIdle = new ManualResetEventSlim(true);
+        private bool paymentRejected = false;
+        private object ackLock = new object();
+        private Dictionary<String, BackgroundWorker> msgIdToTask = new Dictionary<string, BackgroundWorker>();
 
         public DefaultCloverDevice(CloverDeviceConfiguration configuration) :
             this(configuration.getMessagePackageName(), configuration.getCloverTransport(), configuration.getRemoteApplicationID())
@@ -62,6 +69,16 @@ namespace com.clover.remotepay.transport
             deviceObservers.ForEach(x => x.onDeviceError(code, message));
         }
 
+        private void setPaymentConfirmationIdle(bool value)
+        {
+            if (value)
+            {
+                paymentConfirmationIdle.Set();
+            } else
+            {
+                paymentConfirmationIdle.Reset();
+            }
+        }
         /// <summary>
         /// This handles parsing the generic message and figuring
         /// out which handler should be used for processing
@@ -78,6 +95,10 @@ namespace com.clover.remotepay.transport
             switch (rMessage.method)
             {
                 case Methods.BREAK:
+                    break;
+                case Methods.ACK:
+                    AcknowledgementMessage ackMessage = JsonUtils.deserializeSDK<AcknowledgementMessage>(rMessage.payload);
+                    notifyObserverAck(ackMessage);
                     break;
                 case Methods.CASHBACK_SELECTED:
                     CashbackSelectedMessage cbsMessage = JsonUtils.deserializeSDK<CashbackSelectedMessage>(rMessage.payload);
@@ -110,6 +131,11 @@ namespace com.clover.remotepay.transport
                 case Methods.PAYMENT_VOIDED:
                     // this seems to only gets called if a Signature is "Canceled" on the device
                     break;
+                case Methods.CONFIRM_PAYMENT_MESSAGE:
+                    setPaymentConfirmationIdle(false);
+                    ConfirmPaymentMessage confirmPaymentMessage = JsonUtils.deserializeSDK<ConfirmPaymentMessage>(rMessage.payload);
+                    notifyObserversConfirmPayment(confirmPaymentMessage);
+                    break;
                 case Methods.TIP_ADDED:
                     TipAddedMessage tipMessage = JsonUtils.deserializeSDK<TipAddedMessage>(rMessage.payload);
                     notifyObserversTipAdded(tipMessage);
@@ -127,6 +153,7 @@ namespace com.clover.remotepay.transport
                     notifyObserversUiState(uiStateMsg);
                     break;
                 case Methods.VERIFY_SIGNATURE:
+                    paymentRejected = false;
                     VerifySignatureMessage vsigMsg = JsonUtils.deserializeSDK<VerifySignatureMessage>(rMessage.payload);
                     notifyObserversVerifySignature(vsigMsg);
                     break;
@@ -145,6 +172,10 @@ namespace com.clover.remotepay.transport
                     VaultCardResponseMessage vcrMsg = JsonUtils.deserializeSDK<VaultCardResponseMessage>(rMessage.payload);
                     notifyObserversVaultCardResponse(vcrMsg);
                     break;
+                case Methods.CARD_DATA_RESPONSE:
+                    ReadCardDataResponseMessage rcdrMsg = JsonUtils.deserializeSDK<ReadCardDataResponseMessage>(rMessage.payload);
+                    notifyObserversReadCardDataResponse(rcdrMsg);
+                    break;
                 case Methods.CAPTURE_PREAUTH_RESPONSE:
                     CapturePreAuthResponseMessage carMsg = JsonUtils.deserializeSDK<CapturePreAuthResponseMessage>(rMessage.payload);
                     notifyObserversCapturePreAuthResponse(carMsg);
@@ -152,6 +183,10 @@ namespace com.clover.remotepay.transport
                 case Methods.CLOSEOUT_RESPONSE:
                     CloseoutResponseMessage crMsg = JsonUtils.deserializeSDK<CloseoutResponseMessage>(rMessage.payload);
                     notifyObserversCloseoutResponse(crMsg);
+                    break;
+                case Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE:
+                    RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.deserializeSDK<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
+                    notifyObserversPendingPaymentsResponse(rpprMsg);
                     break;
                 case Methods.DISCOVERY_REQUEST:
                     //Outbound no-op
@@ -169,21 +204,30 @@ namespace com.clover.remotepay.transport
                     //Outbound no-op
                     break;
                 case Methods.PRINT_CREDIT:
-                    //Outbound no-op
+                    CreditPrintMessage cpm = JsonUtils.deserializeSDK<CreditPrintMessage>(rMessage.payload);
+                    notifyObserversPrintCredit(cpm);
                     break;
                 case Methods.PRINT_CREDIT_DECLINE:
-                    //Outbound no-op
-                    break;
-                case Methods.PRINT_IMAGE:
-                    //Outbound no-op
+                    DeclineCreditPrintMessage dcpm = JsonUtils.deserializeSDK<DeclineCreditPrintMessage>(rMessage.payload);
+                    notifyObserversPrintCreditDecline(dcpm);
                     break;
                 case Methods.PRINT_PAYMENT:
-                    //Outbound no-op
+                    PaymentPrintMessage ppm = JsonUtils.deserializeSDK<PaymentPrintMessage>(rMessage.payload);
+                    notifyObserversPrintPayment(ppm);
                     break;
                 case Methods.PRINT_PAYMENT_DECLINE:
-                    //Outbound no-op
+                    DeclinePaymentPrintMessage dppm = JsonUtils.deserializeSDK<DeclinePaymentPrintMessage>(rMessage.payload);
+                    notifyObserversPrintPaymentDecline(dppm);
                     break;
                 case Methods.PRINT_PAYMENT_MERCHANT_COPY:
+                    PaymentPrintMerchantCopyMessage ppmcm = JsonUtils.deserializeSDK<PaymentPrintMerchantCopyMessage>(rMessage.payload);
+                    notifyObserversPrintMerchantCopy(ppmcm);
+                    break;
+                case Methods.REFUND_PRINT_PAYMENT:
+                    RefundPaymentPrintMessage rppm = JsonUtils.deserializeSDK<RefundPaymentPrintMessage>(rMessage.payload);
+                    notifyObserversPrintRefund(rppm);
+                    break;
+                case Methods.PRINT_IMAGE:
                     //Outbound no-op
                     break;
                 case Methods.PRINT_TEXT:
@@ -223,6 +267,9 @@ namespace com.clover.remotepay.transport
                     //Outbound no-op
                     break;
                 case Methods.VAULT_CARD:
+                    //Outbound no-op
+                    break;
+                case Methods.CARD_DATA:
                     //Outbound no-op
                     break;
             }
@@ -267,13 +314,31 @@ namespace com.clover.remotepay.transport
             });
             bw.RunWorkerAsync();
         }
+        public void notifyObserversReadCardDataResponse(ReadCardDataResponseMessage cdrm)
+        {
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
+                foreach (ICloverDeviceObserver observer in deviceObservers)
+                {
+                    observer.onReadCardDataResponse(cdrm);
+                }
+            });
+            bw.RunWorkerAsync();
+        }
         public void notifyObserversDiscoveryResponse(DiscoveryResponseMessage drMessage)
         {
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
                 foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
-                    observer.onDeviceReady(drMessage);
+                    if( drMessage.ready )
+                    {
+                        observer.onDeviceReady(this, drMessage);
+                    }
+                    else 
+                    {
+                        observer.onDeviceConnected(); 
+                    }
                 }
             });
             bw.RunWorkerAsync();
@@ -296,6 +361,17 @@ namespace com.clover.remotepay.transport
                 foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onCloseoutResponse(crm.status, crm.reason, crm.batch);
+                }
+            });
+            bw.RunWorkerAsync();
+        }
+        public void notifyObserversPendingPaymentsResponse(RetrievePendingPaymentsResponseMessage rpprm)
+        {
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
+                foreach (ICloverDeviceObserver observer in deviceObservers)
+                {
+                    observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
                 }
             });
             bw.RunWorkerAsync();
@@ -327,6 +403,22 @@ namespace com.clover.remotepay.transport
                 {
                     BackgroundWorker b = o as BackgroundWorker;
                     observer.onCashbackSelected(cbSelected.cashbackAmount);
+                });
+                bw.RunWorkerAsync();
+            }
+        }
+
+        public void notifyObserversConfirmPayment(ConfirmPaymentMessage message)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                BackgroundWorker bw = new BackgroundWorker();
+                // what to do in the background thread
+                bw.DoWork += new DoWorkEventHandler(
+                delegate (object o, DoWorkEventArgs args)
+                {
+                    BackgroundWorker b = o as BackgroundWorker;
+                    observer.onConfirmPayment(message.payment, message.challenges);
                 });
                 bw.RunWorkerAsync();
             }
@@ -453,6 +545,81 @@ namespace com.clover.remotepay.transport
             }
         }
 
+        public void notifyObserverAck(AcknowledgementMessage ackMessage)
+        {
+            lock(ackLock)
+            {
+                BackgroundWorker worker = null;
+                if(msgIdToTask.TryGetValue(ackMessage.sourceMessageId, out worker))
+                {
+                	// this allows DCD to register an action, initially void payment
+                    if (worker != null)
+                    {
+                        msgIdToTask.Remove(ackMessage.sourceMessageId);
+                        worker.RunWorkerAsync();
+                    }
+
+					// this allows other listeners to register a listener
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
+                    {
+                        observer.onMessageAck(ackMessage.sourceMessageId);
+                    }
+                }
+                else
+                {
+                    // No task for messageId
+                }
+            }
+        }
+
+        public void notifyObserversPrintCredit(CreditPrintMessage cpm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onPrintCredit(cpm.credit);
+            }
+        }
+
+        public void notifyObserversPrintCreditDecline(DeclineCreditPrintMessage dcpm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onPrintCreditDecline(dcpm.credit, dcpm.reason);
+            }
+        }
+
+        public void notifyObserversPrintPayment(PaymentPrintMessage ppm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onPrintPayment(ppm.payment, ppm.order);
+            }
+        }
+
+        public void notifyObserversPrintPaymentDecline(DeclinePaymentPrintMessage dppm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onPrintPaymentDecline(dppm.payment, dppm.reason);
+            }
+        }
+
+        public void notifyObserversPrintMerchantCopy(PaymentPrintMerchantCopyMessage ppmcm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onPrintMerchantReceipt(ppmcm.payment);
+            }
+        }
+
+        public void notifyObserversPrintRefund(RefundPaymentPrintMessage rppm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onPrintRefundPayment(rppm.payment, rppm.order, rppm.refund);
+            }
+        }
+
         public override void doShowPaymentReceiptScreen(string orderId, string paymentId)
         {
             sendObjectMessage(new PaymentReceiptMessage(orderId, paymentId));
@@ -489,9 +656,18 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new Message(Methods.SHOW_WELCOME_SCREEN));
         }
 
+        public override void doRetrievePendingPayments()
+        {
+            sendObjectMessage(new Message(Methods.RETRIEVE_PENDING_PAYMENTS));
+        }
+
         public override void doVerifySignature(Payment payment, bool verified)
         {
-            sendObjectMessage(new SignatureVerifiedMessage(payment, verified));
+            paymentConfirmationIdle.Wait();
+            if (!paymentRejected)
+            {
+                sendObjectMessage(new SignatureVerifiedMessage(payment, verified));
+            }
         }
 
         public override void doTerminalMessage(string text)
@@ -507,6 +683,11 @@ namespace com.clover.remotepay.transport
         public override void doVaultCard(int? CardEntryMethods)
         {
             sendObjectMessage(new VaultCardMessage(CardEntryMethods)); // take defaults entry methods
+        }
+
+        public override void doReadCardData(PayIntent payIntent)
+        {
+            sendObjectMessage(new ReadCardDataMessage(payIntent)); 
         }
 
         public override void doCloseout(bool allowOpenTabs, string batchId)
@@ -560,19 +741,31 @@ namespace com.clover.remotepay.transport
 
         public override void doVoidPayment(Payment payment, VoidReason reason)
         {
-            VoidPaymentMessage vpm = new VoidPaymentMessage();
-            vpm.payment = payment;
-            vpm.voidReason = reason;
-            sendObjectMessage(vpm);
-
-            BackgroundWorker bw = new BackgroundWorker();
-            // what to do in the background thread
-            bw.DoWork += new DoWorkEventHandler(
-            delegate (object o, DoWorkEventArgs args)
+            lock(ackLock)
             {
-                notifyObserversPaymentVoided(payment, reason);
-            });
-            bw.RunWorkerAsync();
+                VoidPaymentMessage vpm = new VoidPaymentMessage();
+                vpm.payment = payment;
+                vpm.voidReason = reason;
+                string msgId = sendObjectMessage(vpm);
+
+
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(
+                delegate (object o, DoWorkEventArgs args)
+                {
+                    notifyObserversPaymentVoided(payment, reason);
+                });
+
+
+                if (!SupportsAcks)
+                {
+                    bw.RunWorkerAsync();
+                }
+                else
+                {
+                    msgIdToTask.Add(msgId, bw);
+                }
+            }
         }
 
         public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund)
@@ -594,18 +787,37 @@ namespace com.clover.remotepay.transport
             
         }
 
-        private void sendObjectMessage(Message message)
+        public override void doAcceptPayment(Payment payment)
+        {
+            setPaymentConfirmationIdle(true);
+            PaymentConfirmedMessage message = new PaymentConfirmedMessage();
+            message.payment = payment;
+
+            sendObjectMessage(message);
+        }
+
+        public override void doRejectPayment(Payment payment, Challenge challenge)
+        {
+            paymentRejected = true;
+            setPaymentConfirmationIdle(true);
+            PaymentRejectedMessage message = new PaymentRejectedMessage();
+            message.payment = payment;
+            message.challenge = challenge;
+
+            sendObjectMessage(message);
+        }
+
+        private string sendObjectMessage(Message message)
         {
             RemoteMessage remoteMessage = RemoteMessage.createMessage(
                 message.method, MessageTypes.COMMAND, message, this.packageName, remoteSourceSDK, remoteApplicationID
             );
-
             string msg = JsonUtils.serializeSDK(remoteMessage);
             transport.sendMessage(msg);
 #if DEBUG
             Console.WriteLine("Sent message: " + msg);
 #endif
+            return remoteMessage.id;
         }
-
     }
 }

@@ -379,11 +379,11 @@ namespace com.clover.remotepay.transport
                         Console.WriteLine("Received UiStateMessage: ADD_TIP Customer is tipping... Exit");
                         payIntent.tipAmount = (long)(payIntent.amount * 0.1f);
                     }
-                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment method.", UiDirection.ENTER, new InputOption[0]));
-                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment method. Enter");
+                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment.", UiDirection.ENTER, new InputOption[0]));
+                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment. Enter");
                     Thread.Sleep(1000);
-                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment method.", UiDirection.EXIT, new InputOption[0]));
-                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment method. Exit");
+                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment.", UiDirection.EXIT, new InputOption[0]));
+                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment. Exit");
                     notifyObserversUiState(new UiStateMessage(UiState.PROCESSING, "Processing...", UiDirection.ENTER, new InputOption[0]));
                     Console.WriteLine("Received UiStateMessage: PROCESSING Processing... Enter");
                     Thread.Sleep(1000);
@@ -455,11 +455,11 @@ namespace com.clover.remotepay.transport
                 }
                 else if (payIntent.amount < 0 && payIntent.transactionType == PayIntent.TransactionType.CREDIT)
                 {
-                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment method.", UiDirection.ENTER, new InputOption[0]));
-                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment method... Enter");
+                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment.", UiDirection.ENTER, new InputOption[0]));
+                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment... Enter");
                     Thread.Sleep(1000);
-                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment method.", UiDirection.EXIT, new InputOption[0]));
-                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment method... Exit");
+                    notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment.", UiDirection.EXIT, new InputOption[0]));
+                    Console.WriteLine("Received UiStateMessage: START Customer is choosing payment... Exit");
                     notifyObserversUiState(new UiStateMessage(UiState.PROCESSING, "Processing...", UiDirection.ENTER, new InputOption[0]));
                     Console.WriteLine("Received UiStateMessage: PROCESSING Processing... Enter");
                     Thread.Sleep(3000);
@@ -514,7 +514,12 @@ namespace com.clover.remotepay.transport
         {
             
         }
-        
+
+        public override void doRetrievePendingPayments()
+        {
+
+        }
+
         public void onMessage(string message)
         {
             throw new NotImplementedException();
@@ -537,11 +542,11 @@ namespace com.clover.remotepay.transport
                 Thread.Sleep(3000);
                 notifyObserversUiState(new UiStateMessage(UiState.PROCESSING, "Processing...", UiDirection.EXIT, new InputOption[0]));
                 Console.WriteLine("Received UiStateMessage: PROCESSING Processing... Exit");
-                notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment method.", UiDirection.ENTER, new InputOption[0]));
-                Console.WriteLine("Received UiStateMessage: START Customer is choosing payment method... Enter");
+                notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment.", UiDirection.ENTER, new InputOption[0]));
+                Console.WriteLine("Received UiStateMessage: START Customer is choosing payment... Enter");
                 Thread.Sleep(1000);
-                notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment method.", UiDirection.EXIT, new InputOption[0]));
-                Console.WriteLine("Received UiStateMessage: START Customer is choosing payment method... Exit");
+                notifyObserversUiState(new UiStateMessage(UiState.START, "Customer is choosing payment.", UiDirection.EXIT, new InputOption[0]));
+                Console.WriteLine("Received UiStateMessage: START Customer is choosing payment... Exit");
                 notifyObserversUiState(new UiStateMessage(UiState.PROCESSING, "Processing...", UiDirection.ENTER, new InputOption[0]));
                 Console.WriteLine("Received UiStateMessage: PROCESSING Processing... Enter");
                 Thread.Sleep(3000);
@@ -561,6 +566,11 @@ namespace com.clover.remotepay.transport
             bw.RunWorkerAsync();
         }
 
+        public override void doReadCardData(PayIntent payIntent)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void doResetDevice()
         {
             // Blind to the client
@@ -573,6 +583,16 @@ namespace com.clover.remotepay.transport
                 devOvs.onDeviceError(code, message);
             }
 
+        }
+
+        public override void doAcceptPayment(Payment payment)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public override void doRejectPayment(Payment payment, Challenge challenge)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

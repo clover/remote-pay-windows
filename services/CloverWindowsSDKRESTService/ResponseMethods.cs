@@ -137,6 +137,12 @@ namespace CloverWindowsSDKREST
         public VaultCardResponse VaultCardResponse { get; set; }
     }
 
+    [XmlRoot(ElementName = "OnReadCardDataResponse")]
+    public class OnReadCardDataResponse
+    {
+        public ReadCardDataResponse ReadCardDataResponse { get; set; }
+    }
+
     [XmlRoot(ElementName = "OnDeviceError")]
     public class OnDeviceError
     {

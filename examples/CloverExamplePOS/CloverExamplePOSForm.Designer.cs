@@ -101,6 +101,7 @@ namespace CloverExamplePOS
             this.amountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tipPaymentHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.paymentTotalHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.externalID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.CloseoutButton = new System.Windows.Forms.Button();
@@ -112,8 +113,6 @@ namespace CloverExamplePOS
             this.ShowReceiptButton = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            //this.tableLayoutPanelReceiptButton = new System.Windows.Forms.TableLayoutPanel();
-            //this.ManualRefundReceiptButton = new System.Windows.Forms.Button();
             this.TransactionsListView = new System.Windows.Forms.ListView();
             this.TransAmountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TransDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -139,25 +138,25 @@ namespace CloverExamplePOS
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.label9 = new System.Windows.Forms.Label();
-            this.PrintImage = new System.Windows.Forms.PictureBox();
             this.DisplayMessageTextbox = new System.Windows.Forms.TextBox();
             this.DisplayMessageButton = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.PrintTextBox = new System.Windows.Forms.TextBox();
-            this.PrintURLTextBox = new System.Windows.Forms.TextBox();
             this.PrintTextButton = new System.Windows.Forms.Button();
+            this.tableLayoutPanel96 = new System.Windows.Forms.TableLayoutPanel();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.label52 = new System.Windows.Forms.Label();
-            this.PrintImageButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel96 = new System.Windows.Forms.TableLayoutPanel();
             this.BrowseImageButton = new System.Windows.Forms.Button();
+            this.PrintURLTextBox = new System.Windows.Forms.TextBox();
+            this.PrintImageButton = new System.Windows.Forms.Button();
+            this.PrintImage = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.ShowWelcomeButton = new System.Windows.Forms.Button();
             this.ShowThankYouButton = new System.Windows.Forms.Button();
             this.OpenCashDrawerButton = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
+            this.CardDataButton = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label52 = new System.Windows.Forms.Label();
             this.ManualEntryCheckbox = new System.Windows.Forms.CheckBox();
@@ -173,14 +172,20 @@ namespace CloverExamplePOS
             this.offlineYes = new System.Windows.Forms.RadioButton();
             this.offlineNo = new System.Windows.Forms.RadioButton();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel94 = new System.Windows.Forms.FlowLayoutPanel();
             this.label14 = new System.Windows.Forms.Label();
-            this.label84 = new System.Windows.Forms.Label();
             this.approveOfflineDefault = new System.Windows.Forms.RadioButton();
             this.approveOfflineYes = new System.Windows.Forms.RadioButton();
             this.approveOfflineNo = new System.Windows.Forms.RadioButton();
+            this.flowLayoutPanel94 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label84 = new System.Windows.Forms.Label();
             this.autoApproveSigYes = new System.Windows.Forms.RadioButton();
             this.autoApproveSigNo = new System.Windows.Forms.RadioButton();
+            this.disablePrintingCB = new System.Windows.Forms.CheckBox();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.pendingPaymentListView = new System.Windows.Forms.ListView();
+            this.paymentIdHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.paymentAmountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.refreshPendingPayments = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
             this.DeviceCurrentStatus = new System.Windows.Forms.Label();
@@ -220,21 +225,21 @@ namespace CloverExamplePOS
             this.tableLayoutPanel7.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
-            //this.tableLayoutPanelReceiptButton.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.Cards.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tableLayoutPanel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PrintImage)).BeginInit();
-            this.tableLayoutPanel16.SuspendLayout();
             this.tableLayoutPanel96.SuspendLayout();
+            this.tableLayoutPanel16.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PrintImage)).BeginInit();
             this.flowLayoutPanel5.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanelCNP.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel94.SuspendLayout();
+            this.tabPage8.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel14.SuspendLayout();
             this.tableLayoutPanel15.SuspendLayout();
@@ -300,6 +305,7 @@ namespace CloverExamplePOS
             this.TabControl.Controls.Add(this.Cards);
             this.TabControl.Controls.Add(this.tabPage7);
             this.TabControl.Controls.Add(this.tabPage4);
+            this.TabControl.Controls.Add(this.tabPage8);
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Location = new System.Drawing.Point(0, 4);
             this.TabControl.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
@@ -979,7 +985,8 @@ namespace CloverExamplePOS
             this.PayStatusHeader,
             this.amountHeader,
             this.tipPaymentHeader,
-            this.paymentTotalHeader1});
+            this.paymentTotalHeader1,
+            this.externalID});
             this.OrderPaymentsView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OrderPaymentsView.FullRowSelect = true;
             this.OrderPaymentsView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -1011,6 +1018,10 @@ namespace CloverExamplePOS
             // 
             this.paymentTotalHeader1.Text = "Total";
             this.paymentTotalHeader1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // externalID
+            // 
+            this.externalID.Text = "External ID";
             // 
             // tableLayoutPanel4
             // 
@@ -1133,7 +1144,7 @@ namespace CloverExamplePOS
             this.VoidButton.Click += new System.EventHandler(this.VoidButton_Click);
             // 
             // ShowReceiptButton
-             
+            // 
             this.ShowReceiptButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.ShowReceiptButton.BackColor = System.Drawing.Color.White;
             this.ShowReceiptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -1145,7 +1156,7 @@ namespace CloverExamplePOS
             this.ShowReceiptButton.Text = "Receipt Opt";
             this.ShowReceiptButton.UseVisualStyleBackColor = false;
             this.ShowReceiptButton.Click += new System.EventHandler(this.ShowReceiptButton_Click);
-             
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.tableLayoutPanel5);
@@ -1161,7 +1172,6 @@ namespace CloverExamplePOS
             // 
             this.tableLayoutPanel5.ColumnCount = 1;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            //this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanelReceiptButton, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.TransactionsListView, 0, 1);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1174,33 +1184,6 @@ namespace CloverExamplePOS
             this.tableLayoutPanel5.Size = new System.Drawing.Size(895, 507);
             this.tableLayoutPanel5.TabIndex = 11;
             // 
-            // tableLayoutPanelReceiptButton
-            /* 
-            this.tableLayoutPanelReceiptButton.ColumnCount = 1;
-            this.tableLayoutPanelReceiptButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelReceiptButton.Controls.Add(this.ManualRefundReceiptButton, 0, 0);
-            this.tableLayoutPanelReceiptButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelReceiptButton.Location = new System.Drawing.Point(3, 445);
-            this.tableLayoutPanelReceiptButton.Name = "tableLayoutPanelReceiptButton";
-            this.tableLayoutPanelReceiptButton.RowCount = 1;
-            this.tableLayoutPanelReceiptButton.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelReceiptButton.Size = new System.Drawing.Size(889, 59);
-            this.tableLayoutPanelReceiptButton.TabIndex = 11;
-            */ 
-            // ManualRefundReceiptButton
-            /* 
-            this.ManualRefundReceiptButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.ManualRefundReceiptButton.BackColor = System.Drawing.Color.White;
-            this.ManualRefundReceiptButton.Enabled = false;
-            this.ManualRefundReceiptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ManualRefundReceiptButton.Location = new System.Drawing.Point(820, 5);
-            this.ManualRefundReceiptButton.Name = "ManualRefundReceiptButton";
-            this.ManualRefundReceiptButton.Size = new System.Drawing.Size(66, 49);
-            this.ManualRefundReceiptButton.TabIndex = 17;
-            this.ManualRefundReceiptButton.Text = "Receipt Opt";
-            this.ManualRefundReceiptButton.UseVisualStyleBackColor = false;
-            this.ManualRefundReceiptButton.Click += new System.EventHandler(this.ManualRefundReceiptButton_Click);
-            */ 
             // TransactionsListView
             // 
             this.TransactionsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -1442,10 +1425,11 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel6, 0, 6);
             this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel4, 0, 7);
             this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel94, 0, 8);
+            this.tableLayoutPanel8.Controls.Add(this.disablePrintingCB, 0, 9);
             this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-            this.tableLayoutPanel8.RowCount = 9;
+            this.tableLayoutPanel8.RowCount = 10;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -1455,7 +1439,8 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(895, 420);
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(895, 430);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // label9
@@ -1468,19 +1453,10 @@ namespace CloverExamplePOS
             this.label9.TabIndex = 23;
             this.label9.Text = "Display Message: ";
             // 
-            // PrintImage
-            // 
-            this.PrintImage.Location = new System.Drawing.Point(289, 113);
-            this.PrintImage.Name = "PrintImage";
-            this.PrintImage.Size = new System.Drawing.Size(100, 50);
-            this.PrintImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.PrintImage.TabIndex = 1;
-            this.PrintImage.TabStop = false;
-            // 
             // DisplayMessageTextbox
             // 
             this.DisplayMessageTextbox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.DisplayMessageTextbox.Location = new System.Drawing.Point(102, 17);
+            this.DisplayMessageTextbox.Location = new System.Drawing.Point(113, 17);
             this.DisplayMessageTextbox.Name = "DisplayMessageTextbox";
             this.DisplayMessageTextbox.Size = new System.Drawing.Size(100, 20);
             this.DisplayMessageTextbox.TabIndex = 22;
@@ -1489,7 +1465,7 @@ namespace CloverExamplePOS
             // 
             this.DisplayMessageButton.BackColor = System.Drawing.Color.White;
             this.DisplayMessageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DisplayMessageButton.Location = new System.Drawing.Point(208, 3);
+            this.DisplayMessageButton.Location = new System.Drawing.Point(219, 3);
             this.DisplayMessageButton.Name = "DisplayMessageButton";
             this.DisplayMessageButton.Size = new System.Drawing.Size(75, 49);
             this.DisplayMessageButton.TabIndex = 21;
@@ -1510,7 +1486,7 @@ namespace CloverExamplePOS
             // PrintTextBox
             // 
             this.PrintTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PrintTextBox.Location = new System.Drawing.Point(102, 72);
+            this.PrintTextBox.Location = new System.Drawing.Point(113, 72);
             this.PrintTextBox.Name = "PrintTextBox";
             this.PrintTextBox.Size = new System.Drawing.Size(100, 20);
             this.PrintTextBox.TabIndex = 19;
@@ -1519,7 +1495,7 @@ namespace CloverExamplePOS
             // 
             this.PrintTextButton.BackColor = System.Drawing.Color.White;
             this.PrintTextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PrintTextButton.Location = new System.Drawing.Point(208, 58);
+            this.PrintTextButton.Location = new System.Drawing.Point(219, 58);
             this.PrintTextButton.Name = "PrintTextButton";
             this.PrintTextButton.Size = new System.Drawing.Size(75, 49);
             this.PrintTextButton.TabIndex = 18;
@@ -1527,13 +1503,29 @@ namespace CloverExamplePOS
             this.PrintTextButton.UseVisualStyleBackColor = false;
             this.PrintTextButton.Click += new System.EventHandler(this.PrintTextButton_Click);
             // 
+            // tableLayoutPanel96
+            // 
+            this.tableLayoutPanel96.ColumnCount = 1;
+            this.tableLayoutPanel96.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel96.Controls.Add(this.label11, 0, 0);
+            this.tableLayoutPanel96.Controls.Add(this.label12, 0, 1);
+            this.tableLayoutPanel96.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel96.Location = new System.Drawing.Point(0, 110);
+            this.tableLayoutPanel96.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel96.Name = "tableLayoutPanel96";
+            this.tableLayoutPanel96.RowCount = 2;
+            this.tableLayoutPanel96.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel96.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel96.Size = new System.Drawing.Size(110, 56);
+            this.tableLayoutPanel96.TabIndex = 0;
+            // 
             // label11
             // 
             this.label11.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 3);
+            this.label11.Location = new System.Drawing.Point(3, 5);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(69, 13);
+            this.label11.Size = new System.Drawing.Size(75, 13);
             this.label11.TabIndex = 29;
             this.label11.Text = "Select Image: ";
             // 
@@ -1541,40 +1533,11 @@ namespace CloverExamplePOS
             // 
             this.label12.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(3, 3);
+            this.label12.Location = new System.Drawing.Point(3, 33);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(69, 13);
+            this.label12.Size = new System.Drawing.Size(67, 13);
             this.label12.TabIndex = 0;
             this.label12.Text = "Image URL: ";
-            // 
-            // PrintImageButton
-            // 
-            this.PrintImageButton.BackColor = System.Drawing.Color.White;
-            this.PrintImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PrintImageButton.Location = new System.Drawing.Point(208, 113);
-            this.PrintImageButton.Name = "PrintImageButton";
-            this.PrintImageButton.Size = new System.Drawing.Size(75, 49);
-            this.PrintImageButton.TabIndex = 30;
-            this.PrintImageButton.Text = "Print Image";
-            this.PrintImageButton.UseVisualStyleBackColor = false;
-            this.PrintImageButton.Click += new System.EventHandler(this.PrintImageButton_Click);
-            // 
-            // tableLayoutPanel96
-            // 
-            this.tableLayoutPanel96.ColumnCount = 1;
-            this.tableLayoutPanel96.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel96.Controls.Add(this.label11, 0, 0);
-            this.tableLayoutPanel96.Controls.Add(this.label12, 0, 1);
-
-            this.tableLayoutPanel96.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel96.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel96.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel96.Name = "tableLayoutPanel96";
-            this.tableLayoutPanel96.RowCount = 2;
-            this.tableLayoutPanel96.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel96.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel96.Size = new System.Drawing.Size(110, 55);
-            this.tableLayoutPanel96.TabIndex = 0;
             // 
             // tableLayoutPanel16
             // 
@@ -1582,22 +1545,21 @@ namespace CloverExamplePOS
             this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel16.Controls.Add(this.BrowseImageButton, 0, 0);
             this.tableLayoutPanel16.Controls.Add(this.PrintURLTextBox, 0, 1);
-
             this.tableLayoutPanel16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel16.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel16.Location = new System.Drawing.Point(110, 110);
             this.tableLayoutPanel16.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel16.Name = "tableLayoutPanel16";
             this.tableLayoutPanel16.RowCount = 2;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(106, 55);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(106, 56);
             this.tableLayoutPanel16.TabIndex = 31;
             // 
             // BrowseImageButton
             // 
             this.BrowseImageButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.BrowseImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BrowseImageButton.Location = new System.Drawing.Point(3, 3);
+            this.BrowseImageButton.Location = new System.Drawing.Point(15, 1);
             this.BrowseImageButton.Margin = new System.Windows.Forms.Padding(0);
             this.BrowseImageButton.Name = "BrowseImageButton";
             this.BrowseImageButton.Size = new System.Drawing.Size(75, 21);
@@ -1609,18 +1571,40 @@ namespace CloverExamplePOS
             // PrintURLTextBox
             // 
             this.PrintURLTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PrintURLTextBox.Location = new System.Drawing.Point(3, 3);
+            this.PrintURLTextBox.Location = new System.Drawing.Point(3, 29);
             this.PrintURLTextBox.Name = "PrintURLTextBox";
             this.PrintURLTextBox.Size = new System.Drawing.Size(100, 20);
             this.PrintURLTextBox.TabIndex = 0;
             // 
+            // PrintImageButton
+            // 
+            this.PrintImageButton.BackColor = System.Drawing.Color.White;
+            this.PrintImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PrintImageButton.Location = new System.Drawing.Point(219, 113);
+            this.PrintImageButton.Name = "PrintImageButton";
+            this.PrintImageButton.Size = new System.Drawing.Size(75, 49);
+            this.PrintImageButton.TabIndex = 30;
+            this.PrintImageButton.Text = "Print Image";
+            this.PrintImageButton.UseVisualStyleBackColor = false;
+            this.PrintImageButton.Click += new System.EventHandler(this.PrintImageButton_Click);
+            // 
+            // PrintImage
+            // 
+            this.PrintImage.Location = new System.Drawing.Point(300, 113);
+            this.PrintImage.Name = "PrintImage";
+            this.PrintImage.Size = new System.Drawing.Size(100, 50);
+            this.PrintImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.PrintImage.TabIndex = 1;
+            this.PrintImage.TabStop = false;
+            // 
             // flowLayoutPanel5
             // 
-            this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel5, 4);
+            this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel5, 5);
             this.flowLayoutPanel5.Controls.Add(this.ShowWelcomeButton);
             this.flowLayoutPanel5.Controls.Add(this.ShowThankYouButton);
             this.flowLayoutPanel5.Controls.Add(this.OpenCashDrawerButton);
             this.flowLayoutPanel5.Controls.Add(this.Cancel);
+            this.flowLayoutPanel5.Controls.Add(this.CardDataButton);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 169);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
@@ -1679,6 +1663,19 @@ namespace CloverExamplePOS
             this.Cancel.UseVisualStyleBackColor = false;
             this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
+            // CardDataButton
+            // 
+            this.CardDataButton.BackColor = System.Drawing.Color.White;
+            this.CardDataButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CardDataButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.CardDataButton.Location = new System.Drawing.Point(327, 8);
+            this.CardDataButton.Name = "CardDataButton";
+            this.CardDataButton.Size = new System.Drawing.Size(75, 49);
+            this.CardDataButton.TabIndex = 28;
+            this.CardDataButton.Text = "Read Card Data";
+            this.CardDataButton.UseVisualStyleBackColor = false;
+            this.CardDataButton.Click += new System.EventHandler(this.CardDataButton_Click);
+            // 
             // flowLayoutPanel1
             // 
             this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel1, 5);
@@ -1697,7 +1694,7 @@ namespace CloverExamplePOS
             this.label52.AutoSize = true;
             this.label52.Location = new System.Drawing.Point(3, 3);
             this.label52.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.label52.Name = "label12";
+            this.label52.Name = "label52";
             this.label52.Size = new System.Drawing.Size(170, 13);
             this.label52.TabIndex = 37;
             this.label52.Text = "Card Entry Methods (Sale && Auth): ";
@@ -1854,18 +1851,6 @@ namespace CloverExamplePOS
             this.flowLayoutPanel4.Size = new System.Drawing.Size(889, 24);
             this.flowLayoutPanel4.TabIndex = 41;
             // 
-            // flowLayoutPanel94
-            // 
-            this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel94, 4);
-            this.flowLayoutPanel94.Controls.Add(this.label84);
-            this.flowLayoutPanel94.Controls.Add(this.autoApproveSigYes);
-            this.flowLayoutPanel94.Controls.Add(this.autoApproveSigNo);
-            this.flowLayoutPanel94.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel94.Location = new System.Drawing.Point(3, 343);
-            this.flowLayoutPanel94.Name = "flowLayoutPane94";
-            this.flowLayoutPanel94.Size = new System.Drawing.Size(889, 24);
-            this.flowLayoutPanel94.TabIndex = 0;
-            // 
             // label14
             // 
             this.label14.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1908,36 +1893,112 @@ namespace CloverExamplePOS
             this.approveOfflineNo.Text = "No";
             this.approveOfflineNo.UseVisualStyleBackColor = true;
             // 
+            // flowLayoutPanel94
+            // 
+            this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel94, 4);
+            this.flowLayoutPanel94.Controls.Add(this.label84);
+            this.flowLayoutPanel94.Controls.Add(this.autoApproveSigYes);
+            this.flowLayoutPanel94.Controls.Add(this.autoApproveSigNo);
+            this.flowLayoutPanel94.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel94.Location = new System.Drawing.Point(3, 373);
+            this.flowLayoutPanel94.Name = "flowLayoutPanel94";
+            this.flowLayoutPanel94.Size = new System.Drawing.Size(889, 24);
+            this.flowLayoutPanel94.TabIndex = 0;
+            // 
             // label84
             // 
             this.label84.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label84.AutoSize = true;
             this.label84.Location = new System.Drawing.Point(3, 5);
             this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(181, 13);
+            this.label84.Size = new System.Drawing.Size(157, 13);
             this.label84.TabIndex = 0;
             this.label84.Text = "Accept Signatures W/O Prompt";
             // 
             // autoApproveSigYes
             // 
             this.autoApproveSigYes.AutoSize = true;
-            this.autoApproveSigYes.Location = new System.Drawing.Point(255, 3);
+            this.autoApproveSigYes.Checked = true;
+            this.autoApproveSigYes.Location = new System.Drawing.Point(166, 3);
             this.autoApproveSigYes.Name = "autoApproveSigYes";
             this.autoApproveSigYes.Size = new System.Drawing.Size(43, 17);
             this.autoApproveSigYes.TabIndex = 2;
+            this.autoApproveSigYes.TabStop = true;
             this.autoApproveSigYes.Text = "Yes";
             this.autoApproveSigYes.UseVisualStyleBackColor = true;
-            this.autoApproveSigYes.Checked = true;
             // 
             // autoApproveSigNo
             // 
             this.autoApproveSigNo.AutoSize = true;
-            this.autoApproveSigNo.Location = new System.Drawing.Point(304, 3);
+            this.autoApproveSigNo.Location = new System.Drawing.Point(215, 3);
             this.autoApproveSigNo.Name = "autoApproveSigNo";
             this.autoApproveSigNo.Size = new System.Drawing.Size(39, 17);
             this.autoApproveSigNo.TabIndex = 3;
             this.autoApproveSigNo.Text = "No";
             this.autoApproveSigNo.UseVisualStyleBackColor = true;
+            // 
+            // disablePrintingCB
+            // 
+            this.disablePrintingCB.AutoSize = true;
+            this.disablePrintingCB.Location = new System.Drawing.Point(3, 403);
+            this.disablePrintingCB.Name = "disablePrintingCB";
+            this.disablePrintingCB.Size = new System.Drawing.Size(99, 17);
+            this.disablePrintingCB.TabIndex = 42;
+            this.disablePrintingCB.Text = "Disable Printing";
+            this.disablePrintingCB.UseVisualStyleBackColor = true;
+            this.disablePrintingCB.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.pendingPaymentListView);
+            this.tabPage8.Controls.Add(this.refreshPendingPayments);
+            this.tabPage8.Location = new System.Drawing.Point(4, 25);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(901, 513);
+            this.tabPage8.TabIndex = 6;
+            this.tabPage8.Text = "Pending Payments";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // pendingPaymentListView
+            // 
+            this.pendingPaymentListView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pendingPaymentListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.paymentIdHeader,
+            this.paymentAmountHeader});
+            this.pendingPaymentListView.FullRowSelect = true;
+            this.pendingPaymentListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.pendingPaymentListView.Location = new System.Drawing.Point(7, 6);
+            this.pendingPaymentListView.MultiSelect = false;
+            this.pendingPaymentListView.Name = "pendingPaymentListView";
+            this.pendingPaymentListView.Size = new System.Drawing.Size(887, 446);
+            this.pendingPaymentListView.TabIndex = 40;
+            this.pendingPaymentListView.UseCompatibleStateImageBehavior = false;
+            this.pendingPaymentListView.View = System.Windows.Forms.View.Details;
+            // 
+            // paymentIdHeader
+            // 
+            this.paymentIdHeader.Text = "Payment ID";
+            this.paymentIdHeader.Width = 300;
+            // 
+            // paymentAmountHeader
+            // 
+            this.paymentAmountHeader.Text = "Amount";
+            this.paymentAmountHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.paymentAmountHeader.Width = 150;
+            // 
+            // refreshPendingPayments
+            // 
+            this.refreshPendingPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.refreshPendingPayments.BackColor = System.Drawing.Color.White;
+            this.refreshPendingPayments.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.refreshPendingPayments.Location = new System.Drawing.Point(819, 458);
+            this.refreshPendingPayments.Name = "refreshPendingPayments";
+            this.refreshPendingPayments.Size = new System.Drawing.Size(75, 49);
+            this.refreshPendingPayments.TabIndex = 39;
+            this.refreshPendingPayments.Text = "Refresh";
+            this.refreshPendingPayments.UseVisualStyleBackColor = false;
+            this.refreshPendingPayments.Click += new System.EventHandler(this.refreshPendingPayments_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -2067,7 +2128,6 @@ namespace CloverExamplePOS
             this.tableLayoutPanel7.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
-            //this.tableLayoutPanelReceiptButton.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
             this.Cards.ResumeLayout(false);
@@ -2075,9 +2135,11 @@ namespace CloverExamplePOS
             this.tabPage4.ResumeLayout(false);
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PrintImage)).EndInit();
-            this.tableLayoutPanel16.ResumeLayout(false);
             this.tableLayoutPanel96.ResumeLayout(false);
+            this.tableLayoutPanel96.PerformLayout();
+            this.tableLayoutPanel16.ResumeLayout(false);
+            this.tableLayoutPanel16.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PrintImage)).EndInit();
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
@@ -2089,6 +2151,7 @@ namespace CloverExamplePOS
             this.flowLayoutPanel4.PerformLayout();
             this.flowLayoutPanel94.ResumeLayout(false);
             this.flowLayoutPanel94.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel14.ResumeLayout(false);
             this.tableLayoutPanel14.PerformLayout();
@@ -2202,6 +2265,7 @@ namespace CloverExamplePOS
         private System.Windows.Forms.Button ShowReceiptButton;
         private System.Windows.Forms.Button ShowThankYouButton;
         private System.Windows.Forms.Button OpenCashDrawerButton;
+        private System.Windows.Forms.Button CardDataButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
@@ -2254,6 +2318,13 @@ namespace CloverExamplePOS
         private System.Windows.Forms.RadioButton approveOfflineNo;
         private System.Windows.Forms.RadioButton autoApproveSigYes;
         private System.Windows.Forms.RadioButton autoApproveSigNo;
+        private System.Windows.Forms.ColumnHeader externalID;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.ListView pendingPaymentListView;
+        private System.Windows.Forms.ColumnHeader paymentIdHeader;
+        private System.Windows.Forms.ColumnHeader paymentAmountHeader;
+        private System.Windows.Forms.Button refreshPendingPayments;
+        private System.Windows.Forms.CheckBox disablePrintingCB;
     }
 }
 

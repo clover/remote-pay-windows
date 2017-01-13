@@ -95,4 +95,10 @@ namespace com.clover.remotepay.sdk.service.client {
         public DisplayDiscount DisplayDiscount { get; set; }
     }
 
+    [XmlRoot(ElementName = "RejectPaymentObject")]
+    public class RejectPaymentObject
+    {
+        public clover.sdk.v3.payments.Payment Payment { get; set; }
+        public transport.Challenge Challenge { get; set; }
+    }
 }

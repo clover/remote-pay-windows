@@ -321,17 +321,18 @@ namespace CloverExamplePOS
 
     public class POSPayment : POSExchange
     {
+        public String ExternalID { get; set; }
         public enum Status
         {
             PAID, VOIDED, REFUNDED, AUTHORIZED
         }
-        public POSPayment(string paymentID, string orderID, string employeeID, long amount, long tip = 0, long cashBack = 0) : base(paymentID, orderID, employeeID, amount)
+        public POSPayment(string paymentID, string externalID, string orderID, string employeeID, long amount, long tip = 0, long cashBack = 0) : base(paymentID, orderID, employeeID, amount)
         {
             TipAmount = tip;
             CashBackAmount = cashBack;
             OrderID = orderID;
             EmployeeID = employeeID;
-            
+            ExternalID = externalID;
         }
 
         private Status _status;

@@ -28,6 +28,8 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using com.clover.sdk.v3.payments;
+using com.clover.remotepay.sdk.service.client;
 
 namespace CloverWindowsSDKREST
 {
@@ -180,6 +182,7 @@ namespace CloverWindowsSDKREST
                 EventLog.WriteEntry(SERVICE_NAME, "POS Name or Version is not correctly set.  The service will not run until they are appropriately intialized.");
                 throw new Exception("Invalid external POS name or version. The REST service cannot run without correctly configured <ExternalPOSName> and <ExternalPOSVersion> registry keys.");
             }
+              
             EventLog.WriteEntry(SERVICE_NAME, "POS Name:Version from registry = " + name + ":" + version);
             return name + ":" + version;
         }
@@ -249,6 +252,22 @@ namespace CloverWindowsSDKREST
             if (Device != null)
             {
                 Device.doVerifySignature(request.Payment, false);
+            }
+        }
+
+        public void AcceptPayment(Payment payment)
+        {
+            if (Device != null)
+            {
+                Device.doAcceptPayment(payment);
+            }
+        }
+
+        public void RejectPayment(RejectPaymentObject rpo)
+        {
+            if (Device != null)
+            {
+                Device.doRejectPayment(rpo.Payment, rpo.Challenge);
             }
         }
     }

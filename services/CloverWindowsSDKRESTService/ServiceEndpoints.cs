@@ -21,6 +21,7 @@ using com.clover.remotepay.sdk;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using System.IO;
+using com.clover.sdk.v3.payments;
 
 public sealed class ServiceEndpoints : RESTResource
 {
@@ -80,6 +81,14 @@ public sealed class ServiceEndpoints : RESTResource
     public void ShowWelcomeScreen(HttpListenerContext context)
     {
         GetServer.CloverConnector.ShowWelcomeScreen();
+        this.SendTextResponse(context, "");
+    }
+
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrievePendingPayments$")]
+    public void RetrievePendingPayments(HttpListenerContext context)
+    {
+        GetServer.CloverConnector.RetrievePendingPayments();
         this.SendTextResponse(context, "");
     }
 
@@ -165,6 +174,14 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/ReadCardData$")]
+    public void ReadCardData(HttpListenerContext context)
+    {
+        ReadCardDataRequest readCardDataRequest = ParseRequest<ReadCardDataRequest>(context);
+        GetServer.CloverConnector.ReadCardData(readCardDataRequest);
+        this.SendTextResponse(context, "");
+    }
+
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/CapturePreAuth$")]
     public void CapturePreAuth(HttpListenerContext context)
     {
@@ -181,7 +198,7 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Closeout")]
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Closeout$")]
     public void Closeout(HttpListenerContext context)
     {
         CloseoutRequest message = ParseRequest<CloseoutRequest>(context);
@@ -235,38 +252,6 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/LineItemAddedToDisplayOrder$")]
-    public void LineItemAddedToDisplayOrder(HttpListenerContext context)
-    {
-        LineItemAddedToDisplayOrder dolia = ParseRequest<LineItemAddedToDisplayOrder>(context);
-        GetServer.CloverConnector.LineItemAddedToDisplayOrder(dolia.DisplayOrder, dolia.DisplayLineItem);
-        this.SendTextResponse(context, "");
-    }
-
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/LineItemRemovedFromDisplayOrder$")]
-    public void LineItemRemovedFromDisplayOrder(HttpListenerContext context)
-    {
-        LineItemRemovedFromDisplayOrder dolir = ParseRequest<LineItemRemovedFromDisplayOrder>(context);
-        GetServer.CloverConnector.LineItemRemovedFromDisplayOrder(dolir.DisplayOrder, dolir.DisplayLineItem);
-        this.SendTextResponse(context, "");
-    }
-
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/DiscountAddedToDisplayOrder$")]
-    public void DiscountAddedToDisplayOrder(HttpListenerContext context)
-    {
-        DiscountAddedToDisplayOrder doda = ParseRequest<DiscountAddedToDisplayOrder>(context);
-        GetServer.CloverConnector.DiscountAddedToDisplayOrder(doda.DisplayOrder, doda.DisplayDiscount);
-        this.SendTextResponse(context, "");
-    }
-
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/DiscountRemovedFromDisplayOrder$")]
-    public void DiscountRemovedFromDisplayOrder(HttpListenerContext context)
-    {
-        DiscountRemovedFromDisplayOrder dodr = ParseRequest<DiscountRemovedFromDisplayOrder>(context);
-        GetServer.CloverConnector.DiscountRemovedFromDisplayOrder(dodr.DisplayOrder, dodr.DisplayDiscount);
-        this.SendTextResponse(context, "");
-    }
-
     public void RemoveDisplayOrder(HttpListenerContext context)
     {
         com.clover.remote.order.DisplayOrder order = ParseRequest<com.clover.remote.order.DisplayOrder>(context);
@@ -274,7 +259,7 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/AcceptSignature")]
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/AcceptSignature$")]
     public void AcceptSignature(HttpListenerContext context)
     {
         VerifySignatureRequest message = ParseRequest<VerifySignatureRequest>(context);
@@ -283,7 +268,7 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RejectSignature")]
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RejectSignature$")]
     public void RejectSignature(HttpListenerContext context)
     {
         VerifySignatureRequest message = ParseRequest<VerifySignatureRequest>(context);
@@ -292,12 +277,30 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/InvokeInputOption")]
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/InvokeInputOption$")]
     public void InvokeInputOption(HttpListenerContext context)
     {
         InputOption message = ParseRequest<InputOption>(context);
 
         GetServer.CloverConnector.InvokeInputOption(message);
+        this.SendTextResponse(context, "");
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/AcceptPayment$")]
+    public void AcceptPayment(HttpListenerContext context)
+    {
+        Payment payment = ParseRequest<Payment>(context);
+
+        GetServer.CloverConnector.AcceptPayment(payment);
+        this.SendTextResponse(context, "");
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RejectPayment$")]
+    public void RejectPayment(HttpListenerContext context)
+    {
+        RejectPaymentObject message = ParseRequest<RejectPaymentObject>(context);
+
+        GetServer.CloverConnector.RejectPayment(message.Payment, message.Challenge);
         this.SendTextResponse(context, "");
     }
 
