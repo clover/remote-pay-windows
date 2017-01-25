@@ -36,7 +36,7 @@ namespace com.clover.remotepay.transport
             this.port = port;
             if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
             {
-                throw new ArgumentException("remoteApplicatoinID is required");
+                throw new ArgumentException("remoteApplicationID is required");
             }
             this.remoteApplicationID = remoteApplicationID;
             this.enableLogging = enableLogging;
