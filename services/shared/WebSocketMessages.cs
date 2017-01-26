@@ -16,6 +16,7 @@ using com.clover.remote.order;
 using com.clover.remotepay.sdk;
 using com.clover.remotepay.sdk.service.client;
 using com.clover.remotepay.transport;
+using com.clover.sdk.v3.payments;
 
 /// <summary>
 /// Contains a set of classes to simplify using the Windows WebSocket service by providing
@@ -82,7 +83,21 @@ namespace com.clover.sdk.remote.websocket
         VerifySignatureRequest,
         VaultCard,
         VaultCardResponse,
-        LogMessage
+        ReadCardData,
+        ReadCardDataResponse,
+        LogMessage,
+        ConfirmPaymentRequest,
+        ConfirmPayment,
+        RejectPayment,
+        RetrievePendingPayments,
+        RetrievePendingPaymentsResponse,
+
+        PrintPaymentReceipt,
+        PrintPaymentDeclinedReceipt,
+        PrintManualRefundReceipt,
+        PrintManualRefundDeclinedReceipt,
+        PrintPaymentRefundReceipt,
+        PrintPaymentMerchantCopyReceipt
     }
 
     public class WebSocketMessage<T>
@@ -266,9 +281,27 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
+    public class AcceptPaymentRequestMessage : WebSocketMessage<AcceptPayment>
+    {
+        public AcceptPaymentRequestMessage() : base(WebSocketMethod.ConfirmPayment)
+        {
+        }
+    }
+    public class RejectPaymentRequestMessage : WebSocketMessage<RejectPayment>
+    {
+        public RejectPaymentRequestMessage() : base(WebSocketMethod.RejectPayment)
+        {
+        }
+    }
     public class VaultCardRequestMessage : WebSocketMessage<VaultCardMessage>
     {
         public VaultCardRequestMessage() : base(WebSocketMethod.VaultCard)
+        {
+        }
+    }
+    public class ReadCardDataRequestMessage : WebSocketMessage<ReadCardDataRequest>
+    {
+        public ReadCardDataRequestMessage() : base(WebSocketMethod.ReadCardData)
         {
         }
     }
@@ -279,6 +312,12 @@ namespace com.clover.sdk.remote.websocket
         }
     }
 
+    public class RetrievePendingPaymentsRequestMessage : WebSocketMessage<object>
+    {
+        public RetrievePendingPaymentsRequestMessage() : base(WebSocketMethod.RetrievePendingPayments)
+        {
+        }
+    }
 
 
     // callback methods
@@ -286,6 +325,13 @@ namespace com.clover.sdk.remote.websocket
     public class OnVaultCardResponseMessage : WebSocketMessage<VaultCardResponse>
     {
         public OnVaultCardResponseMessage() : base(WebSocketMethod.VaultCardResponse)
+        {
+        }
+    }
+
+    public class OnReadCardDataResponseMessage : WebSocketMessage<ReadCardDataResponse>
+    {
+        public OnReadCardDataResponseMessage() : base(WebSocketMethod.ReadCardDataResponse)
         {
         }
     }
@@ -391,6 +437,55 @@ namespace com.clover.sdk.remote.websocket
     public class OnVerifySignatureRequestMessage : WebSocketMessage<VerifySignatureRequest>
     {
         public OnVerifySignatureRequestMessage() : base(WebSocketMethod.VerifySignatureRequest)
+        {
+        }
+    }
+    public class OnConfirmPaymentRequestMessage : WebSocketMessage<ConfirmPaymentRequest>
+    {
+        public OnConfirmPaymentRequestMessage() : base(WebSocketMethod.ConfirmPaymentRequest)
+        {
+        }
+    }
+    public class OnRetrievePendingPaymentsResponseMessage : WebSocketMessage<RetrievePendingPaymentsResponse>
+    {
+        public OnRetrievePendingPaymentsResponseMessage() : base(WebSocketMethod.RetrievePendingPaymentsResponse) 
+        {   
+        }
+    }
+
+    public class OnPrintPaymentReceiptMessage : WebSocketMessage<PrintPaymentReceiptMessage>
+    {
+        public OnPrintPaymentReceiptMessage() : base(WebSocketMethod.PrintPaymentReceipt)
+        {
+        }
+    }
+    public class OnPrintPaymentDeclinedReceiptMessage : WebSocketMessage<PrintPaymentDeclineReceiptMessage>
+    {
+        public OnPrintPaymentDeclinedReceiptMessage() : base(WebSocketMethod.PrintPaymentDeclinedReceipt)
+        {
+        }
+    }
+    public class OnPrintManualRefundReceiptMessage : WebSocketMessage<PrintManualRefundReceiptMessage>
+    {
+        public OnPrintManualRefundReceiptMessage() : base(WebSocketMethod.PrintManualRefundReceipt)
+        {
+        }
+    }
+    public class OnPrintManualRefundDeclinedReceiptMessage : WebSocketMessage<PrintManualRefundDeclineReceiptMessage>
+    {
+        public OnPrintManualRefundDeclinedReceiptMessage() : base(WebSocketMethod.PrintManualRefundDeclinedReceipt)
+        { 
+        }
+    }
+    public class OnPrintPaymentMerchatCopyReceiptMessage : WebSocketMessage<PrintPaymentMerchantCopyReceiptMessage>
+    {
+        public OnPrintPaymentMerchatCopyReceiptMessage() : base(WebSocketMethod.PrintPaymentMerchantCopyReceipt)
+        {
+        }
+    }
+    public class OnPrintPaymentRefundReceiptMessage : WebSocketMessage<PrintRefundPaymentReceiptMessage>
+    {
+        public OnPrintPaymentRefundReceiptMessage() : base(WebSocketMethod.PrintPaymentRefundReceipt)
         {
         }
     }

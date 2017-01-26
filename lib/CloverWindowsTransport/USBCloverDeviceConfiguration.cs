@@ -25,13 +25,19 @@ namespace com.clover.remotepay.transport
         int pingSleepSeconds = 1;
         string remoteApplicationID;
 
-        public USBCloverDeviceConfiguration(string deviceId)
+        public USBCloverDeviceConfiguration(string remoteApplicationID, bool enableLogging):this("", remoteApplicationID, enableLogging, 1)
         {
-            this.deviceId = deviceId;
+            //
         }
+
+
         public USBCloverDeviceConfiguration(string deviceId, string remoteApplicationID, bool enableLogging, int pingSleepSeconds)
         {
             this.deviceId = deviceId;
+            if(remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
+            {
+                throw new ArgumentException("remoteApplicatoinID is required");
+            }
             this.remoteApplicationID = remoteApplicationID;
             this.enableLogging = enableLogging;
             this.pingSleepSeconds = pingSleepSeconds;

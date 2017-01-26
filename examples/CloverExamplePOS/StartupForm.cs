@@ -27,11 +27,11 @@ namespace CloverExamplePOS
         private static readonly string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
         CloverDeviceConfiguration selectedConfig;
 
-        CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", "CloverExamplePOS:1.0.0", false, 1);
-        CloverDeviceConfiguration TestConfig = new TestCloverDeviceConfiguration();
-        CloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("10.0.1.193", 14285, "CloverExamplePOS:1.0.0", false, 1);
-        CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, "CloverExamplePOS:1.0.0", false, 1);
-        CloverDeviceConfiguration RemoteWebSocketConfig = new RemoteWebSocketCloverConfiguration("localhost", 8889);
+        const String APPLICATION_ID = "CloverExamplePOS:1.1.0.1";
+
+        CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", APPLICATION_ID, false, 1);
+        CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, APPLICATION_ID, false, 1);
+        CloverDeviceConfiguration RemoteWebSocketConfig = new RemoteWebSocketCloverConfiguration("localhost", 8889, APPLICATION_ID);
 
         public StartupForm(Form tocover) : base(tocover)
         {
@@ -106,11 +106,6 @@ namespace CloverExamplePOS
                 dataSource.Add(new ConfigWrapper("Clover Connector Web Socket service", RemoteWebSocketConfig));
             }
             
-            dataSource.Add(new ConfigWrapper("Network Pay Display (Development Only)", WebSocketConfig));
-            dataSource.Add(new ConfigWrapper("Emulator", TestConfig));
-
-
-
             ConnectionType.DataSource = dataSource;
             ConnectionType.DisplayMember = "Description";
             ConnectionType.ValueMember = "Config";
@@ -137,10 +132,6 @@ namespace CloverExamplePOS
             if (selectedConfig is RemoteWebSocketCloverConfiguration)
             {
                 InitLocalWebSocket();
-            }
-            else if (selectedConfig is WebSocketCloverDeviceConfiguration)
-            {
-                InitWebSocket();
             }
             else
             {
@@ -170,21 +161,11 @@ namespace CloverExamplePOS
                 if (tokens.Length == 1)
                 {
                     int port = Int32.Parse(tokens[0]);
-                    selectedConfig = new RemoteWebSocketCloverConfiguration("localhost", port);
+                    selectedConfig = new RemoteWebSocketCloverConfiguration("localhost", port, APPLICATION_ID);
                 }
                 ((CloverExamplePOSForm)this.Owner).InitializeConnector(selectedConfig);
                 this.Close();
             }
-        }
-
-        private void InitWebSocket()
-        {
-            InputForm iform = new InputForm(this);
-            iform.Title = "WebSocket Host Configuration";
-            iform.Label = "Enter Device IP:Port(ex: 10.0.1.13:8080)";
-            iform.Value = ((WebSocketCloverDeviceConfiguration)WebSocketConfig).hostname + ":" + ((WebSocketCloverDeviceConfiguration)WebSocketConfig).port;
-            iform.FormClosed += WSForm_Closed;
-            iform.Show();
         }
 
         private void WSForm_Closed(object sender, EventArgs e)
@@ -197,7 +178,7 @@ namespace CloverExamplePOS
                 {
                     string ip = tokens[0];
                     int port = Int32.Parse(tokens[1]);
-                    selectedConfig = new WebSocketCloverDeviceConfiguration(ip, port, "CloverExamplePOS", false, 1);
+                    selectedConfig = new WebSocketCloverDeviceConfiguration(ip, port, APPLICATION_ID, false, 1);
                 }
                 ((CloverExamplePOSForm)this.Owner).InitializeConnector(selectedConfig);
                 this.Close();

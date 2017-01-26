@@ -138,6 +138,13 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(onVerifySignatureRequest));
         }
 
+        public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
+        {
+            OnConfirmPaymentRequestMessage onConfirmPaymentRequest = new OnConfirmPaymentRequestMessage();
+            onConfirmPaymentRequest.payload = request;
+            WebSocket.Send(Serialize(onConfirmPaymentRequest));
+        }
+
         public void OnVoidPaymentResponse(VoidPaymentResponse response)
         {
             OnVoidPaymentResponseMessage voidPaymentResponse = new OnVoidPaymentResponseMessage();
@@ -159,6 +166,64 @@ namespace CloverWindowsSDKWebSocketService
             vaultCardResponseMessage.payload = response;
             WebSocket.Send(Serialize(vaultCardResponseMessage));
         }
+
+        public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
+        {
+            OnRetrievePendingPaymentsResponseMessage retrievePendingPaymentsMessage = new OnRetrievePendingPaymentsResponseMessage();
+            retrievePendingPaymentsMessage.payload = response;
+            WebSocket.Send(Serialize(retrievePendingPaymentsMessage));
+        }
+
+        public void OnReadCardDataResponse(ReadCardDataResponse response)
+        {
+            OnReadCardDataResponseMessage cardDataResponseMessage = new OnReadCardDataResponseMessage();
+            cardDataResponseMessage.payload = response;
+            WebSocket.Send(Serialize(cardDataResponseMessage));
+        }
+
+
+        public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
+        {
+            OnPrintManualRefundReceiptMessage message = new OnPrintManualRefundReceiptMessage();
+            message.payload = printManualRefundReceiptMessage;
+            WebSocket.Send(Serialize(message));
+        }
+
+        public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage)
+        {
+            OnPrintManualRefundDeclinedReceiptMessage message = new OnPrintManualRefundDeclinedReceiptMessage();
+            message.payload = printManualRefundDeclineReceiptMessage;
+            WebSocket.Send(Serialize(message));
+        }
+
+        public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage)
+        {
+            OnPrintPaymentReceiptMessage message = new OnPrintPaymentReceiptMessage();
+            message.payload = printPaymentReceiptMessage;
+            WebSocket.Send(Serialize(message));
+        }
+
+        public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage)
+        {
+            OnPrintPaymentDeclinedReceiptMessage message = new OnPrintPaymentDeclinedReceiptMessage();
+            message.payload = printPaymentDeclineReceiptMessage;
+            WebSocket.Send(Serialize(message));
+        }
+
+        public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage)
+        {
+            OnPrintPaymentMerchatCopyReceiptMessage message = new OnPrintPaymentMerchatCopyReceiptMessage();
+            message.payload = printPaymentMerchantCopyReceiptMessage;
+            WebSocket.Send(Serialize(message));
+        }
+
+        public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
+        {
+            OnPrintPaymentRefundReceiptMessage message = new OnPrintPaymentRefundReceiptMessage();
+            message.payload = printRefundPaymentReceiptMessage;
+            WebSocket.Send(Serialize(message));
+        }
+
 
         internal void SendConnectionStatus()
         {

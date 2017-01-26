@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Drawing.Imaging;
+using com.clover.sdk.v3.payments;
 
 namespace com.clover.remotepay.transport.remote
 {
@@ -32,6 +33,11 @@ namespace com.clover.remotepay.transport.remote
     /// </summary>
     public class RemoteRESTCloverConnector : ICloverConnector
     {
+        public bool IsReady
+        {
+            get { return true; }
+            set { }
+        }
         RestClient restClient = new RestClient("http://localhost:8181/Clover");
         CloverDeviceConfiguration Config;
         CallbackController callbackService { get; set; }
@@ -143,6 +149,11 @@ namespace com.clover.remotepay.transport.remote
             Send("/VaultCard", vc);
         }
 
+        public void ReadCardData(ReadCardDataRequest request)
+        {
+            Send("/ReadCardData", request);
+        }
+
         public void Closeout(CloseoutRequest request)
         {
             Send("/Closeout", request);
@@ -192,6 +203,11 @@ namespace com.clover.remotepay.transport.remote
         public void ShowThankYouScreen()
         {
             Send("/ShowThankYouScreen", null);
+        }
+
+        public void RetrievePendingPayments()
+        {
+            Send("/RetrievePendingPayments", null);
         }
 
         public void DisplayPaymentReceiptOptions(String orderId, String paymentId)
@@ -284,6 +300,19 @@ namespace com.clover.remotepay.transport.remote
         public void RemoveDisplayOrder(DisplayOrder displayOrder)
         {
             ShowWelcomeScreen();
+        }
+
+        public void AcceptPayment(Payment payment)
+        {
+            Send("/AcceptPayment", payment);
+        }
+
+        public void RejectPayment(Payment payment, Challenge challenge)
+        {
+            RejectPaymentObject rejectPayment = new RejectPaymentObject();
+            rejectPayment.Payment = payment;
+            rejectPayment.Challenge = challenge;
+            Send("/RejectPayment", rejectPayment);
         }
 
         public class RESTSigVerRequestHandler : VerifySignatureRequest

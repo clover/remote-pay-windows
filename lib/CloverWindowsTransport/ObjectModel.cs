@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using com.clover.sdk.v3.payments;
+using com.clover.sdk.v3.order;
 
 namespace com.clover.remotepay.transport
 {
@@ -55,6 +56,7 @@ namespace com.clover.remotepay.transport
         private static readonly String BUNDLE_KEY_ACTION = "a";
         public bool? allowOfflinePayment { get; set; }
         public bool? approveOfflinePaymentWithoutPrompt { get; set; }
+        public bool? requiresRemoteConfirmation { get; set; }
     }
 
     public enum ResultStatus
@@ -101,6 +103,19 @@ namespace com.clover.remotepay.transport
         public KeyPress keyPress;
         public string description;
     }
+    public enum ChallengeType
+    {
+        DUPLICATE_CHALLENGE,
+        OFFLINE_CHALLENGE
+    }
+
+    public class Challenge
+    {
+        public String message;
+        public ChallengeType type;
+        public VoidReason reason;
+    }
+
     public class Signature2 {
         public int width;
         public int height;
@@ -176,4 +191,28 @@ namespace com.clover.remotepay.transport
     }
     public enum UiDirection { ENTER, EXIT }
     
+    public class PendingPaymentEntry
+    {
+        public String paymentId;
+        public long amount; 
+    }
+
+    public class CardData
+    {
+        public String Track1 { get; set; }
+        public String Track2 { get; set; }
+        public String Track3 { get; set; }
+        public bool Encrypted { get; set; }
+        public String MaskedTrack1 { get; set; }
+        public String MaskedTrack2 { get; set; }
+        public String MaskedTrack3 { get; set; }
+        public String Pan { get; set; }
+        public String CardholderName { get; set; }
+        public String FirstName { get; set; }
+        public String LastName { get; set; }
+        public String Exp { get; set; }
+        public String Last6 { get; set; }
+        public String First4 { get; set; }
+
+    }
 }

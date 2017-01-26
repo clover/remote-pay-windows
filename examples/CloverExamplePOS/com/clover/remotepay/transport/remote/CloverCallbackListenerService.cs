@@ -182,6 +182,17 @@ namespace com.clover.remotepay.transport.remote
             SendTextResponse(context, "");
         }
 
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/ReadCardDataResponse$")]
+        public void ReadCardDataResponse(HttpListenerContext context)
+        {
+            ReadCardDataResponse response = ParseResponse<ReadCardDataResponse>(context);
+            if (response != null)
+            {
+                connectorListener.ForEach(listener => listener.OnReadCardDataResponse(response));
+            }
+            SendTextResponse(context, "");
+        }
+
         [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RefundPaymentResponse$")]
         public void RefundPaymentResponse(HttpListenerContext context)
         {
@@ -257,6 +268,66 @@ namespace com.clover.remotepay.transport.remote
             connectorListener.ForEach(listener => listener.OnVerifySignatureRequest(sigVerRequest));
             SendTextResponse(context, "");
         }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/ConfirmPaymentRequest$")]
+        public void ConfirmPaymentRequest(HttpListenerContext context)
+        {
+            ConfirmPaymentRequest request = ParseResponse<ConfirmPaymentRequest>(context);
+            connectorListener.ForEach(listener => listener.OnConfirmPaymentRequest(request));
+            SendTextResponse(context, "");
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePendingPaymentsResponse")]
+        public void RetrievePendingPayments(HttpListenerContext context)
+        {
+            RetrievePendingPaymentsResponse response = ParseResponse<RetrievePendingPaymentsResponse>(context);
+            connectorListener.ForEach(listener => listener.OnRetrievePendingPaymentsResponse(response));
+            SendTextResponse(context, "");
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintManualRefundReceipt$")]
+        public void PrintManualRefundReceipt(HttpListenerContext context)
+        {
+            PrintManualRefundReceiptMessage printManualRefundReceiptMessage = ParseResponse<PrintManualRefundReceiptMessage>(context);
+            connectorListener.ForEach(listener => listener.OnPrintManualRefundReceipt(printManualRefundReceiptMessage));
+            SendTextResponse(context, "");
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintManualRefundDeclineReceipt$")]
+        public void PrintManualRefundDeclineReceipt(HttpListenerContext context)
+        {
+            PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage = ParseResponse<PrintManualRefundDeclineReceiptMessage>(context);
+            connectorListener.ForEach(listener => listener.OnPrintManualRefundDeclineReceipt(printManualRefundDeclineReceiptMessage));
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintPaymentReceipt$")]
+        public void PrintPaymentReceipt(HttpListenerContext context)
+        {
+            PrintPaymentReceiptMessage printPaymentReceiptMessage = ParseResponse<PrintPaymentReceiptMessage>(context);
+            connectorListener.ForEach(listener => listener.OnPrintPaymentReceipt(printPaymentReceiptMessage));
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintPaymentDeclineReceipt$")]
+        public void PrintPaymentDeclineReceipt(HttpListenerContext context)
+        {
+            PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage = ParseResponse<PrintPaymentDeclineReceiptMessage>(context);
+            connectorListener.ForEach(listener => listener.OnPrintPaymentDeclineReceipt(printPaymentDeclineReceiptMessage));
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintPaymentMerchantCopyReceipt$")]
+        public void PrintPaymentMerchantCopyReceipt(HttpListenerContext context)
+        {
+            PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage = ParseResponse<PrintPaymentMerchantCopyReceiptMessage>(context);
+            connectorListener.ForEach(listener => listener.OnPrintPaymentMerchantCopyReceipt(printPaymentMerchantCopyReceiptMessage));
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintRefundPaymentReceipt$")]
+        public void PrintRefundPaymentReceipt(HttpListenerContext context)
+        {
+            PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage = ParseResponse<PrintRefundPaymentReceiptMessage>(context);
+            connectorListener.ForEach(listener => listener.OnPrintRefundPaymentReceipt(printRefundPaymentReceiptMessage));
+        }
+
 
         private T ParseResponse<T>(HttpListenerContext context)
         {

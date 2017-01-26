@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using com.clover.remote.order;
+using com.clover.remotepay.transport;
+using com.clover.sdk.v3.payments;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,7 +28,14 @@ namespace com.clover.remotepay.sdk
     public interface ICloverConnector
     {
         /// <summary>
-        /// Starts communication with the device.  This is called after the connector is created and listeners are added to the connector.
+        /// Property for the current connection status of the device
+        /// </summary>
+        bool IsReady
+        {
+            get;
+        }
+        /// <summary>
+        /// Starts communication with the device.  This needs to be called after the connector is created and listeners are added to the connector.
         /// </summary>
         void InitializeConnection();
 
@@ -63,6 +72,19 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         void RejectSignature(VerifySignatureRequest request);
 
+        /// <summary>
+        /// If signature is captured during a Sale, this method accepts the signature as entered
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        void AcceptPayment(Payment payment);
+
+        /// <summary>
+        /// If signature is captured during a Sale, this method rejects the signature as entered
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        void RejectPayment(Payment payment, Challenge challenge);
 
         /// <summary>
         /// Auth method to obtain an Auth or Pre-Auth, based on the AuthRequest IsPreAuth flag
@@ -121,6 +143,12 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// 
         void VaultCard(int? CardEntryMethods);
+
+        /// <summary>
+        /// Retrieve Card Data
+        /// </summary>
+        /// 
+        void ReadCardData(ReadCardDataRequest CardDataRequest);
 
         /// <summary>
         /// Cancels the device from waiting for a payment card.
@@ -188,35 +216,6 @@ namespace com.clover.remotepay.sdk
         /// <param name="order"></param>
         void ShowDisplayOrder(DisplayOrder order);
 
-        /// <summary>
-        /// Notify the device of a DisplayLineItem being added to a DisplayOrder
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="lineItem"></param>
-        void LineItemAddedToDisplayOrder(DisplayOrder order, DisplayLineItem lineItem);
-
-        /// <summary>
-        /// Notify the device of a DisplayLineItem being removed from a DisplayOrder
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="lineItem"></param>
-        void LineItemRemovedFromDisplayOrder(DisplayOrder order, DisplayLineItem lineItem);
-
-        /// <summary>
-        /// Notify device of a discount being added to the order. 
-        /// Note: This is independent of a discount being added to a display line item.
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="discount"></param>
-        void DiscountAddedToDisplayOrder(DisplayOrder order, DisplayDiscount discount);
-
-        /// <summary>
-        /// Notify the device that a discount was removed from the order.
-        /// Note: This is independent of a discount being removed from a display line item.
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="discount"></param>
-        void DiscountRemovedFromDisplayOrder(DisplayOrder order, DisplayDiscount discount);
 
         /// <summary>
         /// Remove the DisplayOrder from the device.
@@ -239,5 +238,11 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="ImgURL"></param>
         void PrintImageFromURL(String ImgURL);
+
+        /// <summary>
+        /// Request a list of payments taken offline,
+        /// but that haven't been processed yet
+        /// </summary>
+        void RetrievePendingPayments();
     }
 }

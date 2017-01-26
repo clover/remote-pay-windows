@@ -34,6 +34,7 @@ namespace com.clover.remotepay.transport
         protected readonly string remoteSourceSDK;
         protected readonly string remoteApplicationID;
         protected DeviceInfo deviceInfo;
+        public bool SupportsAcks { get; set; }
         
         public CloverDevice(string packageName, CloverTransport transport, string remoteApplicationID)
         {
@@ -78,6 +79,7 @@ namespace com.clover.remotepay.transport
             deviceObservers.Remove(observer);
         }
 
+
         public abstract void doDiscoveryRequest();
         /// <summary>
         /// 
@@ -102,8 +104,12 @@ namespace com.clover.remotepay.transport
         public abstract void doCloseout(bool allowOpenTabs, string batchId);
         public abstract void doResetDevice();
         public abstract void doVaultCard(int? CardEntryMethods);
+        public abstract void doReadCardData(PayIntent payIntent);
         public abstract void doCapturePreAuth(string paymentID, long amount, long tipAmount);
         public abstract void doLogMessages(LogLevelEnum logLevel, Dictionary<string, string> messages);
+        public abstract void doAcceptPayment(Payment payment);
+        public abstract void doRejectPayment(Payment payment, Challenge challenge);
+        public abstract void doRetrievePendingPayments();
     }
 
     public interface ICloverDeviceObserver
@@ -170,6 +176,12 @@ namespace com.clover.remotepay.transport
         /// <param name="signature">The signature.</param>
         void onVerifySignature(Payment payment, Signature2 signature);
         /// <summary>
+        /// Called when a payment confirmation is requested.
+        /// </summary>
+        /// <param name="payment">The payment.</param>
+        /// <param name="challenges">The confirmation challenges.</param>
+        void onConfirmPayment(Payment payment, List<Challenge> challenges);
+        /// <summary>
         /// Called when a payment is successfully voided.
         /// </summary>
         /// <param name="payment">The payment.</param>
@@ -209,19 +221,24 @@ namespace com.clover.remotepay.transport
         /// <param name="vcrm">The VCRM.</param>
         void onVaultCardResponse(VaultCardResponseMessage vcrm);
         /// <summary>
-        /// Called when a capture pre authorization response is received.
+        /// Called when a retrieve card data response is received.
         /// </summary>
-        /// <param name="paymentId">The payment identifier.</param>
-        /// <param name="amount">The amount.</param>
-        /// <param name="tipAmount">The tip amount.</param>
-        /// <param name="status">The status.</param>
-        /// <param name="reason">The reason.</param>
+        /// <param name="cdrm">The response message for card data.</param>
+        void onReadCardDataResponse(ReadCardDataResponseMessage cdrm);
+        /// <summary>
+        /// Called when a capture preauth response is received.
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <param name="amount"></param>
+        /// <param name="tipAmount"></param>
+        /// <param name="status"></param>
+        /// <param name="reason"></param>
         void onCapturePreAuthResponse(String paymentId, long amount, long tipAmount, ResultStatus status, string reason);
         /// <summary>
         /// Called when a device is ready to receive messages.
         /// </summary>
         /// <param name="drMessage">The dr message.</param>
-        void onDeviceReady(DiscoveryResponseMessage drMessage);
+        void onDeviceReady(CloverDevice device, DiscoveryResponseMessage drMessage);
         /// <summary>
         /// Called when a device is connected to the SDK.
         /// </summary>
@@ -236,6 +253,24 @@ namespace com.clover.remotepay.transport
         /// <param name="code">The code.</param>
         /// <param name="message">The message.</param>
         void onDeviceError(int code, string message);
+        /// <summary>
+        /// Called when a RetrievePendingPaymentsResponse is received
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="pendingPaymentEntries"></param>
+        void onRetrievePendingPaymentsResponse(bool success, List<PendingPaymentEntry> pendingPaymentEntries);
+        /// <summary>
+        /// gets called with the calling requests id to confirm device got the message
+        /// </summary>
+        /// <param name="sourceMessageId"></param>
+        void onMessageAck(string sourceMessageId);
+
+        void onPrintCredit(Credit credit);
+        void onPrintPayment(Payment payment, Order order);
+        void onPrintCreditDecline(Credit credit, String reason);
+        void onPrintRefundPayment(Payment payment, Order order, Refund refund);
+        void onPrintPaymentDecline(Payment payment, String reason);
+        void onPrintMerchantReceipt(Payment payment);
     }
 
     public class DeviceInfo
