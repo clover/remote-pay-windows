@@ -124,6 +124,8 @@ More documentation can be found at [Clover Docs Site](https://docs.clover.com/bu
   set using the format of <company specific package>:<version> e.g. com.clover.ExamplePOS:1.2
 * Modified remote pay so prompts to take orders offline and flagging duplicate orders appear only in merchant facing mode.
 * Added ability to query pending payments.
+* Added ability to request a card swipe outside of a payment (e.g. for gift cards, loyalty cards, etc.) (ReadCardData)
+* Added a “BREAK” message type that makes it possible to reset the device state if the mini becomes unresponsive while processing a payment. 
 
 ## Getting Connected
 1. Download the USB Pay Display app from the Clover App Market on your Clover Mini Dev Kit.
