@@ -63,7 +63,6 @@ namespace com.clover.remotepay.transport
         public readonly bool supportsTipAdjust;
         public readonly bool supportsManualRefund;
         public readonly bool supportsMultiPayToken;
-        public readonly bool supportsRemoteConfirmation;
         public DiscoveryResponseMessage(String merchantId, 
                                         String merchantName, 
                                         String merchantMId,
@@ -74,8 +73,7 @@ namespace com.clover.remotepay.transport
                                         Boolean? supportsAcknowledgement,
                                         Boolean? supportsTipAdjust, 
                                         Boolean? supportsManualRefund,
-                                        Boolean? supportsMultiPayToken,
-                                        Boolean? supportsRemoteConfirmation)
+                                        Boolean? supportsMultiPayToken)
             : base(Methods.DISCOVERY_RESPONSE)
         {
             this.merchantId = merchantId;
@@ -89,7 +87,6 @@ namespace com.clover.remotepay.transport
             this.supportsTipAdjust = supportsTipAdjust.HasValue ? supportsTipAdjust.Value : true;
             this.supportsManualRefund = supportsManualRefund.HasValue ? supportsManualRefund.Value : true;
             this.supportsMultiPayToken = supportsMultiPayToken.HasValue ? supportsMultiPayToken.Value : true;
-            this.supportsRemoteConfirmation = supportsRemoteConfirmation.HasValue ? supportsRemoteConfirmation.Value : false;
         }
     }
     public class PaymentReceiptMessage : Message

@@ -29,7 +29,6 @@ namespace com.clover.remotepay.sdk
         public bool supportsVaultCards { get; set; }
         public bool supportsManualRefunds { get; set; }
         public bool supportsTipAdjust { get; set; }
-        public bool supportsRemoteConfirmation { get; set; }
 
         /// <summary>
         /// 
@@ -40,7 +39,6 @@ namespace com.clover.remotepay.sdk
             supportsTipAdjust = true;
             supportsVaultCards = true;
             supportsPreAuths = true;
-            supportsRemoteConfirmation = false;
             merchantID = "";
             merchantMId = "";
             merchantName = "";
@@ -60,7 +58,6 @@ namespace com.clover.remotepay.sdk
             supportsTipAdjust = drm.supportsTipAdjust;
             supportsVaultCards = drm.supportsMultiPayToken;
             supportsPreAuths = drm.supportsTipAdjust;
-            supportsRemoteConfirmation = drm.supportsRemoteConfirmation;
             merchantID = drm.merchantId;
             merchantMId = drm.merchantMId;
             merchantName = drm.merchantName;
