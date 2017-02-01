@@ -22,7 +22,7 @@ More documentation can be found at [Clover Docs Site](https://docs.clover.com/bu
 ## Release Notes
 # Version 1.1.0.2 
   * Fixed a version mismatch issue for confirming payments by the POS.
-  * **Note:** *It should be used instead of 1.1.0.1*
+  * **Note:** *This version should be used instead of 1.1.0.1*
 
 # Version 1.1
 * Renamed/Added/Removed a number of API operations and request/response objects to establish
