@@ -20,7 +20,7 @@ To complete a transaction end to end, we recommend getting a [Clover Mini Dev Ki
 More documentation can be found at [Clover Docs Site](https://docs.clover.com/build/getting-started-with-cloverconnector/).
 
 ## Release Notes
-# Version 1.1.0.2 fixed an version mismatch issue for confirming payments by the POS.
+# Version 1.1.0.2 fixed a version mismatch issue for confirming payments by the POS.
   * **Note:** *It should be used instead of 1.1.0.1*
 
 # Version 1.1
