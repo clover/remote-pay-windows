@@ -35,7 +35,7 @@ namespace com.clover.remotepay.sdk
             get;
         }
         /// <summary>
-        /// Starts communication with the device.  This needs to be called after the connector is created and listeners are added to the connector.
+        /// Starts communication with the device.  This is called after the connector is created and listeners are added to the connector.
         /// </summary>
         void InitializeConnection();
 

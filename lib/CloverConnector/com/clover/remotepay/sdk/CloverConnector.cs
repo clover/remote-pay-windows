@@ -191,7 +191,7 @@ namespace com.clover.remotepay.sdk
             payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
             payIntent.allowOfflinePayment = request.AllowOfflinePayment;
             payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt;
-            payIntent.requiresRemoteConfirmation = this.merchantInfo.supportsRemoteConfirmation;
+            payIntent.requiresRemoteConfirmation = true;
             Device.doTxStart(payIntent, null, request.DisableTipOnScreen.HasValue ? request.DisableTipOnScreen.Value : false);
         }
 
@@ -312,7 +312,7 @@ namespace com.clover.remotepay.sdk
             payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
             payIntent.allowOfflinePayment = request.AllowOfflinePayment;
             payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt;
-            payIntent.requiresRemoteConfirmation = this.merchantInfo.supportsRemoteConfirmation;
+            payIntent.requiresRemoteConfirmation = true;
             Device.doTxStart(payIntent, null, true);
         }
 
@@ -376,7 +376,7 @@ namespace com.clover.remotepay.sdk
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
             payIntent.isCardNotPresent = request.CardNotPresent;
             payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
-            payIntent.requiresRemoteConfirmation = this.merchantInfo.supportsRemoteConfirmation;
+            payIntent.requiresRemoteConfirmation = true;
             Device.doTxStart(payIntent, null, true);
         }
 
@@ -627,7 +627,7 @@ namespace com.clover.remotepay.sdk
             payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
             payIntent.remotePrint = request.DisablePrinting;
             payIntent.vaultedCard = request.VaultedCard;
-            payIntent.requiresRemoteConfirmation = this.merchantInfo.supportsRemoteConfirmation;
+            payIntent.requiresRemoteConfirmation = true;
             Device.doTxStart(payIntent, null, true);
         }
 

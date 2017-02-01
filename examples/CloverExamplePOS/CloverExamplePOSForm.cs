@@ -1011,6 +1011,7 @@ namespace CloverExamplePOS
                 uiThread.Send(delegate (object state) {
                     ConnectStatusLabel.Text = "Disconnected";
                     Connected = false;
+                    //PaymentReset();
                 }, null);
 
             }
