@@ -99,6 +99,7 @@
     <Compile Include="CloverDeviceConfiguration.cs" />
     <Compile Include="CloverDeviceExample.cs" />
     <Compile Include="CloverDeviceFactory.cs" />
+    <Compile Include="com\clover\remotepay\transport\PairingDeviceConfiguration.cs" />
     <Compile Include="com\clover\remotepay\transport\ProtocolMessage.cs" />
     <Compile Include="DebugSupport.cs" />
     <Compile Include="DefaultCloverDevice.cs" />

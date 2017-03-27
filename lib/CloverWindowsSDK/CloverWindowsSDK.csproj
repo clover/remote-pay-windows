@@ -124,6 +124,7 @@
     <Compile Include="com\clover\sdk\v3\payments\Currency.cs" />
     <Compile Include="com\clover\sdk\v3\payments\CvmResult.cs" />
     <Compile Include="com\clover\sdk\v3\payments\CVVResult.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\DataEntryLocation.cs" />
     <Compile Include="com\clover\sdk\v3\payments\GatewayTxs.cs" />
     <Compile Include="com\clover\sdk\v3\payments\GatewayTxState.cs" />
     <Compile Include="com\clover\sdk\v3\payments\GatewayTxType.cs" />
@@ -140,7 +141,9 @@
     <Compile Include="com\clover\sdk\v3\payments\ServerTotalStats.cs" />
     <Compile Include="com\clover\sdk\v3\payments\ServiceChargeAmount.cs" />
     <Compile Include="com\clover\sdk\v3\payments\TaxableAmountRate.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\TipMode.cs" />
     <Compile Include="com\clover\sdk\v3\payments\Transaction.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\TransactionSettings.cs" />
     <Compile Include="com\clover\sdk\v3\payments\TxType.cs" />
     <Compile Include="com\clover\sdk\v3\payments\Type.cs" />
     <Compile Include="com\clover\sdk\v3\payments\VaultedCard.cs" />
