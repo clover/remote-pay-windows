@@ -23,7 +23,8 @@ namespace com.clover.remotepay.sdk
     /// <summary>
     ///
     /// </summary>
-    public abstract class BaseRequest {
+    public abstract class BaseRequest
+    {
         protected BaseRequest()
         {
         }
@@ -36,6 +37,11 @@ namespace com.clover.remotepay.sdk
     public enum ResponseCode
     {
         SUCCESS, FAIL, UNSUPPORTED, CANCEL, ERROR
+    }
+
+    public enum TipMode
+    {
+        TIP_PROVIDED, ON_SCREEN_BEFORE_PAYMENT, NO_TIP
     }
 
     /// <summary>
@@ -67,6 +73,84 @@ namespace com.clover.remotepay.sdk
     }
 
     /// <summary>
+    ///
+    /// </summary>
+    public abstract class TransactionRequest : BaseRequest
+    {
+        public bool? DisablePrinting { get; set; }
+        public bool? CardNotPresent { get; set; }
+        public bool? DisableRestartTransactionOnFail { get; set; }
+        public long Amount { get; set; }
+        public long? CardEntryMethods { get; set; }
+        public VaultedCard VaultedCard { get; set; }
+        public string ExternalId { get; set; }
+
+        public PayIntent.TransactionType Type { get; set; }
+        public long? SignatureThreshold { get; set; }
+        public DataEntryLocation? SignatureEntryLocation { get; set; }
+        public bool? DisableReceiptSelection { get; set; }
+        public bool? DisableDuplicateChecking { get; set; }
+        public bool? AutoAcceptPaymentConfirmations { get; set; }
+        public bool? AutoAcceptSignature { get; set; }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public class TransactionStartResponse : BaseResponse
+    {
+        public TransactionStartResponse()
+        {
+            this.ExternalId = null;
+        }
+        public string ExternalId { get; set; }
+    }
+
+    /// <summary>
+    /// This request should be used for a Sale call.
+    /// </summary>
+    public class SaleRequest : TransactionRequest
+    {
+
+        public SaleRequest()
+        {
+            this.Type = PayIntent.TransactionType.PAYMENT;
+            DisableCashback = false;
+            DisablePrinting = false;
+            DisableRestartTransactionOnFail = false;
+        }
+        [System.Obsolete("DisableTipOnScreen is deprecated, please use TipMode of None instead.")]
+        public bool? DisableTipOnScreen { get; set; } //
+        public long? TaxAmount { get; set; }
+        public long? TippableAmount { get; set; } // the amount that tip should be calculated on
+        public long? TipAmount { get; set; }
+        public bool? DisableCashback { get; set; } //
+        public bool? AllowOfflinePayment { get; set; }
+        public bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
+        public TipMode? TipMode { get; set; }
+    }
+
+    /// <summary>
+    /// Object passed in to an OnSaleResponse
+    /// </summary>
+    public class SaleResponse : PaymentResponse
+    {
+    }
+
+    /// <summary>
+    /// Object passed in to VerifySignatureRequest. This must
+    /// also be used to either accept or reject a signature as requested
+    /// from the clover device.
+    /// </summary>
+    public class VerifySignatureRequest
+    {
+        public virtual void Accept() { }
+        public virtual void Reject() { }
+        public Signature2 Signature { get; set; }
+        public Payment Payment { get; set; }
+    }
+
+    /// <summary>
     /// This request should be used for Auth only, but is backward
     /// compatible for older implementations.
     /// If you are currently using an AuthRequest with IsPreAuth = true,
@@ -79,19 +163,23 @@ namespace com.clover.remotepay.sdk
         {
             this.Type = PayIntent.TransactionType.PAYMENT;
         }
-        public bool DisableCashback { get; set; }
+        public bool? DisableCashback { get; set; }
         /// <summary>
         /// Amount paid in tips
         /// </summary>
-        public long TaxAmount { get; set; }
+        public long? TaxAmount { get; set; }
+        /// <summary>
+        /// Amount against which a tip should be applied
+        /// </summary>
+        public long? TippableAmount { get; set; } 
         /// <summary>
         /// If true then offline payments can be accepted
         /// </summary>
-        public bool AllowOfflinePayment { get; set; }
+        public bool? AllowOfflinePayment { get; set; }
         /// <summary>
         /// If true then offline payments will be approved without a prompt.  Currently must be true.
         /// </summary>
-        public bool ApproveOfflinePaymentWithoutPrompt { get; set; }
+        public bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
     }
 
     /// <summary>
@@ -138,13 +226,15 @@ namespace com.clover.remotepay.sdk
         public Payment Payment { get; set; }
         public bool IsSale
         {
-            get {
+            get
+            {
                 if (Payment != null && Payment.cardTransaction != null &&
                     Payment.cardTransaction.type.Equals(CardTransactionType.AUTH) &&
                     Payment.result.Equals(clover.sdk.v3.payments.Result.SUCCESS))
                 {
                     return true;
-                } else
+                }
+                else
                 {
                     return false;
                 }
@@ -269,75 +359,6 @@ namespace com.clover.remotepay.sdk
         public long TipAmount { get; set; }
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    public abstract class TransactionRequest : BaseRequest
-    {
-        public bool DisablePrinting { get; set; }
-        public bool CardNotPresent { get; set; }
-        public bool? DisableRestartTransactionOnFail { get; set; }
-        public long Amount { get; set; }
-        public long? CardEntryMethods { get; set; }
-        public VaultedCard VaultedCard { get; set; }
-        public string ExternalId { get; set; }
-
-        public PayIntent.TransactionType Type { get; set; }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public class TransactionStartResponse : BaseResponse
-    {
-        public TransactionStartResponse()
-        {
-            this.ExternalId = null;
-        }
-        public string ExternalId { get; set; }
-    }
-
-    /// <summary>
-    /// This request should be used for a Sale call.
-    /// </summary>
-    public class SaleRequest : TransactionRequest
-    {
-
-        public SaleRequest()
-        {
-            this.Type = PayIntent.TransactionType.PAYMENT;
-            DisableCashback = false;
-            DisablePrinting = false;
-            DisableRestartTransactionOnFail = false;
-        }
-        public bool? DisableTipOnScreen { get; set; } //
-        public long? TaxAmount { get; set; }
-        public long? TippableAmount { get; set; } // the amount that tip should be calculated on
-        public long? TipAmount { get; set; }
-        public bool DisableCashback { get; set; } //
-        public bool? AllowOfflinePayment { get; set; }
-        public bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
-    }
-
-    /// <summary>
-    /// Object passed in to an OnSaleResponse
-    /// </summary>
-    public class SaleResponse : PaymentResponse
-    {
-    }
-
-    /// <summary>
-    /// Object passed in to VerifySignatureRequest. This must
-    /// also be used to either accept or reject a signature as requested
-    /// from the clover device.
-    /// </summary>
-    public class VerifySignatureRequest
-    {
-        public virtual void Accept() { }
-        public virtual void Reject() { }
-        public Signature2 Signature { get; set; }
-        public Payment Payment { get; set; }
-    }
 
     /// <summary>
     /// Object passed in to ConfirmPaymentRequest. This must
@@ -476,7 +497,7 @@ namespace com.clover.remotepay.sdk
     ///</summary>
     public class PrintManualRefundReceiptMessage : BaseResponse
     {
-      public Credit Credit { get; set; }
+        public Credit Credit { get; set; }
     }
 
     /// <summary>
@@ -484,42 +505,43 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class PrintManualRefundDeclineReceiptMessage : BaseResponse
     {
-      public Credit Credit { get; set; }
+        public Credit Credit { get; set; }
     }
 
     /// <summary>
     /// Callback to the POS to request a payment receipt be printed
     /// </summary>
-   public class PrintPaymentReceiptMessage  : BaseResponse {
-      public Order Order { get; set; }
-      public Payment Payment { get; set; }
-   }
+    public class PrintPaymentReceiptMessage : BaseResponse
+    {
+        public Order Order { get; set; }
+        public Payment Payment { get; set; }
+    }
 
-   /// <summary>
-   /// Callback to the POS to request a payment declined receipt
-   /// </summary>
-   public class PrintPaymentDeclineReceiptMessage : BaseResponse
-   {
-      public Payment Payment { get; set; }
-   }
+    /// <summary>
+    /// Callback to the POS to request a payment declined receipt
+    /// </summary>
+    public class PrintPaymentDeclineReceiptMessage : BaseResponse
+    {
+        public Payment Payment { get; set; }
+    }
 
-   /// <summary>
-   /// Callback to the POS to request a merchant payment receipt
-   /// be printed
-   /// </summary>
-   public class PrintPaymentMerchantCopyReceiptMessage : BaseResponse
-   {
-      public Payment Payment { get; set; }
-   }
+    /// <summary>
+    /// Callback to the POS to request a merchant payment receipt
+    /// be printed
+    /// </summary>
+    public class PrintPaymentMerchantCopyReceiptMessage : BaseResponse
+    {
+        public Payment Payment { get; set; }
+    }
 
     /// <summary>
     /// Callback to the POS to request a payment refund receipt
     /// be printed
     /// </summary>
-   public class PrintRefundPaymentReceiptMessage : BaseResponse
-   {
-     public Payment Payment { get; set; }
-     public Refund Refund { get; set; }
-     public Order Order { get; set; }
-  }
+    public class PrintRefundPaymentReceiptMessage : BaseResponse
+    {
+        public Payment Payment { get; set; }
+        public Refund Refund { get; set; }
+        public Order Order { get; set; }
+    }
 }

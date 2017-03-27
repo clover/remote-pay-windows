@@ -73,7 +73,9 @@ namespace com.clover.remotepay.sdk
             RECEIPT_OPTIONS,
 
             // tender handling flow
-            HANDLE_TENDER
+            HANDLE_TENDER,
+            CUSTOM_ACTIVITY,
+            STARTING_CUSTOM_ACTIVITY
         }
 
         public CloverDeviceEvent()

@@ -81,7 +81,9 @@ namespace com.clover.remotepay.data
         PAYMENT_CONFIRMED,
         PAYMENT_REJECTED,
         RETRIEVE_PENDING_PAYMENTS,
-        RETRIEVE_PENDING_PAYMENTS_RESPONSE
+        RETRIEVE_PENDING_PAYMENTS_RESPONSE,
+        ACTIVITY_REQUEST,
+        ACTIVITY_RESPONSE
     }
 
     public enum MessageTypes

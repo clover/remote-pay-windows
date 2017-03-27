@@ -360,7 +360,7 @@ namespace com.clover.remotepay.transport
             //sendObjectMessage(new OpenCashDrawer(reason));
         }
 
-        public override void doTxStart(PayIntent payIntent, Order order, bool suppressTipsOnScreen)
+        public override void doTxStart(PayIntent payIntent, Order order)
         {
             BackgroundWorker bw = new BackgroundWorker();
             // what to do in the background thread
@@ -369,7 +369,10 @@ namespace com.clover.remotepay.transport
             {
                 if (payIntent.amount > 0 && payIntent.transactionType == PayIntent.TransactionType.PAYMENT)
                 {
-                    if(payIntent.amount > 4000 && !suppressTipsOnScreen)
+                    if(payIntent.amount > 4000 && payIntent.transactionSettings != null &&
+                       payIntent.transactionSettings.tipMode.HasValue &&
+                       (!payIntent.transactionSettings.tipMode.Value.HasFlag(TipMode.NO_TIP) &&
+                        !payIntent.transactionSettings.tipMode.Value.HasFlag(TipMode.TIP_PROVIDED)))
                     {
                         // let's tip
                         notifyObserversUiState(new UiStateMessage(UiState.ADD_TIP, "Customer is tipping...", UiDirection.ENTER, new InputOption[0]));

@@ -27,18 +27,39 @@ namespace CloverExamplePOS
         private static readonly string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
         CloverDeviceConfiguration selectedConfig;
 
-        const String APPLICATION_ID = "CloverExamplePOS:1.1.0.2";
+        const String APPLICATION_ID = "com.clover.CloverExamplePOS:1.1.1.0";
 
         CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", APPLICATION_ID, false, 1);
         CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, APPLICATION_ID, false, 1);
         CloverDeviceConfiguration RemoteWebSocketConfig = new RemoteWebSocketCloverConfiguration("localhost", 8889, APPLICATION_ID);
+        
+        WebSocketCloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("192.168.1.14", 12345, APPLICATION_ID, false, 1, "Clover Windows Example POS", "POS-3", Properties.Settings.Default.pairingAuthToken, null, null); // set the 2 delegates in the ctor
 
-        public StartupForm(Form tocover) : base(tocover)
+        PairingDeviceConfiguration.OnPairingCodeHandler pairingCodeHandler = null;
+        PairingDeviceConfiguration.OnPairingSuccessHandler pairingSuccessHandler = null;
+
+
+        public StartupForm(Form tocover, PairingDeviceConfiguration.OnPairingCodeHandler pairingHandler, PairingDeviceConfiguration.OnPairingSuccessHandler successHandler) : base(tocover)
         {
+            this.pairingCodeHandler = pairingHandler;
+            this.pairingSuccessHandler = successHandler;
+            WebSocketConfig.OnPairingCode = pairingHandler;
+            WebSocketConfig.OnPairingSuccess = successHandler;
+            Properties.Settings.Default.Reload();
+            WebSocketConfig.hostname = Properties.Settings.Default.lastWSEndpoint;
+            if(WebSocketConfig.hostname == null || "".Equals(WebSocketConfig.hostname))
+            {
+                WebSocketConfig.hostname = "192.168.1.15"; // just a default...
+            }
+            WebSocketConfig.port = Properties.Settings.Default.lastWSPort;
+            if(WebSocketConfig.port == 0)
+            {
+                WebSocketConfig.port = 12345;
+            }
+            WebSocketConfig.pairingAuthToken = Properties.Settings.Default.pairingAuthToken;
+
             InitializeComponent();
         }
-
-
 
         private void StartupDialog_Load(object sender, EventArgs e)
         {
@@ -106,6 +127,8 @@ namespace CloverExamplePOS
                 dataSource.Add(new ConfigWrapper("Clover Connector Web Socket service", RemoteWebSocketConfig));
             }
             
+            dataSource.Add(new ConfigWrapper("Network Pay Display", WebSocketConfig));
+
             ConnectionType.DataSource = dataSource;
             ConnectionType.DisplayMember = "Description";
             ConnectionType.ValueMember = "Config";
@@ -132,6 +155,10 @@ namespace CloverExamplePOS
             if (selectedConfig is RemoteWebSocketCloverConfiguration)
             {
                 InitLocalWebSocket();
+            }
+            else if (selectedConfig is WebSocketCloverDeviceConfiguration)
+            {
+                InitWebSocket();
             }
             else
             {
@@ -168,6 +195,16 @@ namespace CloverExamplePOS
             }
         }
 
+        private void InitWebSocket()
+        {
+            InputForm iform = new InputForm(this);
+            iform.Title = "WebSocket Host Configuration";
+            iform.Label = "Enter Device IP:Port(ex: 10.0.1.13:8080)";
+            iform.Value = ((WebSocketCloverDeviceConfiguration)WebSocketConfig).hostname + ":" + ((WebSocketCloverDeviceConfiguration)WebSocketConfig).port;
+            iform.FormClosed += WSForm_Closed;
+            iform.Show();
+        }
+
         private void WSForm_Closed(object sender, EventArgs e)
         {
             if (((InputForm)sender).Status == DialogResult.OK)
@@ -178,7 +215,14 @@ namespace CloverExamplePOS
                 {
                     string ip = tokens[0];
                     int port = Int32.Parse(tokens[1]);
-                    selectedConfig = new WebSocketCloverDeviceConfiguration(ip, port, APPLICATION_ID, false, 1);
+
+                    Properties.Settings.Default.lastWSEndpoint = ip;
+                    Properties.Settings.Default.lastWSPort = port;
+                    Properties.Settings.Default.Save();
+
+                    selectedConfig = new WebSocketCloverDeviceConfiguration(ip, port, APPLICATION_ID, "Clover Windows Example POS","AISLE_3", Properties.Settings.Default.pairingAuthToken);
+                    ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingCode = pairingCodeHandler;
+                    ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingSuccess = pairingSuccessHandler;
                 }
                 ((CloverExamplePOSForm)this.Owner).InitializeConnector(selectedConfig);
                 this.Close();

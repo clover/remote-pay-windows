@@ -127,7 +127,7 @@ namespace com.clover.remotepay.transport
             DeviceSetToAccessoryMode();
             // if opening in cust mode fails, then try merchant mode, 
             // which will retrigger the accessory mode call
-            if (MyUsbDevice == null)  
+            if (MyUsbDevice == null)
             {
                 DeviceInitiallyConnected();
             }
@@ -260,7 +260,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         private Boolean DeviceInitiallyConnected()
         {
-            lock(DeviceInitSyncLock)
+            lock (DeviceInitSyncLock)
             {
                 TransportLog("Entering DeviceInitiallyConnected: " + Thread.CurrentThread.GetHashCode());
                 Boolean initialized = false;
@@ -328,7 +328,7 @@ namespace com.clover.remotepay.transport
         /// 
         private Boolean DeviceSetToAccessoryMode()
         {
-            lock(DeviceAccessorySyncLock)
+            lock (DeviceAccessorySyncLock)
             {
                 Boolean initialized = false;
                 if (MyUsbDevice == null || !MyUsbDevice.IsOpen)
@@ -352,7 +352,7 @@ namespace com.clover.remotepay.transport
                                 {
                                     if (usbDevice.Open(out MyUsbDevice))
                                     {
-                                    TransportLog("WinUSB Device Found and Open.");
+                                        TransportLog("WinUSB Device Found and Open.");
                                         break;
                                     }
                                     else
@@ -376,7 +376,7 @@ namespace com.clover.remotepay.transport
                                     {
                                         if (usbDevice.Open(out MyUsbDevice))
                                         {
-                                        TransportLog("LibUSB Device Found and Open.");
+                                            TransportLog("LibUSB Device Found and Open.");
                                             break;
                                         }
                                         else
@@ -488,7 +488,8 @@ namespace com.clover.remotepay.transport
                             if (message != null)
                             {
                                 sendMessageSync(message);
-                            } else
+                            }
+                            else
                             {
                                 TransportLog("Dequeued a null message");  // this should never happen, but just in case, let's log it
                             }
@@ -572,6 +573,10 @@ namespace com.clover.remotepay.transport
                         TransportLog("Finished writing to the output buffer for the message");
                         break;
                     }
+                    // If we need to send additional packets use SetLength(0) to clear out the contents of the buffer
+                    // so the remote side doesn't try to interpret old data as continuation info.
+                    // See CloverUsbAccessoryManager.PacketReader.extractPacket() and handlng of mTrailingReadBytes
+                    mOutPacketBuffer.BaseStream.SetLength(0);
                 } while (true);
             }
             else
@@ -616,11 +621,12 @@ namespace com.clover.remotepay.transport
                 if (null != writer && !writer.IsDisposed)
                 {
                     ecWrite = writer.Write(((MemoryStream)writePacketBuffer.BaseStream).ToArray(), 2000, out bytesWritten);
-                    if (ecWrite != ErrorCode.None) 
+                    if (ecWrite != ErrorCode.None)
                     {
                         onDeviceError((int)ecWrite, "The Clover transport layer can see the USB device, but encountered an error when attempting to send it a message.  Try physically disconnecting/reconnecting the Clover device.");
-	                    TransportLog("ErrorCode: " + ecWrite + "The Clover transport layer can see the USB device, but encountered an error when attempting to send it a message.  Try physically disconnecting/reconnecting the Clover device.");
-	                } else
+                        TransportLog("ErrorCode: " + ecWrite + "The Clover transport layer can see the USB device, but encountered an error when attempting to send it a message.  Try physically disconnecting/reconnecting the Clover device.");
+                    }
+                    else
                     {
                         TransportLog("The UsbEndpointWriter just wrote " + bytesWritten + " bytes.");
                     }
@@ -699,7 +705,7 @@ namespace com.clover.remotepay.transport
                     {
                         onMessage(message);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         TransportLog("Error parsing message: " + message);
                         TransportLog(e.Message);
@@ -854,7 +860,7 @@ namespace com.clover.remotepay.transport
 
         public void disconnect()
         {
-            lock(DeviceAccessorySyncLock)
+            lock (DeviceAccessorySyncLock)
             {
                 onDeviceDisconnected();
 
@@ -948,14 +954,14 @@ namespace com.clover.remotepay.transport
             TransportLog("Device was " + (inserted ? "inserted" : "removed") + ", device id:" + value);
 
             bool found = false;
-            foreach(UsbDeviceFinder customerFinder in CustomerUsbFinders)
+            foreach (UsbDeviceFinder customerFinder in CustomerUsbFinders)
             {
                 int customerVid = customerFinder.Vid;
                 int customerPid = customerFinder.Pid;
 
                 if (upperValue.Contains("VID_" + String.Format("{0:x}", customerVid).ToUpper()))
                 {
-                    if(upperValue.Contains("PID_" + String.Format("{0:x}", customerPid).ToUpper()))
+                    if (upperValue.Contains("PID_" + String.Format("{0:x}", customerPid).ToUpper()))
                     {
                         found = true;
                         if (inserted)
@@ -969,7 +975,7 @@ namespace com.clover.remotepay.transport
                     }
                 }
             }
-            if(!found)
+            if (!found)
             {
                 foreach (UsbDeviceFinder merchantFinder in MerchantUsbFinders)
                 {
@@ -1035,7 +1041,7 @@ namespace com.clover.remotepay.transport
 
         public void Enqueue(T item)
         {
-            lock(this)
+            lock (this)
             {
                 queue.Enqueue(item);
                 Monitor.PulseAll(this);
@@ -1048,7 +1054,7 @@ namespace com.clover.remotepay.transport
         /// <returns></returns>
         public T Dequeue()
         {
-            lock(this)
+            lock (this)
             {
                 return queue.Dequeue();
             }
@@ -1058,7 +1064,7 @@ namespace com.clover.remotepay.transport
         {
             get
             {
-                lock(this)
+                lock (this)
                 {
                     return queue.Count;
                 }

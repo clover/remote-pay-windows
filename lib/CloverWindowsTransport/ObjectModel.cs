@@ -20,7 +20,8 @@ using com.clover.sdk.v3.order;
 
 namespace com.clover.remotepay.transport
 {
-    public class PayIntent {
+    public class PayIntent
+    {
         public enum TransactionType
         {
             PAYMENT,
@@ -41,22 +42,30 @@ namespace com.clover.remotepay.transport
         public PayIntent.TransactionType transactionType { get; set; }
         public List<TaxableAmountRate> taxableAmountRateList { get; set; }
         public ServiceChargeAmount serviceChargeAmount { get; set; }
+        [Obsolete("use TransactionSettings instead")]
         public Boolean isDisableCashBack { get; set; }
         public Boolean isTesting { get; set; }
+        [Obsolete("use TransactionSettings instead")]
         public long cardEntryMethods { get; set; }
         public string voiceAuthCode { get; set; }
         public string postalCode { get; set; }
         public string streetAddress { get; set; }
         public Boolean isCardNotPresent { get; set; }
         public string cardDataMessage { get; set; }
+        [Obsolete("use TransactionSettings instead")]
         public Boolean remotePrint { get; set; }
         public string transactionNo { get; set; }
+        [Obsolete("use TransactionSettings instead")]
         public Boolean isForceSwipePinEntry { get; set; }
+        [Obsolete("use TransactionSettings instead")]
         public bool? disableRestartTransactionWhenFailed { get; set; }
         private static readonly String BUNDLE_KEY_ACTION = "a";
+        [Obsolete("use TransactionSettings instead")]
         public bool? allowOfflinePayment { get; set; }
+        [Obsolete("use TransactionSettings instead")]
         public bool? approveOfflinePaymentWithoutPrompt { get; set; }
         public bool? requiresRemoteConfirmation { get; set; }
+        public TransactionSettings transactionSettings { get; set; }
     }
 
     public enum ResultStatus
@@ -93,7 +102,8 @@ namespace com.clover.remotepay.transport
         DIGIT_9 = ((byte)0x61),
         DIGIT_0 = ((byte)0x62)
     }
-    public class InputOption {
+    public class InputOption
+    {
         public InputOption() { }
         public InputOption(KeyPress kp, string desc)
         {
@@ -116,11 +126,12 @@ namespace com.clover.remotepay.transport
         public VoidReason reason;
     }
 
-    public class Signature2 {
+    public class Signature2
+    {
         public int width;
         public int height;
         public List<Signature2.Stroke> strokes;
-            
+
 
         public class Stroke
         {
@@ -133,10 +144,11 @@ namespace com.clover.remotepay.transport
             public int y;
         }
     }
-    public enum ResponseReasonCode {ORDER_NOT_FOUND, PAYMENT_NOT_FOUND, FAIL}
+    public enum ResponseReasonCode { ORDER_NOT_FOUND, PAYMENT_NOT_FOUND, FAIL }
     public enum TxState { START, SUCCESS, FAIL }
-    
-    public enum UiState {
+
+    public enum UiState
+    {
         // payment flow
         START,
         FAILED,
@@ -187,14 +199,19 @@ namespace com.clover.remotepay.transport
         RECEIPT_OPTIONS,
 
         // tender handling flow
-        HANDLE_TENDER
+        HANDLE_TENDER,
+
+        // custom activity, optionally called from custom activity
+        CUSTOM_ACTIVITY,
+        // starting custom activity, called from RTKA
+        STARTING_CUSTOM_ACTIVITY
     }
     public enum UiDirection { ENTER, EXIT }
-    
+
     public class PendingPaymentEntry
     {
         public String paymentId;
-        public long amount; 
+        public long amount;
     }
 
     public class CardData

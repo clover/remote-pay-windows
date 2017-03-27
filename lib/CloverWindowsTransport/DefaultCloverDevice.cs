@@ -87,7 +87,7 @@ namespace com.clover.remotepay.transport
         public void onMessage(string message)
         {
 #if DEBUG
-            Console.WriteLine("Received message: " + message);
+            Console.WriteLine("Received raw message: " + message);
 #endif
             //CloverTransportObserver
             // Deserialize the message object to a real object, and figure
@@ -700,9 +700,9 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new BreakMessage());
         }
 
-        public override void doTxStart(PayIntent payIntent, Order order, bool suppressOnScreenTips)
+        public override void doTxStart(PayIntent payIntent, Order order)
         {
-            sendObjectMessage(new TxStartRequestMessage(payIntent, order, suppressOnScreenTips));
+            sendObjectMessage(new TxStartRequestMessage(payIntent, order));
         }
 
         public override void doTipAdjustAuth(string orderId, string paymentId, long amount)

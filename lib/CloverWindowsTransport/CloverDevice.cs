@@ -86,7 +86,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         /// <param name="payIntent"></param>
         /// <param name="order">can be null.  If it is, an order will implicitly be created on the other end</param>
-        public abstract void doTxStart(PayIntent payIntent, Order order, bool suppressOnScreenTips);
+        public abstract void doTxStart(PayIntent payIntent, Order order);
         public abstract void doKeyPress(KeyPress keyPress);
         public abstract void doVoidPayment(Payment payment, VoidReason reason);
         public abstract void doOrderUpdate(DisplayOrder order, DisplayOperation operation);

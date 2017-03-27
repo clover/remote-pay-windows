@@ -179,22 +179,93 @@ namespace com.clover.remotepay.sdk
             PayIntent payIntent = new PayIntent();
             payIntent.externalPaymentId = request.ExternalId;
             payIntent.transactionType = PayIntent.TransactionType.PAYMENT;
-            payIntent.remotePrint = request.DisablePrinting;
-            payIntent.isDisableCashBack = request.DisableCashback;
-            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = request.TipAmount.HasValue ? request.TipAmount.Value : 0;
             payIntent.taxAmount = request.TaxAmount;
             payIntent.tippableAmount = request.TippableAmount;
             payIntent.vaultedCard = request.VaultedCard;
-            payIntent.isCardNotPresent = request.CardNotPresent;
-            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
-            payIntent.allowOfflinePayment = request.AllowOfflinePayment;
-            payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt;
             payIntent.requiresRemoteConfirmation = true;
-            Device.doTxStart(payIntent, null, request.DisableTipOnScreen.HasValue ? request.DisableTipOnScreen.Value : false);
+            TransactionSettings ts = getTransactionRequestOverrides(request);
+            if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
+            {
+                payIntent.isCardNotPresent = true;
+            }
+            if (request.DisableCashback.HasValue && request.DisableCashback.Value)
+            {
+                ts.disableCashBack = true;
+            }
+            if (request.AllowOfflinePayment.HasValue)
+            {
+                ts.allowOfflinePayment = request.AllowOfflinePayment;
+            }
+            if (request.ApproveOfflinePaymentWithoutPrompt.HasValue)
+            {
+                ts.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt;
+            }
+            if (request.TipMode.HasValue)
+            {
+                string tipModeString = request.TipMode.Value.ToString();
+                ts.tipMode = (com.clover.sdk.v3.payments.TipMode)Enum.Parse(typeof(TipMode), tipModeString);
+            } else
+            {
+                if (request.DisableTipOnScreen.HasValue && request.DisableTipOnScreen.Value)
+                {
+                    if (payIntent.tipAmount.HasValue  && payIntent.tipAmount.Value > 0)
+                    {
+                        ts.tipMode = com.clover.sdk.v3.payments.TipMode.TIP_PROVIDED;
+                    } else
+                    {
+                        ts.tipMode = com.clover.sdk.v3.payments.TipMode.NO_TIP;
+                    }
+                }
+            }
+            if (request.TippableAmount.HasValue)
+            {
+                ts.tippableAmount = request.TippableAmount.Value;
+            }
+            payIntent.transactionSettings = ts;
+            Device.doTxStart(payIntent, null);
         }
 
+        private TransactionSettings getTransactionRequestOverrides(TransactionRequest request)
+        {
+            TransactionSettings ts = new TransactionSettings();
+            if (request.DisablePrinting.HasValue && request.DisablePrinting.Value)
+            {
+                ts.cloverShouldHandleReceipts = false;
+            }
+            ts.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
+            if (request.DisableRestartTransactionOnFail.HasValue && request.DisableRestartTransactionOnFail.Value)
+            {
+                ts.disableRestartTransactionOnFailure = true;
+            }
+            if (request.DisableDuplicateChecking.HasValue && request.DisableDuplicateChecking.Value)
+            {
+                ts.disableDuplicateCheck = true;
+            }
+            if (request.DisableReceiptSelection.HasValue && request.DisableReceiptSelection.Value)
+            {
+                ts.disableReceiptSelection = true;
+            }
+            if (request.SignatureThreshold.HasValue)
+            {
+                ts.signatureThreshold = request.SignatureThreshold.Value;
+            }
+            if (request.AutoAcceptSignature.HasValue && request.AutoAcceptSignature.Value)
+            {
+                ts.autoAcceptSignature = true;
+            }
+            if (request.AutoAcceptPaymentConfirmations.HasValue && request.AutoAcceptPaymentConfirmations.Value)
+            {
+                ts.autoAcceptPaymentConfirmations = true;
+            }
+            if (request.SignatureEntryLocation.HasValue)
+            {
+                ts.signatureEntryLocation = request.SignatureEntryLocation.Value;
+            }
+            return ts;
+
+        }
         /// <summary>
         /// If signature is captured during a Sale, this method accepts the signature as entered
         /// </summary>
@@ -301,19 +372,31 @@ namespace com.clover.remotepay.sdk
             PayIntent payIntent = new PayIntent();
             payIntent.externalPaymentId = request.ExternalId;
             payIntent.transactionType = request.Type;
-            payIntent.remotePrint = request.DisablePrinting;
-            payIntent.isDisableCashBack = request.DisableCashback;
-            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
             payIntent.taxAmount = request.TaxAmount;
-            payIntent.isCardNotPresent = request.CardNotPresent;
-            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
-            payIntent.allowOfflinePayment = request.AllowOfflinePayment;
-            payIntent.approveOfflinePaymentWithoutPrompt = request.ApproveOfflinePaymentWithoutPrompt;
+            if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
+            {
+                payIntent.isCardNotPresent = true;
+            }
+            TransactionSettings ts = getTransactionRequestOverrides(request);
+            if (request.DisableCashback.HasValue && request.DisableCashback.Value)
+            {
+                ts.disableCashBack = true;
+            }
+            if (request.AllowOfflinePayment.HasValue)
+            {
+                ts.allowOfflinePayment = request.AllowOfflinePayment;
+            }
+            if (request.ApproveOfflinePaymentWithoutPrompt.HasValue && request.ApproveOfflinePaymentWithoutPrompt.Value)
+            {
+                ts.approveOfflinePaymentWithoutPrompt = true;
+            }
+            ts.tipMode = com.clover.sdk.v3.payments.TipMode.ON_PAPER;
+            payIntent.transactionSettings = ts;
             payIntent.requiresRemoteConfirmation = true;
-            Device.doTxStart(payIntent, null, true);
+            Device.doTxStart(payIntent, null);
         }
 
         /// <summary>
@@ -369,15 +452,18 @@ namespace com.clover.remotepay.sdk
             PayIntent payIntent = new PayIntent();
             payIntent.externalPaymentId = request.ExternalId;
             payIntent.transactionType = PayIntent.TransactionType.AUTH;
-            payIntent.remotePrint = request.DisablePrinting;
-            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
+            TransactionSettings ts = getTransactionRequestOverrides(request);
+            payIntent.transactionSettings = ts;
+            ts.tipMode = clover.sdk.v3.payments.TipMode.NO_TIP;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
-            payIntent.isCardNotPresent = request.CardNotPresent;
-            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
+            if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
+            {
+                payIntent.isCardNotPresent = true;
+            }
             payIntent.requiresRemoteConfirmation = true;
-            Device.doTxStart(payIntent, null, true);
+            Device.doTxStart(payIntent, null);
         }
 
         /// <summary>
@@ -620,15 +706,15 @@ namespace com.clover.remotepay.sdk
             }
 
             PayIntent payIntent = new PayIntent();
-            payIntent.cardEntryMethods = request.CardEntryMethods.HasValue ? request.CardEntryMethods.Value : CardEntryMethod;
             payIntent.amount = -Math.Abs(request.Amount);
             payIntent.transactionType = PayIntent.TransactionType.CREDIT;
             payIntent.externalPaymentId = request.ExternalId;
-            payIntent.disableRestartTransactionWhenFailed = request.DisableRestartTransactionOnFail;
-            payIntent.remotePrint = request.DisablePrinting;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.requiresRemoteConfirmation = true;
-            Device.doTxStart(payIntent, null, true);
+            TransactionSettings ts = getTransactionRequestOverrides(request);
+            ts.tipMode = clover.sdk.v3.payments.TipMode.NO_TIP;
+            payIntent.transactionSettings = ts;
+            Device.doTxStart(payIntent, null);
         }
 
         /// <summary>
@@ -1219,15 +1305,15 @@ namespace com.clover.remotepay.sdk
                 }
                 else if (uiDirection == UiDirection.EXIT)
                 {
-                    if (uiState.ToString().Equals(CloverDeviceEvent.DeviceEventState.RECEIPT_OPTIONS.ToString()))
-                    {
-                        cloverConnector.ShowOnDevice(showWelcomeScreen: true);
-                    }
                     // because we can get events out of order, need to make sure we don't wipe out the wrong Options
                     if (lastStartEvent != null && lastStartEvent.EventState.Equals(deviceEvent.EventState))
                     {
                         cloverConnector.listeners.ForEach(listener => listener.OnDeviceActivityEnd(deviceEvent));
                         lastStartEvent = null;
+                        if (uiState.ToString().Equals(CloverDeviceEvent.DeviceEventState.RECEIPT_OPTIONS.ToString()))
+                        {
+                            cloverConnector.ShowOnDevice(showWelcomeScreen: true);
+                        }
                     }
                 }
             }
