@@ -9,7 +9,7 @@ This SDK provides an API with which to allow your Windows Point-of-Sale (POS) sy
 The Windows project includes a .NET dll, REST API Service, WebSocket API Service and an example POS. There are 3 ways to connect to a device
 - CloverConnector.DLL can be used directly by a .NET application. Note: Requires .NET 4.0
 - CloverConnectorRESTService provides a Windows service with a REST API and REST callbacks. To use this, the POS will have to implement a REST service to get callbacks from the service
-- CloverConnectorWebSocketService provides a Windows service with a WebSocket endpoint. To use this, the 
+- CloverConnectorWebSocketService provides a Windows service with a WebSocket endpoint. To use this, the POS will have to implement a WebSocket client to communicate with the WebSocketService and receive callbacks.
 
 To effectively work with the project you'll need:
 - A Windows machine or VM
