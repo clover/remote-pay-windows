@@ -59,6 +59,12 @@ namespace CloverWindowsSDKREST
 
         protected override void OnStart(string[] args)
         {
+            if (args.Length == 0)
+            {
+                //Retrieve the arguments from the service ImagePath
+                args = Environment.GetCommandLineArgs();
+            }
+
             string logSource = "_TransportEventLog";
             if (!EventLog.SourceExists(logSource))
                 EventLog.CreateEventSource(logSource, logSource);
@@ -80,12 +86,14 @@ namespace CloverWindowsSDKREST
                     IEnumerable<string> timerStrings = ((ICollection<string>)args).Where(a => a.Contains("-timer"));
                     if (timerStrings.Count() == 1)
                     {
-                        try {
+                        try
+                        {
                             string timerString = timerStrings.First();
                             int index = timerString.IndexOf('=');
                             string timerSeconds = timerString.Substring(index + 1);
                             Timer = Convert.ToInt32(timerSeconds);
-                        } catch (Exception e)
+                        }
+                        catch (Exception e)
                         {
                             Timer = 1;
                             EventLog.WriteEntry(SERVICE_NAME, "Error parsing the -timer command line argument.  Setting timer to 1 second.");
@@ -122,21 +130,7 @@ namespace CloverWindowsSDKREST
             Console.WriteLine("callback endpoint: " + callbackEndpoint);
             connectorListener.RestClient = new RestSharp.RestClient(callbackEndpoint);
             server.ForwardToClientListener = connectorListener;
-            string webSocketEndpoint = null;
-            if(argsMap.TryGetValue("/L", out webSocketEndpoint))
-            {
-                string[] tokens = webSocketEndpoint.Split(new char[]{':'});
-                if(tokens.Length != 2) {
-                    throw new Exception("Invalid host and port. must be <hostname>:<port>");
-                }
-                string hostname = tokens[0];
-                int port = int.Parse(tokens[1]);
-                server.CloverConnector = new CloverConnector(new WebSocketCloverDeviceConfiguration(hostname, port, getPOSNameAndVersion(), Debug, Timer));
-            }
-            else
-            {
-                server.CloverConnector = new CloverConnector(new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer));
-            }
+            server.CloverConnector = new CloverConnector(new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer));
             server.CloverConnector.InitializeConnection();
             server.CloverConnector.AddCloverConnectorListener(connectorListener);
             StartRESTListener();
@@ -153,9 +147,10 @@ namespace CloverWindowsSDKREST
             {
                 Object rName = Registry.GetValue(REG_KEY, "ExternalPOSName", "unset");
                 Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
-                name = rName.ToString(); 
+                name = rName.ToString();
                 version = rVersion.ToString();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 EventLog.WriteEntry(SERVICE_NAME, e.Message);
             }
@@ -182,7 +177,7 @@ namespace CloverWindowsSDKREST
                 EventLog.WriteEntry(SERVICE_NAME, "POS Name or Version is not correctly set.  The service will not run until they are appropriately intialized.");
                 throw new Exception("Invalid external POS name or version. The REST service cannot run without correctly configured <ExternalPOSName> and <ExternalPOSVersion> registry keys.");
             }
-              
+
             EventLog.WriteEntry(SERVICE_NAME, "POS Name:Version from registry = " + name + ":" + version);
             return name + ":" + version;
         }

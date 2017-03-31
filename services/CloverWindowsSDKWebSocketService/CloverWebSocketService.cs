@@ -70,6 +70,12 @@ namespace CloverWindowsSDKWebSocketService
 
             // Add the event log trace listener to the collection.
             Trace.Listeners.Add(myTraceListener);
+            if (args.Length == 0)
+            {
+                //Retrieve the arguments from the service ImagePath
+                args = Environment.GetCommandLineArgs();
+            }
+
             if (args.Length > 0)
             {
                 if (((ICollection<string>)args).Contains("-debug"))
@@ -108,7 +114,7 @@ namespace CloverWindowsSDKWebSocketService
                     {
                         parameters.Add("/T", "true");
                     }
-                    else if(i+1 < args.Length)
+                    else if (i + 1 < args.Length)
                     {
                         parameters.Add(args[i], args[++i]);
                     }
@@ -119,9 +125,10 @@ namespace CloverWindowsSDKWebSocketService
             IWebSocketConnection sendSocket = null;
             Action<IWebSocketConnection> serverSocket = socket =>
             {
-                socket.OnOpen = () => {
+                socket.OnOpen = () =>
+                {
                     Console.WriteLine("Open! " + clientConnections.Count);
-                    if(clientConnections.Count > 0)
+                    if (clientConnections.Count > 0)
                     {
                         if (clientConnections[0].IsAvailable)
                         {
@@ -203,7 +210,7 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.PrintText(messageList);
                                     break;
                                 }
-                            case WebSocketMethod.PrintImage :
+                            case WebSocketMethod.PrintImage:
                                 {
                                     string base64Img = ((JObject)payload).GetValue("Bitmap").Value<string>();
                                     byte[] imgBytes = Convert.FromBase64String(base64Img);
@@ -268,7 +275,7 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.ManualRefund(mrr);
                                     break;
                                 }
-                            case WebSocketMethod.RefundPayment :
+                            case WebSocketMethod.RefundPayment:
                                 {
                                     RefundPaymentRequest request = JsonUtils.deserialize<RefundPaymentRequest>(payload.ToString());
                                     cloverConnector.RefundPayment(request);
@@ -400,29 +407,6 @@ namespace CloverWindowsSDKWebSocketService
             {
                 config = new TestCloverDeviceConfiguration();
             }
-            else if (lanConfig != null)
-            {
-                int loc = lanConfig.IndexOf(':');
-                if (loc == -1)
-                {
-                    throw new InvalidDataException("invalid lan host. arguments must be '/L <hostname>:<port>'");
-                }
-                try
-                {
-                    string lanHostname = lanConfig.Substring(0, loc);
-                    string lanPortStr = lanConfig.Substring(loc + 1);
-                    int lanPort = int.Parse(lanPortStr);
-                    if (lanPort < 0 || lanPort > 65535)
-                    {
-                        throw new InvalidDataException("Invalid port. must be between 1 and 65535");
-                    }
-                    config = new WebSocketCloverDeviceConfiguration(lanHostname, lanPort, getPOSNameAndVersion(), Debug, Timer);
-                }
-                catch (FormatException fe)
-                {
-                    throw new InvalidDataException("invalid port: " + lanConfig.Substring(loc + 1));
-                }
-            }
             else
             {
                 config = new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer);
@@ -482,9 +466,9 @@ namespace CloverWindowsSDKWebSocketService
             server.ListenerSocket.Close();
         }
 
-        private T Deserialize<T>(String msg) 
+        private T Deserialize<T>(String msg)
         {
-            T obj = JsonUtils.deserialize<T> (msg);
+            T obj = JsonUtils.deserialize<T>(msg);
             return obj;
         }
     }

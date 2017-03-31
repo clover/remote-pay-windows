@@ -265,9 +265,17 @@ namespace com.clover.remotepay.transport
                 TransportLog("Entering DeviceInitiallyConnected: " + Thread.CurrentThread.GetHashCode());
                 Boolean initialized = false;
 
-                if (MyUsbDevice == null || !MyUsbDevice.IsOpen)
+                if (MyUsbDevice == null || !MyUsbDevice.IsOpen || !MyUsbDevice.UsbRegistryInfo.IsAlive)
                 {
-
+                    // If the device is open and  we no longer have this device in the bus enumeration, close it to try to
+                    // get it back to a sane state
+                    if (MyUsbDevice != null && !MyUsbDevice.UsbRegistryInfo.IsAlive)
+                    {
+                        if (MyUsbDevice.IsOpen)
+                        {
+                            MyUsbDevice.Close();
+                        }
+                    }
                     UsbDevice TempMyUsbDevice = null;
                     try
                     {
@@ -331,8 +339,17 @@ namespace com.clover.remotepay.transport
             lock (DeviceAccessorySyncLock)
             {
                 Boolean initialized = false;
-                if (MyUsbDevice == null || !MyUsbDevice.IsOpen)
+                if (MyUsbDevice == null || !MyUsbDevice.IsOpen || !MyUsbDevice.UsbRegistryInfo.IsAlive)
                 {
+                    // If the device is open and  we no longer have this device in the bus enumeration, close it to try to
+                    // get it back to a sane state
+                    if (MyUsbDevice != null && !MyUsbDevice.UsbRegistryInfo.IsAlive)
+                    {
+                        if (MyUsbDevice.IsOpen)
+                        {
+                            MyUsbDevice.Close();
+                        }
+                    }
                     if (MyUsbDevice == null)
                     {
                         TransportLog("DeviceSetToAccessoryMode(): MyUsbDevice is null.  Attempting to recreate/reopen using WinUSB lib");

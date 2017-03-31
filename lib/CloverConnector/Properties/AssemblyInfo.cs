@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Clover Network, Inc.")]
 [assembly: AssemblyProduct("CloverConnector")]
-[assembly: AssemblyCopyright("Copyright © Clover Network, Inc. 2016")]
+[assembly: AssemblyCopyright("Copyright © Clover Network, Inc. 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
