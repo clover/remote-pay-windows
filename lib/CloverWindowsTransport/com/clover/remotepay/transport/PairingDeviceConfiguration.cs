@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+// Copyright (C) 2016 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace com.clover.remotepay.transport.remote
+using System;
+
+namespace com.clover.remotepay.transport
 {
-    /// <summary>
-    /// Configuration object used for initializing the
-    /// RemoteWebSocketCloverConnector, which is primarly
-    /// used as an example and for testing and validation
-    /// </summary>
-    class RemoteWebSocketCloverConfiguration : WebSocketCloverDeviceConfiguration
+    public class PairingDeviceConfiguration
     {
-        public RemoteWebSocketCloverConfiguration(string hostname, int port, string remoteApplicationId) : base(hostname, port, remoteApplicationId, "", "", "")
-        {
-        }
+        public delegate void OnPairingCodeHandler(String pairingCode);
+        public delegate void OnPairingSuccessHandler(String authToken);
+
+        public OnPairingCodeHandler OnPairingCode;
+        public OnPairingSuccessHandler OnPairingSuccess;
     }
 }

@@ -63,15 +63,16 @@ namespace com.clover.remotepay.transport
         public readonly bool supportsTipAdjust;
         public readonly bool supportsManualRefund;
         public readonly bool supportsMultiPayToken;
-        public DiscoveryResponseMessage(String merchantId, 
-                                        String merchantName, 
+        public readonly bool supportsRemoteConfirmation;
+        public DiscoveryResponseMessage(String merchantId,
+                                        String merchantName,
                                         String merchantMId,
-                                        String name, 
-                                        String serial, 
-                                        String model, 
+                                        String name,
+                                        String serial,
+                                        String model,
                                         Boolean ready,
                                         Boolean? supportsAcknowledgement,
-                                        Boolean? supportsTipAdjust, 
+                                        Boolean? supportsTipAdjust,
                                         Boolean? supportsManualRefund,
                                         Boolean? supportsMultiPayToken)
             : base(Methods.DISCOVERY_RESPONSE)
@@ -179,7 +180,8 @@ namespace com.clover.remotepay.transport
     {
         public readonly PayIntent payIntent;
         public readonly Order order;
-        public readonly bool suppressOnScreenTips;
+        [Obsolete("use TipMode in PayIntent.transactionSettings instead")]
+        public readonly bool? suppressOnScreenTips;
 
         public TxStartRequestMessage(PayIntent payIntent, Order order, bool suppressOnScreenTips)
             : base(Methods.TX_START)
@@ -187,6 +189,14 @@ namespace com.clover.remotepay.transport
             this.payIntent = payIntent;
             this.order = order;
             this.suppressOnScreenTips = suppressOnScreenTips;
+        }
+
+        public TxStartRequestMessage(PayIntent payIntent, Order order)
+            : base(Methods.TX_START, 2)
+        {
+            this.payIntent = payIntent;
+            this.order = order;
+            this.suppressOnScreenTips = null;
         }
     }
 
@@ -269,13 +279,13 @@ namespace com.clover.remotepay.transport
         public string paymentId { get; set; }
         public long? amount { get; set; }
         public bool? fullRefund { get; set; }
-        
+
         public RefundRequestMessage() : base(Methods.REFUND_REQUEST, 2)
         {
 
         }
 
-        public RefundRequestMessage(string oid, string pid, long? amt, bool? fullRefund)       : base(Methods.REFUND_REQUEST, 2)
+        public RefundRequestMessage(string oid, string pid, long? amt, bool? fullRefund) : base(Methods.REFUND_REQUEST, 2)
         {
             this.orderId = oid;
             this.paymentId = pid;
@@ -302,7 +312,7 @@ namespace com.clover.remotepay.transport
     {
         public string orderId { get; set; }
         public string paymentId { get; set; }
-        public bool success { get; set; } 
+        public bool success { get; set; }
         public long amount { get; set; }
 
         public TipAdjustResponseMessage(string orderId, string paymentId, long amount, bool success) : base(Methods.TIP_ADJUST_RESPONSE)
@@ -419,9 +429,9 @@ namespace com.clover.remotepay.transport
     {
         public readonly String text;
 
-        public TerminalMessage(String text) 
-            :base(Methods.TERMINAL_MESSAGE)
-        { 
+        public TerminalMessage(String text)
+            : base(Methods.TERMINAL_MESSAGE)
+        {
             this.text = text;
         }
     }
@@ -474,7 +484,7 @@ namespace com.clover.remotepay.transport
 
         public OpenCashDrawerMessage() : base(Methods.OPEN_CASH_DRAWER)
         {
-            
+
         }
 
         public OpenCashDrawerMessage(String reaseon) : base(Methods.OPEN_CASH_DRAWER)
@@ -483,7 +493,7 @@ namespace com.clover.remotepay.transport
         }
     }
 
-    public class CloseoutMessage : Message 
+    public class CloseoutMessage : Message
     {
         public bool allowOpenTabs { get; set; }
         public string batchId { get; set; }
@@ -491,7 +501,7 @@ namespace com.clover.remotepay.transport
         public CloseoutMessage() : base(Methods.CLOSEOUT_REQUEST)
         {
             allowOpenTabs = false;
-            batchId = null; 
+            batchId = null;
         }
 
         public CloseoutMessage(bool allowOpenTabs, string batchId) : base(Methods.CLOSEOUT_REQUEST)
@@ -565,8 +575,8 @@ namespace com.clover.remotepay.transport
         public bool verified;
 
         public SignatureVerifiedMessage(Payment payment, bool verified)
-            :base(Methods.SIGNATURE_VERIFIED)
-                {
+            : base(Methods.SIGNATURE_VERIFIED)
+        {
             this.payment = payment;
             this.verified = verified;
         }
@@ -723,6 +733,59 @@ namespace com.clover.remotepay.transport
 
         }
     }
+
+    public class PairingRequestMessage
+    {
+        public readonly int version = 1;
+        public String method { get; set; }// = "PAIRING_REQUEST";
+        public string payload { get; set; }
+
+        public PairingRequestMessage(PairingRequest pr)
+        {
+            method = "PAIRING_REQUEST";
+            payload = JsonUtils.serialize(pr);
+        }
+
+        public PairingRequestMessage(String method)
+        {
+
+        }
+    }
+
+    public class PairingCodeMessage
+    {
+        public const string METHOD = "PAIRING_CODE";
+        public String pairingCode { get; set; }
+    }
+
+    public class PairingRequest
+    {
+        public const String METHOD = "PAIRING_REQUEST";
+        public String method = METHOD;
+        public String serialNumber { get; set; }
+        public String name { get; set; }
+        public String authenticationToken { get; set; }
+    }
+
+    public class PairingResponseMessage : PairingRequestMessage
+    {
+        public PairingResponseMessage() : base("PAIRING_RESPONSE")
+        {
+
+        }
+    }
+
+    public class PairingResponse : PairingRequest
+    {
+        public const String PAIRED = "PAIRED";
+        public const String INITIAL = "INITIAL";
+        public const String FAILED = "FAILED";
+        public const String METHOD = "PAIRING_RESPONSE";
+        public String pairingState { get; set; }
+        public String applicationName { get; set; }
+        public long millis;
+    }
+
     /// <summary>
     /// The top level protocol message 
     /// </summary

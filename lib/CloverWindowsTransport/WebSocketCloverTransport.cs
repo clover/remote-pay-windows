@@ -20,7 +20,12 @@ using System.Management;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using System.Net.Security;
 using WebSocket4Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace com.clover.remotepay.transport
 {
@@ -39,6 +44,11 @@ namespace com.clover.remotepay.transport
         private bool initialized = false;
         private readonly int ERROR_LIMIT = 3;
 
+        String pairingAuthToken { get; set; }
+        String posName { get; set; }
+        String serialNumber { get; set; }
+        Boolean isPairing = true;
+
         private WebSocket websocket;
 
         Queue<string> messageQueue = new Queue<string>();
@@ -46,15 +56,21 @@ namespace com.clover.remotepay.transport
         private string hostname { get; set; }
         private int port { get; set; }
 
+        PairingDeviceConfiguration config { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="hostname">The hostname or IP of the Clover device to which you are connecting</param>
         /// <param name="port">The port of the Clover device to which you are connecting</param>
-        public WebSocketCloverTransport(string hostname, Int32 port)
+        public WebSocketCloverTransport(string hostname, Int32 port, PairingDeviceConfiguration pairingConfig, String posName, String serialNumber, String pairingAuthToken)
         {
             this.hostname = hostname;
             this.port = port;
+            this.config = pairingConfig;
+            this.posName = posName;
+            this.serialNumber = serialNumber;
+            this.pairingAuthToken = pairingAuthToken;
             connect(hostname, port);
         }
 
@@ -63,12 +79,72 @@ namespace com.clover.remotepay.transport
             initialized = true;
 
             onDeviceConnected();
-            onDeviceReady();
+            //onDeviceReady();
+            SendPairingRequest();
         }
 
-        private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
+        private void SendPairingRequest()
         {
-            onMessage(e.Message);
+            isPairing = true;
+            PairingRequest pr = new PairingRequest();
+            pr.name = this.posName;
+            pr.authenticationToken = this.pairingAuthToken;
+            pr.serialNumber = this.serialNumber;
+
+            PairingRequestMessage prm = new PairingRequestMessage(pr);
+            sendMessage(JsonUtils.serialize(prm));
+        }
+
+        protected  void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+#if DEBUG
+            Console.WriteLine("Received message: " + e.Message);
+#endif
+            if (isPairing)
+            {
+                var definition = new { id = "", method = "", payload = "" , type = "", version = 0};
+                var dynObj = JsonConvert.DeserializeAnonymousType(e.Message, definition);
+                if(dynObj.method != null)
+                {
+                    String method = dynObj.method;
+
+                    if(PairingCodeMessage.METHOD.Equals(method))
+                    {
+                        PairingCodeMessage pcm = JsonUtils.deserialize<PairingCodeMessage>(dynObj.payload);
+                        if(config.OnPairingCode != null)
+                        {
+                            config.OnPairingCode(pcm.pairingCode);
+                        }
+                        else
+                        {
+                            throw new Exception("OnPairingCode handler not set");
+                        }
+                    }
+                    else if(PairingResponse.METHOD.Equals(method))
+                    {
+                        PairingResponse pr = JsonUtils.deserialize<PairingResponse>(dynObj.payload);
+                        if(PairingResponse.PAIRED.Equals(pr.pairingState) || PairingResponse.INITIAL.Equals(pr.pairingState))
+                        {
+                            isPairing = false;
+                            pairingAuthToken = pr.authenticationToken;
+                            if (config.OnPairingSuccess != null) {
+                                config.OnPairingSuccess(pr.authenticationToken);
+                            }
+                            onDeviceReady();
+                        }
+                        else if(PairingResponse.FAILED.Equals(pr.pairingState))
+                        {
+                            pairingAuthToken = null; // 
+                            SendPairingRequest();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                onMessage(e.Message);
+            }
+
         }
 
         private void websocket_Closed(object sender, EventArgs e)
@@ -81,15 +157,42 @@ namespace com.clover.remotepay.transport
             bw.RunWorkerAsync();
         }
 
+        private bool WSRemoteServerCertificateValidationCallback(Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+#if DEBUG
+            // this will write out the cert received from the device for debugging purposes
+            string certFileName = "device_cert.crt";
+            using (var file = File.Create(certFileName))
+            {
+                var cert = certificate.Export(X509ContentType.Cert);
+                file.Write(cert, 0, cert.Length);
+            }
+#endif
+
+            if (sslPolicyErrors == SslPolicyErrors.None)
+            {
+                return true;
+            }
+            else
+            {
+                base.onDeviceError(-201, "Error connecting: " + sslPolicyErrors);
+                shutdown = true;
+                return false;
+            }
+        }
+
         private void connect(string hostname, int port)
         {
             if(!shutdown)
             {
-                websocket = new WebSocket("ws://" + hostname + ":" + port + "/");
+                ServicePointManager.ServerCertificateValidationCallback = this.WSRemoteServerCertificateValidationCallback;
+
+                websocket = new WebSocket("wss://" + hostname + ":" + port + "/remote_pay");
                 websocket.Opened += new EventHandler(websocket_Opened);
                 websocket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(websocket_Error);
                 websocket.Closed += new EventHandler(websocket_Closed);
                 websocket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocket_MessageReceived);
+                //websocket.AllowUnstrustedCertificate = true; // for testing ONLY
                 websocket.Open();
             }
 
@@ -97,10 +200,10 @@ namespace com.clover.remotepay.transport
 
         private void reconnect(object sender, DoWorkEventArgs e)
         {
-            Thread.Sleep(3000);
+            
             if(!shutdown)
             {
-                connect(hostname, port);
+                new Timer((obj) => { connect(hostname, port); }, null, 3000, System.Threading.Timeout.Infinite);
             }
         }
 
@@ -111,6 +214,7 @@ namespace com.clover.remotepay.transport
 
         public override void Dispose()
         {
+            shutdown = true;
             websocket.Close();
         }
 
@@ -157,7 +261,6 @@ namespace com.clover.remotepay.transport
 
         protected override void onDeviceDisconnected()
         {
-            shutdown = true;
             base.onDeviceDisconnected();
         }
     }

@@ -18,19 +18,23 @@ using System.Text;
 
 namespace com.clover.remotepay.transport
 {
-    public class WebSocketCloverDeviceConfiguration : CloverDeviceConfiguration
+    public class WebSocketCloverDeviceConfiguration : PairingDeviceConfiguration, CloverDeviceConfiguration
     {
         public string hostname;
         public Int32 port;
         public string remoteApplicationID;
         public bool enableLogging = false;
         public int pingSleepSeconds = 1;
+        public string posName;
+        public string serialNumber;
+        public string pairingAuthToken;
 
-        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, String remoteApplicationID) : this(hostname, port, remoteApplicationID, false, 1)
+
+        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, String remoteApplicationID, string posName, string serialNumber, string pairingAuthToken) : this(hostname, port, remoteApplicationID, false, 1, posName, serialNumber, pairingAuthToken, null, null)
         {
 
         }
-        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, string remoteApplicationID, bool enableLogging, int pingSleepSeconds)
+        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, string remoteApplicationID, bool enableLogging, int pingSleepSeconds, string posName, string serialNumber, string pairingAuthToken, OnPairingCodeHandler pairingCodeHandler, OnPairingSuccessHandler pairingSuccessHandler)
         {
             this.hostname = hostname;
             this.port = port;
@@ -41,6 +45,12 @@ namespace com.clover.remotepay.transport
             this.remoteApplicationID = remoteApplicationID;
             this.enableLogging = enableLogging;
             this.pingSleepSeconds = pingSleepSeconds;
+            this.posName = posName;
+            this.serialNumber = serialNumber;
+            this.pairingAuthToken = pairingAuthToken;
+            this.OnPairingCode = pairingCodeHandler;
+            this.OnPairingSuccess = pairingSuccessHandler;
+
         }
         public string getCloverDeviceTypeName()
         {
@@ -49,12 +59,12 @@ namespace com.clover.remotepay.transport
 
         public CloverTransport getCloverTransport()
         {
-            return new WebSocketCloverTransport(this.hostname, this.port);
+            return new WebSocketCloverTransport(this.hostname, this.port, this, posName, serialNumber, pairingAuthToken);
         }
 
         public string getMessagePackageName()
         {
-            return "com.clover.remote.protocol.lan";
+            return "com.clover.remote_protocol_broadcast.app";
         }
 
         public string getName()
@@ -76,5 +86,6 @@ namespace com.clover.remotepay.transport
         {
             return remoteApplicationID;
         }
+
     }
 }

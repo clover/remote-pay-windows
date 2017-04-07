@@ -22,5 +22,41 @@ namespace CloverExamplePOS.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string pairingAuthToken {
+            get {
+                return ((string)(this["pairingAuthToken"]));
+            }
+            set {
+                this["pairingAuthToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastWSEndpoint {
+            get {
+                return ((string)(this["lastWSEndpoint"]));
+            }
+            set {
+                this["lastWSEndpoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int lastWSPort {
+            get {
+                return ((int)(this["lastWSPort"]));
+            }
+            set {
+                this["lastWSPort"] = value;
+            }
+        }
     }
 }
