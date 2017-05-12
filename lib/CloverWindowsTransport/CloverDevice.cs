@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using com.clover.remotepay.sdk;
+using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace com.clover.remotepay.transport
 {
@@ -30,22 +32,69 @@ namespace com.clover.remotepay.transport
     {
         protected List<ICloverDeviceObserver> deviceObservers = new List<ICloverDeviceObserver>();
         protected CloverTransport transport;
+        protected string shortTransportType = "UNKNOWN";
         protected string packageName { get; set; }
         protected readonly string remoteSourceSDK;
         protected readonly string remoteApplicationID;
         protected DeviceInfo deviceInfo;
         public bool SupportsAcks { get; set; }
-        
+
         public CloverDevice(string packageName, CloverTransport transport, string remoteApplicationID)
         {
+            string logSource = "_TransportEventLog";
+            if (!EventLog.SourceExists(logSource))
+                EventLog.CreateEventSource(logSource, logSource);
+
+            EventLogTraceListener myTraceListener = new EventLogTraceListener(logSource);
+
+            // Add the event log trace listener to the collection.
+            Trace.Listeners.Add(myTraceListener);
             this.transport = transport;
+            if (transport.GetType() == typeof(USBCloverTransport))
+            {
+                shortTransportType = "USB";
+            }
+            else if (transport.GetType() == typeof(WebSocketCloverTransport))
+            {
+                shortTransportType = "WS";
+            }
             this.packageName = packageName;
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
-            this.remoteSourceSDK = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description + ":"
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
+            this.remoteSourceSDK = getSDKInfoString();
             this.deviceInfo = new DeviceInfo();
             this.remoteApplicationID = remoteApplicationID;
+        }
+
+
+        private String getSDKInfoString()
+        {
+            String REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
+            String receiver = "";
+            try
+            {
+                Object rReceiver = Registry.GetValue(REG_KEY, "DisplayName", "unset");
+                if (rReceiver != null && !rReceiver.ToString().Equals("unset"))
+                {
+                    receiver = rReceiver.ToString();
+                }
+                else
+                {
+                    receiver = "DLL";
+                }
+            }
+            catch (Exception e)
+            {
+                receiver = "DLL";
+                EventLog.WriteEntry(this.packageName.GetType().ToString(), e.Message);
+            }
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
+            String sdkInfoString = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description
+            + "_" + receiver
+            + "|" + shortTransportType
+            + ":"
+            + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
+            + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
+            EventLog.WriteEntry(this.packageName.GetType().ToString(), "SDKInfo from assembly and registry = " + sdkInfoString);
+            return sdkInfoString;
         }
 
         public string getSDKInfo()
@@ -63,7 +112,7 @@ namespace com.clover.remotepay.transport
 
         public void Dispose()
         {
-            if(this.transport != null)
+            if (this.transport != null)
             {
                 transport.Dispose();
             }
