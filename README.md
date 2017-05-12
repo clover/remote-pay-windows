@@ -1,6 +1,6 @@
 # Clover SDK for Windows PoS Integration
 
-Current version: 1.2
+Current version: 1.2.1
 
 ## Overview
 
@@ -30,6 +30,11 @@ To complete a transaction end to end, we recommend getting a [Clover Mini Dev Ki
 
 
 More documentation can be found at [Clover Docs Site](https://docs.clover.com/build/getting-started-with-cloverconnector/).
+
+# Version 1.2.1
+* Additional logging for connector communication and selected transport
+* Added USB Device Hardening via persistent service debug options
+* Corrected a bug in the definition of one of the internal message classes.  Customer API not impacted
 
 # Version 1.2.0
 * PreAuthRequest - no longer prompts for signature or signature verification.  Duplicate payment checking and print options can also be disabled if desired by setting the appropriate PreAuthRequest overrides of disablePrinting, disableDuplicateChecking & disableReceiptSelection to true.
