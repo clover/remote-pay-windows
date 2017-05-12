@@ -802,7 +802,7 @@ namespace com.clover.remotepay.transport
             setPaymentConfirmationIdle(true);
             PaymentRejectedMessage message = new PaymentRejectedMessage();
             message.payment = payment;
-            message.challenge = challenge;
+            message.reason = challenge.reason;
 
             sendObjectMessage(message);
         }

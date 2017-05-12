@@ -547,7 +547,7 @@ namespace com.clover.remotepay.transport
     public class PaymentRejectedMessage : Message
     {
         public Payment payment { get; set; }
-        public Challenge challenge { get; set; }
+        public VoidReason reason { get; set; }
 
         public PaymentRejectedMessage() : base(Methods.PAYMENT_REJECTED)
         {
