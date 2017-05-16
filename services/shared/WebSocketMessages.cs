@@ -40,7 +40,7 @@ namespace com.clover.sdk.remote.websocket
         Auth,
         PreAuth,
         Cancel,
-        Break,
+        Break, // should be ResetDevice
         CapturePreAuth,
         TipAdjustAuth,
         VoidPayment,
@@ -91,6 +91,8 @@ namespace com.clover.sdk.remote.websocket
         RejectPayment,
         RetrievePendingPayments,
         RetrievePendingPaymentsResponse,
+        StartCustomActivity,
+        CustomActivityResponse,
 
         PrintPaymentReceipt,
         PrintPaymentDeclinedReceipt,
@@ -312,9 +314,16 @@ namespace com.clover.sdk.remote.websocket
         }
     }
 
-    public class RetrievePendingPaymentsRequestMessage : WebSocketMessage<object>
+    public class RetrievePendingPaymentsRequestMessage : WebSocketMessage<RetrievePendingPaymentsMessage>
     {
         public RetrievePendingPaymentsRequestMessage() : base(WebSocketMethod.RetrievePendingPayments)
+        {
+        }
+    }
+
+    public class CustomActivityRequestMessage : WebSocketMessage<CustomActivityRequest>
+    {
+        public CustomActivityRequestMessage() : base(WebSocketMethod.StartCustomActivity)
         {
         }
     }
@@ -332,6 +341,13 @@ namespace com.clover.sdk.remote.websocket
     public class OnReadCardDataResponseMessage : WebSocketMessage<ReadCardDataResponse>
     {
         public OnReadCardDataResponseMessage() : base(WebSocketMethod.ReadCardDataResponse)
+        {
+        }
+    }
+
+    public class OnCustomActivityResponseMessage : WebSocketMessage<CustomActivityResponse>
+    {
+        public OnCustomActivityResponseMessage() : base(WebSocketMethod.CustomActivityResponse)
         {
         }
     }
@@ -450,6 +466,13 @@ namespace com.clover.sdk.remote.websocket
     {
         public OnRetrievePendingPaymentsResponseMessage() : base(WebSocketMethod.RetrievePendingPaymentsResponse) 
         {   
+        }
+    }
+
+    public class CustomActivityResponseMessage : WebSocketMessage<CustomActivityResponseMessage>
+    {
+        public CustomActivityResponseMessage() : base(WebSocketMethod.CustomActivityResponse)
+        {
         }
     }
 

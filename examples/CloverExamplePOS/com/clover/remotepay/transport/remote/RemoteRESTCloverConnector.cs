@@ -154,6 +154,11 @@ namespace com.clover.remotepay.transport.remote
             Send("/ReadCardData", request);
         }
 
+        public void StartCustomActivity(CustomActivityRequest request)
+        {
+            Send("/StartCustomActivity", request);
+        }
+
         public void Closeout(CloseoutRequest request)
         {
             Send("/Closeout", request);

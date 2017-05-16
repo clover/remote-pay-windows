@@ -544,4 +544,24 @@ namespace com.clover.remotepay.sdk
         public Refund Refund { get; set; }
         public Order Order { get; set; }
     }
+
+    /// <summary>
+    /// Request for the Clover device to start a Custom Activity
+    /// </summary>
+    public class CustomActivityRequest : BaseRequest
+    {
+        public String Action { get; set; }
+        public String Payload { get; set; }
+        public Boolean NonBlocking = false;
+    }
+
+    /// <summary>
+    /// Response when a custom activity completes on the
+    /// Clover device when it is completed in a normal flow
+    /// </summary>
+    public class CustomActivityResponse : BaseResponse
+    {
+        public String Action { get; set; }
+        public String Payload { get; set; }
+    }
 }

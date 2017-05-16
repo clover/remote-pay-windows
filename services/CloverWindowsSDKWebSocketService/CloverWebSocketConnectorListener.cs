@@ -181,6 +181,12 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(cardDataResponseMessage));
         }
 
+        public void OnCustomActivityResponse(CustomActivityResponse response)
+        {
+            OnCustomActivityResponseMessage carMessage = new OnCustomActivityResponseMessage();
+            carMessage.payload = response;
+            WebSocket.Send(Serialize(carMessage));
+        }
 
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
         {

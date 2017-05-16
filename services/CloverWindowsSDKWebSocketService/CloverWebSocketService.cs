@@ -340,6 +340,12 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.RetrievePendingPayments();
                                     break;
                                 }
+                            case WebSocketMethod.StartCustomActivity:
+                                {
+                                    CustomActivityRequest request = JsonUtils.deserialize<CustomActivityRequest>(payload.ToString());
+                                    cloverConnector.StartCustomActivity(request);
+                                    break;
+                                }
                             default:
                                 {
                                     Console.WriteLine("received unknown websocket method: " + method.ToString() + " in CloverWebSocketService.");

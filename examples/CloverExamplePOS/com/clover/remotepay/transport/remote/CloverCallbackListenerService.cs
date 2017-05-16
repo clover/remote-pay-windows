@@ -277,11 +277,19 @@ namespace com.clover.remotepay.transport.remote
             SendTextResponse(context, "");
         }
 
-        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePendingPaymentsResponse")]
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePendingPaymentsResponse$")]
         public void RetrievePendingPayments(HttpListenerContext context)
         {
             RetrievePendingPaymentsResponse response = ParseResponse<RetrievePendingPaymentsResponse>(context);
             connectorListener.ForEach(listener => listener.OnRetrievePendingPaymentsResponse(response));
+            SendTextResponse(context, "");
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/CustomActivityResponse$")]
+        public void CustomActivityResponse(HttpListenerContext context)
+        {
+            CustomActivityResponse response = ParseResponse<CustomActivityResponse>(context);
+            connectorListener.ForEach(listener => listener.OnCustomActivityResponse(response));
             SendTextResponse(context, "");
         }
 
