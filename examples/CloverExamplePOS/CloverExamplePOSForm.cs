@@ -1236,17 +1236,14 @@ namespace CloverExamplePOS
         public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
         {
             uiThread.Send(delegate (object state) {
-                //this.TabControl.Enabled = false;
+                //this.TabControl.Enabled = false; // should do this, but allows negative testing
                 if (TabControl.SelectedIndex == 0)
                 {
                     newOrderBtn.Enabled = false;
                     SaleButton.Enabled = false;
                     AuthButton.Enabled = false;
                 }
-                if (TabControl.SelectedIndex == 5) // custom activity
-                {
-                    this.TabControl.Enabled = true;
-                }
+
                 UIStateButtonPanel.Controls.Clear();
                 if (deviceEvent.InputOptions != null)
                 {
