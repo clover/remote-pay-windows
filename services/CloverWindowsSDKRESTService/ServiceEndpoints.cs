@@ -304,6 +304,15 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/StartCustomActivity$")]
+    public void StartCustomActivity(HttpListenerContext context)
+    {
+        CustomActivityRequest message = ParseRequest<CustomActivityRequest>(context);
+
+        GetServer.CloverConnector.StartCustomActivity(message);
+        this.SendTextResponse(context, "");
+    }
+
     public void AddCloverConnectorListener(ICloverConnectorListener connectorListener)
     {
         GetServer.CloverConnector.AddCloverConnectorListener(connectorListener);

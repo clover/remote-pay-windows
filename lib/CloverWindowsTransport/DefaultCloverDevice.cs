@@ -188,6 +188,10 @@ namespace com.clover.remotepay.transport
                     RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.deserializeSDK<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
                     notifyObserversPendingPaymentsResponse(rpprMsg);
                     break;
+                case Methods.ACTIVITY_RESPONSE:
+                    ActivityResponseMessage arm = JsonUtils.deserializeSDK<ActivityResponseMessage>(rMessage.payload);
+                    notifyObserversActivityResponse(arm);
+                    break;
                 case Methods.DISCOVERY_REQUEST:
                     //Outbound no-op
                     break;
@@ -372,6 +376,18 @@ namespace com.clover.remotepay.transport
                 foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
+                }
+            });
+            bw.RunWorkerAsync();
+        }
+        public void notifyObserversActivityResponse(ActivityResponseMessage arm)
+        {
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
+                ResultStatus status = arm.resultCode == -1 ? ResultStatus.SUCCESS : ResultStatus.CANCEL;
+                foreach (ICloverDeviceObserver observer in deviceObservers)
+                {
+                    observer.onActivityResponse(status, arm.action, arm.payload, arm.failReason);
                 }
             });
             bw.RunWorkerAsync();
@@ -805,6 +821,16 @@ namespace com.clover.remotepay.transport
             message.challenge = challenge;
 
             sendObjectMessage(message);
+        }
+
+        public override void doStartCustomActivity(string action, string payload, bool nonBlocking)
+        {
+            ActivityRequest ar = new ActivityRequest();
+            ar.action = action;
+            ar.payload = payload;
+            ar.nonBlocking = nonBlocking;
+            ar.forceLaunch = false;
+            sendObjectMessage(ar);
         }
 
         private string sendObjectMessage(Message message)

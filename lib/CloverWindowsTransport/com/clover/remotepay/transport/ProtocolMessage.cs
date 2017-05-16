@@ -554,6 +554,32 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class ActivityRequest : Message
+    {
+        public ActivityRequest() : base(Methods.ACTIVITY_REQUEST)
+        {
+
+        }
+
+        public String action { get; set; }
+        public String payload { get; set; }
+        public bool nonBlocking { get; set; }
+        public bool forceLaunch { get; set; }
+    }
+
+    public class ActivityResponseMessage : Message
+    {
+        public ActivityResponseMessage() : base(Methods.ACTIVITY_RESPONSE)
+        {
+
+        }
+        public int resultCode { get; set; }
+        public String failReason { get; set; }
+        public String payload { get; set; }
+        public String action { get; set; }
+    }
+
+
     public class KeyPressMessage : Message
     {
         public KeyPress keyPress { get; set; }

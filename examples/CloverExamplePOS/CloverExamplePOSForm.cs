@@ -763,6 +763,13 @@ namespace CloverExamplePOS
             }, null);
         }
 
+        public virtual void OnCustomActivityResponse(CustomActivityResponse response)
+        {
+            uiThread.Send(delegate (object state) {
+                AlertForm.Show(this, "Custom Activity Response" + (response.Success ? "" : ": Canceled"), response.Payload);
+            }, null);
+        }
+
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
         {
             uiThread.Send(delegate (object state) {
@@ -1229,13 +1236,14 @@ namespace CloverExamplePOS
         public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
         {
             uiThread.Send(delegate (object state) {
-                this.TabControl.Enabled = false;
+                //this.TabControl.Enabled = false; // should do this, but allows negative testing
                 if (TabControl.SelectedIndex == 0)
                 {
                     newOrderBtn.Enabled = false;
                     SaleButton.Enabled = false;
                     AuthButton.Enabled = false;
                 }
+
                 UIStateButtonPanel.Controls.Clear();
                 if (deviceEvent.InputOptions != null)
                 {
@@ -2315,15 +2323,19 @@ namespace CloverExamplePOS
             cloverConnector.RetrievePendingPayments();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
- 
-        }
         protected override Point ScrollToControl(Control activeControl)
         {
             return this.AutoScrollPosition;
         }
 
+        private void startCustomActivity_Click(object sender, EventArgs e)
+        {
+            CustomActivityRequest car = new CustomActivityRequest();
+            car.Action = customActivityAction.Text;
+            car.Payload = customActivityPayload.Text;
+            car.NonBlocking = nonBlockingCB.Checked;
+            cloverConnector.StartCustomActivity(car);
+        }
     }
 
     /* This class is used to keep the autoscroll from going crazy when selecting controls on the

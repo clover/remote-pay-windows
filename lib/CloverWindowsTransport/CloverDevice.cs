@@ -110,6 +110,8 @@ namespace com.clover.remotepay.transport
         public abstract void doAcceptPayment(Payment payment);
         public abstract void doRejectPayment(Payment payment, Challenge challenge);
         public abstract void doRetrievePendingPayments();
+        public abstract void doStartCustomActivity(string action, string payload, bool nonBlocking);
+
     }
 
     public interface ICloverDeviceObserver
@@ -259,6 +261,14 @@ namespace com.clover.remotepay.transport
         /// <param name="v"></param>
         /// <param name="pendingPaymentEntries"></param>
         void onRetrievePendingPaymentsResponse(bool success, List<PendingPaymentEntry> pendingPaymentEntries);
+        /// <summary>
+        /// Called when a custom activity is completed as part of a normal flow
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="action"></param>
+        /// <param name="payload"></param>
+        /// <param name="failReason"></param>
+        void onActivityResponse(ResultStatus status, String action, String payload, String failReason);
         /// <summary>
         /// gets called with the calling requests id to confirm device got the message
         /// </summary>

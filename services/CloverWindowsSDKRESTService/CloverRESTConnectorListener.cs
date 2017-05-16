@@ -140,6 +140,11 @@ namespace CloverWindowsSDKREST
             Send("/ReadCardDataResponse", Serialize(message));
         }
 
+        public void OnCustomActivityResponse(CustomActivityResponse message)
+        {
+            Send("/CustomActivityResponse", Serialize(message));
+        }
+
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
         {
             Send("/PrintManualRefundReceipt", Serialize(printManualRefundReceiptMessage));

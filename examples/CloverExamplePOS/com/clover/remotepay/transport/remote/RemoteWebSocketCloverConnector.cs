@@ -303,6 +303,12 @@ namespace com.clover.remotepay.transport.remote
                         listeners.ForEach(listener => listener.OnPrintRefundPaymentReceipt(prprm));
                         break;
                     }
+                case WebSocketMethod.CustomActivityResponse:
+                    {
+                        CustomActivityResponse car = JsonUtils.deserialize<CustomActivityResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnCustomActivityResponse(car));
+                        break;
+                    }
             }
         }
 
@@ -389,6 +395,16 @@ namespace com.clover.remotepay.transport.remote
             if (websocket != null)
             {
                 ReadCardDataRequestMessage message = new ReadCardDataRequestMessage();
+                message.payload = request;
+                websocket.Send(JsonUtils.serialize(message));
+            }
+        }
+
+        public void StartCustomActivity(CustomActivityRequest request)
+        {
+            if (websocket != null)
+            {
+                CustomActivityRequestMessage message = new CustomActivityRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
             }

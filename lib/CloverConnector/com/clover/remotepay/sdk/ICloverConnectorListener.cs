@@ -163,6 +163,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage);
 
+        ///<summary>
+        /// Called when a custom activity is terminated in a normal flow
+        ///</summary>
+        void OnCustomActivityResponse(CustomActivityResponse response);
     }
 
     /// <summary>
@@ -278,6 +282,11 @@ namespace com.clover.remotepay.sdk
         }
 
         public virtual void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
+        {
+
+        }
+
+        public virtual void OnCustomActivityResponse(CustomActivityResponse response)
         {
 
         }

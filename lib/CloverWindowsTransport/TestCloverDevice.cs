@@ -360,6 +360,11 @@ namespace com.clover.remotepay.transport
             //sendObjectMessage(new OpenCashDrawer(reason));
         }
 
+        public override void doStartCustomActivity(string action, string payload, bool nonBlocking)
+        {
+            //
+        }
+
         public override void doTxStart(PayIntent payIntent, Order order)
         {
             BackgroundWorker bw = new BackgroundWorker();

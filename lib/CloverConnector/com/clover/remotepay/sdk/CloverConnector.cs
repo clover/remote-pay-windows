@@ -1120,6 +1120,19 @@ namespace com.clover.remotepay.sdk
             Device.doRejectPayment(payment, challenge);
         }
 
+        public void StartCustomActivity(CustomActivityRequest request)
+        {
+            if (Device == null || !IsReady)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
+            }
+            if (request.Action == null)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In StartCustomActivity: The Action cannot be null."));
+            }
+            Device.doStartCustomActivity(request.Action, request.Payload, request.NonBlocking);
+        }
+
         private class InnerDeviceObserver : ICloverDeviceObserver
         {
             public RefundPaymentResponse lastPRR;
@@ -1708,6 +1721,15 @@ namespace com.clover.remotepay.sdk
                 // ignore for now...
             }
 
+            public void onActivityResponse(ResultStatus status, String action, String payload, String failReason)
+            {
+                CustomActivityResponse car = new CustomActivityResponse();
+                car.Action = action;
+                car.Payload = payload;
+                car.Success = status == ResultStatus.SUCCESS;
+                car.Reason = failReason;
+                cloverConnector.listeners.ForEach(listener => listener.OnCustomActivityResponse(car));
+            }
 
             public void onPrintCredit(Credit credit)
             {
