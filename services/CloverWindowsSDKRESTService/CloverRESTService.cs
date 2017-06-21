@@ -61,7 +61,7 @@ namespace CloverWindowsSDKREST
         {
             if (args.Length == 0)
             {
-                //Retrieve the arguments from the service ImagePath
+                // Retrieve the arguments from the service ImagePath
                 args = Environment.GetCommandLineArgs();
             }
 

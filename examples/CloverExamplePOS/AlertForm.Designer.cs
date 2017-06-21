@@ -44,9 +44,9 @@ namespace CloverExamplePOS
             this.TitleTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TitleTextBox.ForeColor = System.Drawing.Color.White;
             this.TitleTextBox.Location = new System.Drawing.Point(0, 0);
-            this.TitleTextBox.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.TitleTextBox.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.TitleTextBox.Name = "TitleTextBox";
-            this.TitleTextBox.Size = new System.Drawing.Size(622, 54);
+            this.TitleTextBox.Size = new System.Drawing.Size(415, 35);
             this.TitleTextBox.TabIndex = 4;
             this.TitleTextBox.Text = "label2";
             this.TitleTextBox.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -58,28 +58,29 @@ namespace CloverExamplePOS
             this.panel1.Controls.Add(this.TitleTextBox);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.OkButton);
-            this.panel1.Location = new System.Drawing.Point(118, 98);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panel1.Location = new System.Drawing.Point(79, 63);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 358);
+            this.panel1.Size = new System.Drawing.Size(415, 229);
             this.panel1.TabIndex = 5;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(68, 96);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label1.Location = new System.Drawing.Point(45, 61);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(478, 110);
+            this.label1.Size = new System.Drawing.Size(319, 105);
             this.label1.TabIndex = 0;
             this.label1.Text = "label1";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OkButton
             // 
             this.OkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OkButton.Location = new System.Drawing.Point(417, 265);
-            this.OkButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.OkButton.Location = new System.Drawing.Point(280, 180);
+            this.OkButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(150, 44);
+            this.OkButton.Size = new System.Drawing.Size(100, 28);
             this.OkButton.TabIndex = 2;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
@@ -87,11 +88,11 @@ namespace CloverExamplePOS
             // 
             // AlertForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(856, 600);
+            this.ClientSize = new System.Drawing.Size(571, 384);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "AlertForm";
             this.Text = "AlertForm";
             this.Load += new System.EventHandler(this.AlertForm_Load);

@@ -304,6 +304,42 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/StartCustomActivity$")]
+    public void StartCustomActivity(HttpListenerContext context)
+    {
+        CustomActivityRequest message = ParseRequest<CustomActivityRequest>(context);
+
+        GetServer.CloverConnector.StartCustomActivity(message);
+        this.SendTextResponse(context, "");
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/SendMessageToActivity$")]
+    public void SendMessageToActivity(HttpListenerContext context)
+    {
+        MessageToActivity message = ParseRequest<MessageToActivity>(context);
+
+        GetServer.CloverConnector.SendMessageToActivity(message);
+        this.SendTextResponse(context, "");
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrieveDeviceStatus$")]
+    public void RetrieveDeviceStatus(HttpListenerContext context)
+    {
+        RetrieveDeviceStatusRequest message = ParseRequest<RetrieveDeviceStatusRequest>(context);
+
+        GetServer.CloverConnector.RetrieveDeviceStatus(message);
+        this.SendTextResponse(context, "");
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrievePayment$")]
+    public void RetrievePayment(HttpListenerContext context)
+    {
+        RetrievePaymentRequest message = ParseRequest<RetrievePaymentRequest>(context);
+
+        GetServer.CloverConnector.RetrievePayment(message);
+        this.SendTextResponse(context, "");
+    }
+
     public void AddCloverConnectorListener(ICloverConnectorListener connectorListener)
     {
         GetServer.CloverConnector.AddCloverConnectorListener(connectorListener);

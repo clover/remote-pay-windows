@@ -53,8 +53,7 @@ namespace com.clover.remotepay.transport
 
         Queue<string> messageQueue = new Queue<string>();
 
-        private string hostname { get; set; }
-        private int port { get; set; }
+        private string endpoint { get; set; }
 
         PairingDeviceConfiguration config { get; set; }
 
@@ -63,15 +62,14 @@ namespace com.clover.remotepay.transport
         /// </summary>
         /// <param name="hostname">The hostname or IP of the Clover device to which you are connecting</param>
         /// <param name="port">The port of the Clover device to which you are connecting</param>
-        public WebSocketCloverTransport(string hostname, Int32 port, PairingDeviceConfiguration pairingConfig, String posName, String serialNumber, String pairingAuthToken)
+        public WebSocketCloverTransport(string endpoint, PairingDeviceConfiguration pairingConfig, String posName, String serialNumber, String pairingAuthToken)
         {
-            this.hostname = hostname;
-            this.port = port;
+            this.endpoint = endpoint;
             this.config = pairingConfig;
             this.posName = posName;
             this.serialNumber = serialNumber;
             this.pairingAuthToken = pairingAuthToken;
-            connect(hostname, port);
+            connect(endpoint);
         }
 
         private void websocket_Opened(object sender, EventArgs e)
@@ -181,13 +179,13 @@ namespace com.clover.remotepay.transport
             }
         }
 
-        private void connect(string hostname, int port)
+        private void connect(string endpoint)
         {
             if(!shutdown)
             {
                 ServicePointManager.ServerCertificateValidationCallback = this.WSRemoteServerCertificateValidationCallback;
 
-                websocket = new WebSocket("wss://" + hostname + ":" + port + "/remote_pay");
+                websocket = new WebSocket(endpoint);
                 websocket.Opened += new EventHandler(websocket_Opened);
                 websocket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(websocket_Error);
                 websocket.Closed += new EventHandler(websocket_Closed);
@@ -203,7 +201,7 @@ namespace com.clover.remotepay.transport
             
             if(!shutdown)
             {
-                new Timer((obj) => { connect(hostname, port); }, null, 3000, System.Threading.Timeout.Infinite);
+                new Timer((obj) => { connect(endpoint); }, null, 3000, System.Threading.Timeout.Infinite);
             }
         }
 

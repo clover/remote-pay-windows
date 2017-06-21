@@ -64,8 +64,7 @@ namespace com.clover.remotepay.transport.remote
         private CloverDeviceConfiguration config;
 
         WebSocket websocket;
-        string hostname = "localhost";
-        int port = 8889;
+        string endpoint = "ws://localhost:8889";
 
         public RemoteWebSocketCloverConnector()
         {
@@ -78,13 +77,12 @@ namespace com.clover.remotepay.transport.remote
                 + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
                 + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
             this.config = config;
-            port = ((RemoteWebSocketCloverConfiguration)config).port;
-            hostname = "localhost";// force this for now..
+            endpoint = ((RemoteWebSocketCloverConfiguration)config).endpoint;
         }
         public void InitializeConnection()
         {
             CardEntryMethod = CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT | CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE | CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
-            websocket = new WebSocket("ws://" + hostname + ":" + port + "/");
+            websocket = new WebSocket(endpoint);
             websocket.Opened += new EventHandler(websocket_Opened);
             websocket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(websocket_Error);
             websocket.Closed += new EventHandler(websocket_Closed);
@@ -303,6 +301,36 @@ namespace com.clover.remotepay.transport.remote
                         listeners.ForEach(listener => listener.OnPrintRefundPaymentReceipt(prprm));
                         break;
                     }
+                case WebSocketMethod.CustomActivityResponse:
+                    {
+                        CustomActivityResponse car = JsonUtils.deserialize<CustomActivityResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnCustomActivityResponse(car));
+                        break;
+                    }
+                case WebSocketMethod.MessageFromActivity:
+                    {
+                        MessageFromActivity mta = JsonUtils.deserialize<MessageFromActivity>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnMessageFromActivity(mta));
+                        break;
+                    }
+                case WebSocketMethod.RetrieveDeviceStatusResponse:
+                    {
+                        RetrieveDeviceStatusResponse rdsr = JsonUtils.deserialize<RetrieveDeviceStatusResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnRetrieveDeviceStatusResponse(rdsr));
+                        break;
+                    }
+                case WebSocketMethod.ResetDeviceResponse:
+                    {
+                        ResetDeviceResponse rdr = JsonUtils.deserialize<ResetDeviceResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnResetDeviceResponse(rdr));
+                        break;
+                    }
+                case WebSocketMethod.RetrievePaymentResponse:
+                    {
+                        RetrievePaymentResponse rpr = JsonUtils.deserialize<RetrievePaymentResponse>(payload.ToString());
+                        listeners.ForEach(listener => listener.OnRetrievePaymentResponse(rpr));
+                        break;
+                    }
             }
         }
 
@@ -389,6 +417,16 @@ namespace com.clover.remotepay.transport.remote
             if (websocket != null)
             {
                 ReadCardDataRequestMessage message = new ReadCardDataRequestMessage();
+                message.payload = request;
+                websocket.Send(JsonUtils.serialize(message));
+            }
+        }
+
+        public void StartCustomActivity(CustomActivityRequest request)
+        {
+            if (websocket != null)
+            {
+                CustomActivityRequestMessage message = new CustomActivityRequestMessage();
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
             }
@@ -636,7 +674,8 @@ namespace com.clover.remotepay.transport.remote
         {
             if (websocket != null)
             {
-                websocket.Send(JsonUtils.serialize(new BreakRequestMessage()));
+                //websocket.Send(JsonUtils.serialize(new BreakRequestMessage())); // deprecated
+                websocket.Send(JsonUtils.serialize(new ResetDeviceMessage()));
             }
         }
 
@@ -682,6 +721,36 @@ namespace com.clover.remotepay.transport.remote
                 msg.payload = rp;
                 websocket.Send(JsonUtils.serialize(msg));
 
+            }
+        }
+
+        public void SendMessageToActivity(MessageToActivity mta)
+        {
+            if (websocket != null)
+            {
+                MessageToActivityMessage msg = new MessageToActivityMessage();
+                msg.payload = mta;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public void RetrieveDeviceStatus(RetrieveDeviceStatusRequest rdsr)
+        {
+            if (websocket != null)
+            {
+                RetrieveDeviceStatusMessage msg = new RetrieveDeviceStatusMessage();
+                msg.payload = rdsr;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public void RetrievePayment(RetrievePaymentRequest rpr)
+        {
+            if (websocket != null)
+            {
+               RetrievePaymentRequestMessage msg = new RetrievePaymentRequestMessage();
+                msg.payload = rpr;
+                websocket.Send(JsonUtils.serialize(msg));
             }
         }
 

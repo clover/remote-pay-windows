@@ -14,13 +14,14 @@
 
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.Diagnostics;
 using System.ServiceProcess;
 using System.Text;
 
 
-namespace CloverWindowsSDKREST 
+namespace CloverWindowsSDKREST
 {
-    
+
     [RunInstaller(true)]
     public class CloverRESTServiceInstaller : Installer
     {
@@ -71,6 +72,29 @@ namespace CloverWindowsSDKREST
 
             Context.Parameters["assemblypath"] = path.ToString();
             base.Install(stateSaver);
+            SetRecoveryOptions(CloverRESTService.SERVICE_NAME);
+        }
+
+        static void SetRecoveryOptions(string serviceName)
+        {
+            int exitCode;
+            using (var process = new System.Diagnostics.Process())
+            {
+                var startInfo = process.StartInfo;
+                startInfo.FileName = "sc";
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+                // tell Windows that the service should restart if it fails
+                startInfo.Arguments = string.Format("failure \"{0}\" reset= 0 actions= restart/60000/restart/60000/restart/60000", serviceName);
+
+                process.Start();
+                process.WaitForExit();
+
+                exitCode = process.ExitCode;
+            }
+
+            if (exitCode != 0)
+                throw new System.InvalidOperationException();
         }
     }
 }

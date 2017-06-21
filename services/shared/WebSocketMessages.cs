@@ -40,7 +40,8 @@ namespace com.clover.sdk.remote.websocket
         Auth,
         PreAuth,
         Cancel,
-        Break,
+        Break, // deprectaed, should be ResetDevice
+        ResetDevice,
         CapturePreAuth,
         TipAdjustAuth,
         VoidPayment,
@@ -91,13 +92,22 @@ namespace com.clover.sdk.remote.websocket
         RejectPayment,
         RetrievePendingPayments,
         RetrievePendingPaymentsResponse,
+        StartCustomActivity,
+        CustomActivityResponse,
+        SendMessageToActivity,
+        MessageFromActivity,
+        RetrieveDeviceStatus,
+        RetrieveDeviceStatusResponse,
+        ResetDeviceResponse,
 
         PrintPaymentReceipt,
         PrintPaymentDeclinedReceipt,
         PrintManualRefundReceipt,
         PrintManualRefundDeclinedReceipt,
         PrintPaymentRefundReceipt,
-        PrintPaymentMerchantCopyReceipt
+        PrintPaymentMerchantCopyReceipt,
+        RetrievePaymentRequest,
+        RetrievePaymentResponse
     }
 
     public class WebSocketMessage<T>
@@ -146,6 +156,12 @@ namespace com.clover.sdk.remote.websocket
     public class BreakRequestMessage : WebSocketMessage<object>
     {
         public BreakRequestMessage() : base(WebSocketMethod.Break)
+        {
+        }
+    }
+    public class ResetDeviceMessage : WebSocketMessage<object>
+    {
+        public ResetDeviceMessage() : base(WebSocketMethod.ResetDevice)
         {
         }
     }
@@ -312,12 +328,47 @@ namespace com.clover.sdk.remote.websocket
         }
     }
 
-    public class RetrievePendingPaymentsRequestMessage : WebSocketMessage<object>
+    public class RetrievePendingPaymentsRequestMessage : WebSocketMessage<RetrievePendingPaymentsMessage>
     {
         public RetrievePendingPaymentsRequestMessage() : base(WebSocketMethod.RetrievePendingPayments)
         {
         }
     }
+
+    public class CustomActivityRequestMessage : WebSocketMessage<CustomActivityRequest>
+    {
+        public CustomActivityRequestMessage() : base(WebSocketMethod.StartCustomActivity)
+        {
+        }
+    }
+
+    public class MessageToActivityMessage : WebSocketMessage<MessageToActivity>
+    {
+        public MessageToActivityMessage() : base(WebSocketMethod.SendMessageToActivity)
+        {
+
+        }
+    }
+
+
+    public class RetrieveDeviceStatusMessage : WebSocketMessage<RetrieveDeviceStatusRequest>
+    {
+        public RetrieveDeviceStatusMessage() : base(WebSocketMethod.RetrieveDeviceStatus)
+        {
+
+        }
+    }
+
+    public class RetrievePaymentRequestMessage : WebSocketMessage<RetrievePaymentRequest>
+    {
+        public RetrievePaymentRequestMessage() : base(WebSocketMethod.RetrievePaymentRequest)
+        {
+
+        }
+    }
+
+
+
 
 
     // callback methods
@@ -332,6 +383,13 @@ namespace com.clover.sdk.remote.websocket
     public class OnReadCardDataResponseMessage : WebSocketMessage<ReadCardDataResponse>
     {
         public OnReadCardDataResponseMessage() : base(WebSocketMethod.ReadCardDataResponse)
+        {
+        }
+    }
+
+    public class OnCustomActivityResponseMessage : WebSocketMessage<CustomActivityResponse>
+    {
+        public OnCustomActivityResponseMessage() : base(WebSocketMethod.CustomActivityResponse)
         {
         }
     }
@@ -453,6 +511,13 @@ namespace com.clover.sdk.remote.websocket
         }
     }
 
+    public class CustomActivityResponseMessage : WebSocketMessage<CustomActivityResponseMessage>
+    {
+        public CustomActivityResponseMessage() : base(WebSocketMethod.CustomActivityResponse)
+        {
+        }
+    }
+
     public class OnPrintPaymentReceiptMessage : WebSocketMessage<PrintPaymentReceiptMessage>
     {
         public OnPrintPaymentReceiptMessage() : base(WebSocketMethod.PrintPaymentReceipt)
@@ -489,4 +554,36 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
+
+    public class OnMessageFromActivityMessage : WebSocketMessage<MessageFromActivity>
+    {
+        public OnMessageFromActivityMessage() : base(WebSocketMethod.MessageFromActivity)
+        {
+
+        }
+    }
+
+    public class OnResetDeviceResponseMessage : WebSocketMessage<ResetDeviceResponse>
+    {
+        public OnResetDeviceResponseMessage() : base(WebSocketMethod.ResetDeviceResponse)
+        {
+
+        }
+    }
+
+    public class OnRetrieveDeviceStatusResponseMessage : WebSocketMessage<RetrieveDeviceStatusResponse>
+    {
+        public OnRetrieveDeviceStatusResponseMessage() : base(WebSocketMethod.RetrieveDeviceStatusResponse)
+        {
+
+        }
+    }
+
+    public class OnRetrievePaymentResponseMessage : WebSocketMessage<RetrievePaymentResponse>
+    {
+        public OnRetrievePaymentResponseMessage() : base(WebSocketMethod.RetrievePaymentResponse)
+        {
+        }
+    }
+
 }

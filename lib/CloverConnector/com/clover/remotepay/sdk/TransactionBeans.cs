@@ -171,7 +171,7 @@ namespace com.clover.remotepay.sdk
         /// <summary>
         /// Amount against which a tip should be applied
         /// </summary>
-        public long? TippableAmount { get; set; } 
+        public long? TippableAmount { get; set; }
         /// <summary>
         /// If true then offline payments can be accepted
         /// </summary>
@@ -544,4 +544,105 @@ namespace com.clover.remotepay.sdk
         public Refund Refund { get; set; }
         public Order Order { get; set; }
     }
+
+    /// <summary>
+    /// Request for the Clover device to start a Custom Activity
+    /// </summary>
+    public class CustomActivityRequest : BaseRequest
+    {
+        public String Action { get; set; }
+        public String Payload { get; set; }
+        public Boolean NonBlocking = false;
+    }
+
+    /// <summary>
+    /// Response when a custom activity completes on the
+    /// Clover device when it is completed in a normal flow
+    /// </summary>
+    public class CustomActivityResponse : BaseResponse
+    {
+        public String Action { get; set; }
+        public String Payload { get; set; }
+    }
+
+    /// <summary>
+    /// base class for messages flowing between POS and CustomActivity
+    /// </summary>
+    public class ActivityMessage
+    {
+        public string Action;
+        public string Payload;
+    }
+
+    /// <summary>
+    /// class for sending messages to a CustomActivity from POS
+    /// </summary>
+    public class MessageToActivity : ActivityMessage
+    {
+
+    }
+
+    /// <summary>
+    /// class for sending message from a CustomActivity to POS
+    /// </summary>
+    public class MessageFromActivity : ActivityMessage
+    {
+
+    }
+
+    /// <summary>
+    /// response to RetrieveDeviceStatus call
+    /// </summary>
+    public class RetrieveDeviceStatusResponse : BaseResponse
+    {
+        public ExternalDeviceState State { get; set; }
+        public ExternalDeviceStateData Data { get; set; }
+    }
+
+    /// <summary>
+    /// Depending on the current device status,
+    /// these fields may or may not be populated
+    /// </summary>
+    public class ExternalDeviceStateData
+    {
+        public string ExternalPaymentId { get; set; }
+        public string CustomActivityId { get; set; }
+    }
+
+    /// <summary>
+    /// enum of current states of the Clover device.
+    /// IDLE - device can handle new requests. Sale, CustomActivity, etc.
+    /// BUSY - device will not response to new requests
+    /// WAITING_FOR_POS - device is waiting for a response from the POS
+    /// WAITING_FOR_CUSTOMER - device is waiting for the customer to take some action
+    /// </summary>
+    public enum ExternalDeviceState
+    {
+        UNKNOWN, // a null enum in JSON will evaluate to this, the first enum
+        IDLE,
+        BUSY,
+        WAITING_FOR_POS,
+        WAITING_FOR_CUSTOMER
+    }
+
+    public class ResetDeviceResponse : BaseResponse
+    {
+        public ExternalDeviceState State { get; set; }
+    }
+
+    //public enum QueryStatus
+    //{
+    //    FOUND, NOT_FOUND, IN_PROGRESS
+    //}
+    /// <summary>
+    /// response to RetrievePayment call
+    /// </summary>
+    public class RetrievePaymentResponse : BaseResponse
+    {
+        public string ExternalPaymentId { get; set; }
+        public QueryStatus QueryStatus { get; set; }
+        public Payment Payment { get; set; }
+
+    }
+
 }

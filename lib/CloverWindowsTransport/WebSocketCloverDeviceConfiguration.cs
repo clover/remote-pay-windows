@@ -20,8 +20,7 @@ namespace com.clover.remotepay.transport
 {
     public class WebSocketCloverDeviceConfiguration : PairingDeviceConfiguration, CloverDeviceConfiguration
     {
-        public string hostname;
-        public Int32 port;
+        public string endpoint;
         public string remoteApplicationID;
         public bool enableLogging = false;
         public int pingSleepSeconds = 1;
@@ -30,14 +29,13 @@ namespace com.clover.remotepay.transport
         public string pairingAuthToken;
 
 
-        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, String remoteApplicationID, string posName, string serialNumber, string pairingAuthToken) : this(hostname, port, remoteApplicationID, false, 1, posName, serialNumber, pairingAuthToken, null, null)
+        public WebSocketCloverDeviceConfiguration(string endpoint, String remoteApplicationID, string posName, string serialNumber, string pairingAuthToken) : this(endpoint, remoteApplicationID, false, 1, posName, serialNumber, pairingAuthToken, null, null)
         {
 
         }
-        public WebSocketCloverDeviceConfiguration(string hostname, Int32 port, string remoteApplicationID, bool enableLogging, int pingSleepSeconds, string posName, string serialNumber, string pairingAuthToken, OnPairingCodeHandler pairingCodeHandler, OnPairingSuccessHandler pairingSuccessHandler)
+        public WebSocketCloverDeviceConfiguration(string endpoint, string remoteApplicationID, bool enableLogging, int pingSleepSeconds, string posName, string serialNumber, string pairingAuthToken, OnPairingCodeHandler pairingCodeHandler, OnPairingSuccessHandler pairingSuccessHandler)
         {
-            this.hostname = hostname;
-            this.port = port;
+            this.endpoint = endpoint;
             if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
             {
                 throw new ArgumentException("remoteApplicationID is required");
@@ -59,7 +57,7 @@ namespace com.clover.remotepay.transport
 
         public CloverTransport getCloverTransport()
         {
-            return new WebSocketCloverTransport(this.hostname, this.port, this, posName, serialNumber, pairingAuthToken);
+            return new WebSocketCloverTransport(this.endpoint, this, posName, serialNumber, pairingAuthToken);
         }
 
         public string getMessagePackageName()

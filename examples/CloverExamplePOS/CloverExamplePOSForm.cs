@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+// Copyright (C) 2016 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -159,7 +159,8 @@ namespace CloverExamplePOS
             SaleButton.ContextMenu = new ContextMenu();
             MenuItem menuItem = new MenuItem("Sale with Vaulted Card");
             menuItem.Enabled = false;
-            menuItem.Click += delegate (object sen, EventArgs args) {
+            menuItem.Click += delegate (object sen, EventArgs args)
+            {
                 uiThread.Send(delegate (object state)
                 {
                     VaultedCardListForm vclForm = new VaultedCardListForm(this);
@@ -204,6 +205,15 @@ namespace CloverExamplePOS
 
             AuthButton.Click.Add(AuthButton_Click);
 
+            DeviceStatusBtn.ContextMenu = new ContextMenu();
+            menuItem = new MenuItem("Send Last Message");
+            menuItem.Enabled = true;
+            menuItem.Click += delegate (object sen, EventArgs args)
+            {
+                cloverConnector.RetrieveDeviceStatus(new RetrieveDeviceStatusRequest(true));
+            };
+            DeviceStatusBtn.ContextMenu.MenuItems.Add(menuItem);
+            DeviceStatusBtn.Click.Add(DeviceStatusBtn_Click);
 
             foreach (POSItem item in Store.AvailableItems)
             {
@@ -330,7 +340,8 @@ namespace CloverExamplePOS
                 {
                     request.TipAmount = tipAmount.GetAmount();
                     request.TipMode = com.clover.remotepay.sdk.TipMode.TIP_PROVIDED;
-                } else
+                }
+                else
                 {
                     // SaleResponse validation error?
                 }
@@ -343,7 +354,8 @@ namespace CloverExamplePOS
                     if (!tipModeProvided.Checked)
                     {
                         request.TipMode = getTipMode();
-                    } else
+                    }
+                    else
                     {
                         // SaleResponse validation error?
                     }
@@ -359,7 +371,7 @@ namespace CloverExamplePOS
             {
                 request.SignatureEntryLocation = getSignatureEntryLocation();
             }
-            
+
             request.TaxAmount = Store.CurrentOrder.TaxAmount;
 
             if (DisableCashBack.Checked)
@@ -418,7 +430,8 @@ namespace CloverExamplePOS
             if (tipModeNone.Checked)
             {
                 return com.clover.remotepay.sdk.TipMode.NO_TIP;
-            } else
+            }
+            else
             {
                 if (tipModeOnScreen.Checked)
                 {
@@ -430,7 +443,8 @@ namespace CloverExamplePOS
                     {
                         return com.clover.remotepay.sdk.TipMode.TIP_PROVIDED;
                     }
-                    else {
+                    else
+                    {
                         return null;
                     }
                 }
@@ -455,7 +469,8 @@ namespace CloverExamplePOS
                     {
                         return DataEntryLocation.ON_SCREEN;
                     }
-                    else {
+                    else
+                    {
                         return null;
                     }
                 }
@@ -717,7 +732,8 @@ namespace CloverExamplePOS
 
                 if (Result.AUTH.Equals(response.Payment.result))
                 {
-                    uiThread.Send(delegate (object state) {
+                    uiThread.Send(delegate (object state)
+                    {
                         AlertForm.Show(this, "Card Authorized", "Payment was Pre-Authorized");
                         POSPayment preAuth = new POSPayment(response.Payment.id, response.Payment.externalPaymentId, response.Payment.order.id, null, response.Payment.amount);
                         Store.AddPreAuth(preAuth);
@@ -745,7 +761,8 @@ namespace CloverExamplePOS
 
         public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 pendingPaymentListView.Items.Clear();
                 Console.WriteLine(response.PendingPayments.Count);
                 foreach (PendingPaymentEntry ppe in response.PendingPayments)
@@ -763,44 +780,82 @@ namespace CloverExamplePOS
             }, null);
         }
 
+        public virtual void OnCustomActivityResponse(CustomActivityResponse response)
+        {
+            uiThread.Send(delegate (object state)
+            {
+                AlertForm.Show(this, "Custom Activity Response" + (response.Success ? "" : ": Canceled"), response.Payload);
+            }, null);
+        }
+
+        public virtual void OnMessageFromActivity(MessageFromActivity message)
+        {
+            uiThread.Send(delegate (object state)
+            {
+                AlertForm.Show(this, "Message from Activity: " + message.Action, message.Payload);
+            }, null);
+        }
+
+        public virtual void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
+        {
+            uiThread.Send(delegate (object state)
+            {
+                AlertForm.Show(this, "OnRetrieveDeviceStatusResponse: ", response.State + ":" + JsonUtils.serialize(response.Data));
+            }, null);
+        }
+
+        public virtual void OnResetDeviceResponse(ResetDeviceResponse response)
+        {
+            uiThread.Send(delegate (object state)
+            {
+                AlertForm.Show(this, "OnResetDeviceResponse", response.State.ToString());
+            }, null);
+        }
+
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, "Print ManualRefund Receipt", (printManualRefundReceiptMessage.Credit.amount / 100.0).ToString("C2"));
             }, null);
         }
 
         public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, "Print ManualRefund Declined Receipt", printManualRefundDeclineReceiptMessage.Reason);
             }, null);
         }
 
         public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, "Print Payment Receipt", (printPaymentReceiptMessage.Payment.amount / 100.0).ToString("C2"));
             }, null);
         }
 
         public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, "Print Payment Declined Receipt", printPaymentDeclineReceiptMessage.Reason);
             }, null);
         }
 
         public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, "Print Merchant Payment Copy Receipt", (printPaymentMerchantCopyReceiptMessage.Payment.amount / 100.0).ToString("C2"));
             }, null);
         }
 
         public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, "Print Refund Payment Receipt", (printRefundPaymentReceiptMessage.Refund.amount / 100.0).ToString("C2"));
             }, null);
         }
@@ -835,7 +890,17 @@ namespace CloverExamplePOS
                 CapturePreAuthRequest captureAuthRequest = new CapturePreAuthRequest();
                 captureAuthRequest.PaymentID = payment.PaymentID;
                 captureAuthRequest.Amount = Store.CurrentOrder.Total;
-                captureAuthRequest.TipAmount = 0;
+                if (tipAmount.TextLength > 0)
+                {
+                    if (tipModeProvided.Checked)
+                    {
+                        long? tip = tipAmount.GetAmount();
+                        captureAuthRequest.TipAmount = tip.HasValue ? tip.Value : 0;
+                    }
+                }
+                else {
+                    captureAuthRequest.TipAmount = 0;
+                }
                 cloverConnector.CapturePreAuth(captureAuthRequest);
             }
         }
@@ -901,7 +966,8 @@ namespace CloverExamplePOS
                 {
                     if (preAuth.PaymentID.Equals(response.PaymentId))
                     {
-                        uiThread.Send(delegate (object state) {
+                        uiThread.Send(delegate (object state)
+                        {
                             Store.CurrentOrder.Status = POSOrder.OrderStatus.AUTHORIZED;
                             preAuth.PaymentStatus = POSPayment.Status.AUTHORIZED;
                             preAuth.Amount = response.Amount;
@@ -918,7 +984,8 @@ namespace CloverExamplePOS
             }
             else
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     AlertForm.Show(this, response.Reason, response.Message);
                 }, null);
 
@@ -934,7 +1001,8 @@ namespace CloverExamplePOS
             }
             else
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     AlertForm.Show(this, response.Reason, response.Message);
                 }, null);
             }
@@ -955,14 +1023,16 @@ namespace CloverExamplePOS
         {
             if (response != null && response.Success)
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     AlertForm.Show(this, "Batch Closed", "Batch " + response.Batch.id + " was successfully processed.");
                 }, null);
 
             }
             if (response != null && response.Result.Equals(ResponseCode.FAIL))
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     AlertForm.Show(this, "Close Attempt Failed", "Reason: " + response.Reason + ".");
                 }, null);
 
@@ -1025,7 +1095,8 @@ namespace CloverExamplePOS
                     break;
                 }
             }
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 VoidButton.Enabled = false;
                 RefundPaymentButton.Enabled = false;
             }, null);
@@ -1056,7 +1127,8 @@ namespace CloverExamplePOS
 
             if (response.Success)
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     ListViewItem lvi = new ListViewItem();
                     POSManualRefund manualRefund = new POSManualRefund(response.Credit.id, response.Credit.orderRef.id, response.Credit.amount);
                     lvi.Tag = manualRefund;
@@ -1083,14 +1155,16 @@ namespace CloverExamplePOS
             }
             else if (response.Result.Equals(ResponseCode.FAIL))
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
             }
             else if (response.Result.Equals(ResponseCode.CANCEL))
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     AlertForm.Show(this, response.Reason, response.Message);
                     PaymentReset();
                 }, null);
@@ -1138,7 +1212,8 @@ namespace CloverExamplePOS
                 string employeeID = null;
                 if (paymentID != null)
                 {
-                    uiThread.Send(delegate (object state) {
+                    uiThread.Send(delegate (object state)
+                    {
 
                         object orderObj = null;
 
@@ -1170,7 +1245,8 @@ namespace CloverExamplePOS
             }
             else if (response.Result.Equals(ResponseCode.FAIL))
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     AlertForm.Show(this, "Error", response.Message);
                     PaymentReset();
                 }, null);
@@ -1187,17 +1263,19 @@ namespace CloverExamplePOS
 
         public void OnDeviceConnected()
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 ConnectStatusLabel.Text = "Connecting...";
             }, null);
         }
 
         public void OnDeviceReady(MerchantInfo merchantInfo)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 ConnectStatusLabel.Text = "Ready! " + merchantInfo.merchantName + "(" + merchantInfo.Device.Serial + ")";
                 Connected = true;
-                if (DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
+                if (DisplayOrder != null && DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
                 {
                     UpdateDisplayOrderTotals();
                 }
@@ -1209,7 +1287,8 @@ namespace CloverExamplePOS
         {
             try
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     ConnectStatusLabel.Text = "Disconnected";
                     Connected = false;
                     //PaymentReset();
@@ -1228,14 +1307,16 @@ namespace CloverExamplePOS
         ////////////////// CloverDeviceListener Methods //////////////////////
         public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
         {
-            uiThread.Send(delegate (object state) {
-                this.TabControl.Enabled = false;
+            uiThread.Send(delegate (object state)
+            {
+                //this.TabControl.Enabled = false; // should do this, but allows negative testing
                 if (TabControl.SelectedIndex == 0)
                 {
                     newOrderBtn.Enabled = false;
                     SaleButton.Enabled = false;
                     AuthButton.Enabled = false;
                 }
+
                 UIStateButtonPanel.Controls.Clear();
                 if (deviceEvent.InputOptions != null)
                 {
@@ -1259,7 +1340,8 @@ namespace CloverExamplePOS
         {
             try
             {
-                uiThread.Send(delegate (object state) {
+                uiThread.Send(delegate (object state)
+                {
                     this.TabControl.Enabled = true;
                     UIStateButtonPanel.Controls.Clear();
                     DeviceCurrentStatus.Text = " ";
@@ -1273,7 +1355,8 @@ namespace CloverExamplePOS
 
         public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, "Device Error", deviceErrorEvent.Message);
             }, null);
         }
@@ -1333,7 +1416,8 @@ namespace CloverExamplePOS
 
         public void OnDeviceError(Exception e)
         {
-            uiThread.Send(delegate (object state) {
+            uiThread.Send(delegate (object state)
+            {
                 AlertForm.Show(this, e.GetType().ToString(), e.Message);
             }, null);
 
@@ -1487,10 +1571,11 @@ namespace CloverExamplePOS
                     t.Tick += new EventHandler(timerShowWelcomeScreen);
                     t.Start();
                 }
-                else {
+                else
+                {
                     cloverConnector.ShowWelcomeScreen(); //This will make sure that the customer sees a
                 }                                        //Welcome screen anytime a new order is initiated.
-            }                                     
+            }
         }
         private void timerShowWelcomeScreen(object sender, EventArgs e)
         {
@@ -1735,7 +1820,7 @@ namespace CloverExamplePOS
             StoreItems.Enabled = true;
             TabControl.Enabled = true;
 
-            if (DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
+            if (DisplayOrder != null && DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
             {
                 cloverConnector.ShowDisplayOrder(DisplayOrder);
             }
@@ -2146,7 +2231,8 @@ namespace CloverExamplePOS
                     {
                         screenResponseMsg = "Card token was not populated by the payment gateway.  This card cannot be saved.";
                     }
-                    else {
+                    else
+                    {
                         screenResponseMsg = "Card was not successfully saved";
                     }
                     AlertForm.Show(this, screenResponseMsg, vcResponse.Reason);
@@ -2157,8 +2243,8 @@ namespace CloverExamplePOS
         public void OnReadCardDataResponse(ReadCardDataResponse rcdResponse)
         {
             String screenResponseMsg = "";
-            if (rcdResponse.Success && rcdResponse.CardData != null && 
-                (rcdResponse.CardData.Track1 != null || 
+            if (rcdResponse.Success && rcdResponse.CardData != null &&
+                (rcdResponse.CardData.Track1 != null ||
                  rcdResponse.CardData.Track2 != null ||
                  rcdResponse.CardData.Pan != null))
             {
@@ -2191,7 +2277,8 @@ namespace CloverExamplePOS
                     {
                         screenResponseMsg = "Card track and pan information was blank.";
                     }
-                    else {
+                    else
+                    {
                         screenResponseMsg = "Card was not successfully read";
                     }
                     AlertForm.Show(this, rcdResponse.Reason, screenResponseMsg);
@@ -2317,13 +2404,97 @@ namespace CloverExamplePOS
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
- 
+
         }
         protected override Point ScrollToControl(Control activeControl)
         {
             return this.AutoScrollPosition;
         }
 
+        private void startCustomActivity_Click(object sender, EventArgs e)
+        {
+            CustomActivityRequest car = new CustomActivityRequest();
+            ComboboxItem item = customActivityAction.Items[customActivityAction.SelectedIndex] as ComboboxItem;
+            car.Action = item.Value;
+            car.Payload = customActivityPayload.Text;
+            car.NonBlocking = nonBlockingCB.Checked;
+            cloverConnector.StartCustomActivity(car);
+        }
+
+        private void SendMessageBtn_Click(object sender, EventArgs e)
+        {
+            MessageToActivity mta = new MessageToActivity();
+            ComboboxItem item = customActivityAction.Items[customActivityAction.SelectedIndex] as ComboboxItem;
+            mta.Action = item.Value;
+            mta.Payload = customActivityPayload.Text;
+            cloverConnector.SendMessageToActivity(mta);
+        }
+
+        private void DeviceStatusBtn_Click(object sender, EventArgs e)
+        {
+            cloverConnector.RetrieveDeviceStatus(new RetrieveDeviceStatusRequest());
+        }
+
+        private void RetrievePayment_Click(object sender, EventArgs e)
+        {
+            RetrievePaymentRequest request = new RetrievePaymentRequest();
+            request.externalPaymentId = RetrievePaymentText.Text;
+            cloverConnector.RetrievePayment(request);
+        }
+
+        private void label15_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public void OnRetrievePaymentResponse(RetrievePaymentResponse response)
+        {
+            if (response.Success)
+            {
+                uiThread.Send(delegate (object state)
+                {
+                    String details = "No matching payment";
+                    Payment payment = response.Payment;
+                    if (payment != null)
+                    {
+                        details = "Created:" + dateFormat(payment.createdTime) + "\nResult: " + payment.result
+                       + "\nPaymentId: " + payment.id + "\nOrderId: " + payment.order.id
+                        + "\nAmount: " + currencyFormat(payment.amount) + " Tip: " + currencyFormat(payment.tipAmount) + " Tax: " + currencyFormat(payment.taxAmount);
+                    }
+                    AlertForm.Show(this, response.QueryStatus.ToString(), details);
+                }, null);
+            }
+            else if (response.Result.Equals(ResponseCode.FAIL))
+            {
+                uiThread.Send(delegate (object state)
+                {
+                    AlertForm.Show(this, response.Reason, response.Message);
+                }, null);
+            }
+            else if (response.Result.Equals(ResponseCode.CANCEL))
+            {
+                uiThread.Send(delegate (object state)
+                {
+                    AlertForm.Show(this, response.Reason, response.Message);
+                }, null);
+            }
+        }
+        public static string currencyFormat(long? value)
+        {
+            double amount = (double)value / 100;
+            return string.Format("{0:C}", amount);
+        }
+
+        public static string dateFormat(double datetime)
+        {
+            var date = (new DateTime(1970, 1, 1)).AddMilliseconds(datetime).ToLocalTime();
+            return date.ToString("g", CultureInfo.CreateSpecificCulture("en-us"));
+        }
+
+        private void disableReceiptOptionsCB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     /* This class is used to keep the autoscroll from going crazy when selecting controls on the
@@ -2375,7 +2546,7 @@ namespace CloverExamplePOS
         private bool KeyEnteredIsValid(string key)
         {
             Regex regex;
-            regex = new Regex(@"^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$"); 
+            regex = new Regex(@"^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$");
             return regex.IsMatch(key);
         }
         protected override void OnKeyPress(KeyPressEventArgs e)
@@ -2396,6 +2567,73 @@ namespace CloverExamplePOS
                 return ul;
             }
             return null;
+        }
+    }
+
+    public class DropDownButton : Button
+    {
+        public new List<EventHandler> Click { get; set; }
+
+        public DropDownButton()
+        {
+            Click = new List<EventHandler>();
+            init();
+        }
+
+        private void init()
+        {
+            Padding = new Padding(Padding.Left, Padding.Top, Padding.Right + 15, Padding.Bottom);
+            base.Click += Clicked;
+        }
+
+
+
+        private void Clicked(object sender, EventArgs e)
+        {
+            if (e is MouseEventArgs)
+            {
+                if (((MouseEventArgs)e).X < this.Size.Width - 15)
+                {
+                    foreach (EventHandler ch in Click)
+                    {
+                        if (ch != null)
+                        {
+                            ch(sender, e);
+                        }
+                    }
+                }
+                else
+                {
+                    //ContextMenu.Show(this, new Point(this.Location.X-this.Size.Width, this.Location.Y+this.Size.Height));
+                    ContextMenu.Show(this, new Point(0, this.Size.Height - Margin.Bottom));
+                }
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs pevent)
+        {
+            base.OnPaint(pevent);
+
+            pevent.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            // draw box
+
+            Pen borderPen = new Pen(Color.FromArgb(16, 0, 0, 0)); // TODO: needs to be text color
+            int ddAreaX = this.Size.Width - 15;
+            int ddAreaHeight = this.Size.Height - Padding.Top - Padding.Bottom - 4; // 3 px space on top and bottom
+            pevent.Graphics.DrawLine(borderPen, new Point(ddAreaX, 3), new Point(ddAreaX, ddAreaHeight));
+
+            // draw triangle
+            int triangleCenterX = ddAreaX + 7;
+            int triangleCenterY = this.Size.Height / 2;
+
+            Point[] triangle = new Point[4];
+            triangle[0] = new Point(triangleCenterX - 3, triangleCenterY - 2);
+            triangle[1] = new Point(triangleCenterX + 3, triangleCenterY - 2);
+            triangle[2] = new Point(triangleCenterX, triangleCenterY + 2);
+            triangle[3] = triangle[0];
+            Brush brush = new SolidBrush(Color.FromArgb(255, 0, 0, 0)); // TODO: needs to be text color
+            pevent.Graphics.FillPolygon(brush, triangle);
         }
     }
 }

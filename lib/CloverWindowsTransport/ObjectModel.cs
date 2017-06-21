@@ -75,6 +75,14 @@ namespace com.clover.remotepay.transport
         CANCEL
     }
 
+    public enum QueryStatus
+    {
+        UNKNOWN,
+        FOUND,
+        NOT_FOUND,
+        IN_PROGRESS
+    }
+
     public enum KeyPress
     {
         NONE = (byte)0x00,
@@ -228,8 +236,8 @@ namespace com.clover.remotepay.transport
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public String Exp { get; set; }
-        public String Last6 { get; set; }
-        public String First4 { get; set; }
+        public String Last4 { get; set; }
+        public String First6 { get; set; }
 
     }
 }

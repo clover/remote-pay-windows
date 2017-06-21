@@ -61,6 +61,7 @@ namespace CloverWindowsSDKWebSocketService
 
         protected override void OnStart(string[] args)
         {
+
             base.OnStart(args);
             string logSource = "_TransportEventLog";
             if (!EventLog.SourceExists(logSource))
@@ -70,9 +71,10 @@ namespace CloverWindowsSDKWebSocketService
 
             // Add the event log trace listener to the collection.
             Trace.Listeners.Add(myTraceListener);
+
             if (args.Length == 0)
             {
-                //Retrieve the arguments from the service ImagePath
+                // Retrieve the arguments from the service ImagePath
                 args = Environment.GetCommandLineArgs();
             }
 
@@ -193,7 +195,8 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.Cancel();
                                     break;
                                 }
-                            case WebSocketMethod.Break:
+                            case WebSocketMethod.Break: // deprecated. use ResetDevice
+                            case WebSocketMethod.ResetDevice:
                                 {
                                     cloverConnector.ResetDevice();
                                     break;
@@ -340,6 +343,30 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.RetrievePendingPayments();
                                     break;
                                 }
+                            case WebSocketMethod.StartCustomActivity:
+                                {
+                                    CustomActivityRequest request = JsonUtils.deserialize<CustomActivityRequest>(payload.ToString());
+                                    cloverConnector.StartCustomActivity(request);
+                                    break;
+                                }
+                            case WebSocketMethod.RetrieveDeviceStatus:
+                                {
+                                    RetrieveDeviceStatusRequest request = JsonUtils.deserialize<RetrieveDeviceStatusRequest>(payload.ToString());
+                                    cloverConnector.RetrieveDeviceStatus(request);
+                                    break;
+                                }
+                            case WebSocketMethod.SendMessageToActivity:
+                                {
+                                    MessageToActivity mta = JsonUtils.deserialize<MessageToActivity>(payload.ToString());
+                                    cloverConnector.SendMessageToActivity(mta);
+                                    break;
+                                }
+                            case WebSocketMethod.RetrievePaymentRequest:
+                                {
+                                    RetrievePaymentRequest rpr = JsonUtils.deserialize<RetrievePaymentRequest>(payload.ToString());
+                                    cloverConnector.RetrievePayment(rpr);
+                                    break;
+                                }
                             default:
                                 {
                                     Console.WriteLine("received unknown websocket method: " + method.ToString() + " in CloverWebSocketService.");
@@ -370,7 +397,7 @@ namespace CloverWindowsSDKWebSocketService
             string port;
 
             bool testConfig = false;
-            string lanConfig = null;
+            //string lanConfig = null;
             string testConfigString;
 
             if (!parameters.TryGetValue("/P", out port))
@@ -394,7 +421,7 @@ namespace CloverWindowsSDKWebSocketService
             {
                 testConfig = true; //
             }
-            parameters.TryGetValue("/L", out lanConfig);
+            //parameters.TryGetValue("/L", out lanConfig);
 
 
             server = new WebSocketServer(protocol + "://127.0.0.1:" + port);
