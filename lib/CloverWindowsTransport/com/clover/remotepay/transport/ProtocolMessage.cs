@@ -554,6 +554,32 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class ActivityRequest : Message
+    {
+        public ActivityRequest() : base(Methods.ACTIVITY_REQUEST)
+        {
+
+        }
+
+        public String action { get; set; }
+        public String payload { get; set; }
+        public bool nonBlocking { get; set; }
+        public bool forceLaunch { get; set; }
+    }
+
+    public class ActivityResponseMessage : Message
+    {
+        public ActivityResponseMessage() : base(Methods.ACTIVITY_RESPONSE)
+        {
+
+        }
+        public int resultCode { get; set; }
+        public String failReason { get; set; }
+        public String payload { get; set; }
+        public String action { get; set; }
+    }
+
+
     public class KeyPressMessage : Message
     {
         public KeyPress keyPress { get; set; }
@@ -660,6 +686,128 @@ namespace com.clover.remotepay.transport
         public List<PendingPaymentEntry> pendingPaymentEntries { get; set; }
 
         public RetrievePendingPaymentsResponseMessage() : base(Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE)
+        {
+
+        }
+    }
+
+    public class ActivityMessageToActivity : Message
+    {
+        public string action { get; set; }
+        public string payload { get; set; }
+
+        public ActivityMessageToActivity(string a, string p) : base(Methods.ACTIVITY_MESSAGE_TO_ACTIVITY)
+        {
+            this.action = a;
+            this.payload = p;
+        }
+    }
+
+    public class ActivityMessageFromActivity : Message
+    {
+        public string action { get; set; }
+        public string payload { get; set; }
+
+        public ActivityMessageFromActivity(string a, string p) : base(Methods.ACTIVITY_MESSAGE_FROM_ACTIVITY)
+        {
+            this.action = a;
+            this.payload = p;
+        }
+    }
+
+    public enum ExternalDeviceState
+    {
+        UNKNOWN,
+        IDLE,
+        BUSY,
+        WAITING_FOR_POS,
+        WAITING_FOR_CUSTOMER
+    }
+    public enum ExternalDeviceSubState
+    {
+        UNKNOWN,
+        CUSTOM_ACTIVITY,
+        STARTING_PAYMENT_FLOW,
+        PROCESSING_PAYMENT,
+        PROCESSING_CARD_DATA,
+        PROCESSING_CREDIT,
+        VERIFY_SIGNATURE,
+        TIP_SCREEN,
+        RECEIPT_SCREEN,
+        CONFIRM_PAYMENT
+    }
+    public class ExternalDeviceStateData
+    {
+        public string externalPaymentId { get; set; }
+        public string customActivityId { get; set; }
+    }
+
+    /// <summary>
+    /// request for current status of the Clover device
+    /// </summary>
+    public class RetrieveDeviceStatusRequest
+    {
+        public Boolean sendLastMessage { get; set; }
+
+        public RetrieveDeviceStatusRequest()
+        {
+            this.sendLastMessage = false;
+        }
+        public RetrieveDeviceStatusRequest(bool sendLastMessage)
+        {
+            this.sendLastMessage = sendLastMessage;
+        }
+    }
+
+    /// <summary>
+    /// request to retrieve a payment associated with the provided externalPaymentId
+    /// </summary>
+    public class RetrievePaymentRequest
+    {
+        public String externalPaymentId { get; set; }
+
+        public RetrievePaymentRequest()
+        {
+
+        }
+        public RetrievePaymentRequest(String externalPaymentId)
+        {
+            this.externalPaymentId = externalPaymentId;
+        }
+    }
+
+
+    public class RetrieveDeviceStatusRequestMessage : Message
+    {
+        public RetrieveDeviceStatusRequest request { get; set; }
+
+        public RetrieveDeviceStatusRequestMessage() : base(Methods.RETRIEVE_DEVICE_STATUS_REQUEST)
+        {
+
+        }
+    }
+
+    public class RetrieveDeviceStatusResponseMessage : Message
+    {
+        public ResultStatus result { get; set; }
+        public string reason { get; set; }
+        public ExternalDeviceState state { get; set; }
+        public ExternalDeviceSubState substate { get; set; }
+        public ExternalDeviceStateData data { get; set; }
+
+        public RetrieveDeviceStatusResponseMessage() : base(Methods.RETRIEVE_DEVICE_STATUS_RESPONSE)
+        {
+
+        }
+    }
+
+    public class ResetDeviceResponseMessage : Message
+    {
+        public ResultStatus result { get; set; }
+        public string reason { get; set; }
+        public ExternalDeviceState state { get; set; }
+
+        public ResetDeviceResponseMessage() : base(Methods.RESET_DEVICE_RESPONSE)
         {
 
         }
@@ -784,6 +932,44 @@ namespace com.clover.remotepay.transport
         public String pairingState { get; set; }
         public String applicationName { get; set; }
         public long millis;
+    }
+
+    /// <summary>
+    /// Request to retrieve a payment made to a specific device.
+    /// </summary>
+    /// 
+    public class PaymentRequestMessage : Message
+    {
+        public String externalPaymentId { get; set; }
+        public PaymentRequestMessage() : base(Methods.RETRIEVE_PAYMENT_REQUEST)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// Response from a RetrievePaymentRequest.
+    /// </summary>
+    public class RetrievePaymentResponseMessage : Message
+    {
+        public ResultStatus status { get; set; }
+        public string reason { get; set; }
+        /// <summary>
+        /// The status of the query
+        /// </summary>
+        public QueryStatus queryStatus { get; set; }
+        /// <summary>
+        /// Payment information
+        /// </summary>
+        public com.clover.sdk.v3.payments.Payment payment { get; set; }
+        /// <summary>
+        /// The externalPaymentId used when a payment was created
+        /// </summary>
+        public String externalPaymentId { get; set; }
+        public RetrievePaymentResponseMessage() : base(Methods.RETRIEVE_PAYMENT_RESPONSE)
+        {
+
+        }
     }
 
     /// <summary>

@@ -44,6 +44,17 @@ namespace com.clover.remotepay.transport
 
         }
 
+        public override void doSendMessageToActivity(string action, string payload)
+        {
+            
+        }
+
+        public override void doRetrieveDeviceStatus(bool sendLastMessage)
+        {
+            throw new NotImplementedException();
+            // TODO: return DeviceStatus callback
+        }
+
         public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund)
         {
             notifyObserversUiState(new UiStateMessage(UiState.RECEIPT_OPTIONS, "Customer is selecting receipt type.", UiDirection.ENTER, new InputOption[0]));
@@ -360,6 +371,11 @@ namespace com.clover.remotepay.transport
             //sendObjectMessage(new OpenCashDrawer(reason));
         }
 
+        public override void doStartCustomActivity(string action, string payload, bool nonBlocking)
+        {
+            //
+        }
+
         public override void doTxStart(PayIntent payIntent, Order order)
         {
             BackgroundWorker bw = new BackgroundWorker();
@@ -594,6 +610,11 @@ namespace com.clover.remotepay.transport
         }
 
         public override void doRejectPayment(Payment payment, Challenge challenge)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public override void doRetrievePayment(string externalPaymentId)
         {
             //throw new NotImplementedException();
         }

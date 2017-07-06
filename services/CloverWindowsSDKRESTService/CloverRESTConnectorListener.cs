@@ -140,6 +140,11 @@ namespace CloverWindowsSDKREST
             Send("/ReadCardDataResponse", Serialize(message));
         }
 
+        public void OnCustomActivityResponse(CustomActivityResponse message)
+        {
+            Send("/CustomActivityResponse", Serialize(message));
+        }
+
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
         {
             Send("/PrintManualRefundReceipt", Serialize(printManualRefundReceiptMessage));
@@ -168,6 +173,26 @@ namespace CloverWindowsSDKREST
         public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
         {
             Send("/PrintRefundPaymentReceipt", Serialize(printRefundPaymentReceiptMessage));
+        }
+
+        public virtual void OnMessageFromActivity(MessageFromActivity message)
+        {
+            Send("/MessageFromActivity", Serialize(message));
+        }
+
+        public virtual void OnResetDeviceResponse(ResetDeviceResponse response)
+        {
+            Send("/ResetDeviceResponse", Serialize(response));
+        }
+
+        public virtual void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
+        {
+            Send("/RetrieveDeviceStatusResponse", Serialize(response));
+        }
+
+        public void OnRetrievePaymentResponse(RetrievePaymentResponse response)
+        {
+            Send("/RetrievePaymentResponse", Serialize(response));
         }
 
         public void ResendStatus()

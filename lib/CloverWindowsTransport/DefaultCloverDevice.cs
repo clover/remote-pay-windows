@@ -188,6 +188,22 @@ namespace com.clover.remotepay.transport
                     RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.deserializeSDK<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
                     notifyObserversPendingPaymentsResponse(rpprMsg);
                     break;
+                case Methods.ACTIVITY_RESPONSE:
+                    ActivityResponseMessage arm = JsonUtils.deserializeSDK<ActivityResponseMessage>(rMessage.payload);
+                    notifyObserversActivityResponse(arm);
+                    break;
+                case Methods.ACTIVITY_MESSAGE_FROM_ACTIVITY:
+                    ActivityMessageFromActivity amfa = JsonUtils.deserializeSDK<ActivityMessageFromActivity>(rMessage.payload);
+                    notifyObserversActivityMessage(amfa);
+                    break;
+                case Methods.RESET_DEVICE_RESPONSE:
+                    ResetDeviceResponseMessage rdrm = JsonUtils.deserializeSDK<ResetDeviceResponseMessage>(rMessage.payload);
+                    notifyObserversDeviceReset(rdrm);
+                    break;
+                case Methods.RETRIEVE_DEVICE_STATUS_RESPONSE:
+                    RetrieveDeviceStatusResponseMessage rdsrm = JsonUtils.deserializeSDK<RetrieveDeviceStatusResponseMessage>(rMessage.payload);
+                    notifyObserversRetrieveDeviceStatusResponse(rdsrm);
+                    break;
                 case Methods.DISCOVERY_REQUEST:
                     //Outbound no-op
                     break;
@@ -226,6 +242,10 @@ namespace com.clover.remotepay.transport
                 case Methods.REFUND_PRINT_PAYMENT:
                     RefundPaymentPrintMessage rppm = JsonUtils.deserializeSDK<RefundPaymentPrintMessage>(rMessage.payload);
                     notifyObserversPrintRefund(rppm);
+                    break;
+                case Methods.RETRIEVE_PAYMENT_RESPONSE:
+                    RetrievePaymentResponseMessage rprm = JsonUtils.deserializeSDK<RetrievePaymentResponseMessage>(rMessage.payload);
+                    notifyObserversRetrievePaymentResponse(rprm);
                     break;
                 case Methods.PRINT_IMAGE:
                     //Outbound no-op
@@ -372,6 +392,18 @@ namespace com.clover.remotepay.transport
                 foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
                     observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
+                }
+            });
+            bw.RunWorkerAsync();
+        }
+        public void notifyObserversActivityResponse(ActivityResponseMessage arm)
+        {
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
+                ResultStatus status = arm.resultCode == -1 ? ResultStatus.SUCCESS : ResultStatus.CANCEL;
+                foreach (ICloverDeviceObserver observer in deviceObservers)
+                {
+                    observer.onActivityResponse(status, arm.action, arm.payload, arm.failReason);
                 }
             });
             bw.RunWorkerAsync();
@@ -620,6 +652,40 @@ namespace com.clover.remotepay.transport
             }
         }
 
+
+        public void notifyObserversActivityMessage(ActivityMessageFromActivity amfa)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onMessageFromActivity(amfa.action, amfa.payload);
+            }
+        }
+
+        public void notifyObserversDeviceReset(ResetDeviceResponseMessage rdrm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onResetDeviceResponse(ResultStatus.SUCCESS, rdrm.reason, rdrm.state);
+            }
+        }
+
+        public void notifyObserversRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponseMessage rdsrm)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onDeviceStatusResponse(ResultStatus.SUCCESS, rdsrm.reason, rdsrm.state, rdsrm.data);
+            }
+        }
+
+        public void notifyObserversRetrievePaymentResponse(RetrievePaymentResponseMessage rpr)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onRetrievePaymentResponse(ResultStatus.SUCCESS, rpr.reason, rpr.externalPaymentId, rpr.queryStatus, rpr.payment);
+            }
+        }
+
+
         public override void doShowPaymentReceiptScreen(string orderId, string paymentId)
         {
             sendObjectMessage(new PaymentReceiptMessage(orderId, paymentId));
@@ -807,6 +873,37 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(message);
         }
 
+        public override void doStartCustomActivity(string action, string payload, bool nonBlocking)
+        {
+            ActivityRequest ar = new ActivityRequest();
+            ar.action = action;
+            ar.payload = payload;
+            ar.nonBlocking = nonBlocking;
+            ar.forceLaunch = false;
+            sendObjectMessage(ar);
+        }
+
+        public override void doSendMessageToActivity(string action, string payload)
+        {
+            ActivityMessageToActivity amta = new ActivityMessageToActivity(action, payload);
+            sendObjectMessage(amta);
+        }
+
+        public override void doRetrieveDeviceStatus(bool sendLastMessage)
+        {
+            RetrieveDeviceStatusRequestMessage rdsrm = new RetrieveDeviceStatusRequestMessage();
+            rdsrm.request = new RetrieveDeviceStatusRequest();
+            rdsrm.request.sendLastMessage = sendLastMessage;
+            sendObjectMessage(rdsrm);
+        }
+
+        public override void doRetrievePayment(string externalPaymentId)
+        {
+          PaymentRequestMessage rprm = new PaymentRequestMessage();
+            rprm.externalPaymentId = externalPaymentId;
+            sendObjectMessage(rprm);
+        }
+
         private string sendObjectMessage(Message message)
         {
             RemoteMessage remoteMessage = RemoteMessage.createMessage(
@@ -819,5 +916,7 @@ namespace com.clover.remotepay.transport
 #endif
             return remoteMessage.id;
         }
+
+
     }
 }

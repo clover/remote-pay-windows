@@ -181,6 +181,33 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(cardDataResponseMessage));
         }
 
+        public void OnCustomActivityResponse(CustomActivityResponse response)
+        {
+            OnCustomActivityResponseMessage carMessage = new OnCustomActivityResponseMessage();
+            carMessage.payload = response;
+            WebSocket.Send(Serialize(carMessage));
+        }
+
+        public void OnMessageFromActivity(MessageFromActivity message)
+        {
+            OnMessageFromActivityMessage mfaMessage = new OnMessageFromActivityMessage();
+            mfaMessage.payload = message;
+            WebSocket.Send(Serialize(mfaMessage));
+        }
+
+        public void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
+        {
+            OnRetrieveDeviceStatusResponseMessage rdsrMessage = new OnRetrieveDeviceStatusResponseMessage();
+            rdsrMessage.payload = response;
+            WebSocket.Send(Serialize(rdsrMessage));
+        }
+
+        public void OnResetDeviceResponse(ResetDeviceResponse response)
+        {
+            OnResetDeviceResponseMessage rdrMessage = new OnResetDeviceResponseMessage();
+            rdrMessage.payload = response;
+            WebSocket.Send(Serialize(rdrMessage));
+        }
 
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
         {
@@ -224,6 +251,13 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(message));
         }
 
+        public virtual void OnRetrievePaymentResponse(RetrievePaymentResponse rpr)
+        {
+            OnRetrievePaymentResponseMessage message = new OnRetrievePaymentResponseMessage();
+            message.payload = rpr;
+            WebSocket.Send(Serialize(message));
+        }
+
 
         internal void SendConnectionStatus()
         {
@@ -246,5 +280,6 @@ namespace CloverWindowsSDKWebSocketService
             var myStr = JsonUtils.serialize(obj);
             return myStr;
         }
+
     }
 }

@@ -38,7 +38,7 @@ namespace com.clover.remotepay.transport
         protected readonly string remoteApplicationID;
         protected DeviceInfo deviceInfo;
         public bool SupportsAcks { get; set; }
-
+        
         public CloverDevice(string packageName, CloverTransport transport, string remoteApplicationID)
         {
             string logSource = "_TransportEventLog";
@@ -53,11 +53,10 @@ namespace com.clover.remotepay.transport
             if (transport.GetType() == typeof(USBCloverTransport))
             {
                 shortTransportType = "USB";
-            }
-            else if (transport.GetType() == typeof(WebSocketCloverTransport))
+            } else if (transport.GetType() == typeof(WebSocketCloverTransport))
             {
                 shortTransportType = "WS";
-            }
+            } 
             this.packageName = packageName;
             this.remoteSourceSDK = getSDKInfoString();
             this.deviceInfo = new DeviceInfo();
@@ -72,11 +71,9 @@ namespace com.clover.remotepay.transport
             try
             {
                 Object rReceiver = Registry.GetValue(REG_KEY, "DisplayName", "unset");
-                if (rReceiver != null && !rReceiver.ToString().Equals("unset"))
-                {
+                if (rReceiver != null && !rReceiver.ToString().Equals("unset")) { 
                     receiver = rReceiver.ToString();
-                }
-                else
+                } else
                 {
                     receiver = "DLL";
                 }
@@ -84,7 +81,12 @@ namespace com.clover.remotepay.transport
             catch (Exception e)
             {
                 receiver = "DLL";
-                EventLog.WriteEntry(this.packageName.GetType().ToString(), e.Message);
+                using (EventLog eventLog = new EventLog("Application"))
+                {
+                    eventLog.Source = "Application";
+                    eventLog.WriteEntry(this.packageName.GetType().ToString() + "->" + e.Message, EventLogEntryType.Information);
+                }
+//                EventLog.WriteEntry(this.packageName.GetType().ToString(), e.Message);
             }
             System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
             String sdkInfoString = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description
@@ -93,7 +95,12 @@ namespace com.clover.remotepay.transport
             + ":"
             + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
             + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
-            EventLog.WriteEntry(this.packageName.GetType().ToString(), "SDKInfo from assembly and registry = " + sdkInfoString);
+            using (EventLog eventLog = new EventLog("Application"))
+            {
+                eventLog.Source = "Application";
+                eventLog.WriteEntry(this.packageName.GetType().ToString() + "->" + "SDKInfo from assembly and registry = " + sdkInfoString, EventLogEntryType.Information);
+            }
+            
             return sdkInfoString;
         }
 
@@ -112,7 +119,7 @@ namespace com.clover.remotepay.transport
 
         public void Dispose()
         {
-            if (this.transport != null)
+            if(this.transport != null)
             {
                 transport.Dispose();
             }
@@ -159,6 +166,11 @@ namespace com.clover.remotepay.transport
         public abstract void doAcceptPayment(Payment payment);
         public abstract void doRejectPayment(Payment payment, Challenge challenge);
         public abstract void doRetrievePendingPayments();
+        public abstract void doStartCustomActivity(string action, string payload, bool nonBlocking);
+        public abstract void doSendMessageToActivity(string action, string payload);
+        public abstract void doRetrieveDeviceStatus(bool sendLastMessage);
+        public abstract void doRetrievePayment(string externalPaymentId);
+
     }
 
     public interface ICloverDeviceObserver
@@ -309,6 +321,14 @@ namespace com.clover.remotepay.transport
         /// <param name="pendingPaymentEntries"></param>
         void onRetrievePendingPaymentsResponse(bool success, List<PendingPaymentEntry> pendingPaymentEntries);
         /// <summary>
+        /// Called when a custom activity is completed as part of a normal flow
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="action"></param>
+        /// <param name="payload"></param>
+        /// <param name="failReason"></param>
+        void onActivityResponse(ResultStatus status, String action, String payload, String failReason);
+        /// <summary>
         /// gets called with the calling requests id to confirm device got the message
         /// </summary>
         /// <param name="sourceMessageId"></param>
@@ -320,6 +340,10 @@ namespace com.clover.remotepay.transport
         void onPrintRefundPayment(Payment payment, Order order, Refund refund);
         void onPrintPaymentDecline(Payment payment, String reason);
         void onPrintMerchantReceipt(Payment payment);
+        void onMessageFromActivity(string action, string payload);
+        void onResetDeviceResponse(ResultStatus status, string reason, ExternalDeviceState state);
+        void onDeviceStatusResponse(ResultStatus status, string reason, ExternalDeviceState state, ExternalDeviceStateData data);
+        void onRetrievePaymentResponse(ResultStatus status, string reason, String externalPaymentId, QueryStatus queryStatus, Payment payment);
     }
 
     public class DeviceInfo

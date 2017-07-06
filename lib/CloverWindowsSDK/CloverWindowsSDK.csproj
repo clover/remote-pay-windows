@@ -41,8 +41,12 @@
     <AssemblyOriginatorKeyFile>CloverWindowsSDK.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibUsbDotNet">
+      <HintPath>..\..\packages\lib\LibUsbDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -124,7 +128,6 @@
     <Compile Include="com\clover\sdk\v3\payments\Currency.cs" />
     <Compile Include="com\clover\sdk\v3\payments\CvmResult.cs" />
     <Compile Include="com\clover\sdk\v3\payments\CVVResult.cs" />
-    <Compile Include="com\clover\sdk\v3\payments\DataEntryLocation.cs" />
     <Compile Include="com\clover\sdk\v3\payments\GatewayTxs.cs" />
     <Compile Include="com\clover\sdk\v3\payments\GatewayTxState.cs" />
     <Compile Include="com\clover\sdk\v3\payments\GatewayTxType.cs" />
@@ -149,6 +152,7 @@
     <Compile Include="com\clover\sdk\v3\payments\VaultedCard.cs" />
     <Compile Include="com\clover\sdk\v3\printer\Printer.cs" />
     <Compile Include="com\clover\sdk\v3\printer\PrinterType.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\DataEntryLocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

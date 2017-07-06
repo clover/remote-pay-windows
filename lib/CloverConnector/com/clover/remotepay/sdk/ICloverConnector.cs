@@ -244,5 +244,28 @@ namespace com.clover.remotepay.sdk
         /// but that haven't been processed yet
         /// </summary>
         void RetrievePendingPayments();
+
+        /// <summary>
+        /// Request to start a Custom Activity on the Clover device
+        /// </summary>
+        void StartCustomActivity(CustomActivityRequest request);
+
+        /// <summary>
+        /// Send a message to a running custom activity on the Clover device
+        /// </summary>
+        /// <param name="request"></param>
+        void SendMessageToActivity(MessageToActivity request);
+
+        /// <summary>
+        /// Send a message requesting the current status of the device
+        /// </summary>
+        /// <param name="request"></param>
+        void RetrieveDeviceStatus(RetrieveDeviceStatusRequest request);
+
+        /// <summary>
+        /// Send a message requesting the Payment information corresponding the the provided External Payment Id 
+        /// </summary>
+        /// <param name="request"></param>
+        void RetrievePayment(RetrievePaymentRequest request);
     }
 }

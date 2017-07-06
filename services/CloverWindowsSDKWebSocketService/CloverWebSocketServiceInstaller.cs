@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.Diagnostics;
 using System.ServiceProcess;
 using System.Text;
 
 
-namespace CloverWindowsSDKWebSocketService 
+namespace CloverWindowsSDKWebSocketService
 {
-    
+
     [RunInstaller(true)]
     public class CloverWebSocketServiceInstaller : Installer
     {
@@ -58,6 +60,29 @@ namespace CloverWindowsSDKWebSocketService
             path.Append(" /P " + port);
             Context.Parameters["assemblypath"] = path.ToString();
             base.Install(stateSaver);
+            SetRecoveryOptions(CloverWebSocketService.SERVICE_NAME);
+        }
+
+        static void SetRecoveryOptions(string serviceName)
+        {
+            int exitCode;
+            using (var process = new Process())
+            {
+                var startInfo = process.StartInfo;
+                startInfo.FileName = "sc";
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+                // tell Windows that the service should restart if it fails
+                startInfo.Arguments = string.Format("failure \"{0}\" reset= 0 actions= restart/60000/restart/60000/restart/60000", serviceName);
+
+                process.Start();
+                process.WaitForExit();
+
+                exitCode = process.ExitCode;
+            }
+
+            if (exitCode != 0)
+                throw new InvalidOperationException();
         }
     }
 }

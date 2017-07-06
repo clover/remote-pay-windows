@@ -31,6 +31,18 @@ To complete a transaction end to end, we recommend getting a [Clover Mini Dev Ki
 
 More documentation can be found at [Clover Docs Site](https://docs.clover.com/build/getting-started-with-cloverconnector/).
 
+# Version 1.3.1-rc1 (Release Candidate)
+* Enhanced EventLog source creation methods to provide better message debugging
+* Added support for starting Custom Activities and handling messaging with those activities
+* Added example custom activity processing to the CloverExamplePOS application
+* Added Device Status messaging to provide better insight into the current state of the connected payment device
+* Added RetrievePayment request/response to provide the ability to query for a payment by external ID on the device
+that originally attempted to process said payment.  Provides additional situational awareness after unexpected
+disconnects with the payment device.
+* Bug fixes for request validation handling
+* Updates for the Secure Network Pay Display support and configuration 
+* General improvements to the CloverExamplePOS application
+
 # Version 1.2.1
 * Additional logging for connector communication and selected transport
 * Added USB Device Hardening via persistent service debug options

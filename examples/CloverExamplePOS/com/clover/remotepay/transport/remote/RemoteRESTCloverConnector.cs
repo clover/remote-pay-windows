@@ -154,6 +154,11 @@ namespace com.clover.remotepay.transport.remote
             Send("/ReadCardData", request);
         }
 
+        public void StartCustomActivity(CustomActivityRequest request)
+        {
+            Send("/StartCustomActivity", request);
+        }
+
         public void Closeout(CloseoutRequest request)
         {
             Send("/Closeout", request);
@@ -313,6 +318,21 @@ namespace com.clover.remotepay.transport.remote
             rejectPayment.Payment = payment;
             rejectPayment.Challenge = challenge;
             Send("/RejectPayment", rejectPayment);
+        }
+
+        public void SendMessageToActivity(MessageToActivity msg)
+        {
+            Send("/SendMessageToActivity", msg);
+        }
+
+        public void RetrieveDeviceStatus(RetrieveDeviceStatusRequest request)
+        {
+            Send("/RetrieveDeviceStatus", request);
+        }
+
+        public void RetrievePayment(RetrievePaymentRequest request)
+        {
+            Send("/RetrievePayment", request);
         }
 
         public class RESTSigVerRequestHandler : VerifySignatureRequest

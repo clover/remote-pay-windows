@@ -277,11 +277,27 @@ namespace com.clover.remotepay.transport.remote
             SendTextResponse(context, "");
         }
 
-        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePendingPaymentsResponse")]
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePendingPaymentsResponse$")]
         public void RetrievePendingPayments(HttpListenerContext context)
         {
             RetrievePendingPaymentsResponse response = ParseResponse<RetrievePendingPaymentsResponse>(context);
             connectorListener.ForEach(listener => listener.OnRetrievePendingPaymentsResponse(response));
+            SendTextResponse(context, "");
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePaymentResponse$")]
+        public void RetrievePaymentResponse(HttpListenerContext context)
+        {
+            RetrievePaymentResponse response = ParseResponse<RetrievePaymentResponse>(context);
+            connectorListener.ForEach(listener => listener.OnRetrievePaymentResponse(response));
+            SendTextResponse(context, "");
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/CustomActivityResponse$")]
+        public void CustomActivityResponse(HttpListenerContext context)
+        {
+            CustomActivityResponse response = ParseResponse<CustomActivityResponse>(context);
+            connectorListener.ForEach(listener => listener.OnCustomActivityResponse(response));
             SendTextResponse(context, "");
         }
 
@@ -328,6 +344,27 @@ namespace com.clover.remotepay.transport.remote
             connectorListener.ForEach(listener => listener.OnPrintRefundPaymentReceipt(printRefundPaymentReceiptMessage));
         }
 
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrieveDeviceStatusResponse$")]
+        public void RetrieveDeviceStatusResponse(HttpListenerContext context)
+        {
+            RetrieveDeviceStatusResponse rdsr = ParseResponse<RetrieveDeviceStatusResponse>(context);
+            connectorListener.ForEach(listener => listener.OnRetrieveDeviceStatusResponse(rdsr));
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/ResetDeviceResponse$")]
+        public void ResetDeviceResponse(HttpListenerContext context)
+        {
+            ResetDeviceResponse rdr = ParseResponse<ResetDeviceResponse>(context);
+            connectorListener.ForEach(listener => listener.OnResetDeviceResponse(rdr));
+        }
+
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/MessageFromActivity")]
+        public void MessageFromActivity(HttpListenerContext context)
+        {
+            MessageFromActivity mfa = ParseResponse<MessageFromActivity>(context);
+            connectorListener.ForEach(listener => listener.OnMessageFromActivity(mfa));
+        }
 
         private T ParseResponse<T>(HttpListenerContext context)
         {

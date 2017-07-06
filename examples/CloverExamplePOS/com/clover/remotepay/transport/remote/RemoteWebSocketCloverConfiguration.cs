@@ -21,7 +21,7 @@ namespace com.clover.remotepay.transport.remote
     /// </summary>
     class RemoteWebSocketCloverConfiguration : WebSocketCloverDeviceConfiguration
     {
-        public RemoteWebSocketCloverConfiguration(string hostname, int port, string remoteApplicationId) : base(hostname, port, remoteApplicationId, "", "", "")
+        public RemoteWebSocketCloverConfiguration(string endpoint, string remoteApplicationId) : base(endpoint, remoteApplicationId, "", "", "")
         {
         }
     }
