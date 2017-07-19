@@ -1,0 +1,297 @@
+\hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments}{}\section{com.\+clover.\+sdk.\+v3.\+payments Namespace Reference}
+\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments}\index{com.\+clover.\+sdk.\+v3.\+payments@{com.\+clover.\+sdk.\+v3.\+payments}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_authorization}{Authorization}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch}{Batch}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch_card_total}{Batch\+Card\+Total}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch_detail}{Batch\+Detail}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch_request}{Batch\+Request}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch_total_stats}{Batch\+Total\+Stats}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch_total_type}{Batch\+Total\+Type}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_card_transaction}{Card\+Transaction}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit}{Credit}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_gateway_txs}{Gateway\+Txs}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_gift_card}{Gift\+Card}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_gift_card_response}{Gift\+Card\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_gift_card_transaction}{Gift\+Card\+Transaction}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_line_item_payment}{Line\+Item\+Payment}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment}{Payment}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment_response}{Payment\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment_tax_rate}{Payment\+Tax\+Rate}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_refund}{Refund}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_server_total_stats}{Server\+Total\+Stats}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_service_charge_amount}{Service\+Charge\+Amount}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_taxable_amount_rate}{Taxable\+Amount\+Rate}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_transaction}{Transaction}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_transaction_settings}{Transaction\+Settings}
+\item 
+class \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_vaulted_card}{Vaulted\+Card}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a81b51961db7fb2e8c34fefd28183a8a1}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a81b51961db7fb2e8c34fefd28183a8a1}} 
+enum {\bfseries A\+V\+S\+Result} \{ \newline
+{\bfseries S\+U\+C\+C\+E\+SS}, 
+{\bfseries Z\+I\+P\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+T\+CH}, 
+{\bfseries Z\+I\+P\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+T\+C\+H\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+N\+O\+T\+\_\+\+C\+H\+E\+C\+K\+ED}, 
+{\bfseries A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+A\+T\+CH}, 
+\newline
+{\bfseries A\+D\+D\+R\+E\+S\+S\+\_\+\+M\+A\+T\+C\+H\+\_\+\+Z\+I\+P\+\_\+\+N\+O\+T\+\_\+\+C\+H\+E\+C\+K\+ED}, 
+{\bfseries N\+E\+I\+T\+H\+E\+R\+\_\+\+M\+A\+T\+CH}, 
+{\bfseries S\+E\+R\+V\+I\+C\+E\+\_\+\+F\+A\+I\+L\+U\+RE}, 
+{\bfseries S\+E\+R\+V\+I\+C\+E\+\_\+\+U\+N\+A\+V\+A\+I\+L\+A\+B\+LE}, 
+\newline
+{\bfseries N\+O\+T\+\_\+\+C\+H\+E\+C\+K\+ED}, 
+{\bfseries Z\+I\+P\+\_\+\+C\+O\+D\+E\+\_\+\+N\+O\+T\+\_\+\+M\+A\+T\+C\+H\+E\+D\+\_\+\+A\+D\+D\+R\+E\+S\+S\+\_\+\+N\+O\+T\+\_\+\+C\+H\+E\+C\+K\+ED}, 
+{\bfseries A\+D\+D\+R\+E\+S\+S\+\_\+\+N\+O\+T\+\_\+\+M\+A\+T\+C\+H\+E\+D\+\_\+\+Z\+I\+P\+\_\+\+C\+O\+D\+E\+\_\+\+N\+O\+T\+\_\+\+C\+H\+E\+C\+K\+ED}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_afd1102ee7e347adf5b7343518d146859}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_afd1102ee7e347adf5b7343518d146859}} 
+enum {\bfseries Batch\+State} \{ \newline
+{\bfseries O\+P\+EN}, 
+{\bfseries Q\+U\+E\+U\+E\+D\+\_\+\+F\+O\+R\+\_\+\+P\+R\+O\+C\+E\+S\+S\+I\+NG}, 
+{\bfseries P\+R\+O\+C\+E\+S\+S\+I\+NG}, 
+{\bfseries C\+L\+O\+S\+ED}, 
+\newline
+{\bfseries F\+A\+I\+L\+ED}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_aa661d537c95b582976caf4a1745309f6}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_aa661d537c95b582976caf4a1745309f6}} 
+enum {\bfseries Batch\+Type} \{ {\bfseries M\+A\+N\+U\+A\+L\+\_\+\+C\+L\+O\+SE}, 
+{\bfseries A\+U\+T\+O\+\_\+\+C\+L\+O\+SE}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ac92e851a362529ec3fa138bd64dec615}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ac92e851a362529ec3fa138bd64dec615}} 
+enum {\bfseries Card\+Entry\+Type} \{ \newline
+{\bfseries S\+W\+I\+P\+ED}, 
+{\bfseries K\+E\+Y\+ED}, 
+{\bfseries V\+O\+I\+CE}, 
+{\bfseries V\+A\+U\+L\+T\+ED}, 
+\newline
+{\bfseries O\+F\+F\+L\+I\+N\+E\+\_\+\+S\+W\+I\+P\+ED}, 
+{\bfseries O\+F\+F\+L\+I\+N\+E\+\_\+\+K\+E\+Y\+ED}, 
+{\bfseries E\+M\+V\+\_\+\+C\+O\+N\+T\+A\+CT}, 
+{\bfseries E\+M\+V\+\_\+\+C\+O\+N\+T\+A\+C\+T\+L\+E\+SS}, 
+\newline
+{\bfseries M\+S\+D\+\_\+\+C\+O\+N\+T\+A\+C\+T\+L\+E\+SS}, 
+{\bfseries P\+I\+N\+P\+A\+D\+\_\+\+M\+A\+N\+U\+A\+L\+\_\+\+E\+N\+T\+RY}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a6f15251c00491e4f9504fe59560bcf4b}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a6f15251c00491e4f9504fe59560bcf4b}} 
+enum {\bfseries Card\+Transaction\+State} \{ {\bfseries P\+E\+N\+D\+I\+NG}, 
+{\bfseries C\+L\+O\+S\+ED}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a4207f1c1388f6f392bd998855cc88936}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a4207f1c1388f6f392bd998855cc88936}} 
+enum {\bfseries Card\+Transaction\+Type} \{ \newline
+{\bfseries A\+U\+TH}, 
+{\bfseries P\+R\+E\+A\+U\+TH}, 
+{\bfseries P\+R\+E\+A\+U\+T\+H\+C\+A\+P\+T\+U\+RE}, 
+{\bfseries A\+D\+J\+U\+ST}, 
+\newline
+{\bfseries V\+O\+ID}, 
+{\bfseries V\+O\+I\+D\+R\+E\+T\+U\+RN}, 
+{\bfseries R\+E\+T\+U\+RN}, 
+{\bfseries R\+E\+F\+U\+ND}, 
+\newline
+{\bfseries N\+A\+K\+E\+D\+R\+E\+F\+U\+ND}, 
+{\bfseries G\+E\+T\+B\+A\+L\+A\+N\+CE}, 
+{\bfseries B\+A\+T\+C\+H\+C\+L\+O\+SE}, 
+{\bfseries A\+C\+T\+I\+V\+A\+TE}, 
+\newline
+{\bfseries B\+A\+L\+A\+N\+C\+E\+\_\+\+L\+O\+CK}, 
+{\bfseries L\+O\+AD}, 
+{\bfseries C\+A\+S\+H\+O\+UT}, 
+{\bfseries C\+A\+S\+H\+O\+U\+T\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+T\+A\+T\+US}, 
+\newline
+{\bfseries R\+E\+D\+E\+M\+P\+T\+I\+ON}, 
+{\bfseries R\+E\+D\+E\+M\+P\+T\+I\+O\+N\+\_\+\+U\+N\+L\+O\+CK}, 
+{\bfseries R\+E\+L\+O\+AD}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ae544d2f27295fd15a3abb7d87bc35928}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ae544d2f27295fd15a3abb7d87bc35928}} 
+enum {\bfseries Card\+Type} \{ \newline
+{\bfseries V\+I\+SA}, 
+{\bfseries MC}, 
+{\bfseries A\+M\+EX}, 
+{\bfseries D\+I\+S\+C\+O\+V\+ER}, 
+\newline
+{\bfseries D\+I\+N\+E\+R\+S\+\_\+\+C\+L\+UB}, 
+{\bfseries J\+CB}, 
+{\bfseries M\+A\+E\+S\+T\+RO}, 
+{\bfseries S\+O\+LO}, 
+\newline
+{\bfseries L\+A\+S\+ER}, 
+{\bfseries C\+H\+I\+N\+A\+\_\+\+U\+N\+I\+O\+N\+\_\+\+P\+AY}, 
+{\bfseries C\+A\+R\+T\+E\+\_\+\+B\+L\+A\+N\+C\+HE}, 
+{\bfseries U\+N\+K\+N\+O\+WN}, 
+\newline
+{\bfseries G\+I\+F\+T\+\_\+\+C\+A\+RD}, 
+{\bfseries E\+BT}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a316f34e84dd323cfc42d1345dbc0944b}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a316f34e84dd323cfc42d1345dbc0944b}} 
+enum {\bfseries Currency} \{ {\bfseries U\+SD}, 
+{\bfseries G\+BP}, 
+{\bfseries E\+UR}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ac4b3a848b3caff1d4200a4280217481d}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ac4b3a848b3caff1d4200a4280217481d}} 
+enum {\bfseries Cvm\+Result} \{ \newline
+{\bfseries N\+O\+\_\+\+C\+V\+M\+\_\+\+R\+E\+Q\+U\+I\+R\+ED}, 
+{\bfseries S\+I\+G\+N\+A\+T\+U\+RE}, 
+{\bfseries P\+IN}, 
+{\bfseries O\+N\+L\+I\+N\+E\+\_\+\+P\+IN}, 
+\newline
+{\bfseries S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+A\+N\+D\+\_\+\+P\+IN}, 
+{\bfseries C\+V\+M\+\_\+\+F\+A\+I\+L\+ED}, 
+{\bfseries D\+E\+V\+I\+CE}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a4890e376edb21551ffa5f45a28c6772a}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a4890e376edb21551ffa5f45a28c6772a}} 
+enum {\bfseries C\+V\+V\+Result} \{ {\bfseries S\+U\+C\+C\+E\+SS}, 
+{\bfseries F\+A\+I\+L\+U\+RE}, 
+{\bfseries N\+O\+T\+\_\+\+P\+R\+O\+C\+E\+S\+S\+ED}, 
+{\bfseries N\+O\+T\+\_\+\+P\+R\+E\+S\+E\+NT}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ad57b15539defff23c13ea55aedf1c551}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ad57b15539defff23c13ea55aedf1c551}} 
+enum {\bfseries Data\+Entry\+Location} \{ {\bfseries O\+N\+\_\+\+S\+C\+R\+E\+EN}, 
+{\bfseries O\+N\+\_\+\+P\+A\+P\+ER}, 
+{\bfseries N\+O\+NE}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a340cc82820b2cb686ec93885b8ebf612}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a340cc82820b2cb686ec93885b8ebf612}} 
+enum {\bfseries Gateway\+Tx\+State} \{ \newline
+{\bfseries I\+N\+I\+T\+I\+A\+T\+ED}, 
+{\bfseries I\+N\+I\+T\+I\+A\+T\+E\+D\+\_\+\+O\+N\+\_\+\+A\+U\+TH}, 
+{\bfseries A\+C\+K\+N\+O\+W\+L\+E\+D\+G\+ED}, 
+{\bfseries C\+O\+N\+N\+E\+C\+T\+\_\+\+F\+A\+I\+L\+ED}, 
+\newline
+{\bfseries T\+I\+M\+E\+O\+UT}, 
+{\bfseries F\+A\+I\+L\+ED}, 
+{\bfseries R\+E\+V\+E\+R\+S\+E\+\_\+\+I\+N\+I\+T\+I\+A\+T\+ED}, 
+{\bfseries R\+E\+V\+E\+R\+S\+E\+\_\+\+I\+N\+I\+T\+I\+A\+T\+E\+D\+\_\+\+O\+N\+\_\+\+A\+U\+TH}, 
+\newline
+{\bfseries R\+E\+V\+E\+R\+S\+ED}, 
+{\bfseries R\+E\+V\+E\+R\+S\+A\+L\+\_\+\+F\+A\+I\+L\+ED}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a3df1de2debbb23f9584db68737e035e7}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a3df1de2debbb23f9584db68737e035e7}} 
+enum {\bfseries Gateway\+Tx\+Type} \{ \newline
+{\bfseries A\+U\+TH}, 
+{\bfseries P\+R\+E\+A\+U\+TH}, 
+{\bfseries P\+R\+E\+A\+U\+T\+H\+C\+A\+P\+T\+U\+RE}, 
+{\bfseries A\+D\+J\+U\+ST}, 
+\newline
+{\bfseries V\+O\+ID}, 
+{\bfseries V\+O\+I\+D\+R\+E\+T\+U\+RN}, 
+{\bfseries R\+E\+T\+U\+RN}, 
+{\bfseries R\+E\+F\+U\+ND}, 
+\newline
+{\bfseries N\+A\+K\+E\+D\+R\+E\+F\+U\+ND}, 
+{\bfseries G\+E\+T\+B\+A\+L\+A\+N\+CE}, 
+{\bfseries B\+A\+T\+C\+H\+C\+L\+O\+SE}, 
+{\bfseries A\+C\+T\+I\+V\+A\+TE}, 
+\newline
+{\bfseries B\+A\+L\+A\+N\+C\+E\+\_\+\+L\+O\+CK}, 
+{\bfseries L\+O\+AD}, 
+{\bfseries C\+A\+S\+H\+O\+UT}, 
+{\bfseries C\+A\+S\+H\+O\+U\+T\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+T\+A\+T\+US}, 
+\newline
+{\bfseries R\+E\+D\+E\+M\+P\+T\+I\+ON}, 
+{\bfseries R\+E\+D\+E\+M\+P\+T\+I\+O\+N\+\_\+\+U\+N\+L\+O\+CK}, 
+{\bfseries R\+E\+L\+O\+AD}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a67d9d7bce276d6e020d49ff3f322fce3}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a67d9d7bce276d6e020d49ff3f322fce3}} 
+enum {\bfseries Gift\+Card\+State} \{ {\bfseries I\+N\+V\+A\+L\+ID}, 
+{\bfseries A\+C\+T\+I\+V\+A\+T\+ED}, 
+{\bfseries I\+N\+A\+C\+T\+I\+VE}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ab493172d8abd5947fc0308d7cc311b2d}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ab493172d8abd5947fc0308d7cc311b2d}} 
+enum {\bfseries Result} \{ \newline
+{\bfseries S\+U\+C\+C\+E\+SS}, 
+{\bfseries F\+A\+IL}, 
+{\bfseries I\+N\+I\+T\+I\+A\+T\+ED}, 
+{\bfseries V\+O\+I\+D\+ED}, 
+\newline
+{\bfseries V\+O\+I\+D\+I\+NG}, 
+{\bfseries A\+U\+TH}, 
+{\bfseries A\+U\+T\+H\+\_\+\+C\+O\+M\+P\+L\+E\+T\+ED}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a64910d0166e294f61d8b27b0d4ef26db}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_a64910d0166e294f61d8b27b0d4ef26db}} 
+enum {\bfseries Tip\+Mode} \{ \newline
+{\bfseries T\+I\+P\+\_\+\+P\+R\+O\+V\+I\+D\+ED}, 
+{\bfseries O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+B\+E\+F\+O\+R\+E\+\_\+\+P\+A\+Y\+M\+E\+NT}, 
+{\bfseries O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+A\+F\+T\+E\+R\+\_\+\+P\+A\+Y\+M\+E\+NT}, 
+{\bfseries O\+N\+\_\+\+P\+A\+P\+ER}, 
+\newline
+{\bfseries N\+O\+\_\+\+T\+IP}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ad4411d3ee4c0997584ff0df20764ba06}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ad4411d3ee4c0997584ff0df20764ba06}} 
+enum {\bfseries Tx\+Type} \{ \newline
+{\bfseries A\+U\+TH}, 
+{\bfseries P\+R\+E\+A\+U\+TH}, 
+{\bfseries P\+R\+E\+A\+U\+T\+H\+C\+A\+P\+T\+U\+RE}, 
+{\bfseries A\+D\+J\+U\+ST}, 
+\newline
+{\bfseries V\+O\+ID}, 
+{\bfseries V\+O\+I\+D\+R\+E\+T\+U\+RN}, 
+{\bfseries R\+E\+T\+U\+RN}, 
+{\bfseries R\+E\+F\+U\+ND}, 
+\newline
+{\bfseries N\+A\+K\+E\+D\+R\+E\+F\+U\+ND}, 
+{\bfseries G\+E\+T\+B\+A\+L\+A\+N\+CE}, 
+{\bfseries B\+A\+T\+C\+H\+C\+L\+O\+SE}, 
+{\bfseries A\+C\+T\+I\+V\+A\+TE}, 
+\newline
+{\bfseries B\+A\+L\+A\+N\+C\+E\+\_\+\+L\+O\+CK}, 
+{\bfseries L\+O\+AD}, 
+{\bfseries C\+A\+S\+H\+O\+UT}, 
+{\bfseries C\+A\+S\+H\+O\+U\+T\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+T\+A\+T\+US}, 
+\newline
+{\bfseries R\+E\+D\+E\+M\+P\+T\+I\+ON}, 
+{\bfseries R\+E\+D\+E\+M\+P\+T\+I\+O\+N\+\_\+\+U\+N\+L\+O\+CK}, 
+{\bfseries R\+E\+L\+O\+AD}
+ \}
+\item 
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ab3a3c9595b671a87b6fe5f1920784b73}\label{namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments_ab3a3c9595b671a87b6fe5f1920784b73}} 
+enum {\bfseries Type} \{ {\bfseries T\+AB}, 
+{\bfseries A\+U\+TH}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Autogenerated by Avro
+
+DO N\+OT E\+D\+IT D\+I\+R\+E\+C\+T\+LY 

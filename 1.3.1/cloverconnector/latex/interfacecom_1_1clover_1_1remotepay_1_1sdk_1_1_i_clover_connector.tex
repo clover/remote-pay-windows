@@ -1,0 +1,749 @@
+\hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector}{}\section{com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector Interface Reference}
+\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector}\index{com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector@{com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector}}
+
+
+Interface to define the available methods to send requests to a connected Clover device.  
+
+
+Inheritance diagram for com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a83c29b3d3a85f95c554a8464295acdb0}{Initialize\+Connection} ()
+\begin{DoxyCompactList}\small\item\em Starts communication with the device. This is called after the connector is created and listeners are added to the connector. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a90fcd7781afc36d654e42b1c9daada87}{Add\+Clover\+Connector\+Listener} (\hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_listener}{I\+Clover\+Connector\+Listener} connector\+Listener)
+\begin{DoxyCompactList}\small\item\em Adds a clover connector listener. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a4acba7cae456cb73a0acf4331cae04f9}{Remove\+Clover\+Connector\+Listener} (\hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_listener}{I\+Clover\+Connector\+Listener} connector\+Listener)
+\begin{DoxyCompactList}\small\item\em Removes a clover connector listener. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_acc92394e6902137c559510e498e78529}{Sale} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request}{Sale\+Request} request)
+\begin{DoxyCompactList}\small\item\em Sale method, aka \char`\"{}purchase\char`\"{} \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ab31791ce69e05ca2e2b15269c2010a15}{Accept\+Signature} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_verify_signature_request}{Verify\+Signature\+Request} request)
+\begin{DoxyCompactList}\small\item\em If signature is captured during a Sale, this method accepts the signature as entered \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0d7b15309b4113bc8d88c5dd65c351c3}{Reject\+Signature} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_verify_signature_request}{Verify\+Signature\+Request} request)
+\begin{DoxyCompactList}\small\item\em If signature is captured during a Sale, this method rejects the signature as entered \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ad6286e6d5ec3157f3ceeafc1de504dff}{Accept\+Payment} (\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment}{Payment} payment)
+\begin{DoxyCompactList}\small\item\em If signature is captured during a Sale, this method accepts the signature as entered \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a6f4a1ae115140ff1cbc8b6d4a8f46be5}{Reject\+Payment} (\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment}{Payment} payment, Challenge challenge)
+\begin{DoxyCompactList}\small\item\em If signature is captured during a Sale, this method rejects the signature as entered \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af0099cbd3075f3c91f6873265f9c766b}{Auth} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} request)
+\begin{DoxyCompactList}\small\item\em Auth method to obtain an Auth or Pre-\/\+Auth, based on the \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} Is\+Pre\+Auth flag \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aa41978ea2b8048ff23ab931752129eb9}{Pre\+Auth} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_pre_auth_request}{Pre\+Auth\+Request} request)
+\begin{DoxyCompactList}\small\item\em Auth method to obtain an Auth or Pre-\/\+Auth, based on the \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} Is\+Pre\+Auth flag \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a1687202a30277f4ae5dffd73b9311b94}{Capture\+Pre\+Auth} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_request}{Capture\+Pre\+Auth\+Request} request)
+\begin{DoxyCompactList}\small\item\em Capture a previous Auth. Note\+: Should only be called if request\textquotesingle{}s Payment\+ID is from an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_response}{Auth\+Response} \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a815c8be2012ebda06247c059771717cc}{Tip\+Adjust\+Auth} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_adjust_auth_request}{Tip\+Adjust\+Auth\+Request} request)
+\begin{DoxyCompactList}\small\item\em Adjust the tip for a previous Auth. Note\+: Should only be called if request\textquotesingle{}s Payment\+ID is from an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_response}{Auth\+Response} \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af35e223ba760d0a6d61c67895c619997}{Void\+Payment} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_void_payment_request}{Void\+Payment\+Request} request)
+\begin{DoxyCompactList}\small\item\em Void a transaction, given a previously used order ID and/or payment ID T\+BD -\/ defining a payment or order ID to be used with a void without requiring a response from \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_acc92394e6902137c559510e498e78529}{Sale()} \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aaa44684c7bf2c04b88ead61034c7c273}{Refund\+Payment} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_refund_payment_request}{Refund\+Payment\+Request} request)
+\begin{DoxyCompactList}\small\item\em Refund a specific payment \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0216263a8b560a29f9c64778e37a136e}{Manual\+Refund} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_manual_refund_request}{Manual\+Refund\+Request} request)
+\begin{DoxyCompactList}\small\item\em Manual refund method, aka \char`\"{}naked credit\char`\"{} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a1d501a736452123be1dd8f42157389e3}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a1d501a736452123be1dd8f42157389e3}} 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a1d501a736452123be1dd8f42157389e3}{Vault\+Card} (int? Card\+Entry\+Methods)
+\begin{DoxyCompactList}\small\item\em Vault card, used to get payment token \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a841db6225c6a5df5e04918d9e2648fd1}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a841db6225c6a5df5e04918d9e2648fd1}} 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a841db6225c6a5df5e04918d9e2648fd1}{Read\+Card\+Data} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_read_card_data_request}{Read\+Card\+Data\+Request} Card\+Data\+Request)
+\begin{DoxyCompactList}\small\item\em Retrieve Card Data \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_abbb999130d903a88e806c7b396c743f7}{Cancel} ()
+\begin{DoxyCompactList}\small\item\em Cancels the device from waiting for a payment card. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ac4f3cd841d87046f329e98d058f65e55}{Closeout} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_request}{Closeout\+Request} request)
+\begin{DoxyCompactList}\small\item\em Send a request to the server to closeout all orders. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aafead472d6f0adc74084a229bf75e5ed}{Reset\+Device} ()
+\begin{DoxyCompactList}\small\item\em Send a request to the server to reset the Clover device. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a16a2a91c231e7a66373b2c0e2f612951}{Print\+Text} (List$<$ string $>$ messages)
+\begin{DoxyCompactList}\small\item\em Print simple lines of text to the Clover Mini printer \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ac716d55882598b92984159f4898bbe2a}{Print\+Image} (Bitmap bitmap)
+\begin{DoxyCompactList}\small\item\em Print an image on the Clover Mini printer \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a2d4c2a87f772459bb1a494e2f87835a8}{Show\+Message} (string message)
+\begin{DoxyCompactList}\small\item\em Show a message on the Clover Mini screen \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a462fd3dbb5914ac1d5b906dd1daa57c0}{Show\+Welcome\+Screen} ()
+\begin{DoxyCompactList}\small\item\em Return the device to the Welcome Screen \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_adb4f9a33f3316cb349a02d05e7ddf902}{Show\+Thank\+You\+Screen} ()
+\begin{DoxyCompactList}\small\item\em Show the thank you screen on the device \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ae60f9c25fa8cc54e3102fcde8ab0b869}{Display\+Payment\+Receipt\+Options} (String order\+Id, String payment\+Id)
+\begin{DoxyCompactList}\small\item\em Show the customer facing receipt option screen for the specified payment. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0fc361c449dc63eab061ca6866124deb}{Open\+Cash\+Drawer} (String reason)
+\begin{DoxyCompactList}\small\item\em Will trigger cash drawer to open that is connected to Clover Mini \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a50be4c513f6f67971b51f6f76f30ac06}{Show\+Display\+Order} (\hyperlink{classcom_1_1clover_1_1remote_1_1order_1_1_display_order}{Display\+Order} order)
+\begin{DoxyCompactList}\small\item\em Show the Display\+Order on the device. Replaces the existing Display\+Order on the device. \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a55ebe329c852bedccaeb882ca71c4774}{Remove\+Display\+Order} (\hyperlink{classcom_1_1clover_1_1remote_1_1order_1_1_display_order}{Display\+Order} order)
+\begin{DoxyCompactList}\small\item\em Remove the Display\+Order from the device. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a105ca79ce329b1b7427450c323bc1d70}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a105ca79ce329b1b7427450c323bc1d70}} 
+void {\bfseries Dispose} ()
+\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af4e56b0504d5e26d2953b5544bd8cf05}{Invoke\+Input\+Option} (transport.\+Input\+Option io)
+\begin{DoxyCompactList}\small\item\em Invoke the Input\+Option as sent in the Device\+Activity\+Start callback \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a16ffe34012c788351332d1d2c41be602}{Print\+Image\+From\+U\+RL} (String Img\+U\+RL)
+\begin{DoxyCompactList}\small\item\em Print an image from a url \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a5d371f91336d4950e32ff051061ad91d}{Retrieve\+Pending\+Payments} ()
+\begin{DoxyCompactList}\small\item\em Request a list of payments taken offline, but that haven\textquotesingle{}t been processed yet \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a3ec58f5860c34bcb104578caddb0b564}{Start\+Custom\+Activity} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_request}{Custom\+Activity\+Request} request)
+\begin{DoxyCompactList}\small\item\em Request to start a Custom Activity on the Clover device \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ad6e241f6dac22bafa5edcc89457c99a7}{Send\+Message\+To\+Activity} (\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_message_to_activity}{Message\+To\+Activity} request)
+\begin{DoxyCompactList}\small\item\em Send a message to a running custom activity on the Clover device \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a172b1a191a58f1f0e4dcc0a8dc7eae48}{Retrieve\+Device\+Status} (Retrieve\+Device\+Status\+Request request)
+\begin{DoxyCompactList}\small\item\em Send a message requesting the current status of the device \end{DoxyCompactList}\item 
+void \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a3b85cfdb92b7c64d9b27decc49ca8b7c}{Retrieve\+Payment} (Retrieve\+Payment\+Request request)
+\begin{DoxyCompactList}\small\item\em Send a message requesting the Payment information corresponding the the provided External Payment Id \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Interface to define the available methods to send requests to a connected Clover device. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ad6286e6d5ec3157f3ceeafc1de504dff}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ad6286e6d5ec3157f3ceeafc1de504dff}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Accept\+Payment@{Accept\+Payment}}
+\index{Accept\+Payment@{Accept\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Accept\+Payment()}{AcceptPayment()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Accept\+Payment (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment}{Payment}}]{payment }\end{DoxyParamCaption})}
+
+
+
+If signature is captured during a Sale, this method accepts the signature as entered 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_afe33a1ba414608b2b05a3336128c7b5c}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ab31791ce69e05ca2e2b15269c2010a15}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ab31791ce69e05ca2e2b15269c2010a15}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Accept\+Signature@{Accept\+Signature}}
+\index{Accept\+Signature@{Accept\+Signature}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Accept\+Signature()}{AcceptSignature()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Accept\+Signature (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_verify_signature_request}{Verify\+Signature\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+If signature is captured during a Sale, this method accepts the signature as entered 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a2d54a7e1d05451c3335fe31337a56ea4}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a90fcd7781afc36d654e42b1c9daada87}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a90fcd7781afc36d654e42b1c9daada87}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Add\+Clover\+Connector\+Listener@{Add\+Clover\+Connector\+Listener}}
+\index{Add\+Clover\+Connector\+Listener@{Add\+Clover\+Connector\+Listener}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Add\+Clover\+Connector\+Listener()}{AddCloverConnectorListener()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Add\+Clover\+Connector\+Listener (\begin{DoxyParamCaption}\item[{\hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_listener}{I\+Clover\+Connector\+Listener}}]{connector\+Listener }\end{DoxyParamCaption})}
+
+
+
+Adds a clover connector listener. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em connector\+Listener} & The connector listener.\\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_aebd32d30edf2691cafd56d8540597d9a}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af0099cbd3075f3c91f6873265f9c766b}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af0099cbd3075f3c91f6873265f9c766b}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Auth@{Auth}}
+\index{Auth@{Auth}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Auth()}{Auth()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Auth (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Auth method to obtain an Auth or Pre-\/\+Auth, based on the \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} Is\+Pre\+Auth flag 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a2ae641aff3f22e4c5fa651d8deaa7bbd}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_abbb999130d903a88e806c7b396c743f7}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_abbb999130d903a88e806c7b396c743f7}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Cancel@{Cancel}}
+\index{Cancel@{Cancel}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Cancel()}{Cancel()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Cancel (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Cancels the device from waiting for a payment card. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a6ca6015f34bf85df7d4242add5751606}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a1687202a30277f4ae5dffd73b9311b94}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a1687202a30277f4ae5dffd73b9311b94}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Capture\+Pre\+Auth@{Capture\+Pre\+Auth}}
+\index{Capture\+Pre\+Auth@{Capture\+Pre\+Auth}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Capture\+Pre\+Auth()}{CapturePreAuth()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Capture\+Pre\+Auth (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_request}{Capture\+Pre\+Auth\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Capture a previous Auth. Note\+: Should only be called if request\textquotesingle{}s Payment\+ID is from an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_response}{Auth\+Response} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a7323abfe34b1fee5634dd7e1296633cb}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ac4f3cd841d87046f329e98d058f65e55}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ac4f3cd841d87046f329e98d058f65e55}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Closeout@{Closeout}}
+\index{Closeout@{Closeout}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Closeout()}{Closeout()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Closeout (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_request}{Closeout\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Send a request to the server to closeout all orders. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_aa8348f5f0769ad3023858d310e5aa847}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ae60f9c25fa8cc54e3102fcde8ab0b869}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ae60f9c25fa8cc54e3102fcde8ab0b869}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Display\+Payment\+Receipt\+Options@{Display\+Payment\+Receipt\+Options}}
+\index{Display\+Payment\+Receipt\+Options@{Display\+Payment\+Receipt\+Options}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Display\+Payment\+Receipt\+Options()}{DisplayPaymentReceiptOptions()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Display\+Payment\+Receipt\+Options (\begin{DoxyParamCaption}\item[{String}]{order\+Id,  }\item[{String}]{payment\+Id }\end{DoxyParamCaption})}
+
+
+
+Show the customer facing receipt option screen for the specified payment. 
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a83c29b3d3a85f95c554a8464295acdb0}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a83c29b3d3a85f95c554a8464295acdb0}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Initialize\+Connection@{Initialize\+Connection}}
+\index{Initialize\+Connection@{Initialize\+Connection}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Initialize\+Connection()}{InitializeConnection()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Initialize\+Connection (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Starts communication with the device. This is called after the connector is created and listeners are added to the connector. 
+
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_ae103900f25165ad063e914698e0aeb5d}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af4e56b0504d5e26d2953b5544bd8cf05}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af4e56b0504d5e26d2953b5544bd8cf05}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Invoke\+Input\+Option@{Invoke\+Input\+Option}}
+\index{Invoke\+Input\+Option@{Invoke\+Input\+Option}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Invoke\+Input\+Option()}{InvokeInputOption()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Invoke\+Input\+Option (\begin{DoxyParamCaption}\item[{transport.\+Input\+Option}]{io }\end{DoxyParamCaption})}
+
+
+
+Invoke the Input\+Option as sent in the Device\+Activity\+Start callback 
+
+
+\begin{DoxyParams}{Parameters}
+{\em io} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0216263a8b560a29f9c64778e37a136e}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0216263a8b560a29f9c64778e37a136e}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Manual\+Refund@{Manual\+Refund}}
+\index{Manual\+Refund@{Manual\+Refund}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Manual\+Refund()}{ManualRefund()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Manual\+Refund (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_manual_refund_request}{Manual\+Refund\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Manual refund method, aka \char`\"{}naked credit\char`\"{} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & A \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_manual_refund_request}{Manual\+Refund\+Request} object\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status code, 0 for success, -\/1 for failure (need to use pre-\/defined constants)
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a0ecc7e8c3333a05853297c46adc8822c}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0fc361c449dc63eab061ca6866124deb}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0fc361c449dc63eab061ca6866124deb}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Open\+Cash\+Drawer@{Open\+Cash\+Drawer}}
+\index{Open\+Cash\+Drawer@{Open\+Cash\+Drawer}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Open\+Cash\+Drawer()}{OpenCashDrawer()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Open\+Cash\+Drawer (\begin{DoxyParamCaption}\item[{String}]{reason }\end{DoxyParamCaption})}
+
+
+
+Will trigger cash drawer to open that is connected to Clover Mini 
+
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_aeeba2f27e901c6f105dbd9cdc624bd2c}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aa41978ea2b8048ff23ab931752129eb9}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aa41978ea2b8048ff23ab931752129eb9}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Pre\+Auth@{Pre\+Auth}}
+\index{Pre\+Auth@{Pre\+Auth}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Pre\+Auth()}{PreAuth()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Pre\+Auth (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_pre_auth_request}{Pre\+Auth\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Auth method to obtain an Auth or Pre-\/\+Auth, based on the \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} Is\+Pre\+Auth flag 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_ab770dbea796bfc3ffa1d0ed999d04b48}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ac716d55882598b92984159f4898bbe2a}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ac716d55882598b92984159f4898bbe2a}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Print\+Image@{Print\+Image}}
+\index{Print\+Image@{Print\+Image}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Print\+Image()}{PrintImage()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Print\+Image (\begin{DoxyParamCaption}\item[{Bitmap}]{bitmap }\end{DoxyParamCaption})}
+
+
+
+Print an image on the Clover Mini printer 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a4743d4155d22ddc978602814cb72ee6b}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a16ffe34012c788351332d1d2c41be602}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a16ffe34012c788351332d1d2c41be602}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Print\+Image\+From\+U\+RL@{Print\+Image\+From\+U\+RL}}
+\index{Print\+Image\+From\+U\+RL@{Print\+Image\+From\+U\+RL}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Print\+Image\+From\+U\+R\+L()}{PrintImageFromURL()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Print\+Image\+From\+U\+RL (\begin{DoxyParamCaption}\item[{String}]{Img\+U\+RL }\end{DoxyParamCaption})}
+
+
+
+Print an image from a url 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Img\+U\+RL} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a16a2a91c231e7a66373b2c0e2f612951}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a16a2a91c231e7a66373b2c0e2f612951}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Print\+Text@{Print\+Text}}
+\index{Print\+Text@{Print\+Text}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Print\+Text()}{PrintText()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Print\+Text (\begin{DoxyParamCaption}\item[{List$<$ string $>$}]{messages }\end{DoxyParamCaption})}
+
+
+
+Print simple lines of text to the Clover Mini printer 
+
+
+\begin{DoxyParams}{Parameters}
+{\em messages} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a1601ef2709d1e2eb53fa92ff1ee46823}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aaa44684c7bf2c04b88ead61034c7c273}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aaa44684c7bf2c04b88ead61034c7c273}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Refund\+Payment@{Refund\+Payment}}
+\index{Refund\+Payment@{Refund\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Refund\+Payment()}{RefundPayment()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Refund\+Payment (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_refund_payment_request}{Refund\+Payment\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Refund a specific payment 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a55f368cbaa89e2a8c47da3ba4a3a80aa}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a6f4a1ae115140ff1cbc8b6d4a8f46be5}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a6f4a1ae115140ff1cbc8b6d4a8f46be5}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Reject\+Payment@{Reject\+Payment}}
+\index{Reject\+Payment@{Reject\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Reject\+Payment()}{RejectPayment()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Reject\+Payment (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment}{Payment}}]{payment,  }\item[{Challenge}]{challenge }\end{DoxyParamCaption})}
+
+
+
+If signature is captured during a Sale, this method rejects the signature as entered 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a2ffc66f46fddbf37d780ca269dd3b562}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0d7b15309b4113bc8d88c5dd65c351c3}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a0d7b15309b4113bc8d88c5dd65c351c3}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Reject\+Signature@{Reject\+Signature}}
+\index{Reject\+Signature@{Reject\+Signature}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Reject\+Signature()}{RejectSignature()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Reject\+Signature (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_verify_signature_request}{Verify\+Signature\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+If signature is captured during a Sale, this method rejects the signature as entered 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a8a86e1d3994b81424b06e0846f52dc29}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a4acba7cae456cb73a0acf4331cae04f9}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a4acba7cae456cb73a0acf4331cae04f9}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Remove\+Clover\+Connector\+Listener@{Remove\+Clover\+Connector\+Listener}}
+\index{Remove\+Clover\+Connector\+Listener@{Remove\+Clover\+Connector\+Listener}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Remove\+Clover\+Connector\+Listener()}{RemoveCloverConnectorListener()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Remove\+Clover\+Connector\+Listener (\begin{DoxyParamCaption}\item[{\hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_listener}{I\+Clover\+Connector\+Listener}}]{connector\+Listener }\end{DoxyParamCaption})}
+
+
+
+Removes a clover connector listener. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em connector\+Listener} & The connector listener.\\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a05aa30b8a934164519333645e267c2e5}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a55ebe329c852bedccaeb882ca71c4774}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a55ebe329c852bedccaeb882ca71c4774}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Remove\+Display\+Order@{Remove\+Display\+Order}}
+\index{Remove\+Display\+Order@{Remove\+Display\+Order}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Remove\+Display\+Order()}{RemoveDisplayOrder()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Remove\+Display\+Order (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remote_1_1order_1_1_display_order}{Display\+Order}}]{order }\end{DoxyParamCaption})}
+
+
+
+Remove the Display\+Order from the device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em order} & \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_af5a1b2bddf01b44eaa40af3f8212451b}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aafead472d6f0adc74084a229bf75e5ed}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_aafead472d6f0adc74084a229bf75e5ed}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Reset\+Device@{Reset\+Device}}
+\index{Reset\+Device@{Reset\+Device}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Reset\+Device()}{ResetDevice()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Reset\+Device (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Send a request to the server to reset the Clover device. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a422575429ff010ed302c57eb5542c35f}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a172b1a191a58f1f0e4dcc0a8dc7eae48}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a172b1a191a58f1f0e4dcc0a8dc7eae48}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Retrieve\+Device\+Status@{Retrieve\+Device\+Status}}
+\index{Retrieve\+Device\+Status@{Retrieve\+Device\+Status}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Retrieve\+Device\+Status()}{RetrieveDeviceStatus()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Retrieve\+Device\+Status (\begin{DoxyParamCaption}\item[{Retrieve\+Device\+Status\+Request}]{request }\end{DoxyParamCaption})}
+
+
+
+Send a message requesting the current status of the device 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a7a5404c24cac6be283c80a7983bfa4eb}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a3b85cfdb92b7c64d9b27decc49ca8b7c}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a3b85cfdb92b7c64d9b27decc49ca8b7c}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Retrieve\+Payment@{Retrieve\+Payment}}
+\index{Retrieve\+Payment@{Retrieve\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Retrieve\+Payment()}{RetrievePayment()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Retrieve\+Payment (\begin{DoxyParamCaption}\item[{Retrieve\+Payment\+Request}]{request }\end{DoxyParamCaption})}
+
+
+
+Send a message requesting the Payment information corresponding the the provided External Payment Id 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a786435c5849a2d8befd83173f70e05a7}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a5d371f91336d4950e32ff051061ad91d}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a5d371f91336d4950e32ff051061ad91d}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Retrieve\+Pending\+Payments@{Retrieve\+Pending\+Payments}}
+\index{Retrieve\+Pending\+Payments@{Retrieve\+Pending\+Payments}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Retrieve\+Pending\+Payments()}{RetrievePendingPayments()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Retrieve\+Pending\+Payments (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Request a list of payments taken offline, but that haven\textquotesingle{}t been processed yet 
+
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a8ba5ef9b937ad8edc9cd5052826da2ed}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_acc92394e6902137c559510e498e78529}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_acc92394e6902137c559510e498e78529}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Sale@{Sale}}
+\index{Sale@{Sale}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Sale()}{Sale()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Sale (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request}{Sale\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Sale method, aka \char`\"{}purchase\char`\"{} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & A \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request}{Sale\+Request} object containing basic information needed for the transaction\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status code, 0 for success, -\/1 for failure (need to use pre-\/defined constants)
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a1adbcc8a0d4aaa82157a102af4f16b91}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ad6e241f6dac22bafa5edcc89457c99a7}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_ad6e241f6dac22bafa5edcc89457c99a7}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Send\+Message\+To\+Activity@{Send\+Message\+To\+Activity}}
+\index{Send\+Message\+To\+Activity@{Send\+Message\+To\+Activity}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Send\+Message\+To\+Activity()}{SendMessageToActivity()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Send\+Message\+To\+Activity (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_message_to_activity}{Message\+To\+Activity}}]{request }\end{DoxyParamCaption})}
+
+
+
+Send a message to a running custom activity on the Clover device 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a328a0dd8b4ed02567f7e8d3184f35038}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a50be4c513f6f67971b51f6f76f30ac06}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a50be4c513f6f67971b51f6f76f30ac06}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Show\+Display\+Order@{Show\+Display\+Order}}
+\index{Show\+Display\+Order@{Show\+Display\+Order}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Show\+Display\+Order()}{ShowDisplayOrder()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Show\+Display\+Order (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remote_1_1order_1_1_display_order}{Display\+Order}}]{order }\end{DoxyParamCaption})}
+
+
+
+Show the Display\+Order on the device. Replaces the existing Display\+Order on the device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em order} & \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_abfa384bfc0c016908d137e0332b7e06c}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a2d4c2a87f772459bb1a494e2f87835a8}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a2d4c2a87f772459bb1a494e2f87835a8}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Show\+Message@{Show\+Message}}
+\index{Show\+Message@{Show\+Message}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Show\+Message()}{ShowMessage()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Show\+Message (\begin{DoxyParamCaption}\item[{string}]{message }\end{DoxyParamCaption})}
+
+
+
+Show a message on the Clover Mini screen 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a6efd4dc87eaf16f949b9aeb93e7af464}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_adb4f9a33f3316cb349a02d05e7ddf902}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_adb4f9a33f3316cb349a02d05e7ddf902}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Show\+Thank\+You\+Screen@{Show\+Thank\+You\+Screen}}
+\index{Show\+Thank\+You\+Screen@{Show\+Thank\+You\+Screen}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Show\+Thank\+You\+Screen()}{ShowThankYouScreen()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Show\+Thank\+You\+Screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Show the thank you screen on the device 
+
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a14b5524c67d9b52c57cd2e972a65d7f1}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a462fd3dbb5914ac1d5b906dd1daa57c0}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a462fd3dbb5914ac1d5b906dd1daa57c0}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Show\+Welcome\+Screen@{Show\+Welcome\+Screen}}
+\index{Show\+Welcome\+Screen@{Show\+Welcome\+Screen}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Show\+Welcome\+Screen()}{ShowWelcomeScreen()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Show\+Welcome\+Screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Return the device to the Welcome Screen 
+
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a33c344737b54ed6d8c910e2ac1e5bd49}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a3ec58f5860c34bcb104578caddb0b564}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a3ec58f5860c34bcb104578caddb0b564}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Start\+Custom\+Activity@{Start\+Custom\+Activity}}
+\index{Start\+Custom\+Activity@{Start\+Custom\+Activity}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Start\+Custom\+Activity()}{StartCustomActivity()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Start\+Custom\+Activity (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_request}{Custom\+Activity\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Request to start a Custom Activity on the Clover device 
+
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a7c4a08c49e7285e95d7e36340ebe3306}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a815c8be2012ebda06247c059771717cc}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_a815c8be2012ebda06247c059771717cc}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Tip\+Adjust\+Auth@{Tip\+Adjust\+Auth}}
+\index{Tip\+Adjust\+Auth@{Tip\+Adjust\+Auth}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Tip\+Adjust\+Auth()}{TipAdjustAuth()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Tip\+Adjust\+Auth (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_adjust_auth_request}{Tip\+Adjust\+Auth\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Adjust the tip for a previous Auth. Note\+: Should only be called if request\textquotesingle{}s Payment\+ID is from an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_response}{Auth\+Response} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_a84fa27d8c605594999b39e619b20359e}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+\mbox{\Hypertarget{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af35e223ba760d0a6d61c67895c619997}\label{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_af35e223ba760d0a6d61c67895c619997}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}!Void\+Payment@{Void\+Payment}}
+\index{Void\+Payment@{Void\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector@{com\+::clover\+::remotepay\+::sdk\+::\+I\+Clover\+Connector}}
+\subsubsection{\texorpdfstring{Void\+Payment()}{VoidPayment()}}
+{\footnotesize\ttfamily void com.\+clover.\+remotepay.\+sdk.\+I\+Clover\+Connector.\+Void\+Payment (\begin{DoxyParamCaption}\item[{\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_void_payment_request}{Void\+Payment\+Request}}]{request }\end{DoxyParamCaption})}
+
+
+
+Void a transaction, given a previously used order ID and/or payment ID T\+BD -\/ defining a payment or order ID to be used with a void without requiring a response from \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_acc92394e6902137c559510e498e78529}{Sale()} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em request} & A Void\+Request object containing basic information needed to void the transaction\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status code, 0 for success, -\/1 for failure (need to use pre-\/defined constants)
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_aa987ae8606b8b2f4a235e9c09ffeef3b}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Connector}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\+Clover\+Connector/com/clover/remotepay/sdk/I\+Clover\+Connector.\+cs\end{DoxyCompactItemize}

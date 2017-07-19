@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['defaultcloverconnectorlistener',['DefaultCloverConnectorListener',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_default_clover_connector_listener.html',1,'com::clover::remotepay::sdk']]],
+  ['defaulttaxrates',['defaultTaxRates',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item.html#acbf6749208f7de59859cfd6042840b65',1,'com::clover::sdk::v3::inventory::Item']]],
+  ['delay',['delay',['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_fire_order.html#a375094a9e2b7281fd66b50bb72d57544',1,'com::clover::sdk::v3::order::FireOrder']]],
+  ['device',['Device',['../classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html',1,'com.clover.sdk.v3.device.Device'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_order.html#a1501b94de8b5efc7c434677b6d89b1ff',1,'com.clover.sdk.v3.order.Order.device()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit.html#acefc7cd9b1508f9c1d6b27f1f172da73',1,'com.clover.sdk.v3.payments.Credit.device()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a1b8b9f84b368df44ad6b203ae74ac59e',1,'com.clover.sdk.v3.payments.Payment.device()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_refund.html#a7352818ebf5686c54a44d083f2599c71',1,'com.clover.sdk.v3.payments.Refund.device()']]],
+  ['deviceinfo',['DeviceInfo',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_device_info.html',1,'com::clover::remotepay::sdk']]],
+  ['deviceprovision',['DeviceProvision',['../classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device_provision.html',1,'com::clover::sdk::v3::device']]],
+  ['devices',['devices',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch.html#a6b6b34ecc7474d320e8e9aee4e12686f',1,'com::clover::sdk::v3::payments::Batch']]],
+  ['disablecashback',['DisableCashback',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request.html#a02447b96d94225a88f3659fa3a5f1ea4',1,'com::clover::remotepay::sdk::SaleRequest']]],
+  ['discount',['Discount',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_discount.html',1,'com.clover.sdk.v3.inventory.Discount'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_discount.html',1,'com.clover.sdk.v3.order.Discount'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_discount.html#a6447f1e7eef9a5c388bf904b5cc1e8c8',1,'com.clover.sdk.v3.order.Discount.discount()']]],
+  ['discountamount',['discountAmount',['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#aaf7ca9189ecde44c059eed82bcfd0c79',1,'com::clover::sdk::v3::order::LineItem']]],
+  ['discountsaddedoperation',['DiscountsAddedOperation',['../classcom_1_1clover_1_1remote_1_1order_1_1operation_1_1_discounts_added_operation.html',1,'com::clover::remote::order::operation']]],
+  ['discountsdeletedoperation',['DiscountsDeletedOperation',['../classcom_1_1clover_1_1remote_1_1order_1_1operation_1_1_discounts_deleted_operation.html',1,'com::clover::remote::order::operation']]],
+  ['displaydiscount',['DisplayDiscount',['../classcom_1_1clover_1_1remote_1_1order_1_1_display_discount.html',1,'com::clover::remote::order']]],
+  ['displayfactory',['DisplayFactory',['../classcom_1_1clover_1_1remote_1_1order_1_1_display_factory.html',1,'com::clover::remote::order']]],
+  ['displaylineitem',['DisplayLineItem',['../classcom_1_1clover_1_1remote_1_1order_1_1_display_line_item.html',1,'com::clover::remote::order']]],
+  ['displaymodification',['DisplayModification',['../classcom_1_1clover_1_1remote_1_1order_1_1_display_modification.html',1,'com::clover::remote::order']]],
+  ['displayoperation',['DisplayOperation',['../classcom_1_1clover_1_1remote_1_1order_1_1operation_1_1_display_operation.html',1,'com::clover::remote::order::operation']]],
+  ['displayorder',['DisplayOrder',['../classcom_1_1clover_1_1remote_1_1order_1_1_display_order.html',1,'com::clover::remote::order']]],
+  ['displaypayment',['DisplayPayment',['../classcom_1_1clover_1_1remote_1_1order_1_1_display_payment.html',1,'com::clover::remote::order']]],
+  ['displaypaymentreceiptoptions',['DisplayPaymentReceiptOptions',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector.html#a3c71f60836d40aa51b70841f7be6cf30',1,'com.clover.remotepay.sdk.CloverConnector.DisplayPaymentReceiptOptions()'],['../interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector.html#ae60f9c25fa8cc54e3102fcde8ab0b869',1,'com.clover.remotepay.sdk.ICloverConnector.DisplayPaymentReceiptOptions()']]],
+  ['displaypaymentreceiptoptionsrequest',['DisplayPaymentReceiptOptionsRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_display_payment_receipt_options_request.html',1,'com::clover::remotepay::sdk']]]
+];

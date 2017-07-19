@@ -1,0 +1,92 @@
+\hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{}\section{com.\+clover.\+remotepay.\+sdk.\+Auth\+Request Class Reference}
+\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}\index{com.\+clover.\+remotepay.\+sdk.\+Auth\+Request@{com.\+clover.\+remotepay.\+sdk.\+Auth\+Request}}
+
+
+This request should be used for Auth only, but is backward compatible for older implementations. If you are currently using an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} with Is\+Pre\+Auth = true, please change your code to use Pre\+Auth\+Request/\+Pre\+Auth\+Response for all Pre\+Auth transactions.  
+
+
+Inheritance diagram for com.\+clover.\+remotepay.\+sdk.\+Auth\+Request\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}
+\end{center}
+\end{figure}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_acd92e15928d39787729933da4400ee6b}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_acd92e15928d39787729933da4400ee6b}} 
+bool {\bfseries Disable\+Cashback}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+long \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_ad23ebdcb14edcb4eb99b0572350905c6}{Tax\+Amount}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Amount paid in tips \end{DoxyCompactList}\item 
+long \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_a2f3e3450ac6bc785023926590bf4c468}{Tippable\+Amount}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Amount against which a tip should be applied \end{DoxyCompactList}\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_afaafa0e18fed556cc3cd6ca9906630b2}{Allow\+Offline\+Payment}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If true then offline payments can be accepted \end{DoxyCompactList}\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_aa1e83e887f5d3db97e7ae9810bb63e08}{Approve\+Offline\+Payment\+Without\+Prompt}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If true then offline payments will be approved without a prompt. Currently must be true. \end{DoxyCompactList}\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_ae60bb0644551b7c845472bfcef226de4}{Force\+Offline\+Payment}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If true then payments will be placed directly in the offline queue for processing when a valid connection exists to the gateway. This means that payments can be taken offline even with a healthy gateway connection, for purposes of keeping customer interaction with the payment device to the bare minimum. The merchant assumes all risk of potentially declined transactions when this feature is enabled. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This request should be used for Auth only, but is backward compatible for older implementations. If you are currently using an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} with Is\+Pre\+Auth = true, please change your code to use Pre\+Auth\+Request/\+Pre\+Auth\+Response for all Pre\+Auth transactions. 
+
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_afaafa0e18fed556cc3cd6ca9906630b2}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_afaafa0e18fed556cc3cd6ca9906630b2}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}!Allow\+Offline\+Payment@{Allow\+Offline\+Payment}}
+\index{Allow\+Offline\+Payment@{Allow\+Offline\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}}
+\subsubsection{\texorpdfstring{Allow\+Offline\+Payment}{AllowOfflinePayment}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Auth\+Request.\+Allow\+Offline\+Payment\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+If true then offline payments can be accepted 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_aa1e83e887f5d3db97e7ae9810bb63e08}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_aa1e83e887f5d3db97e7ae9810bb63e08}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}!Approve\+Offline\+Payment\+Without\+Prompt@{Approve\+Offline\+Payment\+Without\+Prompt}}
+\index{Approve\+Offline\+Payment\+Without\+Prompt@{Approve\+Offline\+Payment\+Without\+Prompt}!com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}}
+\subsubsection{\texorpdfstring{Approve\+Offline\+Payment\+Without\+Prompt}{ApproveOfflinePaymentWithoutPrompt}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Auth\+Request.\+Approve\+Offline\+Payment\+Without\+Prompt\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+If true then offline payments will be approved without a prompt. Currently must be true. 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_ae60bb0644551b7c845472bfcef226de4}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_ae60bb0644551b7c845472bfcef226de4}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}!Force\+Offline\+Payment@{Force\+Offline\+Payment}}
+\index{Force\+Offline\+Payment@{Force\+Offline\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}}
+\subsubsection{\texorpdfstring{Force\+Offline\+Payment}{ForceOfflinePayment}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Auth\+Request.\+Force\+Offline\+Payment\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+If true then payments will be placed directly in the offline queue for processing when a valid connection exists to the gateway. This means that payments can be taken offline even with a healthy gateway connection, for purposes of keeping customer interaction with the payment device to the bare minimum. The merchant assumes all risk of potentially declined transactions when this feature is enabled. 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_ad23ebdcb14edcb4eb99b0572350905c6}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_ad23ebdcb14edcb4eb99b0572350905c6}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}!Tax\+Amount@{Tax\+Amount}}
+\index{Tax\+Amount@{Tax\+Amount}!com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}}
+\subsubsection{\texorpdfstring{Tax\+Amount}{TaxAmount}}
+{\footnotesize\ttfamily long com.\+clover.\+remotepay.\+sdk.\+Auth\+Request.\+Tax\+Amount\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Amount paid in tips 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_a2f3e3450ac6bc785023926590bf4c468}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request_a2f3e3450ac6bc785023926590bf4c468}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}!Tippable\+Amount@{Tippable\+Amount}}
+\index{Tippable\+Amount@{Tippable\+Amount}!com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Auth\+Request}}
+\subsubsection{\texorpdfstring{Tippable\+Amount}{TippableAmount}}
+{\footnotesize\ttfamily long com.\+clover.\+remotepay.\+sdk.\+Auth\+Request.\+Tippable\+Amount\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Amount against which a tip should be applied 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\+Clover\+Connector/com/clover/remotepay/sdk/Transaction\+Beans.\+cs\end{DoxyCompactItemize}

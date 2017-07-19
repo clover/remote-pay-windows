@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['acceptpayment',['AcceptPayment',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector.html#afe33a1ba414608b2b05a3336128c7b5c',1,'com.clover.remotepay.sdk.CloverConnector.AcceptPayment()'],['../interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector.html#ad6286e6d5ec3157f3ceeafc1de504dff',1,'com.clover.remotepay.sdk.ICloverConnector.AcceptPayment()']]],
+  ['acceptsignature',['AcceptSignature',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector.html#a2d54a7e1d05451c3335fe31337a56ea4',1,'com.clover.remotepay.sdk.CloverConnector.AcceptSignature()'],['../interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector.html#ab31791ce69e05ca2e2b15269c2010a15',1,'com.clover.remotepay.sdk.ICloverConnector.AcceptSignature()']]],
+  ['addcloverconnectorlistener',['AddCloverConnectorListener',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector.html#aebd32d30edf2691cafd56d8540597d9a',1,'com.clover.remotepay.sdk.CloverConnector.AddCloverConnectorListener()'],['../interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector.html#a90fcd7781afc36d654e42b1c9daada87',1,'com.clover.remotepay.sdk.ICloverConnector.AddCloverConnectorListener()']]],
+  ['auth',['Auth',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector.html#a2ae641aff3f22e4c5fa651d8deaa7bbd',1,'com.clover.remotepay.sdk.CloverConnector.Auth()'],['../interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector.html#af0099cbd3075f3c91f6873265f9c766b',1,'com.clover.remotepay.sdk.ICloverConnector.Auth()']]]
+];

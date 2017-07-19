@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['openscashdrawer',['opensCashDrawer',['../classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_tender.html#aa65b267d535ae9793eb3c83240540ff9',1,'com::clover::sdk::v3::base_::Tender']]],
+  ['opentabs',['openTabs',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch_detail.html#a31e7d8d50ee2df7c1373e0ff0412c7dc',1,'com::clover::sdk::v3::payments::BatchDetail']]],
+  ['opentips',['openTips',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch_detail.html#a81b8732afda13d6df5de5ef93aa05f47',1,'com::clover::sdk::v3::payments::BatchDetail']]],
+  ['option',['option',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_option_item.html#ab9113ba4bd277f3e8735999fab21c6ca',1,'com::clover::sdk::v3::inventory::OptionItem']]],
+  ['options',['options',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_attribute.html#a1d428824d832818f79da2c6695c732a2',1,'com::clover::sdk::v3::inventory::Attribute']]],
+  ['order',['order',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#ac5b27c5889d5cd387f5af14aaddf6ef0',1,'com::clover::sdk::v3::payments::Payment']]],
+  ['orderid',['orderId',['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_fire_order.html#a99284e04888e31790949f4ede72eb805',1,'com::clover::sdk::v3::order::FireOrder']]],
+  ['orderref',['orderRef',['../classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_service_charge.html#a6dfa5493c5841e67ebd02d5c53a534b9',1,'com.clover.sdk.v3.base_.ServiceCharge.orderRef()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_customer.html#aba176d2a5bcfbcc4c80ade1c9e27274e',1,'com.clover.sdk.v3.customers.Customer.orderRef()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_discount.html#a58b38e2a47d6bd4f0b1ee9353dd0d7a0',1,'com.clover.sdk.v3.order.Discount.orderRef()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#ac67beb7ddb5e2fbc1e74724e616be1e1',1,'com.clover.sdk.v3.order.LineItem.orderRef()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit.html#a9d21d88484689700b810d02c67aad2d4',1,'com.clover.sdk.v3.payments.Credit.orderRef()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_refund.html#a02bb9634a0b1264d827628cb03ef3731',1,'com.clover.sdk.v3.payments.Refund.orderRef()']]],
+  ['overridemerchanttender',['overrideMerchantTender',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_refund.html#a42fd1ab2cec842286b312eb5ebfc8dc0',1,'com::clover::sdk::v3::payments::Refund']]]
+];

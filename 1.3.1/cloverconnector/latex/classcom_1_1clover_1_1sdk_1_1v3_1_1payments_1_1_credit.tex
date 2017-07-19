@@ -1,0 +1,145 @@
+\hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit}{}\section{com.\+clover.\+sdk.\+v3.\+payments.\+Credit Class Reference}
+\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit}\index{com.\+clover.\+sdk.\+v3.\+payments.\+Credit@{com.\+clover.\+sdk.\+v3.\+payments.\+Credit}}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+String \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_af296ad7778f74b1ea14fe35908f04a5f}{id}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Unique identifier \end{DoxyCompactList}\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a9d21d88484689700b810d02c67aad2d4}{order\+Ref}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The order with which the credit is associated \end{DoxyCompactList}\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_acefc7cd9b1508f9c1d6b27f1f172da73}{device}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Device which processed this credit \end{DoxyCompactList}\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_tender}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Tender} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a68a74f3bcbf20225574fcd709d579415}{tender}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The tender type associated with this payment, e.\+g. credit card, cash, etc. \end{DoxyCompactList}\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_aafae65ef4b8afa39c532c844c4ad5470}{employee}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The employee who processed the payment \end{DoxyCompactList}\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_customer}{com.\+clover.\+sdk.\+v3.\+customers.\+Customer} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a1d075194acd4bc2987fad6757dd31520}{customers}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Customer who received the credit/refund \end{DoxyCompactList}\item 
+Int64 \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_ab99189a5b7662b47323aca6862b99c0c}{amount}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Amount paid \end{DoxyCompactList}\item 
+Int64 \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a90650469195d49f730284b3e5e0fc3dd}{tax\+Amount}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Amount paid in tax \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_ab1b45423634a78d0ecc19e7b1c93a608}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_ab1b45423634a78d0ecc19e7b1c93a608}} 
+List$<$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_taxable_amount_rate}{com.\+clover.\+sdk.\+v3.\+payments.\+Taxable\+Amount\+Rate} $>$ {\bfseries tax\+Rates}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+Int64 \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a7e363c4d7b48fa5556339e31cb7c3cb4}{created\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Time payment was recorded on server \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a59007eafcb6a85400f3b41f101d4aced}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a59007eafcb6a85400f3b41f101d4aced}} 
+Int64 {\bfseries client\+Created\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_card_transaction}{com.\+clover.\+sdk.\+v3.\+payments.\+Card\+Transaction} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_acade4c966d115789de6e50f7b1bcdec6}{card\+Transaction}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Information about the card used for credit/debit card payments \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a7867234134c2b351bcb2eb81f3acd615}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a7867234134c2b351bcb2eb81f3acd615}} 
+Boolean {\bfseries voided}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a15f2c21b091cb72c279bccd926eaf913}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a15f2c21b091cb72c279bccd926eaf913}} 
+String {\bfseries void\+Reason}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_ab99189a5b7662b47323aca6862b99c0c}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_ab99189a5b7662b47323aca6862b99c0c}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!amount@{amount}}
+\index{amount@{amount}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{amount}{amount}}
+{\footnotesize\ttfamily Int64 com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+amount\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Amount paid 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_acade4c966d115789de6e50f7b1bcdec6}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_acade4c966d115789de6e50f7b1bcdec6}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!card\+Transaction@{card\+Transaction}}
+\index{card\+Transaction@{card\+Transaction}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{card\+Transaction}{cardTransaction}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_card_transaction}{com.\+clover.\+sdk.\+v3.\+payments.\+Card\+Transaction} com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+card\+Transaction\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Information about the card used for credit/debit card payments 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a7e363c4d7b48fa5556339e31cb7c3cb4}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a7e363c4d7b48fa5556339e31cb7c3cb4}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!created\+Time@{created\+Time}}
+\index{created\+Time@{created\+Time}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{created\+Time}{createdTime}}
+{\footnotesize\ttfamily Int64 com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+created\+Time\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Time payment was recorded on server 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a1d075194acd4bc2987fad6757dd31520}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a1d075194acd4bc2987fad6757dd31520}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!customers@{customers}}
+\index{customers@{customers}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{customers}{customers}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_customer}{com.\+clover.\+sdk.\+v3.\+customers.\+Customer} com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+customers\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Customer who received the credit/refund 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_acefc7cd9b1508f9c1d6b27f1f172da73}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_acefc7cd9b1508f9c1d6b27f1f172da73}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!device@{device}}
+\index{device@{device}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{device}{device}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+device\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Device which processed this credit 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_aafae65ef4b8afa39c532c844c4ad5470}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_aafae65ef4b8afa39c532c844c4ad5470}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!employee@{employee}}
+\index{employee@{employee}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{employee}{employee}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+employee\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The employee who processed the payment 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_af296ad7778f74b1ea14fe35908f04a5f}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_af296ad7778f74b1ea14fe35908f04a5f}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!id@{id}}
+\index{id@{id}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily String com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+id\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Unique identifier 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a9d21d88484689700b810d02c67aad2d4}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a9d21d88484689700b810d02c67aad2d4}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!order\+Ref@{order\+Ref}}
+\index{order\+Ref@{order\+Ref}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{order\+Ref}{orderRef}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+order\+Ref\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The order with which the credit is associated 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a90650469195d49f730284b3e5e0fc3dd}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a90650469195d49f730284b3e5e0fc3dd}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!tax\+Amount@{tax\+Amount}}
+\index{tax\+Amount@{tax\+Amount}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{tax\+Amount}{taxAmount}}
+{\footnotesize\ttfamily Int64 com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+tax\+Amount\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Amount paid in tax 
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a68a74f3bcbf20225574fcd709d579415}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit_a68a74f3bcbf20225574fcd709d579415}} 
+\index{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}!tender@{tender}}
+\index{tender@{tender}!com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit@{com\+::clover\+::sdk\+::v3\+::payments\+::\+Credit}}
+\subsubsection{\texorpdfstring{tender}{tender}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_tender}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Tender} com.\+clover.\+sdk.\+v3.\+payments.\+Credit.\+tender\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The tender type associated with this payment, e.\+g. credit card, cash, etc. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\+Clover\+Windows\+S\+D\+K/com/clover/sdk/v3/payments/Credit.\+cs\end{DoxyCompactItemize}
