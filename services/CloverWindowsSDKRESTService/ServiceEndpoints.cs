@@ -22,6 +22,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using System.IO;
 using com.clover.sdk.v3.payments;
+using System;
 
 public sealed class ServiceEndpoints : RESTResource
 {
@@ -42,6 +43,8 @@ public sealed class ServiceEndpoints : RESTResource
     public ServiceEndpoints() : base()
     {
     }
+
+
 
     [RESTRoute(Method =Grapevine.HttpMethod.GET, PathInfo = @"^/Clover/Status$")]
     public void Status(HttpListenerContext context)
@@ -64,10 +67,19 @@ public sealed class ServiceEndpoints : RESTResource
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/ShowMessage$")]
     public void ShowMessage(HttpListenerContext context)
     {
-        ShowMessage message = ParseRequest<ShowMessage>(context);
+        try
+        {
+            ShowMessage message = ParseRequest<ShowMessage>(context);
+            GetServer.CloverConnector.ShowMessage(message.Message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
 
-        GetServer.CloverConnector.ShowMessage(message.Message);
-        this.SendTextResponse(context, "");
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/ResetDevice$")]
@@ -109,235 +121,488 @@ public sealed class ServiceEndpoints : RESTResource
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintText$")]
     public void PrintText(HttpListenerContext context)
     {
-        PrintText message = ParseRequest<PrintText>(context);
-
-        GetServer.CloverConnector.PrintText(message.Messages);
-        this.SendTextResponse(context, "");
+        try
+        {
+            PrintText message = ParseRequest<PrintText>(context);
+            GetServer.CloverConnector.PrintText(message.Messages);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Auth$")]
     public void Auth(HttpListenerContext context)
     {
-        AuthRequest message = ParseRequest<AuthRequest>(context);
+        try
+        {
+            AuthRequest message = ParseRequest<AuthRequest>(context);
+            GetServer.CloverConnector.Auth(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
 
-        GetServer.CloverConnector.Auth(message);
-        this.SendTextResponse(context, "");
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PreAuth$")]
     public void PreAuth(HttpListenerContext context)
     {
-        PreAuthRequest message = ParseRequest<PreAuthRequest>(context);
+        try
+        {
+            PreAuthRequest message = ParseRequest<PreAuthRequest>(context);
 
-        GetServer.CloverConnector.PreAuth(message);
-        this.SendTextResponse(context, "");
+            GetServer.CloverConnector.PreAuth(message);
+            this.SendTextResponse(context, "");
+        }
+        catch(Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+        
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Sale$")]
     public void Sale(HttpListenerContext context)
     {
-        SaleRequest message = ParseRequest<SaleRequest>(context);
+        try
+        {
+            SaleRequest message = ParseRequest<SaleRequest>(context);
+            GetServer.CloverConnector.Sale(message);
+            this.SendTextResponse(context, "");
+        }
+        catch(Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
 
-        GetServer.CloverConnector.Sale(message);
-        this.SendTextResponse(context, "");
+        //Console.WriteLine(context.Response.StatusCode);
+        //Console.WriteLine(context.Response.StatusDescription);
+        //context.Response.StatusCode
+        
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/VoidPayment$")]
     public void VoidPayment(HttpListenerContext context)
     {
-        VoidPaymentRequest message = ParseRequest<VoidPaymentRequest>(context);
-        GetServer.CloverConnector.VoidPayment(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            VoidPaymentRequest message = ParseRequest<VoidPaymentRequest>(context);
+            GetServer.CloverConnector.VoidPayment(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RefundPayment$")]
     public void RefundPayment(HttpListenerContext context)
     {
-        RefundPaymentRequest message = ParseRequest<RefundPaymentRequest>(context);
-        GetServer.CloverConnector.RefundPayment(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            RefundPaymentRequest message = ParseRequest<RefundPaymentRequest>(context);
+            GetServer.CloverConnector.RefundPayment(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/ManualRefund$")]
     public void ManualRefund(HttpListenerContext context)
     {
-        ManualRefundRequest message = ParseRequest<ManualRefundRequest>(context);
-        GetServer.CloverConnector.ManualRefund(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            ManualRefundRequest message = ParseRequest<ManualRefundRequest>(context);
+            GetServer.CloverConnector.ManualRefund(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/VaultCard$")]
     public void VaultCard(HttpListenerContext context)
     {
-        VaultCard vaultCard = ParseRequest<VaultCard>(context);
-        GetServer.CloverConnector.VaultCard(vaultCard.CardEntryMethods);
-        this.SendTextResponse(context, "");
+        try
+        {
+            VaultCard vaultCard = ParseRequest<VaultCard>(context);
+            GetServer.CloverConnector.VaultCard(vaultCard.CardEntryMethods);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/ReadCardData$")]
     public void ReadCardData(HttpListenerContext context)
     {
-        ReadCardDataRequest readCardDataRequest = ParseRequest<ReadCardDataRequest>(context);
-        GetServer.CloverConnector.ReadCardData(readCardDataRequest);
-        this.SendTextResponse(context, "");
+        try
+        {
+            ReadCardDataRequest readCardDataRequest = ParseRequest<ReadCardDataRequest>(context);
+            GetServer.CloverConnector.ReadCardData(readCardDataRequest);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/CapturePreAuth$")]
     public void CapturePreAuth(HttpListenerContext context)
     {
-        CapturePreAuthRequest message = ParseRequest<CapturePreAuthRequest>(context);
-        GetServer.CloverConnector.CapturePreAuth(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            CapturePreAuthRequest message = ParseRequest<CapturePreAuthRequest>(context);
+            GetServer.CloverConnector.CapturePreAuth(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/TipAdjustAuth$")]
     public void TipAdjustAuth(HttpListenerContext context)
     {
-        TipAdjustAuthRequest message = ParseRequest<TipAdjustAuthRequest>(context);
-        GetServer.CloverConnector.TipAdjustAuth(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            TipAdjustAuthRequest message = ParseRequest<TipAdjustAuthRequest>(context);
+            GetServer.CloverConnector.TipAdjustAuth(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Closeout$")]
     public void Closeout(HttpListenerContext context)
     {
-        CloseoutRequest message = ParseRequest<CloseoutRequest>(context);
-        GetServer.CloverConnector.Closeout(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            CloseoutRequest message = ParseRequest<CloseoutRequest>(context);
+            GetServer.CloverConnector.Closeout(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintImage$")]
     public void PrintImage(HttpListenerContext context)
     {
-        PrintImage message = ParseRequest<PrintImage>(context);
-        if(message.Bitmap != null)
+        try
         {
-            GetServer.CloverConnector.PrintImage(message.GetBitmap());
-            this.SendTextResponse(context, "");
+            PrintImage message = ParseRequest<PrintImage>(context);
+            if (message.Bitmap != null)
+            {
+                GetServer.CloverConnector.PrintImage(message.GetBitmap());
+                this.SendTextResponse(context, "");
+            }
         }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintImageFromURL$")]
     public void PrintImageFromURL(HttpListenerContext context)
     {
-        PrintImage message = ParseRequest<PrintImage>(context);
-        if (message.Url != null)
+        try
         {
-            GetServer.CloverConnector.PrintImageFromURL(message.Url);
-            this.SendTextResponse(context, "");
+            PrintImage message = ParseRequest<PrintImage>(context);
+            if (message.Url != null)
+            {
+                GetServer.CloverConnector.PrintImageFromURL(message.Url);
+                this.SendTextResponse(context, "");
+            }
         }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/DisplayPaymentReceiptOptions$")]
     public void DisplayPaymentReceiptOptions(HttpListenerContext context)
     {
-        DisplayPaymentReceiptOptionsRequest message = ParseRequest<DisplayPaymentReceiptOptionsRequest>(context);
-        GetServer.CloverConnector.DisplayPaymentReceiptOptions(message.OrderID, message.PaymentID);
-        this.SendTextResponse(context, "");
+        try
+        {
+            DisplayPaymentReceiptOptionsRequest message = ParseRequest<DisplayPaymentReceiptOptionsRequest>(context);
+            GetServer.CloverConnector.DisplayPaymentReceiptOptions(message.OrderID, message.PaymentID);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/OpenCashDrawer$")]
     public void OpenCashDrawer(HttpListenerContext context)
     {
-        OpenCashDrawer message = ParseRequest<OpenCashDrawer>(context);
-        GetServer.CloverConnector.OpenCashDrawer(message.Reason);
-        this.SendTextResponse(context, "");
+        try
+        {
+            OpenCashDrawer message = ParseRequest<OpenCashDrawer>(context);
+            GetServer.CloverConnector.OpenCashDrawer(message.Reason);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/DisplayOrder$")]
     public void ShowDisplayOrder(HttpListenerContext context)
     {
-        com.clover.remote.order.DisplayOrder order = ParseRequest<com.clover.remote.order.DisplayOrder>(context);
-        GetServer.CloverConnector.ShowDisplayOrder(order);
-        this.SendTextResponse(context, "");
+        try
+        {
+            com.clover.remote.order.DisplayOrder order = ParseRequest<com.clover.remote.order.DisplayOrder>(context);
+            GetServer.CloverConnector.ShowDisplayOrder(order);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     public void RemoveDisplayOrder(HttpListenerContext context)
     {
-        com.clover.remote.order.DisplayOrder order = ParseRequest<com.clover.remote.order.DisplayOrder>(context);
-        GetServer.CloverConnector.RemoveDisplayOrder(order);
-        this.SendTextResponse(context, "");
+        try
+        {
+            com.clover.remote.order.DisplayOrder order = ParseRequest<com.clover.remote.order.DisplayOrder>(context);
+            GetServer.CloverConnector.RemoveDisplayOrder(order);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/AcceptSignature$")]
     public void AcceptSignature(HttpListenerContext context)
     {
-        VerifySignatureRequest message = ParseRequest<VerifySignatureRequest>(context);
+        try
+        {
+            VerifySignatureRequest message = ParseRequest<VerifySignatureRequest>(context);
+            GetServer.CloverConnector.AcceptSignature(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
 
-        GetServer.CloverConnector.AcceptSignature(message);
-        this.SendTextResponse(context, "");
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RejectSignature$")]
     public void RejectSignature(HttpListenerContext context)
     {
-        VerifySignatureRequest message = ParseRequest<VerifySignatureRequest>(context);
-
-        GetServer.CloverConnector.RejectSignature(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            VerifySignatureRequest message = ParseRequest<VerifySignatureRequest>(context);
+            GetServer.CloverConnector.RejectSignature(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/InvokeInputOption$")]
     public void InvokeInputOption(HttpListenerContext context)
     {
-        InputOption message = ParseRequest<InputOption>(context);
-
-        GetServer.CloverConnector.InvokeInputOption(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            InputOption message = ParseRequest<InputOption>(context);
+            GetServer.CloverConnector.InvokeInputOption(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/AcceptPayment$")]
     public void AcceptPayment(HttpListenerContext context)
     {
-        Payment payment = ParseRequest<Payment>(context);
+        try
+        {
+            Payment payment = ParseRequest<Payment>(context);
+            GetServer.CloverConnector.AcceptPayment(payment);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
 
-        GetServer.CloverConnector.AcceptPayment(payment);
-        this.SendTextResponse(context, "");
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RejectPayment$")]
     public void RejectPayment(HttpListenerContext context)
     {
-        RejectPaymentObject message = ParseRequest<RejectPaymentObject>(context);
-
-        GetServer.CloverConnector.RejectPayment(message.Payment, message.Challenge);
-        this.SendTextResponse(context, "");
+        try
+        {
+            RejectPaymentObject message = ParseRequest<RejectPaymentObject>(context);
+            GetServer.CloverConnector.RejectPayment(message.Payment, message.Challenge);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/StartCustomActivity$")]
     public void StartCustomActivity(HttpListenerContext context)
     {
-        CustomActivityRequest message = ParseRequest<CustomActivityRequest>(context);
-
-        GetServer.CloverConnector.StartCustomActivity(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            CustomActivityRequest message = ParseRequest<CustomActivityRequest>(context);
+            GetServer.CloverConnector.StartCustomActivity(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/SendMessageToActivity$")]
     public void SendMessageToActivity(HttpListenerContext context)
     {
-        MessageToActivity message = ParseRequest<MessageToActivity>(context);
+        try
+        {
+            MessageToActivity message = ParseRequest<MessageToActivity>(context);
+            GetServer.CloverConnector.SendMessageToActivity(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
 
-        GetServer.CloverConnector.SendMessageToActivity(message);
-        this.SendTextResponse(context, "");
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrieveDeviceStatus$")]
     public void RetrieveDeviceStatus(HttpListenerContext context)
     {
-        RetrieveDeviceStatusRequest message = ParseRequest<RetrieveDeviceStatusRequest>(context);
-
-        GetServer.CloverConnector.RetrieveDeviceStatus(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            RetrieveDeviceStatusRequest message = ParseRequest<RetrieveDeviceStatusRequest>(context);
+            GetServer.CloverConnector.RetrieveDeviceStatus(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrievePayment$")]
     public void RetrievePayment(HttpListenerContext context)
     {
-        RetrievePaymentRequest message = ParseRequest<RetrievePaymentRequest>(context);
-
-        GetServer.CloverConnector.RetrievePayment(message);
-        this.SendTextResponse(context, "");
+        try
+        {
+            RetrievePaymentRequest message = ParseRequest<RetrievePaymentRequest>(context);
+            GetServer.CloverConnector.RetrievePayment(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
     }
 
     public void AddCloverConnectorListener(ICloverConnectorListener connectorListener)

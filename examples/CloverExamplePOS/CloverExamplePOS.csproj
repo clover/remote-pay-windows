@@ -40,11 +40,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Grapevine">
-      <HintPath>..\..\packages\lib\Grapevine.dll</HintPath>
+      <HintPath>..\..\packages\Grapevine\lib\Grapevine.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Json70r1\lib\Net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ObjectListView">
+      <HintPath>..\..\packages\lib\ObjectListView.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\..\packages\RestSharp.105.2.3\lib\net4\RestSharp.dll</HintPath>
@@ -140,6 +144,12 @@
     <Compile Include="StoreItem.Designer.cs">
       <DependentUpon>StoreItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="RatingsListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RatingsListForm.Designer.cs">
+      <DependentUpon>RatingsListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="VaultedCardListForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -192,6 +202,9 @@
     <EmbeddedResource Include="StoreItem.resx">
       <DependentUpon>StoreItem.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="RatingsListForm.resx">
+      <DependentUpon>RatingsListForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VaultedCardListForm.resx">
       <DependentUpon>VaultedCardListForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -231,7 +244,11 @@
   <ItemGroup>
     <Content Include="clover-256rgb.ico" />
     <Content Include="clover.ico" />
+    <None Include="Properties\star.ico" />
+    <None Include="Resources\star16.png" />
+    <Content Include="star.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -85,6 +85,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelForceOffline = new System.Windows.Forms.TableLayoutPanel();
             this.OrdersListView = new System.Windows.Forms.ListView();
             this.idHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.totalHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -108,7 +109,7 @@ namespace CloverExamplePOS
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.CloseoutButton = new System.Windows.Forms.Button();
             this.ResetButton = new System.Windows.Forms.Button();
-            this.DeviceStatusBtn = new DropDownButton();
+            this.DeviceStatusButton = new DropDownButton();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.TipAdjustButton = new System.Windows.Forms.Button();
             this.RefundPaymentButton = new System.Windows.Forms.Button();
@@ -125,6 +126,7 @@ namespace CloverExamplePOS
             this.RefundAmount = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.Cards = new System.Windows.Forms.TabPage();
+            this.ratingsListView = new System.Windows.Forms.ListView();
             this.cardsListView = new System.Windows.Forms.ListView();
             this.CardName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.First6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -139,7 +141,9 @@ namespace CloverExamplePOS
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PreAuthButton = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage10 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel8 = new CustomTableLayoutPanel();
+            this.tableLayoutPanel18 = new CustomTableLayoutPanel();
             this.label9 = new System.Windows.Forms.Label();
             this.DisplayMessageTextbox = new System.Windows.Forms.TextBox();
             this.DisplayMessageButton = new System.Windows.Forms.Button();
@@ -158,7 +162,6 @@ namespace CloverExamplePOS
             this.ShowWelcomeButton = new System.Windows.Forms.Button();
             this.ShowThankYouButton = new System.Windows.Forms.Button();
             this.OpenCashDrawerButton = new System.Windows.Forms.Button();
-            this.Cancel = new System.Windows.Forms.Button();
             this.CardDataButton = new System.Windows.Forms.Button();
             this.labelTS = new System.Windows.Forms.Label();
             this.labelTipAmount = new System.Windows.Forms.Label();
@@ -174,8 +177,10 @@ namespace CloverExamplePOS
             this.flowLayoutPanelCNP = new System.Windows.Forms.FlowLayoutPanel();
             this.labelCNP = new System.Windows.Forms.Label();
             this.CardNotPresentCheckbox = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanelForceOffline = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
             this.label13 = new System.Windows.Forms.Label();
+            this.labelForceOffline = new System.Windows.Forms.Label();
             this.offlineDefault = new System.Windows.Forms.RadioButton();
             this.offlineYes = new System.Windows.Forms.RadioButton();
             this.offlineNo = new System.Windows.Forms.RadioButton();
@@ -184,6 +189,9 @@ namespace CloverExamplePOS
             this.approveOfflineDefault = new System.Windows.Forms.RadioButton();
             this.approveOfflineYes = new System.Windows.Forms.RadioButton();
             this.approveOfflineNo = new System.Windows.Forms.RadioButton();
+            this.forceOfflineDefault = new System.Windows.Forms.RadioButton();
+            this.forceOfflineYes = new System.Windows.Forms.RadioButton();
+            this.forceOfflineNo = new System.Windows.Forms.RadioButton();
             this.flowLayoutPanelTipMode = new System.Windows.Forms.FlowLayoutPanel();
             this.labelTipMode = new System.Windows.Forms.Label();
             this.tipModeDefault = new System.Windows.Forms.RadioButton();
@@ -293,13 +301,16 @@ namespace CloverExamplePOS
             this.Cards.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.tabPage10.SuspendLayout();
             this.tableLayoutPanel8.SuspendLayout();
+            this.tableLayoutPanel18.SuspendLayout();
             this.tableLayoutPanel96.SuspendLayout();
             this.tableLayoutPanel16.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PrintImage)).BeginInit();
             this.flowLayoutPanel5.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanelCNP.SuspendLayout();
+            this.flowLayoutPanelForceOffline.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanelTipMode.SuspendLayout();
@@ -374,6 +385,7 @@ namespace CloverExamplePOS
             this.TabControl.Controls.Add(this.tabPage4);
             this.TabControl.Controls.Add(this.tabPage8);
             this.TabControl.Controls.Add(this.tabPage9);
+            this.TabControl.Controls.Add(this.tabPage10);
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Location = new System.Drawing.Point(0, 5);
             this.TabControl.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
@@ -1152,8 +1164,6 @@ namespace CloverExamplePOS
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.CloseoutButton);
-            this.flowLayoutPanel3.Controls.Add(this.ResetButton);
-            this.flowLayoutPanel3.Controls.Add(this.DeviceStatusBtn);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(4, 4);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
@@ -1192,23 +1202,26 @@ namespace CloverExamplePOS
             this.ResetButton.Text = "Reset Device";
             this.ResetButton.UseVisualStyleBackColor = false;
             this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
+           
+
             // 
-            // DeviceStatusBtn
+            // DeviceStatusButton
             // 
-            this.DeviceStatusBtn.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.DeviceStatusBtn.BackColor = System.Drawing.Color.White;
-            this.DeviceStatusBtn.Click = ((System.Collections.Generic.List<System.EventHandler>)(resources.GetObject("DeviceStatusBtn.Click")));
-            this.DeviceStatusBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DeviceStatusBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DeviceStatusBtn.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DeviceStatusBtn.Location = new System.Drawing.Point(210, 4);
-            this.DeviceStatusBtn.Margin = new System.Windows.Forms.Padding(4);
-            this.DeviceStatusBtn.Name = "DeviceStatusBtn";
-            this.DeviceStatusBtn.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
-            this.DeviceStatusBtn.Size = new System.Drawing.Size(112, 62);
-            this.DeviceStatusBtn.TabIndex = 28;
-            this.DeviceStatusBtn.Text = "Device Status";
-            this.DeviceStatusBtn.UseVisualStyleBackColor = false;
+            this.DeviceStatusButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.DeviceStatusButton.BackColor = System.Drawing.Color.White;
+            this.DeviceStatusButton.Click = ((System.Collections.Generic.List<System.EventHandler>)(resources.GetObject("DeviceStatusBtn.Click")));
+            this.DeviceStatusButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DeviceStatusButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DeviceStatusButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.DeviceStatusButton.Location = new System.Drawing.Point(210, 4);
+            this.DeviceStatusButton.Margin = new System.Windows.Forms.Padding(4);
+            this.DeviceStatusButton.Name = "DeviceStatusButton";
+            this.DeviceStatusButton.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
+            this.DeviceStatusButton.Size = new System.Drawing.Size(112, 62);
+            this.DeviceStatusButton.TabIndex = 28;
+            this.DeviceStatusButton.Text = "Device Status";
+            this.DeviceStatusButton.UseVisualStyleBackColor = false;
+
             // 
             // tableLayoutPanel7
             // 
@@ -1541,7 +1554,7 @@ namespace CloverExamplePOS
             // 
             // tabPage4
             // 
-            this.tabPage4.AutoScroll = true;
+            //this.tabPage4.AutoScroll = true;
             this.tabPage4.Controls.Add(this.tableLayoutPanel8);
             this.tabPage4.Location = new System.Drawing.Point(4, 28);
             this.tabPage4.Margin = new System.Windows.Forms.Padding(4);
@@ -1554,8 +1567,8 @@ namespace CloverExamplePOS
             // 
             // tableLayoutPanel8
             // 
-            this.tableLayoutPanel8.AutoScroll = true;
-            this.tableLayoutPanel8.AutoScrollMargin = new System.Drawing.Size(895, 500);
+            //this.tableLayoutPanel8.AutoScroll = true;
+            //this.tableLayoutPanel8.AutoScrollMargin = new System.Drawing.Size(895, 500);
             this.tableLayoutPanel8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel8.ColumnCount = 6;
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -1575,24 +1588,6 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.Controls.Add(this.PrintImageButton, 2, 2);
             this.tableLayoutPanel8.Controls.Add(this.PrintImage, 3, 2);
             this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel5, 0, 4);
-            this.tableLayoutPanel8.Controls.Add(this.labelTS, 0, 5);
-            this.tableLayoutPanel8.Controls.Add(this.labelTipAmount, 0, 6);
-            this.tableLayoutPanel8.Controls.Add(this.tipAmount, 1, 6);
-            this.tableLayoutPanel8.Controls.Add(this.labelSignatureThreshold, 0, 7);
-            this.tableLayoutPanel8.Controls.Add(this.signatureThreshold, 1, 7);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel1, 0, 8);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanelCNP, 0, 9);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel6, 0, 10);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel4, 0, 11);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanelTipMode, 0, 12);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel94, 0, 13);
-            this.tableLayoutPanel8.Controls.Add(this.DisableCashBack, 0, 14);
-            this.tableLayoutPanel8.Controls.Add(this.DisableRestartTransactionOnFailure, 0, 15);
-            this.tableLayoutPanel8.Controls.Add(this.disablePrintingCB, 0, 16);
-            this.tableLayoutPanel8.Controls.Add(this.disableReceiptOptionsCB, 0, 17);
-            this.tableLayoutPanel8.Controls.Add(this.disableDuplicateCheckingCB, 0, 18);
-            this.tableLayoutPanel8.Controls.Add(this.automaticSignatureConfirmationCB, 0, 19);
-            this.tableLayoutPanel8.Controls.Add(this.automaticPaymentConfirmationCB, 0, 20);
             this.tableLayoutPanel8.Controls.Add(this.RetrievePaymentLabel, 0, 3);
             this.tableLayoutPanel8.Controls.Add(this.RetrievePaymentButton, 2, 3);
             this.tableLayoutPanel8.Controls.Add(this.RetrievePaymentText, 1, 3);
@@ -1623,6 +1618,83 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.Size = new System.Drawing.Size(1112, 892);
             this.tableLayoutPanel8.TabIndex = 0;
+
+
+
+
+            // 
+            // tabPage10
+            // 
+            //this.tabPage10.AutoScroll = true;
+            this.tabPage10.Controls.Add(this.tableLayoutPanel18);
+            this.tabPage10.Location = new System.Drawing.Point(4, 37);
+            this.tabPage10.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage10.Name = "tabPage10";
+            this.tabPage10.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage10.Size = new System.Drawing.Size(1810, 1001);
+            this.tabPage10.TabIndex = 3;
+            this.tabPage10.Text = "Transaction Overrides";
+            this.tabPage10.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel18
+            // 
+            //this.tableLayoutPanel18.AutoScroll = true;
+            //this.tableLayoutPanel18.AutoScrollMargin = new System.Drawing.Size(895, 500);
+            this.tableLayoutPanel18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel18.ColumnCount = 6;
+            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel18.Controls.Add(this.labelTipAmount, 0, 6);
+            this.tableLayoutPanel18.Controls.Add(this.tipAmount, 1, 6);
+            this.tableLayoutPanel18.Controls.Add(this.labelSignatureThreshold, 0, 7);
+            this.tableLayoutPanel18.Controls.Add(this.signatureThreshold, 1, 7);
+            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel1, 0, 8);
+            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanelCNP, 0, 9);
+            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel6, 0, 10);
+            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel4, 0, 11);
+            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanelTipMode, 0, 12);
+            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel94, 0, 13);
+            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanelForceOffline, 0, 14);
+            this.tableLayoutPanel18.Controls.Add(this.DisableCashBack, 0, 15);
+            this.tableLayoutPanel18.Controls.Add(this.DisableRestartTransactionOnFailure, 0, 16);
+            this.tableLayoutPanel18.Controls.Add(this.disablePrintingCB, 0, 17);
+            this.tableLayoutPanel18.Controls.Add(this.disableReceiptOptionsCB, 0, 18);
+            this.tableLayoutPanel18.Controls.Add(this.disableDuplicateCheckingCB, 0, 19);
+            this.tableLayoutPanel18.Controls.Add(this.automaticSignatureConfirmationCB, 0, 20);
+            this.tableLayoutPanel18.Controls.Add(this.automaticPaymentConfirmationCB, 0, 21);
+            this.tableLayoutPanel18.Location = new System.Drawing.Point(6, 6);
+            this.tableLayoutPanel18.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel18.Name = "tableLayoutPanel18";
+            this.tableLayoutPanel18.RowCount = 15;
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(1112, 892);
+            this.tableLayoutPanel18.TabIndex = 0;
+
             // 
             // label9
             // 
@@ -1793,8 +1865,9 @@ namespace CloverExamplePOS
             this.flowLayoutPanel5.Controls.Add(this.ShowWelcomeButton);
             this.flowLayoutPanel5.Controls.Add(this.ShowThankYouButton);
             this.flowLayoutPanel5.Controls.Add(this.OpenCashDrawerButton);
-            this.flowLayoutPanel5.Controls.Add(this.Cancel);
             this.flowLayoutPanel5.Controls.Add(this.CardDataButton);
+            this.flowLayoutPanel5.Controls.Add(this.ResetButton);
+            this.flowLayoutPanel5.Controls.Add(this.DeviceStatusButton);
             this.flowLayoutPanel5.Location = new System.Drawing.Point(4, 276);
             this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
@@ -1842,20 +1915,7 @@ namespace CloverExamplePOS
             this.OpenCashDrawerButton.Text = "Open Cash Drawer";
             this.OpenCashDrawerButton.UseVisualStyleBackColor = false;
             this.OpenCashDrawerButton.Click += new System.EventHandler(this.OpenCashDrawerButton_Click);
-            // 
-            // Cancel
-            // 
-            this.Cancel.BackColor = System.Drawing.Color.White;
-            this.Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Cancel.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.Cancel.Location = new System.Drawing.Point(328, 10);
-            this.Cancel.Margin = new System.Windows.Forms.Padding(4);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(100, 60);
-            this.Cancel.TabIndex = 32;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = false;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            
             // 
             // CardDataButton
             // 
@@ -1924,6 +1984,7 @@ namespace CloverExamplePOS
             // flowLayoutPanel1
             // 
             this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel1, 5);
+            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel1, 5);
             this.flowLayoutPanel1.Controls.Add(this.label52);
             this.flowLayoutPanel1.Controls.Add(this.ManualEntryCheckbox);
             this.flowLayoutPanel1.Controls.Add(this.MagStripeCheckbox);
@@ -2003,6 +2064,7 @@ namespace CloverExamplePOS
             // flowLayoutPanelCNP
             // 
             this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanelCNP, 5);
+            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanelCNP, 5);
             this.flowLayoutPanelCNP.Controls.Add(this.labelCNP);
             this.flowLayoutPanelCNP.Controls.Add(this.CardNotPresentCheckbox);
             this.flowLayoutPanelCNP.Location = new System.Drawing.Point(4, 501);
@@ -2035,9 +2097,72 @@ namespace CloverExamplePOS
             this.CardNotPresentCheckbox.UseVisualStyleBackColor = true;
             this.CardNotPresentCheckbox.CheckedChanged += new System.EventHandler(this.EntryCheckbox_CheckedChanged);
             // 
+            // flowLayoutPanelForceOffline
+            // 
+            this.tableLayoutPanelForceOffline.SetColumnSpan(this.flowLayoutPanelForceOffline, 4);
+            this.flowLayoutPanelForceOffline.Controls.Add(this.labelForceOffline);
+            this.flowLayoutPanelForceOffline.Controls.Add(this.forceOfflineDefault);
+            this.flowLayoutPanelForceOffline.Controls.Add(this.forceOfflineYes);
+            this.flowLayoutPanelForceOffline.Controls.Add(this.forceOfflineNo);
+            this.flowLayoutPanelForceOffline.Location = new System.Drawing.Point(4, 541);
+            this.flowLayoutPanelForceOffline.Margin = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanelForceOffline.Name = "flowLayoutPanelForceOffline";
+            this.flowLayoutPanelForceOffline.Size = new System.Drawing.Size(1104, 30);
+            this.flowLayoutPanelForceOffline.TabIndex = 40;
+            // 
+            // labelForceOffline
+            // 
+            this.labelForceOffline.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelForceOffline.AutoSize = true;
+            this.labelForceOffline.Location = new System.Drawing.Point(4, 6);
+            this.labelForceOffline.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelForceOffline.Name = "labelForceOffline";
+            this.labelForceOffline.Size = new System.Drawing.Size(150, 17);
+            this.labelForceOffline.TabIndex = 0;
+            this.labelForceOffline.Text = "Force Offline Payment";
+            // 
+            // forceOfflineDefault
+            // 
+            this.forceOfflineDefault.AutoSize = true;
+            this.forceOfflineDefault.Checked = true;
+            this.forceOfflineDefault.Location = new System.Drawing.Point(165, 4);
+            this.forceOfflineDefault.Margin = new System.Windows.Forms.Padding(4);
+            this.forceOfflineDefault.Name = "forceOfflineDefault";
+            this.forceOfflineDefault.Size = new System.Drawing.Size(82, 21);
+            this.forceOfflineDefault.TabIndex = 1;
+            this.forceOfflineDefault.TabStop = true;
+            this.forceOfflineDefault.Text = "Default";
+            this.forceOfflineDefault.UseVisualStyleBackColor = true;
+            this.forceOfflineDefault.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // forceOfflineYes
+            // 
+            this.forceOfflineYes.AutoSize = true;
+            this.forceOfflineYes.Location = new System.Drawing.Point(253, 4);
+            this.forceOfflineYes.Margin = new System.Windows.Forms.Padding(4);
+            this.forceOfflineYes.Name = "forceOfflineYes";
+            this.forceOfflineYes.Size = new System.Drawing.Size(61, 21);
+            this.forceOfflineYes.TabIndex = 2;
+            this.forceOfflineYes.Text = "Yes";
+            this.forceOfflineYes.UseVisualStyleBackColor = true;
+            this.forceOfflineYes.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // forceOfflineNo
+            // 
+            this.forceOfflineNo.AutoSize = true;
+            this.forceOfflineNo.Location = new System.Drawing.Point(320, 4);
+            this.forceOfflineNo.Margin = new System.Windows.Forms.Padding(4);
+            this.forceOfflineNo.Name = "forceOfflineNo";
+            this.forceOfflineNo.Size = new System.Drawing.Size(55, 21);
+            this.forceOfflineNo.TabIndex = 3;
+            this.forceOfflineNo.Text = "No";
+            this.forceOfflineNo.UseVisualStyleBackColor = true;
+            this.forceOfflineNo.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // flowLayoutPanel6
             // 
             this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel6, 4);
+            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel6, 4);
             this.flowLayoutPanel6.Controls.Add(this.label13);
             this.flowLayoutPanel6.Controls.Add(this.offlineDefault);
             this.flowLayoutPanel6.Controls.Add(this.offlineYes);
@@ -2100,6 +2225,7 @@ namespace CloverExamplePOS
             // flowLayoutPanel4
             // 
             this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel4, 4);
+            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel4, 4);
             this.flowLayoutPanel4.Controls.Add(this.label14);
             this.flowLayoutPanel4.Controls.Add(this.approveOfflineDefault);
             this.flowLayoutPanel4.Controls.Add(this.approveOfflineYes);
@@ -2162,6 +2288,7 @@ namespace CloverExamplePOS
             // flowLayoutPanelTipMode
             // 
             this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanelTipMode, 5);
+            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanelTipMode, 5);
             this.flowLayoutPanelTipMode.Controls.Add(this.labelTipMode);
             this.flowLayoutPanelTipMode.Controls.Add(this.tipModeDefault);
             this.flowLayoutPanelTipMode.Controls.Add(this.tipModeProvided);
@@ -2236,6 +2363,7 @@ namespace CloverExamplePOS
             // flowLayoutPanel94
             // 
             this.tableLayoutPanel8.SetColumnSpan(this.flowLayoutPanel94, 5);
+            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel94, 5);
             this.flowLayoutPanel94.Controls.Add(this.label84);
             this.flowLayoutPanel94.Controls.Add(this.signatureDefault);
             this.flowLayoutPanel94.Controls.Add(this.signatureOnScreen);
@@ -2722,8 +2850,11 @@ namespace CloverExamplePOS
             this.Cards.ResumeLayout(false);
             this.tabPage7.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
+            this.tabPage10.ResumeLayout(false);
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel8.PerformLayout();
+            this.tableLayoutPanel18.ResumeLayout(false);
+            this.tableLayoutPanel18.PerformLayout();
             this.tableLayoutPanel96.ResumeLayout(false);
             this.tableLayoutPanel96.PerformLayout();
             this.tableLayoutPanel16.ResumeLayout(false);
@@ -2808,6 +2939,7 @@ namespace CloverExamplePOS
         private ColumnHeader TransDateHeader;
         private ColumnHeader TransLast4;
         private TabPage tabPage4;
+        private TabPage tabPage10;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel4;
         private FlowLayoutPanel flowLayoutPanel3;
@@ -2824,6 +2956,7 @@ namespace CloverExamplePOS
         private TextBox RefundAmount;
         private Label label5;
         private CustomTableLayoutPanel tableLayoutPanel8;
+        private CustomTableLayoutPanel tableLayoutPanel18;
         private Label label9;
         private Label labelTS;
         private TextBox DisplayMessageTextbox;
@@ -2876,7 +3009,6 @@ namespace CloverExamplePOS
         private ToolStripMenuItem RemoteRESTServiceMenuItem;
         private DropDownButton AuthButton;
         private Button TipAdjustButton;
-        private Button Cancel;
         private FlowLayoutPanel flowLayoutPanel5;
         private FlowLayoutPanel flowLayoutPanel1;
         private FlowLayoutPanel flowLayoutPanelCNP;
@@ -2896,14 +3028,20 @@ namespace CloverExamplePOS
         private ColumnHeader Exp_Month;
         private ColumnHeader Exp_Year;
         private ColumnHeader Token;
+        private ListView ratingsListView;
+        private ColumnHeader RatingID;
+        private ColumnHeader RatingQuestion;
+        private ColumnHeader RatingValue;
         private Button VaultCardBtn;
         private TableLayoutPanel tableLayoutPanel17;
+        private TableLayoutPanel tableLayoutPanelForceOffline;
         private Button OpenOrder_Button;
         private TabPage tabPage7;
         private ListView PreAuthListView;
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
         private Button PreAuthButton;
+        private FlowLayoutPanel flowLayoutPanelForceOffline;
         private FlowLayoutPanel flowLayoutPanel6;
         private Label label13;
         private FlowLayoutPanel flowLayoutPanel4;
@@ -2914,6 +3052,7 @@ namespace CloverExamplePOS
         private Label labelSigLoc;
         private Label label14;
         private Label label84;
+        private Label labelForceOffline;
         private RadioButton offlineDefault;
         private RadioButton offlineYes;
         private RadioButton offlineNo;
@@ -2931,6 +3070,9 @@ namespace CloverExamplePOS
         private RadioButton approveOfflineDefault;
         private RadioButton approveOfflineYes;
         private RadioButton approveOfflineNo;
+        private RadioButton forceOfflineDefault;
+        private RadioButton forceOfflineYes;
+        private RadioButton forceOfflineNo;
         private ColumnHeader externalID;
         private TabPage tabPage8;
         private ListView pendingPaymentListView;
@@ -2948,7 +3090,7 @@ namespace CloverExamplePOS
         private TabPage tabPage9;
         private Button StartCustomActivityBtn;
         private Button SendMessageBtn;
-        private DropDownButton DeviceStatusBtn;
+        private DropDownButton DeviceStatusButton;
         private Label RetrievePaymentLabel;
         private Button RetrievePaymentButton;
         private TextBox RetrievePaymentText;

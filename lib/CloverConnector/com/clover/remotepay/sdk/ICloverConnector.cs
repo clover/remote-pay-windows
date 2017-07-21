@@ -28,13 +28,6 @@ namespace com.clover.remotepay.sdk
     public interface ICloverConnector
     {
         /// <summary>
-        /// Property for the current connection status of the device
-        /// </summary>
-        bool IsReady
-        {
-            get;
-        }
-        /// <summary>
         /// Starts communication with the device.  This is called after the connector is created and listeners are added to the connector.
         /// </summary>
         void InitializeConnection();

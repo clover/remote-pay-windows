@@ -1,6 +1,6 @@
 # Clover SDK for Windows PoS Integration
 
-Current version: 1.2.1
+Current version: 1.3.1
 
 ## Overview
 
@@ -20,8 +20,8 @@ To effectively work with the project you'll need:
 There are four separate installers:
 #####For Development:
   * CloverSDKSetup.exe - Installer that will lay down the dll, REST Clover Connector Service or WebSocket Clover Connector Service, along with the optional ExamplePOS application and source for testing.
-  
-#####For Deployment: 
+
+#####For Deployment:
   * CloverUSBDriverSetup.exe - Clover device USB Driver installation only (automatically installed with the other installers)
   * CloverRESTServiceSetup.exe - Installer for the REST Clover Connector Service only
   * CloverWebSocketServiceSetup.exe - Installer for the WebSocket Clover Connector Service only
@@ -31,16 +31,17 @@ To complete a transaction end to end, we recommend getting a [Clover Mini Dev Ki
 
 More documentation can be found at [Clover Docs Site](https://docs.clover.com/build/getting-started-with-cloverconnector/).
 
-# Version 1.3.1-rc1 (Release Candidate)
+# Version 1.3.1
 * Enhanced EventLog source creation methods to provide better message debugging
 * Added support for starting Custom Activities and handling messaging with those activities
 * Added example custom activity processing to the CloverExamplePOS application
 * Added Device Status messaging to provide better insight into the current state of the connected payment device
 * Added RetrievePayment request/response to provide the ability to query for a payment by external ID on the device
+* Added some new starter examples to aid in quickly getting connected to a Clover device for a few simple scenarios
 that originally attempted to process said payment.  Provides additional situational awareness after unexpected
 disconnects with the payment device.
 * Bug fixes for request validation handling
-* Updates for the Secure Network Pay Display support and configuration 
+* Updates for the Secure Network Pay Display support and configuration
 * General improvements to the CloverExamplePOS application
 
 # Version 1.2.1
@@ -200,10 +201,10 @@ ICloverConnector
   * Changed DisplayOrderDelete to RemoveDisplayOrder.
   * Behavior change for RefundPaymentRequest.  In the prior versions, a value of zero for the amount
     field would trigger a refund of the full payment amount.  With the 1.0 version, passing zero
-    in the amount field will trigger a validation failure.  Use FullRefund:boolean to specify a 
+    in the amount field will trigger a validation failure.  Use FullRefund:boolean to specify a
     full refund amount. NOTE: This will attempt to refund the original (full) payment amount,
-    not the remaining amount, in a partial refund scenario. 
-  * CloverConnecter now requires ApplicationId to be set via configuration/installation of the third party application. This is provided as part of the device configuration that is passed in during the creation of the CloverConnector. 
+    not the remaining amount, in a partial refund scenario.
+  * CloverConnecter now requires ApplicationId to be set via configuration/installation of the third party application. This is provided as part of the device configuration that is passed in during the creation of the CloverConnector.
   * SaleRequest, AuthRequest, PreAuthRequest and ManualRefund require ExternalId to be set.
     * ExternalId should be unique per transaction request and will prevent the Clover device
       from re-processing the last transaction.
@@ -218,7 +219,7 @@ ICloverConnectorListener
   * Changed SignatureVerifyRequest to VerifySignatureRequest
   * Changed OnAuthTipAdjustResponse to OnTipAdjustAuthResponse
   * Changed OnDeviceReady to pass back the MerchantInfo
-  * Removed OnConfigError. In this release, if a merchant attempts to perform an operation that their account is not configured to support (e.g. vaulting a card), then the SDK will call back with a failed transaction and an UNSUPPORTED result. 
+  * Removed OnConfigError. In this release, if a merchant attempts to perform an operation that their account is not configured to support (e.g. vaulting a card), then the SDK will call back with a failed transaction and an UNSUPPORTED result.
   * All Response Messages now return the following:​
     * Success:boolean
     * Result:enum [SUCCESS|FAIL|CANCEL|ERROR|UNSUPPORTED]
@@ -312,9 +313,9 @@ REST Service
 1. Download the USB Pay Display app from the Clover App Market on your Clover Mini Dev Kit.
 2. Open the USB Pay Display app
 3. Run the Clover Connector Windows Example POS app on your Windows POS device
-4. You should see the example POS screen and connection options listed based on the installed connectors. If everything worked you'll get a connected status. If it remains disconnected, you'll want to check that 
+4. You should see the example POS screen and connection options listed based on the installed connectors. If everything worked you'll get a connected status. If it remains disconnected, you'll want to check that
    1) The Clover USB Device drivers are installed
-   2) You are connecting the correct cable to the correct connection point on the Clover Mini “hub” - port USB(port with Clover logo). You will need to use the USB cable that the device came with. 
+   2) You are connecting the correct cable to the correct connection point on the Clover Mini “hub” - port USB(port with Clover logo). You will need to use the USB cable that the device came with.
 
 ## Working with the SDK
 
@@ -326,10 +327,10 @@ REST Service
 
 	  class YourListener : DefaultCloverConnectorListener
 	  {
-	        public MyListener(ICloverConnector cc) : base(cc) 
+	        public MyListener(ICloverConnector cc) : base(cc)
 			{
 			}
-			
+
 			public override void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
             {
 				// accepting by default... can pop a dialog or look at config properties to determine if the payment should be accepted or not
@@ -338,10 +339,10 @@ REST Service
 				// 2. Confirm offline payments if the merchant/Tx is configured to allow offline payments
                 this.cloverConnector.AcceptPayment(request.Payment);
             }
-			
-			pubilc override void OnSaleResponse(SaleResponse response) 
+
+			pubilc override void OnSaleResponse(SaleResponse response)
 			{
-			    if(response.Success) 
+			    if(response.Success)
 				{
 				    // payment was successful
 					// do something with response.Payment
@@ -351,16 +352,16 @@ REST Service
 				    // payment didn't complete, can look at response.Result, response.Reason for additional info
 				}
 			}
-			
+
 			// wait until this gets called to indicate the device
             // is ready to communicate before calling other methods
-            public override void onDeviceReady(MerchantInfo merchantInfo) 
+            public override void onDeviceReady(MerchantInfo merchantInfo)
 		    {
                 super.onDeviceReady(merchantInfo);
 			    Start()
             }
-		  
-            public void Start() 
+
+            public void Start()
             {
                 SaleRequest saleRequest = new SaleRequest(2215, "b1234"); // $22.15 with externalID "b1234"
                 cloverConnector.sale(saleRequest);

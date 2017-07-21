@@ -27,12 +27,26 @@ namespace CloverExamplePOS
     {
         public AlertForm(Form formToCover) : base(formToCover)
         {
-            InitializeComponent();
+            InitializeComponent(0);
+            this.AutoScroll = true;
+        }
+
+        public AlertForm(Form formToCover, int duration) : base(formToCover)
+        {
+            InitializeComponent(duration);
+        }
+
+        private void timer_Tick(Object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void AlertForm_Load(object sender, EventArgs e)
         {
-
+            if (timer != null && timer.Interval > 0)
+            {
+                timer.Start();  
+            }
         }
 
         public String Title

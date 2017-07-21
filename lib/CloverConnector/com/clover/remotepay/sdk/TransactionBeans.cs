@@ -119,15 +119,47 @@ namespace com.clover.remotepay.sdk
             DisablePrinting = false;
             DisableRestartTransactionOnFail = false;
         }
-        [System.Obsolete("DisableTipOnScreen is deprecated, please use TipMode of None instead.")]
-        public bool? DisableTipOnScreen { get; set; } //
+        /// <summary>
+        /// If true then the cashback feature will not appear during the transaction
+        /// </summary>
+        public bool? DisableCashback { get; set; }
+        /// <summary>
+        /// Amount paid in tips
+        /// </summary>
         public long? TaxAmount { get; set; }
-        public long? TippableAmount { get; set; } // the amount that tip should be calculated on
-        public long? TipAmount { get; set; }
-        public bool? DisableCashback { get; set; } //
+        /// <summary>
+        /// Amount against which a tip should be applied
+        /// </summary>
+        public long? TippableAmount { get; set; }
+        /// <summary>
+        /// If true then offline payments can be accepted
+        /// </summary>
         public bool? AllowOfflinePayment { get; set; }
+        /// <summary>
+        /// If true then offline payments will be approved without a prompt.  Currently must be true.
+        /// </summary>
         public bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
+        [System.Obsolete("DisableTipOnScreen is deprecated, please use TipMode of None instead.")]
+        public bool? DisableTipOnScreen { get; set; } //Soon to perish        
+        /// <summary>
+        /// Gets or sets the tip amount.
+        /// </summary>
+        public long? TipAmount { get; set; }
+        /// <summary>
+        /// Gets or sets the tip mode, which controls when the tip is either 
+        /// designated by the customer, provided by the system as part of the request,
+        /// or ommitted completely from the transaction
+        /// </summary>
         public TipMode? TipMode { get; set; }
+        /// <summary>
+        /// If true then payments will be placed directly in the offline queue for
+        /// processing when a valid connection exists to the gateway.  This means that
+        /// payments can be taken offline even with a healthy gateway connection, for purposes
+        /// of keeping customer interaction with the payment device to the bare minimum.
+        /// The merchant assumes all risk of potentially declined transactions when this 
+        /// feature is enabled.
+        /// </summary>
+        public bool? ForceOfflinePayment { get; set; }
     }
 
     /// <summary>
@@ -180,6 +212,15 @@ namespace com.clover.remotepay.sdk
         /// If true then offline payments will be approved without a prompt.  Currently must be true.
         /// </summary>
         public bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
+        /// <summary>
+        /// If true then payments will be placed directly in the offline queue for
+        /// processing when a valid connection exists to the gateway.  This means that
+        /// payments can be taken offline even with a healthy gateway connection, for purposes
+        /// of keeping customer interaction with the payment device to the bare minimum.
+        /// The merchant assumes all risk of potentially declined transactions when this 
+        /// feature is enabled.
+        /// </summary>
+        public bool? ForceOfflinePayment { get; set; }
     }
 
     /// <summary>
@@ -577,17 +618,19 @@ namespace com.clover.remotepay.sdk
     /// <summary>
     /// class for sending messages to a CustomActivity from POS
     /// </summary>
-    public class MessageToActivity : ActivityMessage
+    public class MessageToActivity 
     {
-
+        public string Action;
+        public string Payload;
     }
 
     /// <summary>
     /// class for sending message from a CustomActivity to POS
     /// </summary>
-    public class MessageFromActivity : ActivityMessage
+    public class MessageFromActivity 
     {
-
+        public string Action;
+        public string Payload;
     }
 
     /// <summary>
