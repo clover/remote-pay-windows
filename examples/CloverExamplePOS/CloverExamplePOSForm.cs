@@ -25,7 +25,7 @@ using com.clover.remotepay.transport.remote;
 using System.IO;
 using com.clover.remote.order;
 using com.clover.sdk.v3.payments;
-
+using Newtonsoft.Json;
 
 namespace CloverExamplePOS
 {
@@ -38,6 +38,7 @@ namespace CloverExamplePOS
         Dictionary<POSLineItem, DisplayLineItem> posLineItemToDisplayLineItem = new Dictionary<POSLineItem, DisplayLineItem>();
         POSLineItem SelectedLineItem = null;
         bool Connected = false;
+        RatingsListForm rlForm;
 
         AlertForm pairingForm;
 
@@ -126,8 +127,6 @@ namespace CloverExamplePOS
             RegisterTabs.Appearance = TabAppearance.FlatButtons;
             RegisterTabs.ItemSize = new Size(0, 1);
             RegisterTabs.SizeMode = TabSizeMode.Fixed;
-            // done hiding tabs
-
             // register for app shutdown
             Application.ApplicationExit += new EventHandler(this.AppShutdown);
 
@@ -205,15 +204,18 @@ namespace CloverExamplePOS
 
             AuthButton.Click.Add(AuthButton_Click);
 
-            DeviceStatusBtn.ContextMenu = new ContextMenu();
+            //DeviceStatusButton
+            DeviceStatusButton.ContextMenu = new ContextMenu();
             menuItem = new MenuItem("Send Last Message");
             menuItem.Enabled = true;
             menuItem.Click += delegate (object sen, EventArgs args)
             {
                 cloverConnector.RetrieveDeviceStatus(new RetrieveDeviceStatusRequest(true));
             };
-            DeviceStatusBtn.ContextMenu.MenuItems.Add(menuItem);
-            DeviceStatusBtn.Click.Add(DeviceStatusBtn_Click);
+            DeviceStatusButton.ContextMenu.MenuItems.Add(menuItem);
+            DeviceStatusButton.Click.Add(DeviceStatusBtn_Click);
+
+
 
             foreach (POSItem item in Store.AvailableItems)
             {
@@ -407,6 +409,10 @@ namespace CloverExamplePOS
             {
                 request.ApproveOfflinePaymentWithoutPrompt = approveOfflineYes.Checked;
             }
+            if (!forceOfflineDefault.Checked)
+            {
+                request.ForceOfflinePayment = forceOfflineYes.Checked;
+            }
 
             if (card != null)
             {
@@ -579,6 +585,10 @@ namespace CloverExamplePOS
             if (!approveOfflineDefault.Checked)
             {
                 request.ApproveOfflinePaymentWithoutPrompt = approveOfflineYes.Checked;
+            }
+            if (!forceOfflineDefault.Checked)
+            {
+                request.ForceOfflinePayment = forceOfflineYes.Checked;
             }
             if (card != null)
             {
@@ -784,17 +794,126 @@ namespace CloverExamplePOS
         {
             uiThread.Send(delegate (object state)
             {
-                AlertForm.Show(this, "Custom Activity Response" + (response.Success ? "" : ": Canceled"), response.Payload);
+                try {
+                    dynamic parsedPayload = JsonConvert.DeserializeObject(response.Payload);
+                    string formattedPayload = JsonConvert.SerializeObject(parsedPayload, Formatting.Indented);
+                    Console.WriteLine(formattedPayload);
+                  
+                    AlertForm.Show(this, "Custom Activity Response" + (response.Success ? "" : ": Canceled"), formattedPayload);
+                } catch (Exception e)
+                {
+                    AlertForm.Show(this, "Custom Activity Response" + (response.Success ? "" : ": Canceled"), response.Payload);
+                }
             }, null);
         }
 
-        public virtual void OnMessageFromActivity(MessageFromActivity message)
+        public void OnMessageFromActivity(MessageFromActivity message)
+        {
+            PayloadMessage payloadMessage = JsonConvert.DeserializeObject<PayloadMessage>(message.Payload);
+            switch (payloadMessage.messageType)
+            {
+                case MessageType.REQUEST_RATINGS:
+                    handleRequestRatings();
+                    break;
+                case MessageType.RATINGS:
+                    handleRatings(message.Payload);
+                    break;
+                case MessageType.PHONE_NUMBER:
+                    handleCustomerLookup(message.Payload);
+                    break;
+                case MessageType.CONVERSATION_RESPONSE:
+                    handleJokeResponse(message.Payload);
+                    break;
+                default:
+                    break;
+            }
+        }  
+
+        private void handleCustomerLookup(String payloadMessage)
+        {
+            PhoneNumberMessage message = JsonUtils.deserializeSDK<PhoneNumberMessage>(payloadMessage);
+            String phoneNumber = message.phoneNumber;
+            CustomerInfo customerInfo = new CustomerInfo();
+            customerInfo.customerName = "Ron Burgundy";
+            customerInfo.phoneNumber = phoneNumber;
+            CustomerInfoMessage customerInfoMessage = new CustomerInfoMessage();
+            customerInfoMessage.customerInfo = customerInfo;
+            customerInfoMessage.payloadClassName = "CustomerInfoMessage";
+            customerInfoMessage.messageType = MessageType.CUSTOMER_INFO.ToString();
+            String jsonPayload = JsonConvert.SerializeObject(customerInfoMessage);
+            SendMessageToActivity(jsonPayload, "com.clover.cfp.examples.RatingsExample");
+        }
+
+        private void handleRequestRatings()
+        {
+            Rating rating1 = new Rating();
+            rating1.id = "Quality";
+            rating1.question = "How would you rate the overall quality of your entree?";
+            rating1.value = 0;
+            Rating rating2 = new Rating();
+            rating2.id = "Server";
+            rating2.question = "How would you rate the overall performance of your server?";
+            rating2.value = 0;
+            Rating rating3 = new Rating();
+            rating3.id = "Value";
+            rating3.question = "How would you rate the overall value of your dining experience?";
+            rating3.value = 0;
+            Rating rating4 = new Rating();
+            rating4.id = "RepeatBusiness";
+            rating4.question = "How likely are you to dine at this establishment again in the near future?";
+            rating4.value = 0;
+            Rating[] ratings = new Rating[] { rating1, rating2, rating3, rating4 };
+            RatingsMessage ratingsMessage = new RatingsMessage();
+            ratingsMessage.ratings = ratings;
+            ratingsMessage.messageType = MessageType.RATINGS.ToString();
+            ratingsMessage.payloadClassName = "RatingsMessage";
+            String jsonPayload = JsonConvert.SerializeObject(ratingsMessage);
+            SendMessageToActivity(jsonPayload, "com.clover.cfp.examples.RatingsExample");
+        }
+
+        private void handleRatings(String payload)
+        {
+            RatingsMessage ratingsMessage = JsonUtils.deserializeSDK<RatingsMessage>(payload);
+            Rating[] ratings = ratingsMessage.ratings;
+            showRatingsDialog(ratings);
+        }
+
+        private void rlForm_Disposed(object sender, EventArgs args)
+        {
+            rlForm = null;
+        }
+
+        private void showRatingsDialog(Rating[] ratings)
         {
             uiThread.Send(delegate (object state)
             {
-                AlertForm.Show(this, "Message from Activity: " + message.Action, message.Payload);
+                addRatingsToUI(ratings);
+
+                if (rlForm == null)
+                {
+                    rlForm = new RatingsListForm(this);
+                    rlForm.Disposed += this.rlForm_Disposed;
+                }
+                rlForm.setRatings(ratings);
+                if (!rlForm.Visible)
+                {
+                    rlForm.Show(this);
+                } else
+                {
+                    rlForm.Invalidate();
+                }
             }, null);
         }
+
+        private void handleJokeResponse(String payload)
+        {
+            ConversationResponseMessage jokeResponseMessage = JsonUtils.deserializeSDK<ConversationResponseMessage>(payload);
+            uiThread.Send(delegate (object state)
+            {
+                AlertForm.Show(this, "Received JokeResponse of: " , jokeResponseMessage.message);
+            }, null);
+        }
+
 
         public virtual void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
         {
@@ -949,6 +1068,26 @@ namespace CloverExamplePOS
                 {
                     cc[i].Width = colWidth;
                 }
+            }
+        }
+
+        private void addRatingsToUI(Rating[] ratings)
+        {
+            ratingsListView.Items.Clear();
+            if (ratings != null)
+            {
+                foreach (Rating rating in ratings)
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Tag = rating;
+                    lvi.Text = rating.value.ToString();
+                    lvi.Name = "Rating";
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, rating.id));
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, rating.question));
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, rating.value.ToString() + " STARS"));
+                    ratingsListView.Items.Add(lvi);
+                }
+                autoResizeColumns(ratingsListView);
             }
         }
 
@@ -1364,7 +1503,7 @@ namespace CloverExamplePOS
 
 
 
-        ////////////////// CloverSignatureLister Methods //////////////////////
+        ////////////////// CloverSignatureListener Methods //////////////////////
         /// <summary>
         /// Handle a request from the Clover device to verify a signature
         /// </summary>
@@ -1380,7 +1519,9 @@ namespace CloverExamplePOS
             }, null);
         }
 
-        public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
+
+
+public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
         {
             CloverExamplePOSForm parentForm = this;
             AutoResetEvent confirmPaymentFormBusy = new AutoResetEvent(false);
@@ -2419,6 +2560,14 @@ namespace CloverExamplePOS
             car.Payload = customActivityPayload.Text;
             car.NonBlocking = nonBlockingCB.Checked;
             cloverConnector.StartCustomActivity(car);
+            if (item.Text.Equals("BasicConversationalExample"))
+            {
+                customActivityPayload.Text = "Why did the Storm Trooper buy an iPhone?";
+            }
+            else if(item.Text.Equals("WebViewExample"))
+            {
+                customActivityPayload.Text = "Load helloworld";
+            }
         }
 
         private void SendMessageBtn_Click(object sender, EventArgs e)
@@ -2426,7 +2575,37 @@ namespace CloverExamplePOS
             MessageToActivity mta = new MessageToActivity();
             ComboboxItem item = customActivityAction.Items[customActivityAction.SelectedIndex] as ComboboxItem;
             mta.Action = item.Value;
-            mta.Payload = customActivityPayload.Text;
+            if (item.Text.Equals("BasicConversationalExample"))
+            {
+                ConversationQuestionMessage question = new ConversationQuestionMessage();
+                question.message = "Why did the Storm Trooper buy an iPhone?";
+                question.messageType = MessageType.CONVERSATION_QUESTION.ToString();
+                question.payloadClassName = "ConversationQuestionMessage";
+                String jsonPayload = JsonConvert.SerializeObject(question);
+                mta.Payload = jsonPayload;
+            }
+            else if(item.Text.Equals("WebViewExample"))
+            {
+                WebViewMessage wvm = new WebViewMessage();
+                wvm.html = "<html><body><h1>Hello world</h1><a href=</body></html>";
+                wvm.messageType = MessageType.WEBVIEW.ToString();
+                wvm.payloadClassName = "WebViewMessage";
+                wvm.url = "helloworld.com";
+                String jsonPayload = JsonConvert.SerializeObject(wvm);
+                mta.Payload = jsonPayload;
+            }
+            else
+            {
+                mta.Payload = customActivityPayload.Text;
+            }
+            cloverConnector.SendMessageToActivity(mta);
+        }
+
+        private void SendMessageToActivity(String payload, String action)
+        {
+            MessageToActivity mta = new MessageToActivity();
+            mta.Action = action;
+            mta.Payload = payload;
             cloverConnector.SendMessageToActivity(mta);
         }
 

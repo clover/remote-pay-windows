@@ -149,6 +149,8 @@ namespace CloverWindowsSDKREST
                 Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
                 name = rName.ToString();
                 version = rVersion.ToString();
+                
+
             }
             catch (Exception e)
             {

@@ -193,6 +193,7 @@ namespace com.clover.remotepay.transport
                 AddMerchantDevice(0x28F3, 0x3003);
                 AddMerchantDevice(0x28F3, 0x3000);
                 AddMerchantDevice(0x28F3, 0x2000);
+                AddMerchantDevice(0x28F3, 0x4000);
             }
 
             string customerDevices = System.Configuration.ConfigurationSettings.AppSettings["customer_devices"];
@@ -216,6 +217,7 @@ namespace com.clover.remotepay.transport
                 AddCustomerDevice(0x28F3, 0x3002);
                 AddCustomerDevice(0x28F3, 0x3004);
                 AddCustomerDevice(0x18D1, 0x2D01);
+                AddCustomerDevice(0x28F3, 0x4002);
             }
         }
 

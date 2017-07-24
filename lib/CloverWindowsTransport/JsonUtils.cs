@@ -39,21 +39,17 @@ namespace com.clover.remotepay.transport
         public static T deserialize<T>(String input, JsonConverter[] converters)
         {
             T result = default(T);// sets as the default value of the object, so bool is false, int is 0, string is null, objects are null, etc.
-            try
+            
+            result = JsonConvert.DeserializeObject<T>(input,
+            new JsonSerializerSettings
             {
-                result = JsonConvert.DeserializeObject<T>(input,
-                new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore,
-                    Converters = converters
-                });
-                return result;
-            }
-            catch(Exception t)
-            {
-                return result; //TODO- show we throw an exception?
-            }
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                Converters = converters
+            });
+            return result;
+            
+          
         }
 
         public static string serialize(Object toSer)
@@ -161,7 +157,8 @@ namespace com.clover.remotepay.transport
                 new ListConverter<com.clover.sdk.v3.payments.Payment>(),
                 new ListConverter<com.clover.sdk.v3.payments.LineItemPayment>(),
                 new ListConverter<com.clover.sdk.v3.payments.Refund>(),
-                new ListConverter<com.clover.sdk.v3.payments.Credit>()
+                new ListConverter<com.clover.sdk.v3.payments.Credit>(),
+                new ListConverter<com.clover.sdk.v3.payments.PaymentTaxRate>()
             });
             return result;
 

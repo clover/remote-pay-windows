@@ -66,6 +66,15 @@ namespace com.clover.remotepay.transport
         public bool? approveOfflinePaymentWithoutPrompt { get; set; }
         public bool? requiresRemoteConfirmation { get; set; }
         public TransactionSettings transactionSettings { get; set; }
+        public bool allowPartialAuth {
+            get {
+                return _allowPartialAuth;
+            }
+            set {
+                _allowPartialAuth = value;
+            }
+        }
+        private bool _allowPartialAuth = true;
     }
 
     public enum ResultStatus
@@ -125,6 +134,92 @@ namespace com.clover.remotepay.transport
     {
         DUPLICATE_CHALLENGE,
         OFFLINE_CHALLENGE
+    }
+
+    public enum MessageType
+    {
+        PHONE_NUMBER,
+        RATINGS,
+        REQUEST_RATINGS,
+        CUSTOMER_INFO,
+        CONVERSATION_QUESTION,
+        CONVERSATION_RESPONSE,
+        WEBVIEW
+    }
+
+    public class PayloadMessage
+    {
+        public PayloadMessage(String PayloadClassName, MessageType MessageType)
+        {
+            payloadClassName = PayloadClassName;
+            messageType = MessageType;
+        }
+
+        public String payloadClassName;
+        public MessageType messageType;
+    }
+
+    public class CustomerInfo
+    {
+        public String phoneNumber;
+        public String customerName;
+    }
+    
+    public class CustomerInfoMessage
+    {
+        public CustomerInfo customerInfo;
+        public String payloadClassName;
+        public String messageType;
+    }
+
+    public class PhoneNumberMessage
+    {
+        public String phoneNumber;
+        public String payloadClassName;
+        public MessageType messageType;
+    }
+
+    public class Rating
+    {
+        public String id;
+        public String question;
+        public int value;
+    }
+
+    public class RatingsMessage
+    {
+        public String payloadClassName;
+        public String messageType;
+        public Rating[] ratings;
+    }
+
+    public class RequestRatingsMessage
+    {
+        public String payloadClassName;
+        public MessageType messageType;
+    }
+
+    public class WebViewMessage
+    {
+        public String payloadClassName;
+        public String messageType;
+        public String url;
+        public String html;
+    }
+
+
+    public class ConversationQuestionMessage
+    {
+        public String payloadClassName;
+        public String messageType;
+        public String message;
+    }
+
+    public class ConversationResponseMessage
+    {
+        public String payloadClassName;
+        public String messageType;
+        public String message;
     }
 
     public class Challenge

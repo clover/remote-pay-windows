@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 
+
 namespace CloverExamplePOS
 {
     partial class AlertForm
@@ -28,13 +29,21 @@ namespace CloverExamplePOS
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
+        private void InitializeComponent(int timerDuration)
         {
             this.TitleTextBox = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
+            //if (timerDuration > 0)
+            //{
+            //    this.timer = new Timer();
+            //    this.timer.Interval = timerDuration;
+            //    this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            //}
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // TitleTextBox
@@ -56,13 +65,26 @@ namespace CloverExamplePOS
             this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.TitleTextBox);
-            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.OkButton);
             this.panel1.Location = new System.Drawing.Point(79, 63);
             this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(415, 229);
             this.panel1.TabIndex = 5;
+            // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Location = new System.Drawing.Point(25, 20);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(390, 160);
+            this.panel2.TabIndex = 6;
+            this.panel2.AutoScroll = true;
+            this.panel2.SetAutoScrollMargin(380, 175);
             // 
             // label1
             // 
@@ -105,14 +127,26 @@ namespace CloverExamplePOS
 
         private System.Windows.Forms.Label TitleTextBox;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button OkButton;
+        private Timer timer;
 
-        public static void Show(Form toCover, string title, string label)
+        public static void Show(Form toCover, string title, string label, int duration = 0)
         {
-            AlertForm alertForm = new AlertForm(toCover);
+            AlertForm alertForm;
+            if (duration > 0)
+            {
+                alertForm = new AlertForm(toCover, duration);
+            }
+            else
+            {
+                alertForm = new AlertForm(toCover);
+            }
             alertForm.Title = title;
             alertForm.Label = label;
+            System.Console.WriteLine("In alert form");
+            alertForm.AutoScroll = true;
             alertForm.Show(toCover);
         }
     }

@@ -34,5 +34,6 @@ namespace com.clover.sdk.v3.payments
         public bool? disableDuplicateCheck { get; set; }
         public bool? autoAcceptPaymentConfirmations { get; set; }
         public bool? autoAcceptSignature { get; set; }
+        public bool? forceOfflinePayment { get; set; }
     }
 }

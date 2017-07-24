@@ -195,6 +195,10 @@ namespace com.clover.remotepay.sdk
             {
                 ts.disableCashBack = true;
             }
+            if (request.ForceOfflinePayment.HasValue)
+            {
+                ts.forceOfflinePayment = request.ForceOfflinePayment;
+            }
             if (request.AllowOfflinePayment.HasValue)
             {
                 ts.allowOfflinePayment = request.AllowOfflinePayment;
@@ -393,6 +397,10 @@ namespace com.clover.remotepay.sdk
             if (request.ApproveOfflinePaymentWithoutPrompt.HasValue && request.ApproveOfflinePaymentWithoutPrompt.Value)
             {
                 ts.approveOfflinePaymentWithoutPrompt = true;
+            }
+            if (request.ForceOfflinePayment.HasValue && request.ForceOfflinePayment.Value)
+            {
+                ts.forceOfflinePayment = true;
             }
             ts.tipMode = com.clover.sdk.v3.payments.TipMode.ON_PAPER;
             payIntent.transactionSettings = ts;
@@ -1863,7 +1871,15 @@ namespace com.clover.remotepay.sdk
                 {
                     rdsr.State = st;
                 }
-                rdsr.Data = JsonUtils.deserialize<ExternalDeviceStateData>(JsonUtils.serialize(data));
+
+                try
+                {
+                    rdsr.Data = JsonUtils.deserialize<ExternalDeviceStateData>(JsonUtils.serialize(data));
+                }
+                catch(InvalidOperationException ioe)
+                {
+                    rdsr.Data = null;
+                }
                 cloverConnector.listeners.ForEach(listener => listener.OnRetrieveDeviceStatusResponse(rdsr));
             }
 
@@ -1880,7 +1896,15 @@ namespace com.clover.remotepay.sdk
                 //    rpr.QueryStatus = qs;
                 //}
                 rpr.ExternalPaymentId = externalPaymentId;
-                rpr.Payment = JsonUtils.deserialize<Payment>(JsonUtils.serialize(payment));
+                try
+                {
+                    rpr.Payment = JsonUtils.deserialize<Payment>(JsonUtils.serialize(payment));
+                }
+                catch(InvalidOperationException ioe)
+                {
+                    rpr.Payment = null;
+              
+                }
 
                 cloverConnector.listeners.ForEach(listener => listener.OnRetrievePaymentResponse(rpr));
             }

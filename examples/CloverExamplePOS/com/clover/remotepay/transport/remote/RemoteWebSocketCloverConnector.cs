@@ -144,193 +144,200 @@ namespace com.clover.remotepay.transport.remote
             JObject payload = (JObject)jsonObj.GetValue(ServicePayloadConstants.PROP_PAYLOAD);
             WebSocketMethod wsm = (WebSocketMethod)Enum.Parse(typeof(WebSocketMethod), method.ToString());
 
-            switch (wsm)
+            try
             {
-                case WebSocketMethod.DeviceActivityStart:
-                    {
-                        CloverDeviceEvent deviceEvent = JsonUtils.deserialize<CloverDeviceEvent>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnDeviceActivityStart(deviceEvent));
-                        break;
-                    }
-                case WebSocketMethod.DeviceActivityEnd:
-                    {
-                        CloverDeviceEvent deviceEvent = JsonUtils.deserialize<CloverDeviceEvent>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnDeviceActivityEnd(deviceEvent));
-                        break;
-                    }
-                case WebSocketMethod.DeviceError:
-                    {
-                        CloverDeviceErrorEvent deviceErrorEvent = JsonUtils.deserialize<CloverDeviceErrorEvent>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnDeviceError(deviceErrorEvent));
-                        break;
-                    }
-                case WebSocketMethod.DeviceConnected:
-                    {
-                        listeners.ForEach(listener => listener.OnDeviceConnected());
-                        break;
-                    }
-                case WebSocketMethod.DeviceDisconnected:
-                    {
-                        listeners.ForEach(listener => listener.OnDeviceDisconnected());
-                        break;
-                    }
-                case WebSocketMethod.DeviceReady:
-                    {
-                        MerchantInfo merchantInfo = JsonUtils.deserialize<MerchantInfo>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnDeviceReady(merchantInfo));
-                        break;
-                    }
-                case WebSocketMethod.VerifySignatureRequest:
-                    {
-                        VerifySignatureRequest svr = JsonUtils.deserialize<VerifySignatureRequest>(payload.ToString());
-                        WebSocketSigVerRequestHandler handler = new WebSocketSigVerRequestHandler(this, svr);
-                        listeners.ForEach(listener => listener.OnVerifySignatureRequest(handler));
-                        break;
-                    }
-                case WebSocketMethod.SaleResponse:
-                    {
-                        SaleResponse sr = JsonUtils.deserialize<SaleResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnSaleResponse(sr));
-                        break;
-                    }
-                case WebSocketMethod.PreAuthResponse:
-                    {
-                        PreAuthResponse pr = JsonUtils.deserialize<PreAuthResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnPreAuthResponse(pr));
-                        break;
-                    }
-                case WebSocketMethod.AuthResponse:
-                    {
-                        AuthResponse ar = JsonUtils.deserialize<AuthResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnAuthResponse(ar));
-                        break;
-                    }
-                case WebSocketMethod.CapturePreAuthResponse:
-                    {
-                        CapturePreAuthResponse ar = JsonUtils.deserialize<CapturePreAuthResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnCapturePreAuthResponse(ar));
-                        break;
-                    }
-                case WebSocketMethod.RefundPaymentResponse:
-                    {
-                        RefundPaymentResponse sr = JsonUtils.deserialize<RefundPaymentResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnRefundPaymentResponse(sr));
-                        break;
-                    }
-                case WebSocketMethod.VoidPaymentResponse:
-                    {
-                        VoidPaymentResponse sr = JsonUtils.deserialize<VoidPaymentResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnVoidPaymentResponse(sr));
-                        break;
-                    }
-                case WebSocketMethod.ManualRefundResponse:
-                    {
-                        ManualRefundResponse sr = JsonUtils.deserialize<ManualRefundResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnManualRefundResponse(sr));
-                        break;
-                    }
-                case WebSocketMethod.TipAdjustAuthResponse:
-                    {
-                        TipAdjustAuthResponse taar = JsonUtils.deserialize<TipAdjustAuthResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnTipAdjustAuthResponse(taar));
-                        break;
-                    }
-                case WebSocketMethod.VaultCardResponse:
-                    {
-                        VaultCardResponse vcr = JsonUtils.deserialize<VaultCardResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnVaultCardResponse(vcr));
-                        break;
-                    }
-                case WebSocketMethod.ReadCardDataResponse:
-                    {
-                        ReadCardDataResponse rcdr = JsonUtils.deserialize<ReadCardDataResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnReadCardDataResponse(rcdr));
-                        break;
-                    }
-                case WebSocketMethod.CloseoutResponse:
-                    {
-                        CloseoutResponse cr = JsonUtils.deserialize<CloseoutResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnCloseoutResponse(cr));
-                        break;
-                    }
-                case WebSocketMethod.ConfirmPaymentRequest:
-                    {
-                        ConfirmPaymentRequest cpr = JsonUtils.deserialize<ConfirmPaymentRequest>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnConfirmPaymentRequest(cpr));
-                        break;
-                    }
-                case WebSocketMethod.RetrievePendingPaymentsResponse:
-                    {
-                        RetrievePendingPaymentsResponse rppr = JsonUtils.deserialize<RetrievePendingPaymentsResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnRetrievePendingPaymentsResponse(rppr));
-                        break;
-                    }
-                case WebSocketMethod.PrintManualRefundDeclinedReceipt:
-                    {
-                        PrintManualRefundDeclineReceiptMessage pmrdrm = JsonUtils.deserialize<PrintManualRefundDeclineReceiptMessage>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnPrintManualRefundDeclineReceipt(pmrdrm));
-                        break;
-                    }
-                case WebSocketMethod.PrintManualRefundReceipt:
-                    {
-                        PrintManualRefundReceiptMessage pmrrm = JsonUtils.deserialize<PrintManualRefundReceiptMessage>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnPrintManualRefundReceipt(pmrrm));
-                        break;
-                    }
-                case WebSocketMethod.PrintPaymentDeclinedReceipt:
-                    {
-                        PrintPaymentDeclineReceiptMessage ppdrm = JsonUtils.deserialize<PrintPaymentDeclineReceiptMessage>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnPrintPaymentDeclineReceipt(ppdrm));
-                        break;
-                    }
-                case WebSocketMethod.PrintPaymentMerchantCopyReceipt:
-                    {
-                        PrintPaymentMerchantCopyReceiptMessage ppmcrm = JsonUtils.deserialize<PrintPaymentMerchantCopyReceiptMessage>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnPrintPaymentMerchantCopyReceipt(ppmcrm));
-                        break;
-                    }
-                case WebSocketMethod.PrintPaymentReceipt:
-                    {
-                        PrintPaymentReceiptMessage pprm = JsonUtils.deserialize<PrintPaymentReceiptMessage>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnPrintPaymentReceipt(pprm));
-                        break;
-                    }
-                case WebSocketMethod.PrintPaymentRefundReceipt:
-                    {
-                        PrintRefundPaymentReceiptMessage prprm = JsonUtils.deserialize<PrintRefundPaymentReceiptMessage>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnPrintRefundPaymentReceipt(prprm));
-                        break;
-                    }
-                case WebSocketMethod.CustomActivityResponse:
-                    {
-                        CustomActivityResponse car = JsonUtils.deserialize<CustomActivityResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnCustomActivityResponse(car));
-                        break;
-                    }
-                case WebSocketMethod.MessageFromActivity:
-                    {
-                        MessageFromActivity mta = JsonUtils.deserialize<MessageFromActivity>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnMessageFromActivity(mta));
-                        break;
-                    }
-                case WebSocketMethod.RetrieveDeviceStatusResponse:
-                    {
-                        RetrieveDeviceStatusResponse rdsr = JsonUtils.deserialize<RetrieveDeviceStatusResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnRetrieveDeviceStatusResponse(rdsr));
-                        break;
-                    }
-                case WebSocketMethod.ResetDeviceResponse:
-                    {
-                        ResetDeviceResponse rdr = JsonUtils.deserialize<ResetDeviceResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnResetDeviceResponse(rdr));
-                        break;
-                    }
-                case WebSocketMethod.RetrievePaymentResponse:
-                    {
-                        RetrievePaymentResponse rpr = JsonUtils.deserialize<RetrievePaymentResponse>(payload.ToString());
-                        listeners.ForEach(listener => listener.OnRetrievePaymentResponse(rpr));
-                        break;
-                    }
+                switch (wsm)
+                {
+                    case WebSocketMethod.DeviceActivityStart:
+                        {
+                            CloverDeviceEvent deviceEvent = JsonUtils.deserialize<CloverDeviceEvent>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnDeviceActivityStart(deviceEvent));
+                            break;
+                        }
+                    case WebSocketMethod.DeviceActivityEnd:
+                        {
+                            CloverDeviceEvent deviceEvent = JsonUtils.deserialize<CloverDeviceEvent>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnDeviceActivityEnd(deviceEvent));
+                            break;
+                        }
+                    case WebSocketMethod.DeviceError:
+                        {
+                            CloverDeviceErrorEvent deviceErrorEvent = JsonUtils.deserialize<CloverDeviceErrorEvent>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnDeviceError(deviceErrorEvent));
+                            break;
+                        }
+                    case WebSocketMethod.DeviceConnected:
+                        {
+                            listeners.ForEach(listener => listener.OnDeviceConnected());
+                            break;
+                        }
+                    case WebSocketMethod.DeviceDisconnected:
+                        {
+                            listeners.ForEach(listener => listener.OnDeviceDisconnected());
+                            break;
+                        }
+                    case WebSocketMethod.DeviceReady:
+                        {
+                            MerchantInfo merchantInfo = JsonUtils.deserialize<MerchantInfo>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnDeviceReady(merchantInfo));
+                            break;
+                        }
+                    case WebSocketMethod.VerifySignatureRequest:
+                        {
+                            VerifySignatureRequest svr = JsonUtils.deserialize<VerifySignatureRequest>(payload.ToString());
+                            WebSocketSigVerRequestHandler handler = new WebSocketSigVerRequestHandler(this, svr);
+                            listeners.ForEach(listener => listener.OnVerifySignatureRequest(handler));
+                            break;
+                        }
+                    case WebSocketMethod.SaleResponse:
+                        {
+                            SaleResponse sr = JsonUtils.deserialize<SaleResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnSaleResponse(sr));
+                            break;
+                        }
+                    case WebSocketMethod.PreAuthResponse:
+                        {
+                            PreAuthResponse pr = JsonUtils.deserialize<PreAuthResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPreAuthResponse(pr));
+                            break;
+                        }
+                    case WebSocketMethod.AuthResponse:
+                        {
+                            AuthResponse ar = JsonUtils.deserialize<AuthResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnAuthResponse(ar));
+                            break;
+                        }
+                    case WebSocketMethod.CapturePreAuthResponse:
+                        {
+                            CapturePreAuthResponse ar = JsonUtils.deserialize<CapturePreAuthResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnCapturePreAuthResponse(ar));
+                            break;
+                        }
+                    case WebSocketMethod.RefundPaymentResponse:
+                        {
+                            RefundPaymentResponse sr = JsonUtils.deserialize<RefundPaymentResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnRefundPaymentResponse(sr));
+                            break;
+                        }
+                    case WebSocketMethod.VoidPaymentResponse:
+                        {
+                            VoidPaymentResponse sr = JsonUtils.deserialize<VoidPaymentResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnVoidPaymentResponse(sr));
+                            break;
+                        }
+                    case WebSocketMethod.ManualRefundResponse:
+                        {
+                            ManualRefundResponse sr = JsonUtils.deserialize<ManualRefundResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnManualRefundResponse(sr));
+                            break;
+                        }
+                    case WebSocketMethod.TipAdjustAuthResponse:
+                        {
+                            TipAdjustAuthResponse taar = JsonUtils.deserialize<TipAdjustAuthResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnTipAdjustAuthResponse(taar));
+                            break;
+                        }
+                    case WebSocketMethod.VaultCardResponse:
+                        {
+                            VaultCardResponse vcr = JsonUtils.deserialize<VaultCardResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnVaultCardResponse(vcr));
+                            break;
+                        }
+                    case WebSocketMethod.ReadCardDataResponse:
+                        {
+                            ReadCardDataResponse rcdr = JsonUtils.deserialize<ReadCardDataResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnReadCardDataResponse(rcdr));
+                            break;
+                        }
+                    case WebSocketMethod.CloseoutResponse:
+                        {
+                            CloseoutResponse cr = JsonUtils.deserialize<CloseoutResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnCloseoutResponse(cr));
+                            break;
+                        }
+                    case WebSocketMethod.ConfirmPaymentRequest:
+                        {
+                            ConfirmPaymentRequest cpr = JsonUtils.deserialize<ConfirmPaymentRequest>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnConfirmPaymentRequest(cpr));
+                            break;
+                        }
+                    case WebSocketMethod.RetrievePendingPaymentsResponse:
+                        {
+                            RetrievePendingPaymentsResponse rppr = JsonUtils.deserialize<RetrievePendingPaymentsResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnRetrievePendingPaymentsResponse(rppr));
+                            break;
+                        }
+                    case WebSocketMethod.PrintManualRefundDeclinedReceipt:
+                        {
+                            PrintManualRefundDeclineReceiptMessage pmrdrm = JsonUtils.deserialize<PrintManualRefundDeclineReceiptMessage>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintManualRefundDeclineReceipt(pmrdrm));
+                            break;
+                        }
+                    case WebSocketMethod.PrintManualRefundReceipt:
+                        {
+                            PrintManualRefundReceiptMessage pmrrm = JsonUtils.deserialize<PrintManualRefundReceiptMessage>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintManualRefundReceipt(pmrrm));
+                            break;
+                        }
+                    case WebSocketMethod.PrintPaymentDeclinedReceipt:
+                        {
+                            PrintPaymentDeclineReceiptMessage ppdrm = JsonUtils.deserialize<PrintPaymentDeclineReceiptMessage>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintPaymentDeclineReceipt(ppdrm));
+                            break;
+                        }
+                    case WebSocketMethod.PrintPaymentMerchantCopyReceipt:
+                        {
+                            PrintPaymentMerchantCopyReceiptMessage ppmcrm = JsonUtils.deserialize<PrintPaymentMerchantCopyReceiptMessage>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintPaymentMerchantCopyReceipt(ppmcrm));
+                            break;
+                        }
+                    case WebSocketMethod.PrintPaymentReceipt:
+                        {
+                            PrintPaymentReceiptMessage pprm = JsonUtils.deserialize<PrintPaymentReceiptMessage>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintPaymentReceipt(pprm));
+                            break;
+                        }
+                    case WebSocketMethod.PrintPaymentRefundReceipt:
+                        {
+                            PrintRefundPaymentReceiptMessage prprm = JsonUtils.deserialize<PrintRefundPaymentReceiptMessage>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintRefundPaymentReceipt(prprm));
+                            break;
+                        }
+                    case WebSocketMethod.CustomActivityResponse:
+                        {
+                            CustomActivityResponse car = JsonUtils.deserialize<CustomActivityResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnCustomActivityResponse(car));
+                            break;
+                        }
+                    case WebSocketMethod.MessageFromActivity:
+                        {
+                            MessageFromActivity mta = JsonUtils.deserialize<MessageFromActivity>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnMessageFromActivity(mta));
+                            break;
+                        }
+                    case WebSocketMethod.RetrieveDeviceStatusResponse:
+                        {
+                            RetrieveDeviceStatusResponse rdsr = JsonUtils.deserialize<RetrieveDeviceStatusResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnRetrieveDeviceStatusResponse(rdsr));
+                            break;
+                        }
+                    case WebSocketMethod.ResetDeviceResponse:
+                        {
+                            ResetDeviceResponse rdr = JsonUtils.deserialize<ResetDeviceResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnResetDeviceResponse(rdr));
+                            break;
+                        }
+                    case WebSocketMethod.RetrievePaymentResponse:
+                        {
+                            RetrievePaymentResponse rpr = JsonUtils.deserialize<RetrievePaymentResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnRetrievePaymentResponse(rpr));
+                            break;
+                        }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
