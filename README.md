@@ -12,16 +12,16 @@ The Windows project includes a .NET dll, REST API Service, WebSocket API Service
 - CloverConnectorWebSocketService provides a Windows service with a WebSocket endpoint. To use this, the POS will have to implement a WebSocket client to communicate with the WebSocketService and receive callbacks.
 
 To effectively work with the project you'll need:
-- A Windows machine or VM
-- An [IDE](https://www.visualstudio.com/downloads/), Visual Studio is one option
+- A computer or virtual machine running Windows. The SDK supports Windows 10, Windows 8, and Windows 7.
+- An IDE, such as [Visual Studio](https://www.visualstudio.com/downloads/).
 
 ## Installers
 
 There are four separate installers:
-#####For Development:
+##### For Development:
   * CloverSDKSetup.exe - Installer that will lay down the dll, REST Clover Connector Service or WebSocket Clover Connector Service, along with the optional ExamplePOS application and source for testing.
 
-#####For Deployment:
+##### For Deployment:
   * CloverUSBDriverSetup.exe - Clover device USB Driver installation only (automatically installed with the other installers)
   * CloverRESTServiceSetup.exe - Installer for the REST Clover Connector Service only
   * CloverWebSocketServiceSetup.exe - Installer for the WebSocket Clover Connector Service only
