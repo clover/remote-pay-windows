@@ -1,6 +1,6 @@
 ![alt text](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
 
-# Clover SDK for Windows PoS Integration
+# Clover SDK for Windows POS Integration
 
 Current version: 1.3.1
 
@@ -9,7 +9,7 @@ Current version: 1.3.1
 This SDK provides an API with which to allow your Windows point-of-sale (POS) system to interface with a [Clover® device](https://www.clover.com/pos-hardware/). Learn more about [integrations](https://www.clover.com/integrations).
 
 Supported Windows Versions:
--Windows 10, Windows 8, and Windows 7
+  * Windows 10, Windows 8, and Windows 7
 
 The Windows project includes a .NET DLL, REST API Service, WebSocket API Service, and an example POS. There are three ways to connect to a device:
 - CloverConnector.DLL can be used directly by a .NET application. Note: Requires .NET 4.0
