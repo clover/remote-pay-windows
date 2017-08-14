@@ -1,58 +1,69 @@
-# Clover SDK for Windows PoS Integration
+![alt text](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
+
+# Clover SDK for Windows POS Integration
 
 Current version: 1.3.1
 
 ## Overview
 
-This SDK provides an API with which to allow your Windows Point-of-Sale (POS) system to interface with a [Clover® Mini device] (https://www.clover.com/pos-hardware/mini). From the Mini, merchants can accept payments using: credit, debit, EMV contact and contactless (including Apple Pay), gift cards, EBT (electronic benefit transfer), and more. Learn more about integrations at [clover.com/integrations](https://www.clover.com/integrations).
+This SDK provides an API with which to allow your Windows point-of-sale (POS) system to interface with a [Clover® device](https://www.clover.com/pos-hardware/). Learn more about [integrations](https://www.clover.com/integrations).
 
-The Windows project includes a .NET dll, REST API Service, WebSocket API Service and an example POS. There are 3 ways to connect to a device
+**Supported Windows Versions:**
+  * Windows 10, Windows 8, and Windows 7
+
+The Windows project includes a .NET DLL, REST API Service, WebSocket API Service, and an example POS. There are three ways to connect to a device:
 - CloverConnector.DLL can be used directly by a .NET application. Note: Requires .NET 4.0
 - CloverConnectorRESTService provides a Windows service with a REST API and REST callbacks. To use this, the POS will have to implement a REST service to get callbacks from the service
 - CloverConnectorWebSocketService provides a Windows service with a WebSocket endpoint. To use this, the POS will have to implement a WebSocket client to communicate with the WebSocketService and receive callbacks.
 
-To effectively work with the project you'll need:
-- A Windows machine or VM
-- An [IDE](https://www.visualstudio.com/downloads/), Visual Studio is one option
+**To effectively work with the project you'll need:**
+- A computer or virtual machine running Windows. The SDK supports Windows 10, Windows 8, and Windows 7.
+- An IDE, such as [Visual Studio](https://www.visualstudio.com/downloads/).
 
 ## Installers
 
 There are four separate installers:
-#####For Development:
-  * CloverSDKSetup.exe - Installer that will lay down the dll, REST Clover Connector Service or WebSocket Clover Connector Service, along with the optional ExamplePOS application and source for testing.
+### For Development:
+  * CloverSDKSetup.exe - Installer that will lay down the DLL, REST Clover Connector Service, or WebSocket Clover Connector Service, along with the optional example POS application and source for testing.
 
-#####For Deployment:
+### For Deployment:
   * CloverUSBDriverSetup.exe - Clover device USB Driver installation only (automatically installed with the other installers)
   * CloverRESTServiceSetup.exe - Installer for the REST Clover Connector Service only
   * CloverWebSocketServiceSetup.exe - Installer for the WebSocket Clover Connector Service only
 
-To complete a transaction end to end, we recommend getting a [Clover Mini Dev Kit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).
+To experience a transaction end-to-end from the merchant and customer perspectives, we recommend getting a [Clover DevKit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).
 
+## Help 
 
-More documentation can be found at [Clover Docs Site](https://docs.clover.com/build/getting-started-with-cloverconnector/).
+- [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
+- [API Documentation](http://clover.github.io/remote-pay-windows/1.3.1/cloverconnector/html/index.html)
+- [Semi-Integration FAQ](https://docs.clover.com/build/semi-integration-faq/)
+- [Clover Developer Community](https://community.clover.com/index.html)
 
-# Version 1.3.1
-* Enhanced EventLog source creation methods to provide better message debugging
-* Added support for starting Custom Activities and handling messaging with those activities
-* Added example custom activity processing to the CloverExamplePOS application
-* Added Device Status messaging to provide better insight into the current state of the connected payment device
-* Added RetrievePayment request/response to provide the ability to query for a payment by external ID on the device
+## Change Log
+
+### Version 1.3.1
+* Enhanced EventLog source creation methods to provide better message debugging.
+* Added support for starting Custom Activities and handling messaging with those activities.
+* Added example custom activity processing to the CloverExamplePOS application.
+* Added Device Status messaging to provide better insight into the current state of the connected payment device.
+* Added RetrievePayment request/response to provide the ability to query for a payment by external ID on the device.
 * Added some new starter examples to aid in quickly getting connected to a Clover device for a few simple scenarios
-that originally attempted to process said payment.  Provides additional situational awareness after unexpected
+that originally attempted to process said payment. Provides additional situational awareness after unexpected
 disconnects with the payment device.
-* Bug fixes for request validation handling
-* Updates for the Secure Network Pay Display support and configuration
-* General improvements to the CloverExamplePOS application
+* Bug fixes for request validation handling.
+* Updates for the Secure Network Pay Display support and configuration.
+* General improvements to the Clover Example POS application.
 
-# Version 1.2.1
+### Version 1.2.1
 * Additional logging for connector communication and selected transport
 * Added USB Device Hardening via persistent service debug options
-* Corrected a bug in the definition of one of the internal message classes.  Customer API not impacted
+* Corrected a bug in the definition of one of the internal message classes. Customer API not impacted.
 
-# Version 1.2.0
-* PreAuthRequest - no longer prompts for signature or signature verification.  Duplicate payment checking and print options can also be disabled if desired by setting the appropriate PreAuthRequest overrides of disablePrinting, disableDuplicateChecking & disableReceiptSelection to true.
-* Changes to support certain transaction level overrides have been included in this version. To facilitate the addition of the new override capabilities, some new   options were added to the SaleRequest & TransactionRequest classes.
-  * TransactionRequest - extended by SaleRequest, AuthRequest, PreAuthRequest & ManualRefundRequest
+### Version 1.2.0
+* PreAuthRequest - no longer prompts for signature or signature verification. Duplicate payment checking and print options can also be disabled if desired by setting the appropriate PreAuthRequest overrides of disablePrinting, disableDuplicateChecking & disableReceiptSelection to true.
+* Changes to support certain transaction level overrides have been included in this version. To facilitate the addition of the new override capabilities, some new options were added to the SaleRequest and TransactionRequest classes.
+  * TransactionRequest - extended by SaleRequest, AuthRequest, PreAuthRequest & ManualRefundRequest.
     * (Long) signatureThreshold was added to enable the override of the signature threshold in the Merchant settings for payments.
     * (DataEntryLocation) signatureEntryLocation was added to enable the override of the Signature Entry Location in the Merchant Signature Settings for Payments.  Value of NONE will cause the device to skip requesting a signature for the specified transaction.
     Possible values:
@@ -62,24 +73,24 @@ disconnects with the payment device.
     * (Boolean) disableReceiptSelection was added to enable bypassing the customer-facing receipt selection screen.
     * (Boolean) disableDuplicateChecking was added to enable bypassing any duplicate transaction logic and associated requests for confirmation.
     * (Boolean) autoAcceptPaymentConfirmations was added to enable the automatic acceptance of any payment confirmations that might be applicable for the given transaction (e.g. offline payment confirmation).  This override prevents any payment confirmation requests from being transmitted back to the calling program and continues processing as if a confirmPayment() was initiated by the caller.
-    * (Boolean) autoAcceptSignature was added to enable the automatic acceptance of a signature (on screen or on paper) if applicable for the given transaction.  This override prevents signature confirmation requests from being transmitted back to the calling program and continues processing as if a acceptSignature() was initiated by the caller.
-  * SaleRequest (extends TransactionRequest)
-    * (TipMode) tipMode was added to specify the location from which to accept the tip.  You can now provide a tip up front or specify no tip to override the merchant configured (on screen/on paper) settings. **NOTE** If you desire to take the tip on paper, populate the signatureEntryLocation with ON_PAPER
+    * (Boolean) autoAcceptSignature was added to enable the automatic acceptance of a signature (on screen or on paper) if applicable for the given transaction. This override prevents signature confirmation requests from being transmitted back to the calling program and continues processing as if a acceptSignature() was initiated by the caller.
+  * SaleRequest (extends TransactionRequest).
+    * (TipMode) tipMode was added to specify the location from which to accept the tip. You can now provide a tip up front or specify no tip to override the merchant configured (on screen/on paper) settings. **NOTE** If you desire to take the tip on paper, populate the signatureEntryLocation with ON_PAPER
     Possible values:
-      * TIP_PROVIDED - tip is included in the request
-      * ON_SCREEN_BEFORE_PAYMENT - valid when requested via Mini or Mobile
-      * NO_TIP - tip will not be requested for this payment
+      * TIP_PROVIDED - tip is included in the request.
+      * ON_SCREEN_BEFORE_PAYMENT - valid when requested via Mini or Mobile.
+      * NO_TIP - tip will not be requested for this payment.
 
-# Version 1.1.0.3
+### Version 1.1.0.3
   * Corrected an issue with handling large messages resulting in USB communication failures to connected devices.
 
-# Version 1.1.0.2
+### Version 1.1.0.2
   * Fix issue where requiresRemoteConfirmation was false
 
 ## Release Notes
-# Version 1.1
+### Version 1.1
 * Renamed/Added/Removed a number of API operations and request/response objects to establish
-  better consistency across platforms
+  better consistency across platforms.
 
   * ICloverConnector (Operations)
     * Added
