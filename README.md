@@ -8,7 +8,7 @@ Current version: 1.3.1
 
 This SDK provides an API with which to allow your Windows point-of-sale (POS) system to interface with a [Clover® device](https://www.clover.com/pos-hardware/). Learn more about [integrations](https://www.clover.com/integrations).
 
-Supported Windows Versions:
+**Supported Windows Versions:**
   * Windows 10, Windows 8, and Windows 7
 
 The Windows project includes a .NET DLL, REST API Service, WebSocket API Service, and an example POS. There are three ways to connect to a device:
@@ -16,7 +16,7 @@ The Windows project includes a .NET DLL, REST API Service, WebSocket API Service
 - CloverConnectorRESTService provides a Windows service with a REST API and REST callbacks. To use this, the POS will have to implement a REST service to get callbacks from the service
 - CloverConnectorWebSocketService provides a Windows service with a WebSocket endpoint. To use this, the POS will have to implement a WebSocket client to communicate with the WebSocketService and receive callbacks.
 
-To effectively work with the project you'll need:
+**To effectively work with the project you'll need:**
 - A computer or virtual machine running Windows. The SDK supports Windows 10, Windows 8, and Windows 7.
 - An IDE, such as [Visual Studio](https://www.visualstudio.com/downloads/).
 
@@ -33,7 +33,7 @@ There are four separate installers:
 
 To experience a transaction end-to-end from the merchant and customer perspectives, we recommend getting a [Clover DevKit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).
 
-## Help: 
+## Help 
 
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
 - [API Documentation](http://clover.github.io/remote-pay-windows/1.3.1/cloverconnector/html/index.html)
