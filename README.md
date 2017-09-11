@@ -42,6 +42,7 @@ To experience a transaction end-to-end from the merchant and customer perspectiv
 
 ## Change Log
 
+## Release Notes
 ### Version 1.3.1
 * Enhanced EventLog source creation methods to provide better message debugging.
 * Added support for starting Custom Activities and handling messaging with those activities.
@@ -80,14 +81,11 @@ disconnects with the payment device.
       * TIP_PROVIDED - tip is included in the request.
       * ON_SCREEN_BEFORE_PAYMENT - valid when requested via Mini or Mobile.
       * NO_TIP - tip will not be requested for this payment.
-
-### Version 1.1.0.3
   * Corrected an issue with handling large messages resulting in USB communication failures to connected devices.
 
 ### Version 1.1.0.2
   * Fix issue where requiresRemoteConfirmation was false
 
-## Release Notes
 ### Version 1.1
 * Renamed/Added/Removed a number of API operations and request/response objects to establish
   better consistency across platforms.
