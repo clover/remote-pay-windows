@@ -86,11 +86,11 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 
 3. Enter `>adb devices` on the command line. This will retrieve a list of available devices similar to the one below.
 
-		```
-		List of devices attached
-		C010UC43040345	device
-		C030UQ50550081	device
-		```
+	```
+	List of devices attached
+	C010UC43040345	device
+	C030UQ50550081	device
+	```
 
 4. Modify the command from step 2 to include the ID for the device you want to set up. 
 	
