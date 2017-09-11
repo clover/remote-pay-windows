@@ -114,7 +114,7 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 	C010UC43040345	device
 	192.168.1.3:5555 device
 	```
-### Help 
+### Additional Resources 
 
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
