@@ -1,4 +1,4 @@
-![alt text](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
+![Clover logo](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
 
 # Clover SDK for Windows POS integration
 
@@ -114,7 +114,7 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 	C010UC43040345	device
 	192.168.1.3:5555 device
 	```
-### Additional Resources 
+### Additional resources 
 
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
