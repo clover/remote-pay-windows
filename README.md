@@ -2,20 +2,20 @@
 
 # Clover SDK for Windows POS integration
 
-### Version
+## Version
 
 Current version: 1.3.1
 
-### Overview
+## Overview
 
-This SDK enables your Windows point-of-sale (POS) system to communicate with a [Clover® device](https://www.clover.com/pos-hardware/). Learn more about [Clover integrations](https://www.clover.com/integrations).
+This SDK enables your Windows point-of-sale (POS) system to communicate with a [Clover® payment device](https://www.clover.com/pos-hardware/). Learn more about [Clover integrations](https://www.clover.com/integrations).
 
 **Platforms supported:**
   * Windows 10
   * Windows 8
   * Windows 7
   
-### Connecting to a Clover device 
+## Connecting to a Clover device 
 
 The Windows project includes three options for connecting to a Clover device. 
 
@@ -28,21 +28,21 @@ To work with the project effectively, you will need:
 - An IDE, such as [Visual Studio](https://www.visualstudio.com/downloads/).
 - To experience transactions end-to-end from the merchant and customer perspectives, we also recommend ordering a [Clover DevKit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).
 
-### Installing the SDK and Services
+## Installing the SDK and Services
 
 There are four separate installers.
 
-#### For development:
+### For development:
 
   * CloverSDKSetup.exe - This file will install the DLL, as well as the Clover Connector REST Service or Clover Connector WebSocket Service. It will also install the example POS application and source for testing.
 
-#### For deployment:
+### For deployment:
 
   * CloverUSBDriverSetup.exe - This file installs the USB driver for the Clover device only.
   * CloverRESTServiceSetup.exe - This file installs the REST Clover Connector Service and the USB driver for the Clover device.
   * CloverWebSocketServiceSetup.exe - This file installs the WebSocket Clover Connector Service and the USB driver for the Clover device.
 
-### Building the SDK
+## Building the SDK
 
 The SDK has the following structure. 
 
@@ -63,7 +63,7 @@ The SDK has the following structure.
 	└── shared                         # Contains code shared by the Services
 ```
 
-#### Working with the Example POS
+## Working with the Example POS
 
 To build and run the example POS application using .NET and VisualStudio 2015:
  1. Open **Clover.sln**
@@ -71,12 +71,12 @@ To build and run the example POS application using .NET and VisualStudio 2015:
  3. Select the **CloverExamplePOS**
  4. Click **Run**
 
-#### Setting up a virtal machine
+## Setting up a virtal machine
 
 1. Install [VMWare Fusion](https://www.vmware.com/products/fusion.html). (NOTE: VirtualBox will not see the device properly.)
 2. Run the driver installers.
 
-### Debugging
+## Debugging
 
 To debug the device in TCP/IP using Android Debug Bridge (adb):
 1. Plug the device into a laptop, then select **Connect to Mac**. This will set the device up for debugging on port 5555.
@@ -114,7 +114,7 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 	C010UC43040345	device
 	192.168.1.3:5555 device
 	```
-### Additional resources 
+## Additional resources 
 
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
