@@ -35,47 +35,47 @@ namespace CloverWindowsSDKWebSocketService
         {
             OnAuthResponseMessage authResponse = new OnAuthResponseMessage();
             authResponse.payload = response;
-            WebSocket.Send(Serialize(authResponse));
+            Send(Serialize(authResponse));
         }
 
         public void OnPreAuthResponse(PreAuthResponse response)
         {
             OnPreAuthResponseMessage preAuthResponse = new OnPreAuthResponseMessage();
             preAuthResponse.payload = response;
-            WebSocket.Send(Serialize(preAuthResponse));
+            Send(Serialize(preAuthResponse));
         }
 
         public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
         {
             OnCapturePreAuthResponseMessage authCaptureResponse = new OnCapturePreAuthResponseMessage();
             authCaptureResponse.payload = response;
-            WebSocket.Send(Serialize(authCaptureResponse));
+            Send(Serialize(authCaptureResponse));
         }
 
         public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
             OnTipAdjustAuthResponseMessage tipAdjustResponse = new OnTipAdjustAuthResponseMessage();
             tipAdjustResponse.payload = response;
-            WebSocket.Send(Serialize(tipAdjustResponse));
+            Send(Serialize(tipAdjustResponse));
         }
 
         public void OnCloseoutResponse(CloseoutResponse response)
         {
             OnCloseoutResponseMessage closeoutResponse = new OnCloseoutResponseMessage();
             closeoutResponse.payload = response;
-            WebSocket.Send(Serialize(closeoutResponse));
+            Send(Serialize(closeoutResponse));
         }
 
         public void OnDeviceConnected()
         {
             CurrentConnectionStatus = "Connected";
-            WebSocket.Send(Serialize(new OnDeviceConnectedMessage()));
+            Send(Serialize(new OnDeviceConnectedMessage()));
         }
 
         public void OnDeviceDisconnected()
         {
             CurrentConnectionStatus = "Disconnected";
-            WebSocket.Send(Serialize(new OnDeviceDisconnectedMessage()));
+            Send(Serialize(new OnDeviceDisconnectedMessage()));
         }
 
         public void OnDeviceReady(MerchantInfo merchantInfo)
@@ -84,7 +84,7 @@ namespace CloverWindowsSDKWebSocketService
             this.MerchantInfo = merchantInfo;
             OnDeviceReadyMessage message = new OnDeviceReadyMessage();
             message.payload = merchantInfo;
-            WebSocket.Send(Serialize(message));
+            Send(Serialize(message));
         }
 
         public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
@@ -92,7 +92,7 @@ namespace CloverWindowsSDKWebSocketService
             OnDeviceActivityEndMessage method = new OnDeviceActivityEndMessage();
             method.payload = deviceEvent;
             string messageContent = Serialize(method);
-            WebSocket.Send(messageContent);
+           Send(messageContent);
         }
 
         public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
@@ -100,56 +100,56 @@ namespace CloverWindowsSDKWebSocketService
             OnDeviceActivityStartMessage method = new OnDeviceActivityStartMessage();
             method.payload = deviceEvent;
             string messageContent = Serialize(method);
-            WebSocket.Send(messageContent);
+            Send(messageContent);
         }
 
         public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
         {
             OnDeviceErrorMessage deviceError = new OnDeviceErrorMessage();
             deviceError.payload = deviceErrorEvent;
-            WebSocket.Send(Serialize(deviceError));
+            Send(Serialize(deviceError));
         }
 
         public void OnManualRefundResponse(ManualRefundResponse response)
         {
             OnManualRefundResponseMessage manualRefundResponse = new OnManualRefundResponseMessage();
             manualRefundResponse.payload = response;
-            WebSocket.Send(Serialize(manualRefundResponse));
+            Send(Serialize(manualRefundResponse));
         }
 
         public void OnRefundPaymentResponse(RefundPaymentResponse response)
         {
             OnRefundPaymentResponseMessage refundPaymentResponse = new OnRefundPaymentResponseMessage();
             refundPaymentResponse.payload = response;
-            WebSocket.Send(Serialize(refundPaymentResponse));
+            Send(Serialize(refundPaymentResponse));
         }
 
         public void OnSaleResponse(SaleResponse response)
         {
             OnSaleResponseMessage onSaleResponse = new OnSaleResponseMessage();
             onSaleResponse.payload = response;
-            WebSocket.Send(Serialize(onSaleResponse));
+            Send(Serialize(onSaleResponse));
         }
 
         public void OnVerifySignatureRequest(VerifySignatureRequest request)
         {
             OnVerifySignatureRequestMessage onVerifySignatureRequest = new OnVerifySignatureRequestMessage();
             onVerifySignatureRequest.payload = request;
-            WebSocket.Send(Serialize(onVerifySignatureRequest));
+           Send(Serialize(onVerifySignatureRequest));
         }
 
         public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
         {
             OnConfirmPaymentRequestMessage onConfirmPaymentRequest = new OnConfirmPaymentRequestMessage();
             onConfirmPaymentRequest.payload = request;
-            WebSocket.Send(Serialize(onConfirmPaymentRequest));
+            Send(Serialize(onConfirmPaymentRequest));
         }
 
         public void OnVoidPaymentResponse(VoidPaymentResponse response)
         {
             OnVoidPaymentResponseMessage voidPaymentResponse = new OnVoidPaymentResponseMessage();
             voidPaymentResponse.payload = response;
-            WebSocket.Send(Serialize(voidPaymentResponse));
+            Send(Serialize(voidPaymentResponse));
         }
 
         public void OnTipAdded(com.clover.remotepay.transport.TipAddedMessage message)
@@ -157,105 +157,105 @@ namespace CloverWindowsSDKWebSocketService
             OnTipAddedMessage method = new OnTipAddedMessage();
             method.payload = message;
             string messageContent = Serialize(method);
-            WebSocket.Send(messageContent);
+            Send(messageContent);
         }
 
         public void OnVaultCardResponse(VaultCardResponse response)
         {
             OnVaultCardResponseMessage vaultCardResponseMessage = new OnVaultCardResponseMessage();
             vaultCardResponseMessage.payload = response;
-            WebSocket.Send(Serialize(vaultCardResponseMessage));
+            Send(Serialize(vaultCardResponseMessage));
         }
 
         public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
         {
             OnRetrievePendingPaymentsResponseMessage retrievePendingPaymentsMessage = new OnRetrievePendingPaymentsResponseMessage();
             retrievePendingPaymentsMessage.payload = response;
-            WebSocket.Send(Serialize(retrievePendingPaymentsMessage));
+            Send(Serialize(retrievePendingPaymentsMessage));
         }
 
         public void OnReadCardDataResponse(ReadCardDataResponse response)
         {
             OnReadCardDataResponseMessage cardDataResponseMessage = new OnReadCardDataResponseMessage();
             cardDataResponseMessage.payload = response;
-            WebSocket.Send(Serialize(cardDataResponseMessage));
+            Send(Serialize(cardDataResponseMessage));
         }
 
         public void OnCustomActivityResponse(CustomActivityResponse response)
         {
             OnCustomActivityResponseMessage carMessage = new OnCustomActivityResponseMessage();
             carMessage.payload = response;
-            WebSocket.Send(Serialize(carMessage));
+            Send(Serialize(carMessage));
         }
 
         public void OnMessageFromActivity(MessageFromActivity message)
         {
             OnMessageFromActivityMessage mfaMessage = new OnMessageFromActivityMessage();
             mfaMessage.payload = message;
-            WebSocket.Send(Serialize(mfaMessage));
+            Send(Serialize(mfaMessage));
         }
 
         public void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
         {
             OnRetrieveDeviceStatusResponseMessage rdsrMessage = new OnRetrieveDeviceStatusResponseMessage();
             rdsrMessage.payload = response;
-            WebSocket.Send(Serialize(rdsrMessage));
+            Send(Serialize(rdsrMessage));
         }
 
         public void OnResetDeviceResponse(ResetDeviceResponse response)
         {
             OnResetDeviceResponseMessage rdrMessage = new OnResetDeviceResponseMessage();
             rdrMessage.payload = response;
-            WebSocket.Send(Serialize(rdrMessage));
+            Send(Serialize(rdrMessage));
         }
 
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
         {
             OnPrintManualRefundReceiptMessage message = new OnPrintManualRefundReceiptMessage();
             message.payload = printManualRefundReceiptMessage;
-            WebSocket.Send(Serialize(message));
+            Send(Serialize(message));
         }
 
         public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage)
         {
             OnPrintManualRefundDeclinedReceiptMessage message = new OnPrintManualRefundDeclinedReceiptMessage();
             message.payload = printManualRefundDeclineReceiptMessage;
-            WebSocket.Send(Serialize(message));
+            Send(Serialize(message));
         }
 
         public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage)
         {
             OnPrintPaymentReceiptMessage message = new OnPrintPaymentReceiptMessage();
             message.payload = printPaymentReceiptMessage;
-            WebSocket.Send(Serialize(message));
+            Send(Serialize(message));
         }
 
         public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage)
         {
             OnPrintPaymentDeclinedReceiptMessage message = new OnPrintPaymentDeclinedReceiptMessage();
             message.payload = printPaymentDeclineReceiptMessage;
-            WebSocket.Send(Serialize(message));
+            Send(Serialize(message));
         }
 
         public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage)
         {
             OnPrintPaymentMerchatCopyReceiptMessage message = new OnPrintPaymentMerchatCopyReceiptMessage();
             message.payload = printPaymentMerchantCopyReceiptMessage;
-            WebSocket.Send(Serialize(message));
+            Send(Serialize(message));
         }
 
         public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
         {
             OnPrintPaymentRefundReceiptMessage message = new OnPrintPaymentRefundReceiptMessage();
             message.payload = printRefundPaymentReceiptMessage;
-            WebSocket.Send(Serialize(message));
+            Send(Serialize(message));
         }
 
         public virtual void OnRetrievePaymentResponse(RetrievePaymentResponse rpr)
         {
             OnRetrievePaymentResponseMessage message = new OnRetrievePaymentResponseMessage();
             message.payload = rpr;
-            WebSocket.Send(Serialize(message));
+           Send(Serialize(message));
         }
 
 
@@ -279,6 +279,14 @@ namespace CloverWindowsSDKWebSocketService
         {
             var myStr = JsonUtils.serialize(obj);
             return myStr;
+        }
+
+        private void Send(string message)
+        {
+            if(WebSocket != null)
+            {
+                WebSocket.Send(message);
+            }
         }
 
     }
