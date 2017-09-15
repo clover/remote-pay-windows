@@ -49,8 +49,8 @@ namespace com.clover.remotepay.transport
         private static int EMPTY_STRING = 1;
         private bool shutdown = false;
         private readonly int ERROR_LIMIT = 3;
-        private BackgroundWorker receiveMessagesThread;
-        private BackgroundWorker sendMessagesThread;
+        private BackgroundWorker receiveMessagesThread = new BackgroundWorker();
+        private BackgroundWorker sendMessagesThread = new BackgroundWorker();
         private DoWorkEventHandler receiveMessagesDoWorkHandler;
         private DoWorkEventHandler sendMessagesDoWorkHandler;
 
@@ -114,9 +114,15 @@ namespace com.clover.remotepay.transport
             // it if necessary.
             if (getPingSleepSeconds() > 0)
             {
+                if(_timer != null)
+                {
+                    _timer.Close();
+                    Console.WriteLine("Timer thread closed");
+                }
                 _timer.AutoReset = false;
                 _timer.Interval = getPingSleepSeconds() * 1000;
                 _timer.Elapsed += new ElapsedEventHandler(OnTimerEvent);
+                Console.WriteLine("Timer Thread created");
                 _timer.Start();
             }
         }
@@ -309,6 +315,7 @@ namespace com.clover.remotepay.transport
                     catch (Exception ex)
                     {
                         TransportLog(ex.Message);
+                        Console.WriteLine("DeviceInitiallyConnected : " + ex.Message);
                     }
                     TransportLog("Exiting DeviceInitiallyConnected initialized=" + initialized);
                 }
@@ -333,9 +340,15 @@ namespace com.clover.remotepay.transport
             try
             {
                 ConnectDevice();
+                if(_timer != null)
+                {
+                    _timer.Close();
+                }
                 _timer.Start();
             } catch (Exception ex)
             {
+                _timer.Close();
+                Console.WriteLine("OnTimerEvent Exception : " + ex.Message);
                 // Ignore the exception if we are trying to reconnect
             }
 
@@ -461,6 +474,7 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog(Environment.NewLine);
                         TransportLog(ex.Message);
+                        //Console.WriteLine("DeviceSetToAccessoryMode Exception : " + ex.Message);
                     }
                     TransportLog("Exiting DeviceSetToAccessoryMode");
                     if (initialized)
@@ -493,14 +507,18 @@ namespace com.clover.remotepay.transport
 
         private void messageSendLoop()
         {
-            sendMessagesThread = new BackgroundWorker();
-            // what to do in the background thread
-            sendMessagesThread.DoWork += sendMessagesDoWorkHandler;
-            sendMessagesThread.RunWorkerAsync();
+            
+            
+            if(!sendMessagesThread.IsBusy)
+            {
+                sendMessagesThread.RunWorkerAsync();
+            }
+            
         }
 
         private void initializeBGWDoWorkHandlers()
         {
+            Console.WriteLine("sendMessagesDoWorkHandler created");
             sendMessagesDoWorkHandler = new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
@@ -530,6 +548,7 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog("Error occurred in sendMessageSync(): " + e.Message);
                         TransportLog(e.StackTrace);
+                        Console.WriteLine("initializeBGWDoWorkHandler Exception : " + e.Message);
                     }
                     lock (messageQueue)
                     {
@@ -540,8 +559,9 @@ namespace com.clover.remotepay.transport
                     }
                 } while (!shutdown);
                 TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating sendMessagesThread");
+                Console.WriteLine("Terminating sendMessagesThread");
             });
-
+            Console.WriteLine("receiveMessagesDoWorkHandler created");
             receiveMessagesDoWorkHandler = new DoWorkEventHandler(
             delegate (object o, DoWorkEventArgs args)
             {
@@ -553,9 +573,13 @@ namespace com.clover.remotepay.transport
                 catch (Exception e)
                 {
                     TransportLog("receiveMessagesThread Exception: " + e.Message);
+                    Console.WriteLine("receiveMessagesThread Exception: " + e.Message);
                 }
                 TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating receiveMessagesThread");
+                Console.WriteLine("Terminating receiveMessagesThread");
             });
+            receiveMessagesThread.DoWork += receiveMessagesDoWorkHandler;
+            sendMessagesThread.DoWork += sendMessagesDoWorkHandler;
         }
 
         public int sendMessageSync(string message)
@@ -568,10 +592,16 @@ namespace com.clover.remotepay.transport
             if (!String.IsNullOrEmpty(message))
             {
                 byte[] stringBytes = Encoding.UTF8.GetBytes(message);
-
-                mOutPacketBuffer.Seek(0, SeekOrigin.Begin);
-                mOutPacketBuffer.Write(IPAddress.HostToNetworkOrder((int)REMOTE_STRING_MAGIC_START_TOKEN));
-                mOutPacketBuffer.Write(IPAddress.HostToNetworkOrder(stringBytes.Length));
+                try
+                {
+                    mOutPacketBuffer.Seek(0, SeekOrigin.Begin);
+                    mOutPacketBuffer.Write(IPAddress.HostToNetworkOrder((int)REMOTE_STRING_MAGIC_START_TOKEN));
+                    mOutPacketBuffer.Write(IPAddress.HostToNetworkOrder(stringBytes.Length));
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Writing magic : " + e.Message);
+                }
 
                 int stringByteLength = stringBytes.Length;
                 if (stringByteLength <= 0 || stringByteLength > REMOTE_STRING_LENGTH_MAX)
@@ -591,7 +621,14 @@ namespace com.clover.remotepay.transport
                     // or the remaining size of the buffer.
                     int packetLength = Math.Min(remainingBytes, remainingSpace);
                     // Write the bytes into the buffer
-                    mOutPacketBuffer.Write(stringBytes, stringByteLength - remainingBytes, packetLength);
+                    try
+                    {
+                        mOutPacketBuffer.Write(stringBytes, stringByteLength - remainingBytes, packetLength);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Max length : " + e.Message);
+                    }
                     // current position is set to the maximum that can be written.
                     // Current position is reset zero
                     writePacket(mOutPacketBuffer);
@@ -641,8 +678,15 @@ namespace com.clover.remotepay.transport
                 TransportLog("The outDataSize = " + outDataSize + " bytes.");
                 BinaryWriter writePacketBuffer = new BinaryWriter(new MemoryStream(outDataSize + 2));
                 // Write two bytes
-                writePacketBuffer.Write(IPAddress.HostToNetworkOrder((short)outDataSize));
-                writePacketBuffer.Write(((MemoryStream)outDataBuffer.BaseStream).ToArray());
+                try
+                {
+                    writePacketBuffer.Write(IPAddress.HostToNetworkOrder((short)outDataSize));
+                    writePacketBuffer.Write(((MemoryStream)outDataBuffer.BaseStream).ToArray());
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("outDataSize : " + e.Message);
+                }
 
                 outDataBuffer.Seek(0, SeekOrigin.Begin);
 
@@ -681,10 +725,14 @@ namespace com.clover.remotepay.transport
         public void startListeningForMessages()
         {
             TransportLog("Starting a new receiveMessagesThread.");
-            receiveMessagesThread = new BackgroundWorker();
+            //Console.WriteLine("Starting a new receiveMessagesThread");
+            
             // what to do in the background thread
-            receiveMessagesThread.DoWork += receiveMessagesDoWorkHandler;
-            receiveMessagesThread.RunWorkerAsync();
+            if(!receiveMessagesThread.IsBusy)
+            {
+                receiveMessagesThread.RunWorkerAsync();
+            }
+            
         }
 
         /// <summary>
@@ -692,6 +740,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         private void getMessages()
         {
+            Console.WriteLine("getMessage() thread start ");
             TransportLog("Thread Start: getMessages()");
             do
             {
@@ -740,6 +789,7 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog("Error parsing message: " + message);
                         TransportLog(e.Message);
+                        Console.WriteLine("Error parsing message: " + e.Message);
                     }
                 }
             } while (shutdown != true);
@@ -793,25 +843,34 @@ namespace com.clover.remotepay.transport
             {
                 throw new IOException("USB accessory not connected");
             }
-            int numBytesRead;
+            int numBytesRead =0;
             byte[] readPacket = new byte[MAX_PACKET_BYTES];
 
             ErrorCode ecRead;
             BinaryReader output = null;
-            do
+            try
             {
-                ecRead = reader.Read(readPacket, 1000, out numBytesRead);
-                //TransportLog("Read  :{0} ErrorCode:{1}", numBytesRead, ecRead);
-                if (ecRead != ErrorCode.Success
-                    &&
-                    ecRead != ErrorCode.IoTimedOut
-                    &&
-                    ecRead != ErrorCode.IoCancelled)
+                do
                 {
-                    throw new IOException("Error reading USB message: " + ecRead.ToString());
+
+                    ecRead = reader.Read(readPacket, 1000, out numBytesRead);
+                    //TransportLog("Read  :{0} ErrorCode:{1}", numBytesRead, ecRead);
+                    if (ecRead != ErrorCode.Success
+                        &&
+                        ecRead != ErrorCode.IoTimedOut
+                        &&
+                        ecRead != ErrorCode.IoCancelled)
+                    {
+                        throw new IOException("Error reading USB message: " + ecRead.ToString());
+                    }
                 }
+                while (numBytesRead <= 0 && !shutdown);
             }
-            while (numBytesRead <= 0 && !shutdown);
+            catch(Exception e)
+            {
+                Console.WriteLine("ecRead Exception: " + e.Message);
+            }
+            
 
             if (!shutdown)
             {
@@ -822,10 +881,17 @@ namespace com.clover.remotepay.transport
                 }
 
                 BinaryReader inPacketBuffer = new BinaryReader(new MemoryStream(readPacket));
-
-                short inDataSize = IPAddress.NetworkToHostOrder(
+                short inDataSize=0;
+                try
+                {
+                    inDataSize = IPAddress.NetworkToHostOrder(
                     inPacketBuffer.ReadInt16()
                     );
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("inPacketBuffer : " + e.Message);
+                }
                 if (inDataSize <= 0)
                 {
                     throw new IOException("Invalid data size " + inDataSize + " bytes");
@@ -1055,12 +1121,14 @@ namespace com.clover.remotepay.transport
             if (receiveMessagesThread != null)
             {
                 TransportLog(receiveMessagesThread.ToString() + " : receiveMessagesThread removing DoWorkHandler");
-                receiveMessagesThread.DoWork -= receiveMessagesDoWorkHandler;
+                
+                
             }
             if (sendMessagesThread != null)
             {
                 TransportLog(sendMessagesThread.ToString() + " : sendMessagesThread removing DoWorkHandler");
-                sendMessagesThread.DoWork -= sendMessagesDoWorkHandler;
+                
+               
             }
             base.onDeviceDisconnected();
         }

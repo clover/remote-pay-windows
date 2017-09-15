@@ -2535,6 +2535,10 @@ public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
             {
                 request.DisableDuplicateChecking = true;
             }
+            if (automaticPaymentConfirmationCB.Checked)
+            {
+                request.AutoAcceptPaymentConfirmations = true;
+            }
             cloverConnector.PreAuth(request);
         }
 

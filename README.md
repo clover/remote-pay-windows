@@ -28,7 +28,9 @@ To work with the project effectively, you will need:
 - An IDE, such as [Visual Studio](https://www.visualstudio.com/downloads/).
 - To experience transactions end-to-end from the merchant and customer perspectives, we also recommend ordering a [Clover DevKit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).
 
+
 ## Installing the SDK and Services
+
 
 There are four separate installers.
 

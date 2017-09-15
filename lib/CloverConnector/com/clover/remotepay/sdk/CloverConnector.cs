@@ -134,6 +134,10 @@ namespace com.clover.remotepay.sdk
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
         public void Sale(SaleRequest request)
         {
+            if(deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             lastRequest = request;
             if (Device == null || !IsReady)
             {
@@ -278,6 +282,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void AcceptSignature(VerifySignatureRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In AcceptSignature : Device is not connected. "));
@@ -303,6 +311,11 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void RejectSignature(VerifySignatureRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In RejectSignature : Device is not connected. "));
@@ -332,6 +345,11 @@ namespace com.clover.remotepay.sdk
         public void Auth(AuthRequest request)
         {
             lastRequest = request;
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+
             if (Device == null || !IsReady)
             {
                 deviceObserver.onFinishCancel(ResponseCode.ERROR,
@@ -416,6 +434,12 @@ namespace com.clover.remotepay.sdk
         public void PreAuth(PreAuthRequest request)
         {
             lastRequest = request;
+
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+
             if (Device == null || !IsReady)
             {
                 deviceObserver.onFinishCancel(ResponseCode.ERROR,
@@ -482,6 +506,11 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void CapturePreAuth(CapturePreAuthRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+
             if (Device == null || !IsReady)
             {
                 deviceObserver.onCapturePreAuthResponse(ResponseCode.ERROR,
@@ -527,6 +556,11 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void TipAdjustAuth(TipAdjustAuthRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+
             if (Device == null || !IsReady)
             {
                 deviceObserver.onAuthTipAdjusted(ResponseCode.ERROR,
@@ -573,6 +607,11 @@ namespace com.clover.remotepay.sdk
         /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
         public void VoidPayment(VoidPaymentRequest request) // SaleResponse is a Transaction? or create a Transaction from a SaleResponse
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+
             if (Device == null || !IsReady)
             {
                 deviceObserver.onPaymentVoided(ResponseCode.ERROR,
@@ -611,6 +650,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void RefundPayment(RefundPaymentRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 RefundPaymentResponse prr = new RefundPaymentResponse();
@@ -671,6 +714,10 @@ namespace com.clover.remotepay.sdk
         {
             //payment, finishOK(credit), finishCancel, onPaymentVoided
             lastRequest = request;
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 deviceObserver.onFinishCancel(ResponseCode.ERROR,
@@ -720,8 +767,10 @@ namespace com.clover.remotepay.sdk
             payIntent.externalPaymentId = request.ExternalId;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.requiresRemoteConfirmation = true;
+            payIntent.cardEntryMethods = request.CardEntryMethods.Value;
             TransactionSettings ts = getTransactionRequestOverrides(request);
             ts.tipMode = clover.sdk.v3.payments.TipMode.NO_TIP;
+            ts.cardEntryMethods = request.CardEntryMethods.Value;
             payIntent.transactionSettings = ts;
             Device.doTxStart(payIntent, null);
         }
@@ -733,6 +782,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void Closeout(CloseoutRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In Closeout: CloseoutRequest - The Clover device is not connected."));
@@ -748,6 +801,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void ResetDevice()
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ResetDevice: The Clover device is not connected."));
@@ -763,6 +820,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void Cancel()
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In Cancel: The Clover device is not connected."));
@@ -779,6 +840,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void PrintText(List<string> messages)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In PrintText: The Clover device is not connected."));
@@ -800,6 +865,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void PrintImage(Bitmap bitmap) //Bitmap img
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In PrintImage: The Clover device is not connected."));
@@ -825,6 +894,10 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public void ShowMessage(string message)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowMessage: The Clover device is not connected."));
@@ -839,6 +912,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void ShowWelcomeScreen()
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowWelcomeScreen: The Clover device is not connected."));
@@ -853,6 +930,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void ShowThankYouScreen()
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowThankYouScreen: The Clover device is not connected."));
@@ -913,6 +994,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void VaultCard(int? CardEntryMethods)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In VaultCard: The Clover device is not connected."));
@@ -936,6 +1021,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void ReadCardData(ReadCardDataRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 deviceObserver.onReadCardDataResponse(ResponseCode.ERROR,
@@ -969,6 +1058,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void DisplayPaymentReceiptOptions(string orderId, string paymentId)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In DisplayPaymentReceiptOptions: The Clover device is not connected."));
@@ -993,6 +1086,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void OpenCashDrawer(String reason)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In OpenCashDrawer: The Clover device is not connected."));
@@ -1012,6 +1109,10 @@ namespace com.clover.remotepay.sdk
         /// <param name="order"></param>
         public void ShowDisplayOrder(DisplayOrder order)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowDisplayOrder: The Clover device is not connected."));
@@ -1034,6 +1135,10 @@ namespace com.clover.remotepay.sdk
         {
             OrderDeletedOperation dao = new OrderDeletedOperation();
             dao.id = order.id;
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In RemoveDisplayOrder: The Clover device is not connected."));
@@ -1055,6 +1160,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         public void RetrievePendingPayments()
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 deviceObserver.onRetrievePendingPaymentsResponse(ResponseCode.ERROR,
@@ -1080,6 +1189,10 @@ namespace com.clover.remotepay.sdk
         /// <param name="io"></param>
         public void InvokeInputOption(InputOption io)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In InvokeInputOption: The Clover device is not connected."));
@@ -1095,6 +1208,10 @@ namespace com.clover.remotepay.sdk
 
         public void PrintImageFromURL(string ImgURL)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In PrintImageFromURL: The Clover device is not connected."));
@@ -1125,6 +1242,10 @@ namespace com.clover.remotepay.sdk
 
         public void AcceptPayment(Payment payment)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In AcceptPayment: The Clover device is not connected."));
@@ -1140,6 +1261,10 @@ namespace com.clover.remotepay.sdk
 
         public void RejectPayment(Payment payment, Challenge challenge)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In RejectPayment: The Clover device is not connected."));
@@ -1155,6 +1280,10 @@ namespace com.clover.remotepay.sdk
 
         public void StartCustomActivity(CustomActivityRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
@@ -1170,6 +1299,10 @@ namespace com.clover.remotepay.sdk
 
         public void SendMessageToActivity(MessageToActivity request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
@@ -1185,6 +1318,10 @@ namespace com.clover.remotepay.sdk
 
         public void RetrieveDeviceStatus(RetrieveDeviceStatusRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
@@ -1195,6 +1332,10 @@ namespace com.clover.remotepay.sdk
 
         public void RetrievePayment(RetrievePaymentRequest request)
         {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
             if (Device == null || !IsReady)
             {
                 OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
