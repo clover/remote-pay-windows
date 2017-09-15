@@ -42,6 +42,8 @@ To experience a transaction end-to-end from the merchant and customer perspectiv
 
 ## Change Log
 
+For more developer documentation and information about the Semi-Integration program, please visit our [semi-integration developer documents] (https://docs.clover.com/build/integration-overview-requirements/). 
+
 ## Release Notes
 ### Version 1.3.1
 * Enhanced EventLog source creation methods to provide better message debugging.
