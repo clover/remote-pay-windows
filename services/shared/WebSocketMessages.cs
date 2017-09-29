@@ -18,6 +18,7 @@ using com.clover.remotepay.sdk.service.client;
 using com.clover.remotepay.transport;
 using com.clover.sdk.v3.payments;
 
+
 /// <summary>
 /// Contains a set of classes to simplify using the Windows WebSocket service by providing
 /// beans that can be serialized to invoke methods on the service.
@@ -107,7 +108,13 @@ namespace com.clover.sdk.remote.websocket
         PrintPaymentRefundReceipt,
         PrintPaymentMerchantCopyReceipt,
         RetrievePaymentRequest,
-        RetrievePaymentResponse
+        RetrievePaymentResponse,
+        PrintJobStatusRequest,
+        PrintJobStatusResponse,
+        RetrievePrintersRequest,
+        RetrievePrintersResponse,
+        OpenCashDrawerRequest,
+        OpenCashDrawerResponse
     }
 
     public class WebSocketMessage<T>
@@ -225,9 +232,9 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
-    public class OpenCashDrawerRequestMessage : WebSocketMessage<OpenCashDrawer>
+    public class OpenCashDrawerRequestMessage : WebSocketMessage<OpenCashDrawerRequest>
     {
-        public OpenCashDrawerRequestMessage() : base(WebSocketMethod.OpenCashDrawer)
+        public OpenCashDrawerRequestMessage() : base(WebSocketMethod.OpenCashDrawerRequest)
         {
         }
     }
@@ -365,6 +372,21 @@ namespace com.clover.sdk.remote.websocket
         {
 
         }
+    }
+
+    public class OpenCashDrawerMessage : WebSocketMessage<OpenCashDrawerRequest>
+    {
+        public OpenCashDrawerMessage() : base(WebSocketMethod.OpenCashDrawer) { }
+    }
+
+    public class RetrievePrintJobStatusRequestMessage : WebSocketMessage<PrintJobStatusRequest>
+    {
+        public RetrievePrintJobStatusRequestMessage() : base (WebSocketMethod.PrintJobStatusRequest) { }
+    }
+
+    public class RetrievePrintersRequestMessage : WebSocketMessage<RetrievePrintersRequest>
+    {
+        public RetrievePrintersRequestMessage() : base(WebSocketMethod.RetrievePrintersRequest) { }
     }
 
 
@@ -585,5 +607,30 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
+
+    public class OnPrintJobStatusResponseMessage : WebSocketMessage<PrintJobStatusResponse>
+    {
+        public OnPrintJobStatusResponseMessage() : base(WebSocketMethod.PrintJobStatusResponse)
+        {
+
+        }
+    }
+
+    public class OnPrintJobStatusRequestMessage : WebSocketMessage<PrintJobStatusRequest>
+    {
+        public OnPrintJobStatusRequestMessage() : base(WebSocketMethod.PrintJobStatusRequest) { }
+    }
+
+    public class OnRetrievePrintersResponseMessage : WebSocketMessage<RetrievePrintersResponse>
+    { 
+        public OnRetrievePrintersResponseMessage() : base(WebSocketMethod.RetrievePrintersResponse) { }
+    }
+
+    public class OnRetrievePrintersRequestMessage : WebSocketMessage<RetrievePrintersRequest>
+    {
+        public OnRetrievePrintersRequestMessage() : base(WebSocketMethod.RetrievePrintersRequest) { }
+    }
+
+
 
 }

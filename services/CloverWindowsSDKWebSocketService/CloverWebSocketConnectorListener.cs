@@ -258,6 +258,34 @@ namespace CloverWindowsSDKWebSocketService
            Send(Serialize(message));
         }
 
+        public virtual void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            OnPrintJobStatusResponseMessage msg = new OnPrintJobStatusResponseMessage();
+            msg.payload = response;
+            WebSocket.Send(Serialize(msg));
+        }
+
+        public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+            OnPrintJobStatusRequestMessage msg = new OnPrintJobStatusRequestMessage();
+            msg.payload = request;
+            WebSocket.Send(Serialize(msg));
+        }
+
+        public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            OnRetrievePrintersResponseMessage msg = new OnRetrievePrintersResponseMessage();
+            msg.payload = response;
+            WebSocket.Send(Serialize(msg));
+        }
+
+        public virtual void OnRetrievePrintersRequest(RetrievePrintersRequest request)
+        {
+            OnRetrievePrintersRequestMessage msg = new OnRetrievePrintersRequestMessage();
+            msg.payload = request;
+            WebSocket.Send(Serialize(msg));
+        }
+
 
         internal void SendConnectionStatus()
         {
@@ -289,5 +317,6 @@ namespace CloverWindowsSDKWebSocketService
             }
         }
 
+        
     }
 }

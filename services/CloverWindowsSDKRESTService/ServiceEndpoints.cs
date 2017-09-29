@@ -123,8 +123,8 @@ public sealed class ServiceEndpoints : RESTResource
     {
         try
         {
-            PrintText message = ParseRequest<PrintText>(context);
-            GetServer.CloverConnector.PrintText(message.Messages);
+            PrintRequest message = ParseRequest<PrintRequest>(context);
+            GetServer.CloverConnector.PrintText(message.text);
             this.SendTextResponse(context, "");
         }
         catch (Exception e)
@@ -363,10 +363,10 @@ public sealed class ServiceEndpoints : RESTResource
     {
         try
         {
-            PrintImage message = ParseRequest<PrintImage>(context);
-            if (message.Url != null)
+            PrintRequest message = ParseRequest<PrintRequest>(context);
+            if (message.imageURLs[0] != null)
             {
-                GetServer.CloverConnector.PrintImageFromURL(message.Url);
+                GetServer.CloverConnector.PrintImageFromURL(message.imageURLs[0]);
                 this.SendTextResponse(context, "");
             }
         }
@@ -595,6 +595,39 @@ public sealed class ServiceEndpoints : RESTResource
         {
             RetrievePaymentRequest message = ParseRequest<RetrievePaymentRequest>(context);
             GetServer.CloverConnector.RetrievePayment(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrievePrinters")]
+    public void RetrievePrinters(HttpListenerContext context)
+    {
+        try
+        {
+            RetrievePrintersRequest message = ParseRequest<RetrievePrintersRequest>(context);
+            GetServer.CloverConnector.RetrievePrinters(message);
+            this.SendTextResponse(context, "");
+        } catch(Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintJobStatus")]
+    public void PrintJobStatus(HttpListenerContext context)
+    {
+        try
+        {
+            PrintJobStatusRequest message = ParseRequest<PrintJobStatusRequest>(context);
+            GetServer.CloverConnector.RetrievePrintJobStatus(message);
             this.SendTextResponse(context, "");
         }
         catch (Exception e)

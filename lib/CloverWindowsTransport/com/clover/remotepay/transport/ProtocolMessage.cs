@@ -18,6 +18,7 @@ using com.clover.remotepay.data;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.customers;
+using com.clover.sdk.v3.printer;
 using System;
 using System.Collections.Generic;
 
@@ -145,6 +146,8 @@ namespace com.clover.remotepay.transport
 
         public string png { get; set; }
         public string urlString { get; set; }
+        public string printRequestId { get; set; }
+        public Printer printer { get; set; }
     }
 
     public class FinishCancelMessage : Message
@@ -370,7 +373,7 @@ namespace com.clover.remotepay.transport
         /// <summary>
         /// Detail code if an error is encountered
         /// </summary>
-        public ResponseReasonCode? reason { get; set; }
+        public ResponseReasonCode reason { get; set; }
         /// <summary>
         /// Detail message
         /// </summary>
@@ -759,6 +762,118 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class RetrievePrintersRequest
+    {
+        public PrintCategory category;
+
+        public RetrievePrintersRequest() { }
+
+        public RetrievePrintersRequest(PrintCategory category)
+        {
+            this.category = category;
+        }
+    }
+
+    public enum PrintCategory
+    {
+        ORDER,
+        RECEIPT
+    }
+
+    public class RetrievePrintersRequestMessage : Message
+    {
+       public PrintCategory category { get; set; }
+        public RetrievePrintersRequestMessage() : base(Methods.GET_PRINTERS_REQUEST) { }
+
+    }
+
+    public class RetrievePrintersResponseMessage : Message
+    {
+        public List<Printer> printers = new List<Printer>();
+        //public Printer printer;
+        public RetrievePrintersResponseMessage() : base(Methods.GET_PRINTERS_RESPONSE) { }
+
+        public RetrievePrintersResponseMessage(Printer printer) : base(Methods.GET_PRINTERS_RESPONSE)
+        {
+            printers.Add(printer);
+            
+        }
+    }
+
+    public class PrintJobStatusResponseMessage : Message
+    {
+        public String printRequestId;
+        public String status;
+
+        public PrintJobStatusResponseMessage() : base(Methods.PRINT_JOB_STATUS_RESPONSE) { }
+
+    }
+
+
+    public class PrintJobStatusResponse
+    {
+        public String printRequestId;
+        public PrintJobStatus status;
+
+        public PrintJobStatusResponse(String printRequestId, String status)
+        {
+            this.printRequestId = printRequestId;
+            
+            switch(status)
+            {
+                case "IN_QUEUE":
+                    this.status = PrintJobStatus.IN_QUEUE;
+                    break;
+                case "PRINTING":
+                    this.status = PrintJobStatus.PRINTING;
+                    break;
+                case "DONE":
+                    this.status = PrintJobStatus.DONE;
+                    break;
+                case "ERROR":
+                    this.status = PrintJobStatus.ERROR;
+                    break;
+                case "UNKNOWN":
+                    this.status = PrintJobStatus.UNKNOWN;
+                    break;
+                case "NOT_FOUND":
+                    this.status = PrintJobStatus.NOT_FOUND;
+                    break;
+                default:
+                    this.status = PrintJobStatus.ERROR;
+                    break;
+            }
+        }
+
+        
+
+    }
+
+    public enum PrintJobStatus
+    {
+        IN_QUEUE,
+        PRINTING,
+        DONE,
+        ERROR,
+        UNKNOWN,
+        NOT_FOUND
+    }
+
+    public class PrintJobStatusRequest
+    {
+        public String printRequestId;
+
+        public PrintJobStatusRequest()
+        {
+
+        }
+
+        public PrintJobStatusRequest(String printRequestId)
+        {
+            this.printRequestId = printRequestId;
+        }
+    }
+
     /// <summary>
     /// request to retrieve a payment associated with the provided externalPaymentId
     /// </summary>
@@ -773,6 +888,18 @@ namespace com.clover.remotepay.transport
         public RetrievePaymentRequest(String externalPaymentId)
         {
             this.externalPaymentId = externalPaymentId;
+        }
+    }
+
+    public class PrintJobStatusRequestMessage : Message
+    {
+        public String printRequestId;
+
+        public PrintJobStatusRequestMessage() : base(Methods.PRINT_JOB_STATUS_REQUEST) { }
+
+        public PrintJobStatusRequestMessage(String printRequestId) : base(Methods.PRINT_JOB_STATUS_REQUEST)
+        {
+            this.printRequestId = printRequestId;
         }
     }
 
@@ -984,6 +1111,12 @@ namespace com.clover.remotepay.transport
         public string packageName { get; set; }
         public string remoteSourceSDK { get; set; }
         public string remoteApplicationID { get; set; }
+        public int version { get; set; }
+        public String attachment { get; set; }
+        public String attachmentUri { get; set; }
+        public String attachmentEncoding { get; set; }
+        public Boolean? lastFragment;
+        public int? fragmentIndex;
 
         public static RemoteMessage createMessage(Methods meth, MessageTypes msgType, Message payload, string packageName, string remoteSourceSDK, string remoteApplicationID)
         {

@@ -149,19 +149,20 @@ namespace CloverExamplePOS
             this.DisplayMessageButton = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.PrintTextBox = new System.Windows.Forms.TextBox();
-            this.PrintTextButton = new System.Windows.Forms.Button();
+            this.PrintTextButton = new DropDownButton();
             this.tableLayoutPanel96 = new System.Windows.Forms.TableLayoutPanel();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.BrowseImageButton = new System.Windows.Forms.Button();
             this.PrintURLTextBox = new System.Windows.Forms.TextBox();
-            this.PrintImageButton = new System.Windows.Forms.Button();
+            this.PrintImageButton = new DropDownButton();
             this.PrintImage = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.ShowWelcomeButton = new System.Windows.Forms.Button();
             this.ShowThankYouButton = new System.Windows.Forms.Button();
-            this.OpenCashDrawerButton = new System.Windows.Forms.Button();
+            this.OpenCashDrawerButton = new DropDownButton();
+            this.RetrievePrintJobStatusButton = new System.Windows.Forms.Button();
             this.CardDataButton = new System.Windows.Forms.Button();
             this.labelTS = new System.Windows.Forms.Label();
             this.labelTipAmount = new System.Windows.Forms.Label();
@@ -1223,6 +1224,19 @@ namespace CloverExamplePOS
             this.DeviceStatusButton.UseVisualStyleBackColor = false;
 
             // 
+            // PrintTextButton
+            // 
+            this.PrintTextButton.BackColor = System.Drawing.Color.White;
+            this.PrintTextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PrintTextButton.Location = new System.Drawing.Point(483, 72);
+            this.PrintTextButton.Margin = new System.Windows.Forms.Padding(4);
+            this.PrintTextButton.Name = "PrintTextButton";
+            this.PrintTextButton.Size = new System.Drawing.Size(100, 60);
+            this.PrintTextButton.TabIndex = 18;
+            this.PrintTextButton.Text = "Print";
+            this.PrintTextButton.UseVisualStyleBackColor = false;
+
+            // 
             // tableLayoutPanel7
             // 
             this.tableLayoutPanel7.ColumnCount = 4;
@@ -1748,19 +1762,8 @@ namespace CloverExamplePOS
             this.PrintTextBox.Name = "PrintTextBox";
             this.PrintTextBox.Size = new System.Drawing.Size(132, 22);
             this.PrintTextBox.TabIndex = 19;
-            // 
-            // PrintTextButton
-            // 
-            this.PrintTextButton.BackColor = System.Drawing.Color.White;
-            this.PrintTextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PrintTextButton.Location = new System.Drawing.Point(483, 72);
-            this.PrintTextButton.Margin = new System.Windows.Forms.Padding(4);
-            this.PrintTextButton.Name = "PrintTextButton";
-            this.PrintTextButton.Size = new System.Drawing.Size(100, 60);
-            this.PrintTextButton.TabIndex = 18;
-            this.PrintTextButton.Text = "Print";
-            this.PrintTextButton.UseVisualStyleBackColor = false;
-            this.PrintTextButton.Click += new System.EventHandler(this.PrintTextButton_Click);
+            
+            //new System.EventHandler(this.PrintTextButton_Click);
             // 
             // tableLayoutPanel96
             // 
@@ -1847,8 +1850,7 @@ namespace CloverExamplePOS
             this.PrintImageButton.TabIndex = 30;
             this.PrintImageButton.Text = "Print Image";
             this.PrintImageButton.UseVisualStyleBackColor = false;
-            this.PrintImageButton.Click += new System.EventHandler(this.PrintImageButton_Click);
-            // 
+            
             // PrintImage
             // 
             this.PrintImage.Location = new System.Drawing.Point(591, 140);
@@ -1865,6 +1867,7 @@ namespace CloverExamplePOS
             this.flowLayoutPanel5.Controls.Add(this.ShowWelcomeButton);
             this.flowLayoutPanel5.Controls.Add(this.ShowThankYouButton);
             this.flowLayoutPanel5.Controls.Add(this.OpenCashDrawerButton);
+            this.flowLayoutPanel5.Controls.Add(this.RetrievePrintJobStatusButton);
             this.flowLayoutPanel5.Controls.Add(this.CardDataButton);
             this.flowLayoutPanel5.Controls.Add(this.ResetButton);
             this.flowLayoutPanel5.Controls.Add(this.DeviceStatusButton);
@@ -1914,8 +1917,23 @@ namespace CloverExamplePOS
             this.OpenCashDrawerButton.TabIndex = 28;
             this.OpenCashDrawerButton.Text = "Open Cash Drawer";
             this.OpenCashDrawerButton.UseVisualStyleBackColor = false;
-            this.OpenCashDrawerButton.Click += new System.EventHandler(this.OpenCashDrawerButton_Click);
             
+
+            //
+            // RetrievePrintJobStatusButton
+            //
+            this.RetrievePrintJobStatusButton.BackColor = System.Drawing.Color.White;
+            this.RetrievePrintJobStatusButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RetrievePrintJobStatusButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.RetrievePrintJobStatusButton.Location = new System.Drawing.Point(220, 10);
+            this.RetrievePrintJobStatusButton.Margin = new System.Windows.Forms.Padding(4);
+            this.RetrievePrintJobStatusButton.Name = "RetrievePrintJobStatusButton";
+            this.RetrievePrintJobStatusButton.Size = new System.Drawing.Size(100, 60);
+            this.RetrievePrintJobStatusButton.TabIndex = 28;
+            this.RetrievePrintJobStatusButton.Text = "Print Job Status";
+            this.RetrievePrintJobStatusButton.UseVisualStyleBackColor = false;
+            this.RetrievePrintJobStatusButton.Click += new System.EventHandler(this.RetrievePrintJobStatusButton_Click);
+
             // 
             // CardDataButton
             // 
@@ -2989,17 +3007,18 @@ namespace CloverExamplePOS
         private FlowLayoutPanel UIStateButtonPanel;
         private Label label4;
         private Button DisplayMessageButton;
-        private Button PrintTextButton;
+        private DropDownButton PrintTextButton;
         private Button ShowWelcomeButton;
         private Button ShowReceiptButton;
         private Button ShowThankYouButton;
-        private Button OpenCashDrawerButton;
+        private DropDownButton OpenCashDrawerButton;
+        private Button RetrievePrintJobStatusButton;
         private Button CardDataButton;
         private TableLayoutPanel tableLayoutPanel15;
         private Label label11;
         private Label label12;
         private Label label52;
-        private Button PrintImageButton;
+        private DropDownButton PrintImageButton;
         private TableLayoutPanel tableLayoutPanel16;
         private TableLayoutPanel tableLayoutPanel96;
         private TableLayoutPanel tableLayoutPanelTipAmount;

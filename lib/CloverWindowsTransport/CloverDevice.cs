@@ -18,8 +18,10 @@ using com.clover.remotepay.transport;
 using com.clover.remotepay.data;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.payments;
+using com.clover.sdk.v3.printer;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Linq;
 using com.clover.remotepay.sdk;
@@ -157,6 +159,8 @@ namespace com.clover.remotepay.transport
         public abstract void doOpenCashDrawer(string reason);
         public abstract void doPrintImage(string base64String);
         public abstract void doPrintImageURL(string urlString);
+        public abstract void doPrintImage(Bitmap bitmap, String printRequestId, String printDeviceId);
+        public abstract void doPrintImage(String url, String printRequestId, String printDeviceId);
         public abstract void doCloseout(bool allowOpenTabs, string batchId);
         public abstract void doResetDevice();
         public abstract void doVaultCard(int? CardEntryMethods);
@@ -170,6 +174,8 @@ namespace com.clover.remotepay.transport
         public abstract void doSendMessageToActivity(string action, string payload);
         public abstract void doRetrieveDeviceStatus(bool sendLastMessage);
         public abstract void doRetrievePayment(string externalPaymentId);
+        public abstract void doRetrievePrinters(RetrievePrintersRequest request);
+        public abstract void doRetrievePrintJobStatus(PrintJobStatusRequest request);
 
     }
 
@@ -262,7 +268,7 @@ namespace com.clover.remotepay.transport
         /// <param name="code">The code.</param>
         /// <param name="msg">The MSG.</param>
         /// TODO Edit XML Comment Template for onRefundPaymentResponse
-        void onRefundPaymentResponse(Refund refund, String orderId, String paymentId, TxState code, string msg);
+        void onRefundPaymentResponse(Refund refund, String orderId, String paymentId, TxState code, string msg, ResponseReasonCode reason);
         /// <summary>
         /// Called when a closeout response is received.
         /// </summary>
@@ -313,7 +319,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         /// <param name="code">The code.</param>
         /// <param name="message">The message.</param>
-        void onDeviceError(int code, string message);
+        void onDeviceError(int code, Exception cause, string message);
         /// <summary>
         /// Called when a RetrievePendingPaymentsResponse is received
         /// </summary>
@@ -344,6 +350,8 @@ namespace com.clover.remotepay.transport
         void onResetDeviceResponse(ResultStatus status, string reason, ExternalDeviceState state);
         void onDeviceStatusResponse(ResultStatus status, string reason, ExternalDeviceState state, ExternalDeviceStateData data);
         void onRetrievePaymentResponse(ResultStatus status, string reason, String externalPaymentId, QueryStatus queryStatus, Payment payment);
+        void onRetrievePrintersResponse(List<Printer> printers);
+        void onRetrievePrintJobStatus(String printRequestId, String status);
     }
 
     public class DeviceInfo

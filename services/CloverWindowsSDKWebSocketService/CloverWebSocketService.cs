@@ -135,7 +135,7 @@ namespace CloverWindowsSDKWebSocketService
                         if (clientConnections[0].IsAvailable)
                         {
                             socket.Close();
-                            connectorListener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, "Another client is already connected"));
+                            connectorListener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, null, "Another client is already connected"));
                             return;
                         }
                     }
@@ -171,7 +171,8 @@ namespace CloverWindowsSDKWebSocketService
                             case WebSocketMethod.OpenCashDrawer:
                                 {
                                     string reason = ((JObject)payload).GetValue("Reason").Value<string>();
-                                    cloverConnector.OpenCashDrawer(reason);
+                                    OpenCashDrawerRequest req = new OpenCashDrawerRequest(reason);
+                                    cloverConnector.OpenCashDrawer(req);
                                     break;
                                 }
                             case WebSocketMethod.ShowMessage:
@@ -209,8 +210,9 @@ namespace CloverWindowsSDKWebSocketService
                                     {
                                         messageList.Add(msg);
                                     }
-
-                                    cloverConnector.PrintText(messageList);
+                                    PrintRequest req = new PrintRequest(messageList, null, null);
+                                    //cloverConnector.PrintText(messageList);
+                                    cloverConnector.Print(req);
                                     break;
                                 }
                             case WebSocketMethod.PrintImage:
@@ -221,13 +223,17 @@ namespace CloverWindowsSDKWebSocketService
                                     ms.Write(imgBytes, 0, imgBytes.Length);
                                     Bitmap bp = new Bitmap(ms);
                                     ms.Close();
-                                    cloverConnector.PrintImage(bp);
+                                    //cloverConnector.PrintImage(bp);
+                                    PrintRequest req = new PrintRequest(bp, null, null);
+                                    cloverConnector.Print(req);
                                     break;
                                 }
                             case WebSocketMethod.PrintImageFromURL:
                                 {
                                     string url = ((JObject)payload).GetValue("Url").Value<string>();
-                                    cloverConnector.PrintImageFromURL(url);
+                                    //cloverConnector.PrintImageFromURL(url);
+                                    PrintRequest req = new PrintRequest(url, null, null);
+                                    cloverConnector.Print(req);
                                     break;
                                 }
                             case WebSocketMethod.Auth:
@@ -367,6 +373,24 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.RetrievePayment(rpr);
                                     break;
                                 }
+                            case WebSocketMethod.RetrievePrintersRequest:
+                                {
+                                    RetrievePrintersRequest rpr = JsonUtils.deserialize<RetrievePrintersRequest>(payload.ToString());
+                                    cloverConnector.RetrievePrinters(rpr);
+                                    break;
+                                }
+                            case WebSocketMethod.PrintJobStatusRequest:
+                                {
+                                    PrintJobStatusRequest req = JsonUtils.deserialize<PrintJobStatusRequest>(payload.ToString());
+                                    cloverConnector.RetrievePrintJobStatus(req);
+                                    break;
+                                }
+                            case WebSocketMethod.OpenCashDrawerRequest:
+                                {
+                                    OpenCashDrawerRequest req = JsonUtils.deserialize<OpenCashDrawerRequest>(payload.ToString());
+                                    cloverConnector.OpenCashDrawer(req);
+                                    break;
+                                }
                             default:
                                 {
                                     Console.WriteLine("received unknown websocket method: " + method.ToString() + " in CloverWebSocketService.");
@@ -432,7 +456,7 @@ namespace CloverWindowsSDKWebSocketService
             CloverDeviceConfiguration config = null;
             if (testConfig)
             {
-                config = new TestCloverDeviceConfiguration();
+                //config = new TestCloverDeviceConfiguration();
             }
             else
             {

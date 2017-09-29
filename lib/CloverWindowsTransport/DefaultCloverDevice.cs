@@ -21,26 +21,35 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using com.clover.remote.order;
 using com.clover.remote.order.operation;
+using com.clover.remotepay.sdk;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Threading;
+using System.Drawing;
+using com.clover.sdk.v3.printer;
+using System.IO;
+using System.Drawing.Imaging;
+using System.Net;
 
 namespace com.clover.remotepay.transport
 {
     public class DefaultCloverDevice : CloverDevice, CloverTransportObserver
     {
+        
         private RefundResponseMessage lastRefundResponseMessage { get; set; }
-
         // Used to halt auto-accept of signature when payment confirmation is requested.
         private ManualResetEventSlim paymentConfirmationIdle = new ManualResetEventSlim(true);
         private bool paymentRejected = false;
         private object ackLock = new object();
         private Dictionary<String, BackgroundWorker> msgIdToTask = new Dictionary<string, BackgroundWorker>();
-
+        private int remoteMessageVersion = 1;
+        public int maxMessageSizeInChars;
+        public long MAX_PAYLOAD_SIZE = 10000000;
         public DefaultCloverDevice(CloverDeviceConfiguration configuration) :
             this(configuration.getMessagePackageName(), configuration.getCloverTransport(), configuration.getRemoteApplicationID())
         {
+            maxMessageSizeInChars = Math.Max(1000, configuration.getMaxMessageCharacters());
         }
 
         public DefaultCloverDevice(String packageName, CloverTransport transport, String remoteApplicationID) : base(packageName, transport, remoteApplicationID)
@@ -64,9 +73,9 @@ namespace com.clover.remotepay.transport
             doDiscoveryRequest();
         }
 
-        public void onDeviceError(int code, string message)
+        public void onDeviceError(int code, Exception cause, string message)
         {
-            deviceObservers.ForEach(x => x.onDeviceError(code, message));
+            deviceObservers.ForEach(x => x.onDeviceError(code, cause, message));
         }
 
         private void setPaymentConfirmationIdle(bool value)
@@ -87,11 +96,13 @@ namespace com.clover.remotepay.transport
         public void onMessage(string message)
         {
 #if DEBUG
-            Console.WriteLine("Received raw message: " + message);
+            Console.WriteLine("Some message: " + message);
+
 #endif
             //CloverTransportObserver
             // Deserialize the message object to a real object, and figure
             RemoteMessage rMessage = JsonUtils.deserializeSDK<RemoteMessage>(message);
+            remoteMessageVersion = Math.Max(remoteMessageVersion, rMessage.version);
             switch (rMessage.method)
             {
                 case Methods.BREAK:
@@ -247,6 +258,14 @@ namespace com.clover.remotepay.transport
                     RetrievePaymentResponseMessage rprm = JsonUtils.deserializeSDK<RetrievePaymentResponseMessage>(rMessage.payload);
                     notifyObserversRetrievePaymentResponse(rprm);
                     break;
+                case Methods.GET_PRINTERS_RESPONSE:
+                    RetrievePrintersResponseMessage rtrm = JsonUtils.deserializeSDK<RetrievePrintersResponseMessage>(rMessage.payload);
+                    notifyObserversRetrievePrinterResponse(rtrm);
+                    break;
+                case Methods.PRINT_JOB_STATUS_RESPONSE:
+                    PrintJobStatusResponseMessage pjsrm = JsonUtils.deserializeSDK<PrintJobStatusResponseMessage>(rMessage.payload);
+                    notifyObserversRetrievePrintJobStatus(pjsrm);
+                    break;
                 case Methods.PRINT_IMAGE:
                     //Outbound no-op
                     break;
@@ -304,7 +323,14 @@ namespace com.clover.remotepay.transport
                 bw.DoWork += new DoWorkEventHandler(
                 delegate (object o, DoWorkEventArgs args)
                 {
-                    observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message);
+                    if(rrm.reason != null)
+                    {
+                        observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message, (ResponseReasonCode)rrm.reason);
+                    }
+                    else
+                    {
+                        observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message, ResponseReasonCode.NONE);
+                    }
                 });
                 bw.RunWorkerAsync();
             }
@@ -685,6 +711,23 @@ namespace com.clover.remotepay.transport
             }
         }
 
+        public void notifyObserversRetrievePrinterResponse(RetrievePrintersResponseMessage response)
+        {
+            foreach(ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onRetrievePrintersResponse(response.printers);
+                
+            }
+        }
+
+        public void notifyObserversRetrievePrintJobStatus(PrintJobStatusResponseMessage response)
+        {
+            foreach(ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onRetrievePrintJobStatus(response.printRequestId, response.status);
+            }
+        }
+
 
         public override void doShowPaymentReceiptScreen(string orderId, string paymentId)
         {
@@ -790,19 +833,90 @@ namespace com.clover.remotepay.transport
             }
             sendObjectMessage(tpm);
         }
-
+        
         public override void doPrintImage(string base64String)
         {
             ImagePrintMessage ipm = new ImagePrintMessage();
             ipm.png = base64String;
             sendObjectMessage(ipm);
+            
         }
 
+        public override void doPrintImage(Bitmap img, String printRequestId, String printDeviceId)
+        {
+            if (img != null)
+            {
+                ImagePrintMessage ipm = new ImagePrintMessage();
+                ipm.printRequestId = printRequestId;
+
+                if (printDeviceId != null)
+                {
+                    Printer printer = new Printer();
+                    printer.id = printDeviceId;
+                    ipm.printer = printer;
+                }
+
+                if (remoteMessageVersion > 1)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    img.Save(ms, ImageFormat.Png);
+                    byte[] imgBytes = ms.ToArray();
+                    sendCommandMessage(ipm, ipm.method, version: 2, attachmentData: imgBytes);
+                }
+                else
+                {
+                    MemoryStream ms = new MemoryStream();
+                    img.Save(ms, ImageFormat.Png);
+                    byte[] imgBytes = ms.ToArray();
+                    string base64Image = Convert.ToBase64String(imgBytes);
+                    ipm.png = base64Image;
+                    sendObjectMessage(ipm);
+                }
+            }
+        }
+
+        public override void doPrintImage(string url, string printRequestId, string printDeviceId)
+        {
+
+            WebRequest request = WebRequest.Create(url);
+            WebResponse response = request.GetResponse();
+            Stream responseStream = response.GetResponseStream();
+            Bitmap bitmap = new Bitmap(responseStream);
+            MemoryStream ms = new MemoryStream();
+            bitmap.Save(ms, ImageFormat.Png);
+            byte[] imgBytes = ms.ToArray();
+        
+            ImagePrintMessage ipm = new ImagePrintMessage();
+
+            if (printDeviceId != null)
+            {
+                Printer printer = new Printer();
+                printer.id = printDeviceId;
+                ipm.printer = printer;
+            }
+
+            if (remoteMessageVersion > 1)
+            {
+                sendCommandMessage(ipm, ipm.method, version: 2, attachmentData: imgBytes);
+            }
+            else
+            {
+                
+                string base64Image = Convert.ToBase64String(imgBytes);
+                ipm.png = base64Image;
+                sendObjectMessage(ipm);
+            }
+
+        }
+        
         public override void doPrintImageURL(string urlString)
         {
+           
+
             ImagePrintMessage ipm = new ImagePrintMessage();
             ipm.urlString = urlString;
-            sendObjectMessage(ipm);
+            //sendObjectMessage(ipm);
+            sendCommandMessage(payload: ipm, method: ipm.method);
         }
 
         public override void doVoidPayment(Payment payment, VoidReason reason)
@@ -897,6 +1011,14 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(rdsrm);
         }
 
+        public override void doRetrievePrinters(RetrievePrintersRequest request)
+        {
+            RetrievePrintersRequestMessage message = new RetrievePrintersRequestMessage();
+            message.category = request.category;
+
+            sendObjectMessage(message);
+        }
+
         public override void doRetrievePayment(string externalPaymentId)
         {
           PaymentRequestMessage rprm = new PaymentRequestMessage();
@@ -917,6 +1039,145 @@ namespace com.clover.remotepay.transport
             return remoteMessage.id;
         }
 
+        private String sendCommandMessage(Message payload, Methods method, int version =1, String attachment = null, String attachmentEncoding =null, byte[] attachmentData =null, String attachmentUrl=null)
+        {
 
+            RemoteMessage rm = RemoteMessage.createMessage(
+                method, MessageTypes.COMMAND, payload, this.packageName, remoteSourceSDK, remoteApplicationID
+            );
+            rm.attachment = attachment;
+            rm.attachmentEncoding = attachmentEncoding;
+           
+            return sendRemoteMessage(rm, version, attachmentData, attachmentUrl,  attachmentEncoding);
+        }
+
+        private String sendRemoteMessage(RemoteMessage remoteMsg, int version =1, byte[] attachmentData=null, String attachmentUrl=null, String attachmentEncoding=null)
+        {
+
+            remoteMsg.packageName = this.packageName;
+            remoteMsg.remoteApplicationID = remoteApplicationID;
+            remoteMsg.remoteSourceSDK = remoteSourceSDK;
+            remoteMsg.version = version;
+
+            if(remoteMsg.version > 1)
+            {
+                Boolean hasAttachmentURI = attachmentUrl != null;
+                Boolean hasAttachmentData = attachmentData != null;
+                int payloadHelper = 0;
+                if(remoteMsg.attachment != null) {
+                    payloadHelper = (remoteMsg.attachment.Length != 0 ? remoteMsg.attachment.Length : 0);
+                }
+                if(remoteMsg.payload != null)
+                {
+                    payloadHelper += (remoteMsg.payload.Length != 0 ? remoteMsg.payload.Length : 0);
+                }
+                Boolean payloadTooLarge = payloadHelper > maxMessageSizeInChars;
+                Boolean shouldFrag = hasAttachmentURI || payloadTooLarge || hasAttachmentData;
+                if(shouldFrag)
+                {
+                    
+                    if((remoteMsg.attachment != null && remoteMsg.attachment.Length > MAX_PAYLOAD_SIZE))
+                    {
+                        Console.WriteLine("Error sending message - payload size is greater than the maximum allowed");
+                        return null;
+                    }
+
+                    int fragmentIndex = 0;
+                    String payloadStr = remoteMsg.payload != null ? remoteMsg.payload : "";
+                    
+                    int startIndex = 0;
+                    while(startIndex < payloadStr.Length)
+                    {
+                        int length = (maxMessageSizeInChars < payloadStr.Length ? maxMessageSizeInChars : payloadStr.Length);
+                        String fPayload = payloadStr.Substring(startIndex, length);
+                        startIndex += length;
+                        Boolean attachmentAvailable = ((remoteMsg.attachment !=null && remoteMsg.attachment.Length > 0 ? remoteMsg.attachment.Length : 0) == 0); //if attachment not null and is nonzero return false, otherwise return true
+                        Boolean attachmentUriAvailable = ((remoteMsg.attachmentUri !=null && remoteMsg.attachmentUri.Length > 0 ? remoteMsg.attachmentUri.Length : 0) == 0); //if attachment not null and is nonzero return false, otherwise return true
+                        Boolean lastFragment = payloadStr.Length == 0 && (attachmentAvailable && attachmentUriAvailable);
+                        sendMessageFragment(remoteMsg, fPayload, null, fragmentIndex++, lastFragment);
+                    }
+
+
+                    // now let's fragment the attachment or attachmentData
+                    String attach = remoteMsg.attachment;
+                    if (attach != null)
+                    {
+                        if(remoteMsg.attachmentEncoding == "BASE64")
+                        {
+                            remoteMsg.attachmentEncoding = "BASE64.ATTACHMENT";
+                            int start = 0;
+                            int count = attach.Length;
+                            while(attach.Length > 0)
+                            {
+                                String aPayload = attach.Substring(start, maxMessageSizeInChars < attach.Length ? maxMessageSizeInChars : attach.Length);
+                                start += maxMessageSizeInChars < attach.Length ? maxMessageSizeInChars : attach.Length;
+                                sendMessageFragment(remoteMsg, null, aPayload, fragmentIndex++, attach.Length == 0);
+                            }
+                        } else
+                        {
+                            //TODO: chunk as-is
+                        }
+                    } else if(attachmentData != null)
+                    {
+                        int start = 0;
+                        int count = attachmentData.Length;
+                        remoteMsg.attachmentEncoding = "BASE64.FRAGMENT";
+                        while(start < count)
+                        {
+                            int length = Math.Min(maxMessageSizeInChars, count - start);
+                            byte[] chunkData = new byte[length];
+                            Array.Copy(attachmentData, start, chunkData,0, length);
+                            start = start + maxMessageSizeInChars;
+
+                            //FRAGMENT Payload
+                            String fAttachment =  Convert.ToBase64String(chunkData);
+                            sendMessageFragment(remoteMsg: remoteMsg, fPayload: null, fAttachment: fAttachment, fragmentIndex: fragmentIndex++, lastFragment: start > count);
+                        }
+
+                    }
+                } else //we DON'T need to fragment
+                {
+                    if(attachmentData != null)
+                    {
+                        String base64string = Convert.ToBase64String(attachmentData);
+                        this.doPrintImage(base64string);
+                    }
+                    
+                }
+            }
+
+            return remoteMsg.id;
+        }
+
+        private void sendMessageFragment(RemoteMessage remoteMsg, String fPayload, String fAttachment, int fragmentIndex, Boolean lastFragment)
+        {
+            RemoteMessage fRemoteMessage = new RemoteMessage();
+            fRemoteMessage.id = remoteMsg.id;
+            fRemoteMessage.method = remoteMsg.method;
+            fRemoteMessage.type = remoteMsg.type;
+            fRemoteMessage.packageName = remoteMsg.packageName;
+            fRemoteMessage.remoteApplicationID = remoteMsg.remoteApplicationID;
+            fRemoteMessage.remoteSourceSDK = remoteMsg.remoteSourceSDK;
+            fRemoteMessage.version = remoteMsg.version;
+            // changes for the fragment
+            fRemoteMessage.payload = fPayload;
+            fRemoteMessage.attachmentUri = null;
+            fRemoteMessage.attachmentEncoding = remoteMsg.attachmentEncoding != null ? remoteMsg.attachmentEncoding : "BASE64.FRAGMENT";
+            fRemoteMessage.attachment = fAttachment;
+            fRemoteMessage.fragmentIndex = fragmentIndex;
+            fRemoteMessage.lastFragment = lastFragment;
+
+            string msg = JsonUtils.serializeSDK(fRemoteMessage);
+            transport.sendMessage(msg);
+
+            Console.WriteLine("Sent message: " + msg);
+
+        }
+
+        public override void doRetrievePrintJobStatus(PrintJobStatusRequest request)
+        {
+            PrintJobStatusRequestMessage msg = new PrintJobStatusRequestMessage(request.printRequestId);
+            sendObjectMessage(msg);
+        }
     }
 }

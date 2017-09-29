@@ -195,6 +195,26 @@ namespace CloverWindowsSDKREST
             Send("/RetrievePaymentResponse", Serialize(response));
         }
 
+        public virtual void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            Send("/PrintJobStatusResponse", Serialize(response));
+        }
+
+        public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            Send("/RetrievePrintersResponse", Serialize(response));
+        }
+
+        public virtual void OnRetrievePrintersRequest(RetrievePrintersRequest request)
+        {
+            Send("/RetrievePrintersRequest", Serialize(request));
+        }
+
+        public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+            Send("/PrintJobStatusRequest", Serialize(request));
+        }
+
         public void ResendStatus()
         {
             switch (Status)
@@ -252,5 +272,7 @@ namespace CloverWindowsSDKREST
 
             }
         }
+
+        
     }
 }

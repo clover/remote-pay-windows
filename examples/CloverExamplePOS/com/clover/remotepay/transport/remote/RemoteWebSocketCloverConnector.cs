@@ -131,14 +131,14 @@ namespace com.clover.remotepay.transport.remote
             catch (Exception exc)
             {
                 Console.WriteLine(exc.Message + " => " + e.Message);
-                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, exc.Message + " => " + e.Message)));
+                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, null, exc.Message + " => " + e.Message)));
                 return;
             }
 
             JToken method = jsonObj.GetValue(ServicePayloadConstants.PROP_METHOD);
             if (method == null)
             {
-                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "Invalid message: " + e.Message)));
+                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "Invalid message: " + e.Message)));
                 return;
             }
             JObject payload = (JObject)jsonObj.GetValue(ServicePayloadConstants.PROP_PAYLOAD);
@@ -333,6 +333,31 @@ namespace com.clover.remotepay.transport.remote
                             listeners.ForEach(listener => listener.OnRetrievePaymentResponse(rpr));
                             break;
                         }
+                    case WebSocketMethod.RetrievePrintersResponse:
+                        {
+                            RetrievePrintersResponse rpr = JsonUtils.deserialize<RetrievePrintersResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnRetrievePrintersResponse(rpr));
+                            break;
+                        }
+                    case WebSocketMethod.PrintJobStatusRequest:
+                        {
+                            PrintJobStatusRequest pjsr = JsonUtils.deserialize<PrintJobStatusRequest>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintJobStatusRequest(pjsr));
+                            break;
+                        }
+                    case WebSocketMethod.PrintJobStatusResponse:
+                        {
+                            PrintJobStatusResponse pjsr = JsonUtils.deserialize<PrintJobStatusResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintJobStatusResponse(pjsr));
+                            break;
+                        }
+                    case WebSocketMethod.RetrievePrintersRequest:
+                        {
+                            RetrievePrintersRequest rpr = JsonUtils.deserialize<RetrievePrintersRequest>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnRetrievePrintersRequest(rpr));
+                            break;
+                        }
+                    
                 }
             }
             catch(Exception ex)
@@ -747,7 +772,8 @@ namespace com.clover.remotepay.transport.remote
             {
                 RetrieveDeviceStatusMessage msg = new RetrieveDeviceStatusMessage();
                 msg.payload = rdsr;
-                websocket.Send(JsonUtils.serialize(msg));
+                String ms = JsonUtils.serialize(msg);
+                websocket.Send(ms);
             }
         }
 
@@ -757,6 +783,60 @@ namespace com.clover.remotepay.transport.remote
             {
                RetrievePaymentRequestMessage msg = new RetrievePaymentRequestMessage();
                 msg.payload = rpr;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public void OpenCashDrawer(OpenCashDrawerRequest request)
+        {
+            if(websocket != null)
+            {
+                OpenCashDrawerRequestMessage message = new OpenCashDrawerRequestMessage();
+                message.payload = request;
+                websocket.Send(JsonUtils.serialize(message));
+            }
+            
+        }
+
+        public void Print(PrintRequest request)
+        {
+            if(websocket != null)
+            {
+                if (request.text.Count > 0)
+                {
+                    this.PrintText(request.text);
+                }
+                else if (request.images.Count > 0)
+                {
+                    this.PrintImage(request.images[0]);
+                }
+                else if (request.imageURLs.Count > 0)
+                {
+                    this.PrintImageFromURL(request.imageURLs[0]);
+                }
+                else
+                {
+                    Console.WriteLine("In Print: PrintRequest had no content or had an unhandled content type");
+                }
+            }
+        }
+
+        public void RetrievePrinters(RetrievePrintersRequest request)
+        {
+            if(websocket != null)
+            {
+                com.clover.sdk.remote.websocket.RetrievePrintersRequestMessage msg = new com.clover.sdk.remote.websocket.RetrievePrintersRequestMessage();
+                msg.payload = request;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public void RetrievePrintJobStatus(PrintJobStatusRequest request)
+        {
+            if(websocket != null)
+            {
+                RetrievePrintJobStatusRequestMessage msg = new RetrievePrintJobStatusRequestMessage();
+                msg.payload = request;
                 websocket.Send(JsonUtils.serialize(msg));
             }
         }

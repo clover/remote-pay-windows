@@ -335,6 +335,45 @@ namespace com.clover.remotepay.transport.remote
             Send("/RetrievePayment", request);
         }
 
+        public void OpenCashDrawer(OpenCashDrawerRequest request)
+        {
+            Send("/OpenCashDrawer", request);
+        }
+
+        public void Print(PrintRequest request)
+        {
+            if(request.images.Count > 0)
+            {
+                MemoryStream ms = new MemoryStream();
+                request.images[0].Save(ms, ImageFormat.Png);
+                byte[] imgBytes = ms.ToArray();
+                string base64Image = Convert.ToBase64String(imgBytes);
+                PrintImage pi = new PrintImage();
+                pi.Bitmap = base64Image;
+                Send("/PrintImage", pi);
+            }
+            else if(request.imageURLs.Count > 0)
+            {
+                Send("/PrintImageFromURL", request);
+            }
+            else if(request.text.Count > 0)
+            {
+                Send("/PrintText", request);
+            }
+
+            
+        }
+
+        public void RetrievePrinters(RetrievePrintersRequest request)
+        {
+            Send("/RetrievePrinters", request);
+        }
+
+        public void RetrievePrintJobStatus(PrintJobStatusRequest request)
+        {
+            Send("/PrintJobStatus", request);
+        }
+
         public class RESTSigVerRequestHandler : VerifySignatureRequest
         {
             VerifySignatureRequest svr;

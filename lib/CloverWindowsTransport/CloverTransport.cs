@@ -76,9 +76,9 @@ namespace com.clover.remotepay.transport
         }
 
         public abstract void Dispose();
-        protected void onDeviceError(int code, string message)
+        protected void onDeviceError(int code, Exception cause, string message)
         {
-            observers.ForEach(x => x.onDeviceError(code, message));
+            observers.ForEach(x => x.onDeviceError(code, cause, message));
         }
 
         /// <summary>
@@ -115,6 +115,11 @@ namespace com.clover.remotepay.transport
 
         // Implement this to send info
         public abstract int sendMessage(string message);
+
+        public int getRemoteMessageVersion()
+        {
+            return 1;
+        }
     }
 
     public interface CloverTransportObserver
@@ -136,6 +141,6 @@ namespace com.clover.remotepay.transport
         void onDeviceDisconnected(CloverTransport transport);
 
         void onMessage(string message);
-        void onDeviceError(int code, string message);
+        void onDeviceError(int code, Exception cause, string message);
     }
 }

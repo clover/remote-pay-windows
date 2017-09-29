@@ -28,6 +28,7 @@ namespace com.clover.remotepay.transport.remote
         private string remoteApplicationID;
         private bool enableLogging = false;
         private int pingSleepSeconds = 1;
+        int maxCharInMessage = 50000;
 
         public RemoteRESTCloverConfiguration(string host, int port, String remoteApplicationId) : this(host, port, remoteApplicationId, false, 1)
         {
@@ -79,6 +80,11 @@ namespace com.clover.remotepay.transport.remote
         public string getRemoteApplicationID()
         {
             return remoteApplicationID;
+        }
+
+        public int getMaxMessageCharacters()
+        {
+            return maxCharInMessage;
         }
     }
 }
