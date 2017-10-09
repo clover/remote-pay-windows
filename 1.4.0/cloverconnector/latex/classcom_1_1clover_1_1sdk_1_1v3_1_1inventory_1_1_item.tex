@@ -1,0 +1,324 @@
+\hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item}{}\section{com.\+clover.\+sdk.\+v3.\+inventory.\+Item Class Reference}
+\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item}\index{com.\+clover.\+sdk.\+v3.\+inventory.\+Item@{com.\+clover.\+sdk.\+v3.\+inventory.\+Item}}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+String \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a96a8ea741bccdec1ff38290072dc81be}{id}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Unique identifier \end{DoxyCompactList}\item 
+Boolean \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ab4eb6d5b2ed5d4035d10763126428208}{hidden}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if this item is hidden from register \end{DoxyCompactList}\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a687ac7bd9f49ab5a607540892f418a22}{item\+Group}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Reference to an item group \end{DoxyCompactList}\item 
+String \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a31b1fee3cbaf1135680573c5a7383e7d}{name}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Name of the item \end{DoxyCompactList}\item 
+String \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ac82a6eec76936ce59c611e01a3c112fb}{alternate\+Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Alternate name of the item \end{DoxyCompactList}\item 
+String \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a9136170e39444f43307d1b53782864c5}{code}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Product code, e.\+g. U\+PC or E\+AN \end{DoxyCompactList}\item 
+String \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ab31416347cfb11689955a6118a272964}{sku}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em S\+KU of the item \end{DoxyCompactList}\item 
+Int64 \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a76cae4be53be49e7205dcb7427eb5d13}{price}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Price of the item, typically in cents; use price\+Type and merchant currency to determine actual item price \end{DoxyCompactList}\item 
+\hyperlink{namespacecom_1_1clover_1_1sdk_1_1v3_1_1inventory_a29563083c5ea6797e6ce5b3f5a1d2f12}{com.\+clover.\+sdk.\+v3.\+inventory.\+Price\+Type} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ac63cf057404352aa1897a353206fcdb2}{price\+Type}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+Boolean \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_acbf6749208f7de59859cfd6042840b65}{default\+Tax\+Rates}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Flag to indicate whether or not to use default tax rates \end{DoxyCompactList}\item 
+String \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a3831c28627732a1c99f5c3ecfe8ada43}{unit\+Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Unit name, e.\+g. oz, lb \end{DoxyCompactList}\item 
+Int64 \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ae6641b1de1f59b1ae077c627f29324d9}{cost}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Cost of the item to merchant, as opposed to customer price \end{DoxyCompactList}\item 
+Boolean \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a36d5c01f6ce6ee7385d1f34c3933369a}{is\+Revenue}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if this item should be counted as revenue, for example gift cards and donations would not \end{DoxyCompactList}\item 
+Int64 \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a4949190b359070e62d1c370efcc47fcf}{stock\+Count}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em D\+E\+P\+R\+E\+C\+A\+T\+ED\+: use item\+Stock instead \end{DoxyCompactList}\item 
+List$<$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tax_rate}{com.\+clover.\+sdk.\+v3.\+inventory.\+Tax\+Rate} $>$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a22ded520de11eba7869f8b7964235c1d}{tax\+Rates}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+List$<$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_modifier_group}{com.\+clover.\+sdk.\+v3.\+inventory.\+Modifier\+Group} $>$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a1661611e4da6946eea0092d541564758}{modifier\+Groups}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+List$<$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_category}{com.\+clover.\+sdk.\+v3.\+inventory.\+Category} $>$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ad471a26603e3090feb14480897fc1626}{categories}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Categories associated with this item \end{DoxyCompactList}\item 
+List$<$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tag}{com.\+clover.\+sdk.\+v3.\+inventory.\+Tag} $>$ \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a5d623c51808818ce0363e8911c68e6dd}{tags}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Tags associated with this item \end{DoxyCompactList}\item 
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_stock}{com.\+clover.\+sdk.\+v3.\+inventory.\+Item\+Stock} \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a6edcd5227a75b71a8ae9436595219f6f}{item\+Stock}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item}{Item} stock attribute that can be expanded to show stock quantity \end{DoxyCompactList}\item 
+Int64 \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a2b74add66faf4233a9d29c5f34b3dd57}{modified\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 27 of file Item.\+cs.
+
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ac82a6eec76936ce59c611e01a3c112fb}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ac82a6eec76936ce59c611e01a3c112fb}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!alternate\+Name@{alternate\+Name}}
+\index{alternate\+Name@{alternate\+Name}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{alternate\+Name}{alternateName}}
+{\footnotesize\ttfamily String com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+alternate\+Name\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Alternate name of the item 
+
+
+
+Definition at line 52 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ad471a26603e3090feb14480897fc1626}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ad471a26603e3090feb14480897fc1626}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!categories@{categories}}
+\index{categories@{categories}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{categories}{categories}}
+{\footnotesize\ttfamily List$<$\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_category}{com.\+clover.\+sdk.\+v3.\+inventory.\+Category}$>$ com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+categories\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Categories associated with this item 
+
+
+
+Definition at line 103 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a9136170e39444f43307d1b53782864c5}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a9136170e39444f43307d1b53782864c5}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!code@{code}}
+\index{code@{code}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{code}{code}}
+{\footnotesize\ttfamily String com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+code\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Product code, e.\+g. U\+PC or E\+AN 
+
+
+
+Definition at line 57 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ae6641b1de1f59b1ae077c627f29324d9}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ae6641b1de1f59b1ae077c627f29324d9}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!cost@{cost}}
+\index{cost@{cost}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{cost}{cost}}
+{\footnotesize\ttfamily Int64 com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+cost\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Cost of the item to merchant, as opposed to customer price 
+
+
+
+Definition at line 84 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_acbf6749208f7de59859cfd6042840b65}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_acbf6749208f7de59859cfd6042840b65}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!default\+Tax\+Rates@{default\+Tax\+Rates}}
+\index{default\+Tax\+Rates@{default\+Tax\+Rates}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{default\+Tax\+Rates}{defaultTaxRates}}
+{\footnotesize\ttfamily Boolean com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+default\+Tax\+Rates\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Flag to indicate whether or not to use default tax rates 
+
+
+
+Definition at line 74 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ab4eb6d5b2ed5d4035d10763126428208}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ab4eb6d5b2ed5d4035d10763126428208}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!hidden@{hidden}}
+\index{hidden@{hidden}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{hidden}{hidden}}
+{\footnotesize\ttfamily Boolean com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+hidden\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+True if this item is hidden from register 
+
+
+
+Definition at line 37 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a96a8ea741bccdec1ff38290072dc81be}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a96a8ea741bccdec1ff38290072dc81be}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!id@{id}}
+\index{id@{id}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily String com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+id\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Unique identifier 
+
+
+
+Definition at line 32 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a36d5c01f6ce6ee7385d1f34c3933369a}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a36d5c01f6ce6ee7385d1f34c3933369a}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!is\+Revenue@{is\+Revenue}}
+\index{is\+Revenue@{is\+Revenue}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{is\+Revenue}{isRevenue}}
+{\footnotesize\ttfamily Boolean com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+is\+Revenue\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+True if this item should be counted as revenue, for example gift cards and donations would not 
+
+
+
+Definition at line 89 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a687ac7bd9f49ab5a607540892f418a22}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a687ac7bd9f49ab5a607540892f418a22}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!item\+Group@{item\+Group}}
+\index{item\+Group@{item\+Group}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{item\+Group}{itemGroup}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference}{com.\+clover.\+sdk.\+v3.\+base\+\_\+.\+Reference} com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+item\+Group\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Reference to an item group 
+
+
+
+Definition at line 42 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a6edcd5227a75b71a8ae9436595219f6f}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a6edcd5227a75b71a8ae9436595219f6f}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!item\+Stock@{item\+Stock}}
+\index{item\+Stock@{item\+Stock}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{item\+Stock}{itemStock}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_stock}{com.\+clover.\+sdk.\+v3.\+inventory.\+Item\+Stock} com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+item\+Stock\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item}{Item} stock attribute that can be expanded to show stock quantity 
+
+
+
+Definition at line 113 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a2b74add66faf4233a9d29c5f34b3dd57}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a2b74add66faf4233a9d29c5f34b3dd57}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!modified\+Time@{modified\+Time}}
+\index{modified\+Time@{modified\+Time}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{modified\+Time}{modifiedTime}}
+{\footnotesize\ttfamily Int64 com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+modified\+Time\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 115 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a1661611e4da6946eea0092d541564758}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a1661611e4da6946eea0092d541564758}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!modifier\+Groups@{modifier\+Groups}}
+\index{modifier\+Groups@{modifier\+Groups}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{modifier\+Groups}{modifierGroups}}
+{\footnotesize\ttfamily List$<$\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_modifier_group}{com.\+clover.\+sdk.\+v3.\+inventory.\+Modifier\+Group}$>$ com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+modifier\+Groups\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 98 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a31b1fee3cbaf1135680573c5a7383e7d}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a31b1fee3cbaf1135680573c5a7383e7d}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!name@{name}}
+\index{name@{name}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily String com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+name\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Name of the item 
+
+
+
+Definition at line 47 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a76cae4be53be49e7205dcb7427eb5d13}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a76cae4be53be49e7205dcb7427eb5d13}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!price@{price}}
+\index{price@{price}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{price}{price}}
+{\footnotesize\ttfamily Int64 com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+price\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Price of the item, typically in cents; use price\+Type and merchant currency to determine actual item price 
+
+
+
+Definition at line 67 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ac63cf057404352aa1897a353206fcdb2}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ac63cf057404352aa1897a353206fcdb2}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!price\+Type@{price\+Type}}
+\index{price\+Type@{price\+Type}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{price\+Type}{priceType}}
+{\footnotesize\ttfamily \hyperlink{namespacecom_1_1clover_1_1sdk_1_1v3_1_1inventory_a29563083c5ea6797e6ce5b3f5a1d2f12}{com.\+clover.\+sdk.\+v3.\+inventory.\+Price\+Type} com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+price\+Type\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 69 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ab31416347cfb11689955a6118a272964}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_ab31416347cfb11689955a6118a272964}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!sku@{sku}}
+\index{sku@{sku}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{sku}{sku}}
+{\footnotesize\ttfamily String com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+sku\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+S\+KU of the item 
+
+
+
+Definition at line 62 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a4949190b359070e62d1c370efcc47fcf}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a4949190b359070e62d1c370efcc47fcf}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!stock\+Count@{stock\+Count}}
+\index{stock\+Count@{stock\+Count}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{stock\+Count}{stockCount}}
+{\footnotesize\ttfamily Int64 com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+stock\+Count\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+D\+E\+P\+R\+E\+C\+A\+T\+ED\+: use item\+Stock instead 
+
+
+
+Definition at line 94 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a5d623c51808818ce0363e8911c68e6dd}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a5d623c51808818ce0363e8911c68e6dd}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!tags@{tags}}
+\index{tags@{tags}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{tags}{tags}}
+{\footnotesize\ttfamily List$<$\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tag}{com.\+clover.\+sdk.\+v3.\+inventory.\+Tag}$>$ com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+tags\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Tags associated with this item 
+
+
+
+Definition at line 108 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a22ded520de11eba7869f8b7964235c1d}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a22ded520de11eba7869f8b7964235c1d}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!tax\+Rates@{tax\+Rates}}
+\index{tax\+Rates@{tax\+Rates}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{tax\+Rates}{taxRates}}
+{\footnotesize\ttfamily List$<$\hyperlink{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tax_rate}{com.\+clover.\+sdk.\+v3.\+inventory.\+Tax\+Rate}$>$ com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+tax\+Rates\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 96 of file Item.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a3831c28627732a1c99f5c3ecfe8ada43}\label{classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_item_a3831c28627732a1c99f5c3ecfe8ada43}} 
+\index{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}!unit\+Name@{unit\+Name}}
+\index{unit\+Name@{unit\+Name}!com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item@{com\+::clover\+::sdk\+::v3\+::inventory\+::\+Item}}
+\subsubsection{\texorpdfstring{unit\+Name}{unitName}}
+{\footnotesize\ttfamily String com.\+clover.\+sdk.\+v3.\+inventory.\+Item.\+unit\+Name\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Unit name, e.\+g. oz, lb 
+
+
+
+Definition at line 79 of file Item.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\+Clover\+Windows\+S\+D\+K/com/clover/sdk/v3/inventory/Item.\+cs\end{DoxyCompactItemize}

@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['select_5faccount',['SELECT_ACCOUNT',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3a67d3fc46bdadf1451cace4eef70146de',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['select_5fapplication',['SELECT_APPLICATION',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3af484775a3d80d677006385894ebf2994',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['service_5ffailure',['SERVICE_FAILURE',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a81b51961db7fb2e8c34fefd28183a8a1aace2c814c676bdbcc96e614e49cd9408',1,'com::clover::sdk::v3::payments']]],
+  ['service_5funavailable',['SERVICE_UNAVAILABLE',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a81b51961db7fb2e8c34fefd28183a8a1a321504743197244f08c01a4fd2df88b5',1,'com::clover::sdk::v3::payments']]],
+  ['signature',['SIGNATURE',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ac4b3a848b3caff1d4200a4280217481daef21bf22481e7930df1e2bda54025095',1,'com::clover::sdk::v3::payments']]],
+  ['signature_5fand_5fpin',['SIGNATURE_AND_PIN',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ac4b3a848b3caff1d4200a4280217481dae2fb69c541de083c046b4c259296b25e',1,'com::clover::sdk::v3::payments']]],
+  ['signature_5fon_5fscreen_5ffallback',['SIGNATURE_ON_SCREEN_FALLBACK',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3ab58d684ab39bdc4e7b8d1fb54339fd4a',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['signature_5freject',['SIGNATURE_REJECT',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3ab71615445415784cc2de542d0968aec6',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['solo',['SOLO',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ae544d2f27295fd15a3abb7d87bc35928aca17c443abc74bd2419fbc922fc0c32e',1,'com::clover::sdk::v3::payments']]],
+  ['spa',['SPA',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2aaa491df98d63f0894f18087bb142d472',1,'com::clover::sdk::v3::base_']]],
+  ['split_5fcustom',['SPLIT_CUSTOM',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1order.html#a0087c2efbeb2cfefd1bc3b78a3f7dbd8a8abe3af169c902d88de041b26ade5739',1,'com::clover::sdk::v3::order']]],
+  ['split_5fguest',['SPLIT_GUEST',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1order.html#a0087c2efbeb2cfefd1bc3b78a3f7dbd8a9df79f69c448e3cd3b848892d99ceb19',1,'com::clover::sdk::v3::order']]],
+  ['split_5fitem',['SPLIT_ITEM',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1order.html#a0087c2efbeb2cfefd1bc3b78a3f7dbd8a4997a4c97d5a205793abff99f7a17f33',1,'com::clover::sdk::v3::order']]],
+  ['start',['START',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3ab078ffd28db767c502ac367053f6e0ac',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['starting_5fcustom_5factivity',['STARTING_CUSTOM_ACTIVITY',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3a1e151a63da765fa1333e0ac9d0747288',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['success',['SUCCESS',['../namespacecom_1_1clover_1_1remotepay_1_1sdk.html#ad35c0938efdc4d31c4a040db886ad0f3ad0749aaba8b833466dfcbb0428e4f89c',1,'com.clover.remotepay.sdk.SUCCESS()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a81b51961db7fb2e8c34fefd28183a8a1ad0749aaba8b833466dfcbb0428e4f89c',1,'com.clover.sdk.v3.payments.SUCCESS()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a4890e376edb21551ffa5f45a28c6772aad0749aaba8b833466dfcbb0428e4f89c',1,'com.clover.sdk.v3.payments.SUCCESS()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ab493172d8abd5947fc0308d7cc311b2dad0749aaba8b833466dfcbb0428e4f89c',1,'com.clover.sdk.v3.payments.SUCCESS()']]],
+  ['swiped',['SWIPED',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ac92e851a362529ec3fa138bd64dec615a03ad5738a8b7fd6fcf512967c580bcd7',1,'com::clover::sdk::v3::payments']]]
+];

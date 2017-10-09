@@ -1,0 +1,361 @@
+\hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event}{}\section{com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event Class Reference}
+\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event}\index{com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event@{com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3}{Device\+Event\+State} \{ \newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab078ffd28db767c502ac367053f6e0ac}{Device\+Event\+State.\+S\+T\+A\+RT}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab9e14d9b2886bcff408b85aefa780419}{Device\+Event\+State.\+F\+A\+I\+L\+ED}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a19da7170bea36556dde582519795f3fc}{Device\+Event\+State.\+F\+A\+T\+AL}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a7f873066b6a00fc1bc728c3063bec9eb}{Device\+Event\+State.\+T\+R\+Y\+\_\+\+A\+G\+A\+IN}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad307c747dc4b0d01887e1708287a1248}{Device\+Event\+State.\+I\+N\+P\+U\+T\+\_\+\+E\+R\+R\+OR}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3aecf2b44d8d7123e7b1de16ce792b6dce}{Device\+Event\+State.\+P\+I\+N\+\_\+\+B\+Y\+P\+A\+S\+S\+\_\+\+C\+O\+N\+F\+I\+RM}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad4539bffb6062bdcbd7e7cc1b1228926}{Device\+Event\+State.\+C\+A\+N\+C\+E\+L\+ED}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3adbe2cbac46ffa8283747010d8e1e6396}{Device\+Event\+State.\+T\+I\+M\+E\+D\+\_\+\+O\+UT}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a4ea3ded788dcac04d3f0f948c934f777}{Device\+Event\+State.\+D\+E\+C\+L\+I\+N\+ED}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1b6ef2e240937c15fa23edf66cfd63ac}{Device\+Event\+State.\+V\+O\+I\+D\+ED}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab8fb5ae4c4330708f0e200a39feda74a}{Device\+Event\+State.\+C\+O\+N\+F\+I\+G\+U\+R\+I\+NG}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ae133e9a63fd4950f19c2180be4047ecc}{Device\+Event\+State.\+P\+R\+O\+C\+E\+S\+S\+I\+NG}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a43580c127fe920f7b061ce9adecd17bc}{Device\+Event\+State.\+R\+E\+M\+O\+V\+E\+\_\+\+C\+A\+RD}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a7dd3599169a887197ac12a5e16d909df}{Device\+Event\+State.\+P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+G\+O\+\_\+\+O\+N\+L\+I\+NE}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab845f6482a09938e41ce8cccc6ad4317}{Device\+Event\+State.\+P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+C\+R\+E\+D\+IT}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3af677627f72bd14c4639d04193ce40e25}{Device\+Event\+State.\+P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+S\+W\+I\+PE}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3af484775a3d80d677006385894ebf2994}{Device\+Event\+State.\+S\+E\+L\+E\+C\+T\+\_\+\+A\+P\+P\+L\+I\+C\+A\+T\+I\+ON}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3abdf78c612a86bc8605e7c92a0060cbd4}{Device\+Event\+State.\+P\+I\+N\+\_\+\+P\+AD}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3adff856fe14e8b3ece7eda2d4d9a7d90c}{Device\+Event\+State.\+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+N\+U\+M\+B\+ER}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad4ebf21babbb7e040e5146d1028587d8}{Device\+Event\+State.\+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+VV}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3acdd216a4e02dd1f7fbfce4b89cd2606d}{Device\+Event\+State.\+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+V\+V\+\_\+\+U\+N\+R\+E\+A\+D\+A\+B\+LE}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab4ffef8fd9417fed72e6cd44b13af056}{Device\+Event\+State.\+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+E\+X\+P\+I\+R\+A\+T\+I\+ON}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a67d3fc46bdadf1451cace4eef70146de}{Device\+Event\+State.\+S\+E\+L\+E\+C\+T\+\_\+\+A\+C\+C\+O\+U\+NT}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a40b964a83ea0b2e15dc1bebb761e311a}{Device\+Event\+State.\+C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+C\+O\+N\+F\+I\+RM}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a0d33609b5a20b61f42d2db001a6e57b2}{Device\+Event\+State.\+C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+S\+E\+L\+E\+CT}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a3432bddaaa244183b7d0d33a6e97743b}{Device\+Event\+State.\+C\+O\+N\+T\+A\+C\+T\+L\+E\+S\+S\+\_\+\+T\+A\+P\+\_\+\+R\+E\+Q\+U\+I\+R\+ED}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1351a74b0f340642fa4e09c2a737c1f5}{Device\+Event\+State.\+V\+O\+I\+C\+E\+\_\+\+R\+E\+F\+E\+R\+R\+A\+L\+\_\+\+R\+E\+S\+U\+LT}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a764f5bdd9bd60af94ccf9670ac1ef768}{Device\+Event\+State.\+C\+O\+N\+F\+I\+R\+M\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+A\+U\+TH}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a9fcece51cdd7d711c73a64d3531f13e4}{Device\+Event\+State.\+P\+A\+C\+K\+E\+T\+\_\+\+E\+X\+C\+E\+P\+T\+I\+ON}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a55a4b4b0d597e3b4963562d9afb3de5a}{Device\+Event\+State.\+C\+O\+N\+F\+I\+R\+M\+\_\+\+D\+U\+P\+L\+I\+C\+A\+T\+E\+\_\+\+C\+H\+E\+CK}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3aa1b2d16c5199a72ea5569995665ef182}{Device\+Event\+State.\+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+ER}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a684bfcac45ce57b3183b61b88a1e0c76}{Device\+Event\+State.\+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+E\+R\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a713097fcee40b081fe4c5fbd2720efa6}{Device\+Event\+State.\+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+EN}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a916d07064873043c0f99bde62e6a9c66}{Device\+Event\+State.\+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a25ed92d3ee69377e107c7ffcb1fdc7d7}{Device\+Event\+State.\+A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+RE}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab58d684ab39bdc4e7b8d1fb54339fd4a}{Device\+Event\+State.\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+F\+A\+L\+L\+B\+A\+CK}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a4b158acaa946265531fd38e86354cfeb}{Device\+Event\+State.\+R\+E\+T\+U\+R\+N\+\_\+\+T\+O\+\_\+\+M\+E\+R\+C\+H\+A\+NT}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab71615445415784cc2de542d0968aec6}{Device\+Event\+State.\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+R\+E\+J\+E\+CT}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab9bf02eddab05e8a9d9e3bdb9c81610b}{Device\+Event\+State.\+A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+C\+O\+N\+F\+I\+RM}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a8b31015e36755bf998ffd9a48fb80c6b}{Device\+Event\+State.\+A\+D\+D\+\_\+\+T\+IP}, 
+\newline
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a9027e7f0e3e9ec7618b77148ac17d010}{Device\+Event\+State.\+R\+E\+C\+E\+I\+P\+T\+\_\+\+O\+P\+T\+I\+O\+NS}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ac262604b72e10018d653835de1dbdc8e}{Device\+Event\+State.\+H\+A\+N\+D\+L\+E\+\_\+\+T\+E\+N\+D\+ER}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a5207473f30c2df8539081499267b4b7f}{Device\+Event\+State.\+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY}, 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1e151a63da765fa1333e0ac9d0747288}{Device\+Event\+State.\+S\+T\+A\+R\+T\+I\+N\+G\+\_\+\+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a0df5d9dce784a5f5f5a89b4d52e2d307}{Clover\+Device\+Event} ()
+\item 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a7533454f372bda7cca419525f8fd7133}{Clover\+Device\+Event} (int code, string msg)
+\end{DoxyCompactItemize}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3}{Device\+Event\+State} \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a5d6c86f9855c46c813acd9563f9c99ab}{Event\+State}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+int \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_ae3422a3a9dcd7e8c1c7b20c410b24d9f}{Code}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+string \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_aec34f3a982ec78a0a03499f1c309bde3}{Message}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+Object \mbox{[}$\,$\mbox{]} \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_ae31e3c80cfdd87b897ba14d017a21599}{Options}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+Input\+Option \mbox{[}$\,$\mbox{]} \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_aeeac7f67f737137d1b9ec633b7823d6a}{Input\+Options}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 22 of file Clover\+Events.\+cs.
+
+
+
+\subsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Device\+Event\+State@{Device\+Event\+State}}
+\index{Device\+Event\+State@{Device\+Event\+State}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Device\+Event\+State}{DeviceEventState}}
+{\footnotesize\ttfamily enum \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3}{com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Device\+Event\+State}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+T\+A\+RT@{S\+T\+A\+RT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!S\+T\+A\+RT@{S\+T\+A\+RT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab078ffd28db767c502ac367053f6e0ac}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab078ffd28db767c502ac367053f6e0ac}} 
+S\+T\+A\+RT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{F\+A\+I\+L\+ED@{F\+A\+I\+L\+ED}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!F\+A\+I\+L\+ED@{F\+A\+I\+L\+ED}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab9e14d9b2886bcff408b85aefa780419}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab9e14d9b2886bcff408b85aefa780419}} 
+F\+A\+I\+L\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{F\+A\+T\+AL@{F\+A\+T\+AL}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!F\+A\+T\+AL@{F\+A\+T\+AL}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a19da7170bea36556dde582519795f3fc}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a19da7170bea36556dde582519795f3fc}} 
+F\+A\+T\+AL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{T\+R\+Y\+\_\+\+A\+G\+A\+IN@{T\+R\+Y\+\_\+\+A\+G\+A\+IN}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!T\+R\+Y\+\_\+\+A\+G\+A\+IN@{T\+R\+Y\+\_\+\+A\+G\+A\+IN}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a7f873066b6a00fc1bc728c3063bec9eb}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a7f873066b6a00fc1bc728c3063bec9eb}} 
+T\+R\+Y\+\_\+\+A\+G\+A\+IN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+N\+P\+U\+T\+\_\+\+E\+R\+R\+OR@{I\+N\+P\+U\+T\+\_\+\+E\+R\+R\+OR}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!I\+N\+P\+U\+T\+\_\+\+E\+R\+R\+OR@{I\+N\+P\+U\+T\+\_\+\+E\+R\+R\+OR}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad307c747dc4b0d01887e1708287a1248}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad307c747dc4b0d01887e1708287a1248}} 
+I\+N\+P\+U\+T\+\_\+\+E\+R\+R\+OR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+I\+N\+\_\+\+B\+Y\+P\+A\+S\+S\+\_\+\+C\+O\+N\+F\+I\+RM@{P\+I\+N\+\_\+\+B\+Y\+P\+A\+S\+S\+\_\+\+C\+O\+N\+F\+I\+RM}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!P\+I\+N\+\_\+\+B\+Y\+P\+A\+S\+S\+\_\+\+C\+O\+N\+F\+I\+RM@{P\+I\+N\+\_\+\+B\+Y\+P\+A\+S\+S\+\_\+\+C\+O\+N\+F\+I\+RM}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3aecf2b44d8d7123e7b1de16ce792b6dce}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3aecf2b44d8d7123e7b1de16ce792b6dce}} 
+P\+I\+N\+\_\+\+B\+Y\+P\+A\+S\+S\+\_\+\+C\+O\+N\+F\+I\+RM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+A\+N\+C\+E\+L\+ED@{C\+A\+N\+C\+E\+L\+ED}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+A\+N\+C\+E\+L\+ED@{C\+A\+N\+C\+E\+L\+ED}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad4539bffb6062bdcbd7e7cc1b1228926}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad4539bffb6062bdcbd7e7cc1b1228926}} 
+C\+A\+N\+C\+E\+L\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{T\+I\+M\+E\+D\+\_\+\+O\+UT@{T\+I\+M\+E\+D\+\_\+\+O\+UT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!T\+I\+M\+E\+D\+\_\+\+O\+UT@{T\+I\+M\+E\+D\+\_\+\+O\+UT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3adbe2cbac46ffa8283747010d8e1e6396}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3adbe2cbac46ffa8283747010d8e1e6396}} 
+T\+I\+M\+E\+D\+\_\+\+O\+UT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{D\+E\+C\+L\+I\+N\+ED@{D\+E\+C\+L\+I\+N\+ED}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!D\+E\+C\+L\+I\+N\+ED@{D\+E\+C\+L\+I\+N\+ED}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a4ea3ded788dcac04d3f0f948c934f777}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a4ea3ded788dcac04d3f0f948c934f777}} 
+D\+E\+C\+L\+I\+N\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{V\+O\+I\+D\+ED@{V\+O\+I\+D\+ED}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!V\+O\+I\+D\+ED@{V\+O\+I\+D\+ED}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1b6ef2e240937c15fa23edf66cfd63ac}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1b6ef2e240937c15fa23edf66cfd63ac}} 
+V\+O\+I\+D\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+O\+N\+F\+I\+G\+U\+R\+I\+NG@{C\+O\+N\+F\+I\+G\+U\+R\+I\+NG}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+O\+N\+F\+I\+G\+U\+R\+I\+NG@{C\+O\+N\+F\+I\+G\+U\+R\+I\+NG}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab8fb5ae4c4330708f0e200a39feda74a}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab8fb5ae4c4330708f0e200a39feda74a}} 
+C\+O\+N\+F\+I\+G\+U\+R\+I\+NG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+R\+O\+C\+E\+S\+S\+I\+NG@{P\+R\+O\+C\+E\+S\+S\+I\+NG}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!P\+R\+O\+C\+E\+S\+S\+I\+NG@{P\+R\+O\+C\+E\+S\+S\+I\+NG}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ae133e9a63fd4950f19c2180be4047ecc}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ae133e9a63fd4950f19c2180be4047ecc}} 
+P\+R\+O\+C\+E\+S\+S\+I\+NG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+M\+O\+V\+E\+\_\+\+C\+A\+RD@{R\+E\+M\+O\+V\+E\+\_\+\+C\+A\+RD}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!R\+E\+M\+O\+V\+E\+\_\+\+C\+A\+RD@{R\+E\+M\+O\+V\+E\+\_\+\+C\+A\+RD}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a43580c127fe920f7b061ce9adecd17bc}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a43580c127fe920f7b061ce9adecd17bc}} 
+R\+E\+M\+O\+V\+E\+\_\+\+C\+A\+RD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+G\+O\+\_\+\+O\+N\+L\+I\+NE@{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+G\+O\+\_\+\+O\+N\+L\+I\+NE}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+G\+O\+\_\+\+O\+N\+L\+I\+NE@{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+G\+O\+\_\+\+O\+N\+L\+I\+NE}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a7dd3599169a887197ac12a5e16d909df}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a7dd3599169a887197ac12a5e16d909df}} 
+P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+G\+O\+\_\+\+O\+N\+L\+I\+NE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+C\+R\+E\+D\+IT@{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+C\+R\+E\+D\+IT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+C\+R\+E\+D\+IT@{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+C\+R\+E\+D\+IT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab845f6482a09938e41ce8cccc6ad4317}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab845f6482a09938e41ce8cccc6ad4317}} 
+P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+C\+R\+E\+D\+IT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+S\+W\+I\+PE@{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+S\+W\+I\+PE}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+S\+W\+I\+PE@{P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+S\+W\+I\+PE}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3af677627f72bd14c4639d04193ce40e25}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3af677627f72bd14c4639d04193ce40e25}} 
+P\+R\+O\+C\+E\+S\+S\+I\+N\+G\+\_\+\+S\+W\+I\+PE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+E\+L\+E\+C\+T\+\_\+\+A\+P\+P\+L\+I\+C\+A\+T\+I\+ON@{S\+E\+L\+E\+C\+T\+\_\+\+A\+P\+P\+L\+I\+C\+A\+T\+I\+ON}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!S\+E\+L\+E\+C\+T\+\_\+\+A\+P\+P\+L\+I\+C\+A\+T\+I\+ON@{S\+E\+L\+E\+C\+T\+\_\+\+A\+P\+P\+L\+I\+C\+A\+T\+I\+ON}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3af484775a3d80d677006385894ebf2994}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3af484775a3d80d677006385894ebf2994}} 
+S\+E\+L\+E\+C\+T\+\_\+\+A\+P\+P\+L\+I\+C\+A\+T\+I\+ON&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+I\+N\+\_\+\+P\+AD@{P\+I\+N\+\_\+\+P\+AD}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!P\+I\+N\+\_\+\+P\+AD@{P\+I\+N\+\_\+\+P\+AD}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3abdf78c612a86bc8605e7c92a0060cbd4}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3abdf78c612a86bc8605e7c92a0060cbd4}} 
+P\+I\+N\+\_\+\+P\+AD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+N\+U\+M\+B\+ER@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+N\+U\+M\+B\+ER}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+N\+U\+M\+B\+ER@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+N\+U\+M\+B\+ER}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3adff856fe14e8b3ece7eda2d4d9a7d90c}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3adff856fe14e8b3ece7eda2d4d9a7d90c}} 
+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+N\+U\+M\+B\+ER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+VV@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+VV}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+VV@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+VV}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad4ebf21babbb7e040e5146d1028587d8}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ad4ebf21babbb7e040e5146d1028587d8}} 
+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+VV&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+V\+V\+\_\+\+U\+N\+R\+E\+A\+D\+A\+B\+LE@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+V\+V\+\_\+\+U\+N\+R\+E\+A\+D\+A\+B\+LE}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+V\+V\+\_\+\+U\+N\+R\+E\+A\+D\+A\+B\+LE@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+V\+V\+\_\+\+U\+N\+R\+E\+A\+D\+A\+B\+LE}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3acdd216a4e02dd1f7fbfce4b89cd2606d}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3acdd216a4e02dd1f7fbfce4b89cd2606d}} 
+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+C\+V\+V\+\_\+\+U\+N\+R\+E\+A\+D\+A\+B\+LE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+E\+X\+P\+I\+R\+A\+T\+I\+ON@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+E\+X\+P\+I\+R\+A\+T\+I\+ON}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+E\+X\+P\+I\+R\+A\+T\+I\+ON@{M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+E\+X\+P\+I\+R\+A\+T\+I\+ON}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab4ffef8fd9417fed72e6cd44b13af056}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab4ffef8fd9417fed72e6cd44b13af056}} 
+M\+A\+N\+U\+A\+L\+\_\+\+C\+A\+R\+D\+\_\+\+E\+X\+P\+I\+R\+A\+T\+I\+ON&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+E\+L\+E\+C\+T\+\_\+\+A\+C\+C\+O\+U\+NT@{S\+E\+L\+E\+C\+T\+\_\+\+A\+C\+C\+O\+U\+NT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!S\+E\+L\+E\+C\+T\+\_\+\+A\+C\+C\+O\+U\+NT@{S\+E\+L\+E\+C\+T\+\_\+\+A\+C\+C\+O\+U\+NT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a67d3fc46bdadf1451cace4eef70146de}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a67d3fc46bdadf1451cace4eef70146de}} 
+S\+E\+L\+E\+C\+T\+\_\+\+A\+C\+C\+O\+U\+NT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+C\+O\+N\+F\+I\+RM@{C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+C\+O\+N\+F\+I\+RM}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+C\+O\+N\+F\+I\+RM@{C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+C\+O\+N\+F\+I\+RM}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a40b964a83ea0b2e15dc1bebb761e311a}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a40b964a83ea0b2e15dc1bebb761e311a}} 
+C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+C\+O\+N\+F\+I\+RM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+S\+E\+L\+E\+CT@{C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+S\+E\+L\+E\+CT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+S\+E\+L\+E\+CT@{C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+S\+E\+L\+E\+CT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a0d33609b5a20b61f42d2db001a6e57b2}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a0d33609b5a20b61f42d2db001a6e57b2}} 
+C\+A\+S\+H\+B\+A\+C\+K\+\_\+\+S\+E\+L\+E\+CT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+O\+N\+T\+A\+C\+T\+L\+E\+S\+S\+\_\+\+T\+A\+P\+\_\+\+R\+E\+Q\+U\+I\+R\+ED@{C\+O\+N\+T\+A\+C\+T\+L\+E\+S\+S\+\_\+\+T\+A\+P\+\_\+\+R\+E\+Q\+U\+I\+R\+ED}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+O\+N\+T\+A\+C\+T\+L\+E\+S\+S\+\_\+\+T\+A\+P\+\_\+\+R\+E\+Q\+U\+I\+R\+ED@{C\+O\+N\+T\+A\+C\+T\+L\+E\+S\+S\+\_\+\+T\+A\+P\+\_\+\+R\+E\+Q\+U\+I\+R\+ED}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a3432bddaaa244183b7d0d33a6e97743b}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a3432bddaaa244183b7d0d33a6e97743b}} 
+C\+O\+N\+T\+A\+C\+T\+L\+E\+S\+S\+\_\+\+T\+A\+P\+\_\+\+R\+E\+Q\+U\+I\+R\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{V\+O\+I\+C\+E\+\_\+\+R\+E\+F\+E\+R\+R\+A\+L\+\_\+\+R\+E\+S\+U\+LT@{V\+O\+I\+C\+E\+\_\+\+R\+E\+F\+E\+R\+R\+A\+L\+\_\+\+R\+E\+S\+U\+LT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!V\+O\+I\+C\+E\+\_\+\+R\+E\+F\+E\+R\+R\+A\+L\+\_\+\+R\+E\+S\+U\+LT@{V\+O\+I\+C\+E\+\_\+\+R\+E\+F\+E\+R\+R\+A\+L\+\_\+\+R\+E\+S\+U\+LT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1351a74b0f340642fa4e09c2a737c1f5}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1351a74b0f340642fa4e09c2a737c1f5}} 
+V\+O\+I\+C\+E\+\_\+\+R\+E\+F\+E\+R\+R\+A\+L\+\_\+\+R\+E\+S\+U\+LT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+O\+N\+F\+I\+R\+M\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+A\+U\+TH@{C\+O\+N\+F\+I\+R\+M\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+A\+U\+TH}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+O\+N\+F\+I\+R\+M\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+A\+U\+TH@{C\+O\+N\+F\+I\+R\+M\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+A\+U\+TH}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a764f5bdd9bd60af94ccf9670ac1ef768}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a764f5bdd9bd60af94ccf9670ac1ef768}} 
+C\+O\+N\+F\+I\+R\+M\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+A\+U\+TH&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+A\+C\+K\+E\+T\+\_\+\+E\+X\+C\+E\+P\+T\+I\+ON@{P\+A\+C\+K\+E\+T\+\_\+\+E\+X\+C\+E\+P\+T\+I\+ON}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!P\+A\+C\+K\+E\+T\+\_\+\+E\+X\+C\+E\+P\+T\+I\+ON@{P\+A\+C\+K\+E\+T\+\_\+\+E\+X\+C\+E\+P\+T\+I\+ON}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a9fcece51cdd7d711c73a64d3531f13e4}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a9fcece51cdd7d711c73a64d3531f13e4}} 
+P\+A\+C\+K\+E\+T\+\_\+\+E\+X\+C\+E\+P\+T\+I\+ON&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+O\+N\+F\+I\+R\+M\+\_\+\+D\+U\+P\+L\+I\+C\+A\+T\+E\+\_\+\+C\+H\+E\+CK@{C\+O\+N\+F\+I\+R\+M\+\_\+\+D\+U\+P\+L\+I\+C\+A\+T\+E\+\_\+\+C\+H\+E\+CK}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+O\+N\+F\+I\+R\+M\+\_\+\+D\+U\+P\+L\+I\+C\+A\+T\+E\+\_\+\+C\+H\+E\+CK@{C\+O\+N\+F\+I\+R\+M\+\_\+\+D\+U\+P\+L\+I\+C\+A\+T\+E\+\_\+\+C\+H\+E\+CK}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a55a4b4b0d597e3b4963562d9afb3de5a}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a55a4b4b0d597e3b4963562d9afb3de5a}} 
+C\+O\+N\+F\+I\+R\+M\+\_\+\+D\+U\+P\+L\+I\+C\+A\+T\+E\+\_\+\+C\+H\+E\+CK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+ER@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+ER}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+ER@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+ER}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3aa1b2d16c5199a72ea5569995665ef182}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3aa1b2d16c5199a72ea5569995665ef182}} 
+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+ER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+E\+R\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+E\+R\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+E\+R\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+E\+R\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a684bfcac45ce57b3183b61b88a1e0c76}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a684bfcac45ce57b3183b61b88a1e0c76}} 
+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+P\+A\+P\+E\+R\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+EN@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+EN}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+EN@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+EN}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a713097fcee40b081fe4c5fbd2720efa6}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a713097fcee40b081fe4c5fbd2720efa6}} 
+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+EN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID@{V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a916d07064873043c0f99bde62e6a9c66}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a916d07064873043c0f99bde62e6a9c66}} 
+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+C\+O\+N\+F\+I\+R\+M\+\_\+\+V\+O\+ID&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+RE@{A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+RE}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+RE@{A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+RE}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a25ed92d3ee69377e107c7ffcb1fdc7d7}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a25ed92d3ee69377e107c7ffcb1fdc7d7}} 
+A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+RE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+F\+A\+L\+L\+B\+A\+CK@{S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+F\+A\+L\+L\+B\+A\+CK}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+F\+A\+L\+L\+B\+A\+CK@{S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+F\+A\+L\+L\+B\+A\+CK}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab58d684ab39bdc4e7b8d1fb54339fd4a}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab58d684ab39bdc4e7b8d1fb54339fd4a}} 
+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+F\+A\+L\+L\+B\+A\+CK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+T\+U\+R\+N\+\_\+\+T\+O\+\_\+\+M\+E\+R\+C\+H\+A\+NT@{R\+E\+T\+U\+R\+N\+\_\+\+T\+O\+\_\+\+M\+E\+R\+C\+H\+A\+NT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!R\+E\+T\+U\+R\+N\+\_\+\+T\+O\+\_\+\+M\+E\+R\+C\+H\+A\+NT@{R\+E\+T\+U\+R\+N\+\_\+\+T\+O\+\_\+\+M\+E\+R\+C\+H\+A\+NT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a4b158acaa946265531fd38e86354cfeb}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a4b158acaa946265531fd38e86354cfeb}} 
+R\+E\+T\+U\+R\+N\+\_\+\+T\+O\+\_\+\+M\+E\+R\+C\+H\+A\+NT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+R\+E\+J\+E\+CT@{S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+R\+E\+J\+E\+CT}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+R\+E\+J\+E\+CT@{S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+R\+E\+J\+E\+CT}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab71615445415784cc2de542d0968aec6}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab71615445415784cc2de542d0968aec6}} 
+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+R\+E\+J\+E\+CT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+C\+O\+N\+F\+I\+RM@{A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+C\+O\+N\+F\+I\+RM}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+C\+O\+N\+F\+I\+RM@{A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+C\+O\+N\+F\+I\+RM}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab9bf02eddab05e8a9d9e3bdb9c81610b}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ab9bf02eddab05e8a9d9e3bdb9c81610b}} 
+A\+D\+D\+\_\+\+S\+I\+G\+N\+A\+T\+U\+R\+E\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+C\+O\+N\+F\+I\+RM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{A\+D\+D\+\_\+\+T\+IP@{A\+D\+D\+\_\+\+T\+IP}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!A\+D\+D\+\_\+\+T\+IP@{A\+D\+D\+\_\+\+T\+IP}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a8b31015e36755bf998ffd9a48fb80c6b}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a8b31015e36755bf998ffd9a48fb80c6b}} 
+A\+D\+D\+\_\+\+T\+IP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+C\+E\+I\+P\+T\+\_\+\+O\+P\+T\+I\+O\+NS@{R\+E\+C\+E\+I\+P\+T\+\_\+\+O\+P\+T\+I\+O\+NS}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!R\+E\+C\+E\+I\+P\+T\+\_\+\+O\+P\+T\+I\+O\+NS@{R\+E\+C\+E\+I\+P\+T\+\_\+\+O\+P\+T\+I\+O\+NS}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a9027e7f0e3e9ec7618b77148ac17d010}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a9027e7f0e3e9ec7618b77148ac17d010}} 
+R\+E\+C\+E\+I\+P\+T\+\_\+\+O\+P\+T\+I\+O\+NS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+A\+N\+D\+L\+E\+\_\+\+T\+E\+N\+D\+ER@{H\+A\+N\+D\+L\+E\+\_\+\+T\+E\+N\+D\+ER}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!H\+A\+N\+D\+L\+E\+\_\+\+T\+E\+N\+D\+ER@{H\+A\+N\+D\+L\+E\+\_\+\+T\+E\+N\+D\+ER}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ac262604b72e10018d653835de1dbdc8e}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3ac262604b72e10018d653835de1dbdc8e}} 
+H\+A\+N\+D\+L\+E\+\_\+\+T\+E\+N\+D\+ER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY@{C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY@{C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a5207473f30c2df8539081499267b4b7f}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a5207473f30c2df8539081499267b4b7f}} 
+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+T\+A\+R\+T\+I\+N\+G\+\_\+\+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY@{S\+T\+A\+R\+T\+I\+N\+G\+\_\+\+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!S\+T\+A\+R\+T\+I\+N\+G\+\_\+\+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY@{S\+T\+A\+R\+T\+I\+N\+G\+\_\+\+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY}}}\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1e151a63da765fa1333e0ac9d0747288}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3a1e151a63da765fa1333e0ac9d0747288}} 
+S\+T\+A\+R\+T\+I\+N\+G\+\_\+\+C\+U\+S\+T\+O\+M\+\_\+\+A\+C\+T\+I\+V\+I\+TY&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 24 of file Clover\+Events.\+cs.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a0df5d9dce784a5f5f5a89b4d52e2d307}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a0df5d9dce784a5f5f5a89b4d52e2d307}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Clover\+Device\+Event@{Clover\+Device\+Event}}
+\index{Clover\+Device\+Event@{Clover\+Device\+Event}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Clover\+Device\+Event()}{CloverDeviceEvent()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Clover\+Device\+Event (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 81 of file Clover\+Events.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a7533454f372bda7cca419525f8fd7133}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a7533454f372bda7cca419525f8fd7133}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Clover\+Device\+Event@{Clover\+Device\+Event}}
+\index{Clover\+Device\+Event@{Clover\+Device\+Event}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Clover\+Device\+Event()}{CloverDeviceEvent()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Clover\+Device\+Event (\begin{DoxyParamCaption}\item[{int}]{code,  }\item[{string}]{msg }\end{DoxyParamCaption})}
+
+
+
+Definition at line 85 of file Clover\+Events.\+cs.
+
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_ae3422a3a9dcd7e8c1c7b20c410b24d9f}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_ae3422a3a9dcd7e8c1c7b20c410b24d9f}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Code@{Code}}
+\index{Code@{Code}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Code}{Code}}
+{\footnotesize\ttfamily int com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Code\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 91 of file Clover\+Events.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a5d6c86f9855c46c813acd9563f9c99ab}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a5d6c86f9855c46c813acd9563f9c99ab}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Event\+State@{Event\+State}}
+\index{Event\+State@{Event\+State}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Event\+State}{EventState}}
+{\footnotesize\ttfamily \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_a1c3d109490aaab4a0b8f40ceb990abe3}{Device\+Event\+State} com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Event\+State\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 90 of file Clover\+Events.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_aeeac7f67f737137d1b9ec633b7823d6a}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_aeeac7f67f737137d1b9ec633b7823d6a}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Input\+Options@{Input\+Options}}
+\index{Input\+Options@{Input\+Options}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Input\+Options}{InputOptions}}
+{\footnotesize\ttfamily Input\+Option \mbox{[}$\,$\mbox{]} com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Input\+Options\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 94 of file Clover\+Events.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_aec34f3a982ec78a0a03499f1c309bde3}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_aec34f3a982ec78a0a03499f1c309bde3}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Message@{Message}}
+\index{Message@{Message}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Message}{Message}}
+{\footnotesize\ttfamily string com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Message\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 92 of file Clover\+Events.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_ae31e3c80cfdd87b897ba14d017a21599}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event_ae31e3c80cfdd87b897ba14d017a21599}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}!Options@{Options}}
+\index{Options@{Options}!com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event@{com\+::clover\+::remotepay\+::sdk\+::\+Clover\+Device\+Event}}
+\subsubsection{\texorpdfstring{Options}{Options}}
+{\footnotesize\ttfamily Object \mbox{[}$\,$\mbox{]} com.\+clover.\+remotepay.\+sdk.\+Clover\+Device\+Event.\+Options\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 93 of file Clover\+Events.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\+Clover\+Connector/com/clover/remotepay/sdk/Clover\+Events.\+cs\end{DoxyCompactItemize}

@@ -1,0 +1,192 @@
+\hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request}{}\section{com.\+clover.\+remotepay.\+sdk.\+Sale\+Request Class Reference}
+\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request}\index{com.\+clover.\+remotepay.\+sdk.\+Sale\+Request@{com.\+clover.\+remotepay.\+sdk.\+Sale\+Request}}
+
+
+This request should be used for a Sale call.  
+
+
+Inheritance diagram for com.\+clover.\+remotepay.\+sdk.\+Sale\+Request\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a08796114adcaa9d1a24cfb58232b6ab1}{Sale\+Request} ()
+\end{DoxyCompactItemize}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a02447b96d94225a88f3659fa3a5f1ea4}{Disable\+Cashback}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If true then the cashback feature will not appear during the transaction \end{DoxyCompactList}\item 
+long \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a713d87b7e697d1df24b5821a32e2345e}{Tax\+Amount}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Amount paid in tips \end{DoxyCompactList}\item 
+long \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_aad74927135a360b3b391c96160195dac}{Tippable\+Amount}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Amount against which a tip should be applied \end{DoxyCompactList}\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a3e30025cafc6b7c2a9abcbfb2b5b60ff}{Allow\+Offline\+Payment}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If true then offline payments can be accepted \end{DoxyCompactList}\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a5d441b8615062ba07c082c2392cc37eb}{Approve\+Offline\+Payment\+Without\+Prompt}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If true then offline payments will be approved without a prompt. Currently must be true. \end{DoxyCompactList}\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a1ecc113e6e74c09bcfdb22fde2935693}{Disable\+Tip\+On\+Screen}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+long \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a2c5929123c6d790a089b31cb1f6661fc}{Tip\+Amount}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets the tip amount. \end{DoxyCompactList}\item 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5}{Tip\+Mode} \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a18d23b1e889f262b8586511f983fd54c}{Tip\+Mode}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets the tip mode, which controls when the tip is either designated by the customer, provided by the system as part of the request, or ommitted completely from the transaction \end{DoxyCompactList}\item 
+bool \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a3b9ec1f158eda7a094c83a34a6c2e02a}{Force\+Offline\+Payment}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If true then payments will be placed directly in the offline queue for processing when a valid connection exists to the gateway. This means that payments can be taken offline even with a healthy gateway connection, for purposes of keeping customer interaction with the payment device to the bare minimum. The merchant assumes all risk of potentially declined transactions when this feature is enabled. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+This request should be used for a Sale call. 
+
+
+
+Definition at line 192 of file Transaction\+Beans.\+cs.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a08796114adcaa9d1a24cfb58232b6ab1}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a08796114adcaa9d1a24cfb58232b6ab1}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Sale\+Request@{Sale\+Request}}
+\index{Sale\+Request@{Sale\+Request}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Sale\+Request()}{SaleRequest()}}
+{\footnotesize\ttfamily com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Sale\+Request (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 195 of file Transaction\+Beans.\+cs.
+
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a3e30025cafc6b7c2a9abcbfb2b5b60ff}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a3e30025cafc6b7c2a9abcbfb2b5b60ff}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Allow\+Offline\+Payment@{Allow\+Offline\+Payment}}
+\index{Allow\+Offline\+Payment@{Allow\+Offline\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Allow\+Offline\+Payment}{AllowOfflinePayment}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Allow\+Offline\+Payment\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+If true then offline payments can be accepted 
+
+
+
+Definition at line 217 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a5d441b8615062ba07c082c2392cc37eb}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a5d441b8615062ba07c082c2392cc37eb}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Approve\+Offline\+Payment\+Without\+Prompt@{Approve\+Offline\+Payment\+Without\+Prompt}}
+\index{Approve\+Offline\+Payment\+Without\+Prompt@{Approve\+Offline\+Payment\+Without\+Prompt}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Approve\+Offline\+Payment\+Without\+Prompt}{ApproveOfflinePaymentWithoutPrompt}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Approve\+Offline\+Payment\+Without\+Prompt\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+If true then offline payments will be approved without a prompt. Currently must be true. 
+
+
+
+Definition at line 221 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a02447b96d94225a88f3659fa3a5f1ea4}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a02447b96d94225a88f3659fa3a5f1ea4}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Disable\+Cashback@{Disable\+Cashback}}
+\index{Disable\+Cashback@{Disable\+Cashback}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Disable\+Cashback}{DisableCashback}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Disable\+Cashback\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+If true then the cashback feature will not appear during the transaction 
+
+
+
+Definition at line 205 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a1ecc113e6e74c09bcfdb22fde2935693}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a1ecc113e6e74c09bcfdb22fde2935693}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Disable\+Tip\+On\+Screen@{Disable\+Tip\+On\+Screen}}
+\index{Disable\+Tip\+On\+Screen@{Disable\+Tip\+On\+Screen}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Disable\+Tip\+On\+Screen}{DisableTipOnScreen}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Disable\+Tip\+On\+Screen\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definition at line 223 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a3b9ec1f158eda7a094c83a34a6c2e02a}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a3b9ec1f158eda7a094c83a34a6c2e02a}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Force\+Offline\+Payment@{Force\+Offline\+Payment}}
+\index{Force\+Offline\+Payment@{Force\+Offline\+Payment}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Force\+Offline\+Payment}{ForceOfflinePayment}}
+{\footnotesize\ttfamily bool com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Force\+Offline\+Payment\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+If true then payments will be placed directly in the offline queue for processing when a valid connection exists to the gateway. This means that payments can be taken offline even with a healthy gateway connection, for purposes of keeping customer interaction with the payment device to the bare minimum. The merchant assumes all risk of potentially declined transactions when this feature is enabled. 
+
+
+
+Definition at line 242 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a713d87b7e697d1df24b5821a32e2345e}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a713d87b7e697d1df24b5821a32e2345e}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Tax\+Amount@{Tax\+Amount}}
+\index{Tax\+Amount@{Tax\+Amount}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Tax\+Amount}{TaxAmount}}
+{\footnotesize\ttfamily long com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Tax\+Amount\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Amount paid in tips 
+
+
+
+Definition at line 209 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a2c5929123c6d790a089b31cb1f6661fc}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a2c5929123c6d790a089b31cb1f6661fc}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Tip\+Amount@{Tip\+Amount}}
+\index{Tip\+Amount@{Tip\+Amount}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Tip\+Amount}{TipAmount}}
+{\footnotesize\ttfamily long com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Tip\+Amount\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Gets or sets the tip amount. 
+
+
+
+Definition at line 227 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a18d23b1e889f262b8586511f983fd54c}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_a18d23b1e889f262b8586511f983fd54c}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Tip\+Mode@{Tip\+Mode}}
+\index{Tip\+Mode@{Tip\+Mode}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Tip\+Mode}{TipMode}}
+{\footnotesize\ttfamily \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5}{Tip\+Mode} com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Tip\+Mode\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Gets or sets the tip mode, which controls when the tip is either designated by the customer, provided by the system as part of the request, or ommitted completely from the transaction 
+
+
+
+Definition at line 233 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_aad74927135a360b3b391c96160195dac}\label{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request_aad74927135a360b3b391c96160195dac}} 
+\index{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}!Tippable\+Amount@{Tippable\+Amount}}
+\index{Tippable\+Amount@{Tippable\+Amount}!com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request@{com\+::clover\+::remotepay\+::sdk\+::\+Sale\+Request}}
+\subsubsection{\texorpdfstring{Tippable\+Amount}{TippableAmount}}
+{\footnotesize\ttfamily long com.\+clover.\+remotepay.\+sdk.\+Sale\+Request.\+Tippable\+Amount\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Amount against which a tip should be applied 
+
+
+
+Definition at line 213 of file Transaction\+Beans.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\+Clover\+Connector/com/clover/remotepay/sdk/Transaction\+Beans.\+cs\end{DoxyCompactItemize}

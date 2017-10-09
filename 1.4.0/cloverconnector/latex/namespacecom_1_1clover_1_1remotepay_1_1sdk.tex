@@ -1,0 +1,305 @@
+\hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk}{}\section{com.\+clover.\+remotepay.\+sdk Namespace Reference}
+\label{namespacecom_1_1clover_1_1remotepay_1_1sdk}\index{com.\+clover.\+remotepay.\+sdk@{com.\+clover.\+remotepay.\+sdk}}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_1_1service}{service}
+\end{DoxyCompactItemize}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_accept_payment}{Accept\+Payment}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Accept\+Payment \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_activity_message}{Activity\+Message}
+\begin{DoxyCompactList}\small\item\em base class for messages flowing between P\+OS and Custom\+Activity \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be used for Auth only, but is backward compatible for older implementations. If you are currently using an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} with Is\+Pre\+Auth = true, please change your code to use Pre\+Auth\+Request/\+Pre\+Auth\+Response for all Pre\+Auth transactions. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_response}{Auth\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Auth\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_base_request}{Base\+Request}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_base_response}{Base\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_request}{Capture\+Pre\+Auth\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be used for capturing payments obtained from a Pre\+Auth response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_response}{Capture\+Pre\+Auth\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Capture\+Pre\+Auth\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_request}{Closeout\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be passed in to make a closeout request \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_response}{Closeout\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Closeout\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector}{Clover\+Connector}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_error_event}{Clover\+Device\+Error\+Event}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event}{Clover\+Device\+Event}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_confirm_payment_request}{Confirm\+Payment\+Request}
+\begin{DoxyCompactList}\small\item\em Object passed in to \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_confirm_payment_request}{Confirm\+Payment\+Request}. This must also be used to either accept or reject a payment as requested from the clover device. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_request}{Custom\+Activity\+Request}
+\begin{DoxyCompactList}\small\item\em Request for the Clover device to start a Custom Activity \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_response}{Custom\+Activity\+Response}
+\begin{DoxyCompactList}\small\item\em Response when a custom activity completes on the Clover device when it is completed in a normal flow \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_default_clover_connector_listener}{Default\+Clover\+Connector\+Listener}
+\begin{DoxyCompactList}\small\item\em This is a default implementation of the \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_listener}{I\+Clover\+Connector\+Listener} that can be used for quickly creating example applications by simply overriding the appropriate listener method(s) needed for testing a particular remote call. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_device_info}{Device\+Info}
+\begin{DoxyCompactList}\small\item\em Contains the device information of the connected device \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_display_payment_receipt_options_request}{Display\+Payment\+Receipt\+Options\+Request}
+\begin{DoxyCompactList}\small\item\em The request used to show the receipt options screen \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_external_device_state_data}{External\+Device\+State\+Data}
+\begin{DoxyCompactList}\small\item\em Depending on the current device status, these fields may or may not be populated \end{DoxyCompactList}\item 
+class {\bfseries External\+I\+D\+Util}
+\begin{DoxyCompactList}\small\item\em Used for generating a unique string of the length specified Uses the linear congruential generator (L\+CG) algorithm in conjunction with the .N\+ET R\+N\+G\+Crypto\+Service\+Provider class. \end{DoxyCompactList}\item 
+interface \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector}{I\+Clover\+Connector}
+\begin{DoxyCompactList}\small\item\em Interface to define the available methods to send requests to a connected Clover device. \end{DoxyCompactList}\item 
+interface \hyperlink{interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_listener}{I\+Clover\+Connector\+Listener}
+\begin{DoxyCompactList}\small\item\em These are the methods to implement for intercepting messages that are sent from a Clover device. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_manual_refund_request}{Manual\+Refund\+Request}
+\begin{DoxyCompactList}\small\item\em This should be used to request a manual refund via the Manual\+Refund method \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_manual_refund_response}{Manual\+Refund\+Response}
+\begin{DoxyCompactList}\small\item\em The object passed in to On\+Manual\+Refund\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_merchant_info}{Merchant\+Info}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_message_from_activity}{Message\+From\+Activity}
+\begin{DoxyCompactList}\small\item\em class for sending message from a Custom\+Activity to P\+OS \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_message_to_activity}{Message\+To\+Activity}
+\begin{DoxyCompactList}\small\item\em class for sending messages to a Custom\+Activity from P\+OS \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_open_cash_drawer_request}{Open\+Cash\+Drawer\+Request}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_payment_response}{Payment\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_pre_auth_request}{Pre\+Auth\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be used for Pre\+Auth transactions. If you are currently using an \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request}{Auth\+Request} with Is\+Pre\+Auth = true, please change your code to use Pre\+Auth\+Request/\+Pre\+Auth\+Response for all Pre\+Auth transactions. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_pre_auth_response}{Pre\+Auth\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Pre\+Auth\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_job_status_request}{Print\+Job\+Status\+Request}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_job_status_response}{Print\+Job\+Status\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_manual_refund_decline_receipt_message}{Print\+Manual\+Refund\+Decline\+Receipt\+Message}
+\begin{DoxyCompactList}\small\item\em Callback to request the P\+OS print a Manual\+Refund declined receipt \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_manual_refund_receipt_message}{Print\+Manual\+Refund\+Receipt\+Message}
+\begin{DoxyCompactList}\small\item\em Callback to request the P\+OS print a receipt for a Manual\+Refund /summary$>$ \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_payment_decline_receipt_message}{Print\+Payment\+Decline\+Receipt\+Message}
+\begin{DoxyCompactList}\small\item\em Callback to the P\+OS to request a payment declined receipt \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_payment_merchant_copy_receipt_message}{Print\+Payment\+Merchant\+Copy\+Receipt\+Message}
+\begin{DoxyCompactList}\small\item\em Callback to the P\+OS to request a merchant payment receipt be printed \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_payment_receipt_message}{Print\+Payment\+Receipt\+Message}
+\begin{DoxyCompactList}\small\item\em Callback to the P\+OS to request a payment receipt be printed \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_refund_payment_receipt_message}{Print\+Refund\+Payment\+Receipt\+Message}
+\begin{DoxyCompactList}\small\item\em Callback to the P\+OS to request a payment refund receipt be printed \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_print_request}{Print\+Request}
+\begin{DoxyCompactList}\small\item\em This should be used for a print call. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_read_card_data_request}{Read\+Card\+Data\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be passed to initiate retrieval of card data \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_read_card_data_response}{Read\+Card\+Data\+Response}
+\begin{DoxyCompactList}\small\item\em Retrieve Card Data \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_refund_payment_request}{Refund\+Payment\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be used to make a payment request using the Refund\+Payment method \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_refund_payment_response}{Refund\+Payment\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Refund\+Payment\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_reject_payment}{Reject\+Payment}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Reject\+Payment \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_reset_device_response}{Reset\+Device\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_device_status_response}{Retrieve\+Device\+Status\+Response}
+\begin{DoxyCompactList}\small\item\em response to Retrieve\+Device\+Status call \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_payment_response}{Retrieve\+Payment\+Response}
+\begin{DoxyCompactList}\small\item\em response to Retrieve\+Payment call \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_pending_payments_response}{Retrieve\+Pending\+Payments\+Response}
+\begin{DoxyCompactList}\small\item\em The response object for offline payments that have not been processed by the Clover device \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_printers_response}{Retrieve\+Printers\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request}{Sale\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be used for a Sale call. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_response}{Sale\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to an On\+Sale\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_s_d_k_info}{S\+D\+K\+Info}
+\begin{DoxyCompactList}\small\item\em Descriptive information about this S\+DK \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_added}{Tip\+Added}
+\begin{DoxyCompactList}\small\item\em Pased in to On\+Tip\+Added, when an on-\/screen tip is selected \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_adjust_auth_request}{Tip\+Adjust\+Auth\+Request}
+\begin{DoxyCompactList}\small\item\em This request should be used to make a request to adjust the tip amount on a payment obtained from an Auth request or payment after a Capture\+Pre\+Auth request \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_adjust_auth_response}{Tip\+Adjust\+Auth\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Tip\+Adjust\+Auth\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_transaction_request}{Transaction\+Request}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_transaction_start_response}{Transaction\+Start\+Response}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_type_info}{Type\+Info}
+\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_vault_card_response}{Vault\+Card\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to an On\+Vault\+Card\+Response \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_verify_signature_request}{Verify\+Signature\+Request}
+\begin{DoxyCompactList}\small\item\em Object passed in to \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_verify_signature_request}{Verify\+Signature\+Request}. This must also be used to either accept or reject a signature as requested from the clover device. \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_void_payment_request}{Void\+Payment\+Request}
+\begin{DoxyCompactList}\small\item\em Object passed in to request the voiding of a payment \end{DoxyCompactList}\item 
+class \hyperlink{classcom_1_1clover_1_1remotepay_1_1sdk_1_1_void_payment_response}{Void\+Payment\+Response}
+\begin{DoxyCompactList}\small\item\em Object passed in to On\+Void\+Payment\+Resopnse \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3}{Response\+Code} \{ \newline
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3ad0749aaba8b833466dfcbb0428e4f89c}{Response\+Code.\+S\+U\+C\+C\+E\+SS}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3ac2759effffc94bb9acc71d69fe3e8a1f}{Response\+Code.\+F\+A\+IL}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3a40aa75f8e8cfdf7b660c5620e953229f}{Response\+Code.\+U\+N\+S\+U\+P\+P\+O\+R\+T\+ED}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3a2027c027133e22c8929e2874dc44dd36}{Response\+Code.\+C\+A\+N\+C\+EL}, 
+\newline
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3abb1ca97ec761fc37101737ba0aa2e7c5}{Response\+Code.\+E\+R\+R\+OR}
+ \}
+\item 
+enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5}{Tip\+Mode} \{ \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5acf5b6c7b0f06e3531889f43936c98a60}{Tip\+Mode.\+T\+I\+P\+\_\+\+P\+R\+O\+V\+I\+D\+ED}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5a72ad789ccd88111ee510a11dfc4e7652}{Tip\+Mode.\+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+B\+E\+F\+O\+R\+E\+\_\+\+P\+A\+Y\+M\+E\+NT}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5ae65c355e3df9b2537c394c245629175b}{Tip\+Mode.\+N\+O\+\_\+\+T\+IP}
+ \}
+\item 
+enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7af}{Print\+Job\+Status} \{ \newline
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afaeae92fb876111864092d0921b943f100}{Print\+Job\+Status.\+I\+N\+\_\+\+Q\+U\+E\+UE}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa80740a1b51505a3f7697e6c4e532ba81}{Print\+Job\+Status.\+P\+R\+I\+N\+T\+I\+NG}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa2ba22e58ca17bb728d522bba36cf8350}{Print\+Job\+Status.\+D\+O\+NE}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afabb1ca97ec761fc37101737ba0aa2e7c5}{Print\+Job\+Status.\+E\+R\+R\+OR}, 
+\newline
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa696b031073e74bf2cb98e5ef201d4aa3}{Print\+Job\+Status.\+U\+N\+K\+N\+O\+WN}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa8c02547a8a3b02382bac3557bcb2280d}{Print\+Job\+Status.\+N\+O\+T\+\_\+\+F\+O\+U\+ND}
+ \}
+\item 
+enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034}{External\+Device\+State} \{ \newline
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a696b031073e74bf2cb98e5ef201d4aa3}{External\+Device\+State.\+U\+N\+K\+N\+O\+WN}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034aa5daf7f2ebbba4975d61dab1c40188c7}{External\+Device\+State.\+I\+D\+LE}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a802706a9238e2928077f97736854bad4}{External\+Device\+State.\+B\+U\+SY}, 
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034af65801313de012106fc2ab541d03598a}{External\+Device\+State.\+W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS}, 
+\newline
+\hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a2735145cbf7e8a1d6c7ff4305140d4a1}{External\+Device\+State.\+W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER}
+ \}\begin{DoxyCompactList}\small\item\em enum of current states of the Clover device. I\+D\+LE -\/ device can handle new requests. Sale, Custom\+Activity, etc. B\+U\+SY -\/ device will not response to new requests W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS -\/ device is waiting for a response from the P\+OS W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER -\/ device is waiting for the customer to take some action \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034}} 
+\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!External\+Device\+State@{External\+Device\+State}}
+\index{External\+Device\+State@{External\+Device\+State}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}
+\subsubsection{\texorpdfstring{External\+Device\+State}{ExternalDeviceState}}
+{\footnotesize\ttfamily enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034}{com.\+clover.\+remotepay.\+sdk.\+External\+Device\+State}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+enum of current states of the Clover device. I\+D\+LE -\/ device can handle new requests. Sale, Custom\+Activity, etc. B\+U\+SY -\/ device will not response to new requests W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS -\/ device is waiting for a response from the P\+OS W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER -\/ device is waiting for the customer to take some action 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{U\+N\+K\+N\+O\+WN@{U\+N\+K\+N\+O\+WN}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!U\+N\+K\+N\+O\+WN@{U\+N\+K\+N\+O\+WN}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a696b031073e74bf2cb98e5ef201d4aa3}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a696b031073e74bf2cb98e5ef201d4aa3}} 
+U\+N\+K\+N\+O\+WN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+D\+LE@{I\+D\+LE}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!I\+D\+LE@{I\+D\+LE}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034aa5daf7f2ebbba4975d61dab1c40188c7}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034aa5daf7f2ebbba4975d61dab1c40188c7}} 
+I\+D\+LE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{B\+U\+SY@{B\+U\+SY}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!B\+U\+SY@{B\+U\+SY}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a802706a9238e2928077f97736854bad4}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a802706a9238e2928077f97736854bad4}} 
+B\+U\+SY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS@{W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS@{W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034af65801313de012106fc2ab541d03598a}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034af65801313de012106fc2ab541d03598a}} 
+W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+P\+OS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER@{W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER@{W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a2735145cbf7e8a1d6c7ff4305140d4a1}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a9d5838a91e2711306ad561d104fed034a2735145cbf7e8a1d6c7ff4305140d4a1}} 
+W\+A\+I\+T\+I\+N\+G\+\_\+\+F\+O\+R\+\_\+\+C\+U\+S\+T\+O\+M\+ER&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 804 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7af}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7af}} 
+\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!Print\+Job\+Status@{Print\+Job\+Status}}
+\index{Print\+Job\+Status@{Print\+Job\+Status}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}
+\subsubsection{\texorpdfstring{Print\+Job\+Status}{PrintJobStatus}}
+{\footnotesize\ttfamily enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7af}{com.\+clover.\+remotepay.\+sdk.\+Print\+Job\+Status}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+N\+\_\+\+Q\+U\+E\+UE@{I\+N\+\_\+\+Q\+U\+E\+UE}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!I\+N\+\_\+\+Q\+U\+E\+UE@{I\+N\+\_\+\+Q\+U\+E\+UE}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afaeae92fb876111864092d0921b943f100}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afaeae92fb876111864092d0921b943f100}} 
+I\+N\+\_\+\+Q\+U\+E\+UE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{P\+R\+I\+N\+T\+I\+NG@{P\+R\+I\+N\+T\+I\+NG}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!P\+R\+I\+N\+T\+I\+NG@{P\+R\+I\+N\+T\+I\+NG}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa80740a1b51505a3f7697e6c4e532ba81}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa80740a1b51505a3f7697e6c4e532ba81}} 
+P\+R\+I\+N\+T\+I\+NG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{D\+O\+NE@{D\+O\+NE}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!D\+O\+NE@{D\+O\+NE}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa2ba22e58ca17bb728d522bba36cf8350}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa2ba22e58ca17bb728d522bba36cf8350}} 
+D\+O\+NE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{E\+R\+R\+OR@{E\+R\+R\+OR}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!E\+R\+R\+OR@{E\+R\+R\+OR}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afabb1ca97ec761fc37101737ba0aa2e7c5}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afabb1ca97ec761fc37101737ba0aa2e7c5}} 
+E\+R\+R\+OR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{U\+N\+K\+N\+O\+WN@{U\+N\+K\+N\+O\+WN}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!U\+N\+K\+N\+O\+WN@{U\+N\+K\+N\+O\+WN}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa696b031073e74bf2cb98e5ef201d4aa3}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa696b031073e74bf2cb98e5ef201d4aa3}} 
+U\+N\+K\+N\+O\+WN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{N\+O\+T\+\_\+\+F\+O\+U\+ND@{N\+O\+T\+\_\+\+F\+O\+U\+ND}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!N\+O\+T\+\_\+\+F\+O\+U\+ND@{N\+O\+T\+\_\+\+F\+O\+U\+ND}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa8c02547a8a3b02382bac3557bcb2280d}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a7f035b9087c646b0eebf6280d429f7afa8c02547a8a3b02382bac3557bcb2280d}} 
+N\+O\+T\+\_\+\+F\+O\+U\+ND&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 588 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3}} 
+\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!Response\+Code@{Response\+Code}}
+\index{Response\+Code@{Response\+Code}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}
+\subsubsection{\texorpdfstring{Response\+Code}{ResponseCode}}
+{\footnotesize\ttfamily enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3}{com.\+clover.\+remotepay.\+sdk.\+Response\+Code}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+U\+C\+C\+E\+SS@{S\+U\+C\+C\+E\+SS}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!S\+U\+C\+C\+E\+SS@{S\+U\+C\+C\+E\+SS}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3ad0749aaba8b833466dfcbb0428e4f89c}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3ad0749aaba8b833466dfcbb0428e4f89c}} 
+S\+U\+C\+C\+E\+SS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{F\+A\+IL@{F\+A\+IL}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!F\+A\+IL@{F\+A\+IL}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3ac2759effffc94bb9acc71d69fe3e8a1f}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3ac2759effffc94bb9acc71d69fe3e8a1f}} 
+F\+A\+IL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{U\+N\+S\+U\+P\+P\+O\+R\+T\+ED@{U\+N\+S\+U\+P\+P\+O\+R\+T\+ED}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!U\+N\+S\+U\+P\+P\+O\+R\+T\+ED@{U\+N\+S\+U\+P\+P\+O\+R\+T\+ED}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3a40aa75f8e8cfdf7b660c5620e953229f}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3a40aa75f8e8cfdf7b660c5620e953229f}} 
+U\+N\+S\+U\+P\+P\+O\+R\+T\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+A\+N\+C\+EL@{C\+A\+N\+C\+EL}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!C\+A\+N\+C\+EL@{C\+A\+N\+C\+EL}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3a2027c027133e22c8929e2874dc44dd36}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3a2027c027133e22c8929e2874dc44dd36}} 
+C\+A\+N\+C\+EL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{E\+R\+R\+OR@{E\+R\+R\+OR}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!E\+R\+R\+OR@{E\+R\+R\+OR}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3abb1ca97ec761fc37101737ba0aa2e7c5}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_ad35c0938efdc4d31c4a040db886ad0f3abb1ca97ec761fc37101737ba0aa2e7c5}} 
+E\+R\+R\+OR&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 39 of file Transaction\+Beans.\+cs.
+
+\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5}} 
+\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!Tip\+Mode@{Tip\+Mode}}
+\index{Tip\+Mode@{Tip\+Mode}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}
+\subsubsection{\texorpdfstring{Tip\+Mode}{TipMode}}
+{\footnotesize\ttfamily enum \hyperlink{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5}{com.\+clover.\+remotepay.\+sdk.\+Tip\+Mode}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{T\+I\+P\+\_\+\+P\+R\+O\+V\+I\+D\+ED@{T\+I\+P\+\_\+\+P\+R\+O\+V\+I\+D\+ED}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!T\+I\+P\+\_\+\+P\+R\+O\+V\+I\+D\+ED@{T\+I\+P\+\_\+\+P\+R\+O\+V\+I\+D\+ED}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5acf5b6c7b0f06e3531889f43936c98a60}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5acf5b6c7b0f06e3531889f43936c98a60}} 
+T\+I\+P\+\_\+\+P\+R\+O\+V\+I\+D\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+B\+E\+F\+O\+R\+E\+\_\+\+P\+A\+Y\+M\+E\+NT@{O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+B\+E\+F\+O\+R\+E\+\_\+\+P\+A\+Y\+M\+E\+NT}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+B\+E\+F\+O\+R\+E\+\_\+\+P\+A\+Y\+M\+E\+NT@{O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+B\+E\+F\+O\+R\+E\+\_\+\+P\+A\+Y\+M\+E\+NT}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5a72ad789ccd88111ee510a11dfc4e7652}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5a72ad789ccd88111ee510a11dfc4e7652}} 
+O\+N\+\_\+\+S\+C\+R\+E\+E\+N\+\_\+\+B\+E\+F\+O\+R\+E\+\_\+\+P\+A\+Y\+M\+E\+NT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{N\+O\+\_\+\+T\+IP@{N\+O\+\_\+\+T\+IP}!com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}}\index{com\+::clover\+::remotepay\+::sdk@{com\+::clover\+::remotepay\+::sdk}!N\+O\+\_\+\+T\+IP@{N\+O\+\_\+\+T\+IP}}}\mbox{\Hypertarget{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5ae65c355e3df9b2537c394c245629175b}\label{namespacecom_1_1clover_1_1remotepay_1_1sdk_a3d5c6c8529ad6bcdc5a4fd5224361ac5ae65c355e3df9b2537c394c245629175b}} 
+N\+O\+\_\+\+T\+IP&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 44 of file Transaction\+Beans.\+cs.
+
