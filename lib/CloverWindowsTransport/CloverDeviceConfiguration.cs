@@ -27,5 +27,6 @@ namespace com.clover.remotepay.transport
         int getPingSleepSeconds();
         string getRemoteApplicationID();
         CloverTransport getCloverTransport();
+        int getMaxMessageCharacters();
     }
 }

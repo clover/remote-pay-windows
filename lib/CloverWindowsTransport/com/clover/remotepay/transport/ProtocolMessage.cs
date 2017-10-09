@@ -18,6 +18,7 @@ using com.clover.remotepay.data;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.customers;
+using com.clover.sdk.v3.printer;
 using System;
 using System.Collections.Generic;
 
@@ -129,7 +130,7 @@ namespace com.clover.remotepay.transport
     public class TextPrintMessage : Message
     {
         public List<string> textLines { get; set; }
-
+        public string externalPrintJobId { get; set; }
         public TextPrintMessage()
             : base(Methods.PRINT_TEXT)
         {
@@ -145,6 +146,8 @@ namespace com.clover.remotepay.transport
 
         public string png { get; set; }
         public string urlString { get; set; }
+        public string externalPrintJobId { get; set; }
+        public Printer printer { get; set; }
     }
 
     public class FinishCancelMessage : Message
@@ -370,7 +373,7 @@ namespace com.clover.remotepay.transport
         /// <summary>
         /// Detail code if an error is encountered
         /// </summary>
-        public ResponseReasonCode? reason { get; set; }
+        public ResponseReasonCode reason { get; set; }
         /// <summary>
         /// Detail message
         /// </summary>
@@ -481,13 +484,20 @@ namespace com.clover.remotepay.transport
     public class OpenCashDrawerMessage : Message
     {
         public String reason { get; set; }
+        public Printer printer { get; set; }
 
         public OpenCashDrawerMessage() : base(Methods.OPEN_CASH_DRAWER)
         {
 
         }
 
-        public OpenCashDrawerMessage(String reaseon) : base(Methods.OPEN_CASH_DRAWER)
+        public OpenCashDrawerMessage(String reason, Printer p) : base(Methods.OPEN_CASH_DRAWER)
+        {
+            this.reason = reason;
+            this.printer = p;
+        }
+
+        public OpenCashDrawerMessage(String reason) : base(Methods.OPEN_CASH_DRAWER)
         {
             this.reason = reason;
         }
@@ -759,6 +769,59 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class RetrievePrintersRequest
+    {
+        public PrintCategory category;
+
+        public RetrievePrintersRequest() { }
+
+        public RetrievePrintersRequest(PrintCategory category)
+        {
+            this.category = category;
+        }
+    }
+
+    public enum PrintCategory
+    {
+        NONE,
+        ORDER,
+        RECEIPT
+    }
+
+    public class RetrievePrintersRequestMessage : Message
+    {
+       public PrintCategory category { get; set; }
+        public RetrievePrintersRequestMessage() : base(Methods.GET_PRINTERS_REQUEST) { }
+
+    }
+
+    public class RetrievePrintersResponseMessage : Message
+    {
+        public List<Printer> printers = new List<Printer>();
+        //public Printer printer;
+        public RetrievePrintersResponseMessage() : base(Methods.GET_PRINTERS_RESPONSE) { }
+
+        public RetrievePrintersResponseMessage(Printer printer) : base(Methods.GET_PRINTERS_RESPONSE)
+        {
+            printers.Add(printer);
+            
+        }
+    }
+
+    public class PrintJobStatusResponseMessage : Message
+    {
+        public String externalPrintJobId;
+        public String status;
+
+        public PrintJobStatusResponseMessage() : base(Methods.PRINT_JOB_STATUS_RESPONSE) { }
+
+    }
+
+
+    
+
+    
+
     /// <summary>
     /// request to retrieve a payment associated with the provided externalPaymentId
     /// </summary>
@@ -773,6 +836,18 @@ namespace com.clover.remotepay.transport
         public RetrievePaymentRequest(String externalPaymentId)
         {
             this.externalPaymentId = externalPaymentId;
+        }
+    }
+
+    public class PrintJobStatusRequestMessage : Message
+    {
+        public String externalPrintJobId;
+
+        public PrintJobStatusRequestMessage() : base(Methods.PRINT_JOB_STATUS_REQUEST) { }
+
+        public PrintJobStatusRequestMessage(String printRequestId) : base(Methods.PRINT_JOB_STATUS_REQUEST)
+        {
+            this.externalPrintJobId = printRequestId;
         }
     }
 
@@ -984,6 +1059,12 @@ namespace com.clover.remotepay.transport
         public string packageName { get; set; }
         public string remoteSourceSDK { get; set; }
         public string remoteApplicationID { get; set; }
+        public int version { get; set; }
+        public String attachment { get; set; }
+        public String attachmentUri { get; set; }
+        public String attachmentEncoding { get; set; }
+        public Boolean? lastFragment;
+        public int? fragmentIndex;
 
         public static RemoteMessage createMessage(Methods meth, MessageTypes msgType, Message payload, string packageName, string remoteSourceSDK, string remoteApplicationID)
         {

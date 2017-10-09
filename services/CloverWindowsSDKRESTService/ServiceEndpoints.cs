@@ -23,6 +23,7 @@ using Newtonsoft.Json.Converters;
 using System.IO;
 using com.clover.sdk.v3.payments;
 using System;
+using System.Drawing;
 
 public sealed class ServiceEndpoints : RESTResource
 {
@@ -358,6 +359,46 @@ public sealed class ServiceEndpoints : RESTResource
 
     }
 
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Print$")]
+    public void Print(HttpListenerContext context)
+    {
+        try
+        {
+
+            PrintRequest64 message = ParseRequest<PrintRequest64>(context);
+            PrintRequest request = null;
+            if (message != null)
+            {
+                if(message.base64strings.Count > 0)
+                {
+                    
+                    byte[] imgBytes = Convert.FromBase64String(message.base64strings[0]);
+                    MemoryStream ms = new MemoryStream();
+                    ms.Write(imgBytes, 0, imgBytes.Length);
+                    Bitmap bp = new Bitmap(ms);
+                    ms.Close();
+                    request = new PrintRequest(bp, message.externalPrintJobId, message.printDeviceId);
+                }
+                else if(message.imgUrls.Count > 0)
+                {
+                    request = new PrintRequest(message.imgUrls[0], message.externalPrintJobId, message.printDeviceId);
+                }
+                else if(message.textLines.Count > 0)
+                {
+                    request = new PrintRequest(message.textLines, message.externalPrintJobId, message.printDeviceId);
+                }
+                GetServer.CloverConnector.Print(request);
+                this.SendTextResponse(context, "");
+            }
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+    }
+
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintImageFromURL$")]
     public void PrintImageFromURL(HttpListenerContext context)
     {
@@ -401,9 +442,9 @@ public sealed class ServiceEndpoints : RESTResource
     public void OpenCashDrawer(HttpListenerContext context)
     {
         try
-        {
-            OpenCashDrawer message = ParseRequest<OpenCashDrawer>(context);
-            GetServer.CloverConnector.OpenCashDrawer(message.Reason);
+        {   
+            OpenCashDrawerRequest message = ParseRequest<OpenCashDrawerRequest>(context);
+            GetServer.CloverConnector.OpenCashDrawer(message);
             this.SendTextResponse(context, "");
         }
         catch (Exception e)
@@ -595,6 +636,39 @@ public sealed class ServiceEndpoints : RESTResource
         {
             RetrievePaymentRequest message = ParseRequest<RetrievePaymentRequest>(context);
             GetServer.CloverConnector.RetrievePayment(message);
+            this.SendTextResponse(context, "");
+        }
+        catch (Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrievePrinters")]
+    public void RetrievePrinters(HttpListenerContext context)
+    {
+        try
+        {
+            RetrievePrintersRequest message = ParseRequest<RetrievePrintersRequest>(context);
+            GetServer.CloverConnector.RetrievePrinters(message);
+            this.SendTextResponse(context, "");
+        } catch(Exception e)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.StatusDescription = e.Message;
+            this.SendTextResponse(context, "error processing request");
+        }
+    }
+
+    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/RetrievePrintJobStatus")]
+    public void PrintJobStatus(HttpListenerContext context)
+    {
+        try
+        {
+            PrintJobStatusRequest message = ParseRequest<PrintJobStatusRequest>(context);
+            GetServer.CloverConnector.RetrievePrintJobStatus(message);
             this.SendTextResponse(context, "");
         }
         catch (Exception e)

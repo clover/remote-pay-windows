@@ -26,6 +26,7 @@ using System.IO;
 using com.clover.remote.order;
 using com.clover.sdk.v3.payments;
 using Newtonsoft.Json;
+using com.clover.sdk.v3.printer;
 
 namespace CloverExamplePOS
 {
@@ -39,11 +40,14 @@ namespace CloverExamplePOS
         POSLineItem SelectedLineItem = null;
         bool Connected = false;
         RatingsListForm rlForm;
-
+        public Printer selectedPrinter = new Printer();
         AlertForm pairingForm;
-
+        private int buttonPressed = 0;
+        public static string lastPrintJobId = "";
         private Dictionary<string, object> TempObjectMap = new Dictionary<string, object>();
-
+        public MenuItem textPrintersMenuItem;
+        public MenuItem imagePrintersMenuItem;
+        public MenuItem cashDrawerPrintersMenuItem;
         string OriginalFormTitle;
         enum ClientTab { ORDER, ORDERLIST, REFUND, TEST }
         private Boolean _suspendUpdateOrderUI = false;
@@ -217,6 +221,83 @@ namespace CloverExamplePOS
 
 
 
+            //PrintTextButton
+            PrintTextButton.ContextMenu = new ContextMenu();
+            menuItem = new MenuItem("Default");
+            menuItem.Enabled = true;
+            menuItem.Click += delegate (object sen, EventArgs args)
+            {
+                selectedPrinter = null;
+                PrintTextMenu_Click();
+            };
+            DeviceStatusButton.ContextMenu.MenuItems.Add(menuItem);
+            textPrintersMenuItem = new MenuItem("Printers");
+            textPrintersMenuItem.Enabled = true;
+            PrintTextButton.ContextMenu.MenuItems.Add(menuItem);
+            PrintTextButton.ContextMenu.MenuItems.Add(textPrintersMenuItem);
+            PrintTextButton.ContextMenu.Popup += delegate (object sen, EventArgs args)
+            {
+                buttonPressed = 1;
+                RetrievePrintersRequest request = new RetrievePrintersRequest();
+                cloverConnector.RetrievePrinters(request);
+            };
+            PrintTextButton.Click = new List<EventHandler>();
+            PrintTextButton.Click.Add(PrintTextBtn_Click);
+            
+
+
+
+
+            //PrintImageButton
+            PrintImageButton.ContextMenu = new ContextMenu();
+            PrintImageButton.ContextMenu.Popup += delegate (object sen, EventArgs args)
+            {
+                buttonPressed = 2;
+                RetrievePrintersRequest request = new RetrievePrintersRequest();
+                cloverConnector.RetrievePrinters(request);
+            };
+            menuItem = new MenuItem("Default");
+            menuItem.Click += delegate (object sen, EventArgs args)
+            {
+                selectedPrinter = null;
+                PrintImageMenu_Click();
+            };
+            menuItem.Enabled = true;
+            menuItem.Index = 0;
+            PrintImageButton.ContextMenu.MenuItems.Add(menuItem);
+            imagePrintersMenuItem = new MenuItem("Printers");
+            imagePrintersMenuItem.Enabled = true;
+            imagePrintersMenuItem.Index = 1;
+            PrintImageButton.ContextMenu.MenuItems.Add(imagePrintersMenuItem);
+            PrintImageButton.Click = new List<EventHandler>();
+            PrintImageButton.Click.Add(PrintImageButton_Click);
+
+
+            OpenCashDrawerButton.ContextMenu = new ContextMenu();
+            menuItem = new MenuItem("Default");
+            menuItem.Click += delegate (object sen, EventArgs args)
+            {
+                selectedPrinter = null;
+                OpenCashDrawerMenu_Click();
+            };
+            menuItem.Enabled = true;
+            menuItem.Index = 0;
+            OpenCashDrawerButton.ContextMenu.MenuItems.Add(menuItem);
+            cashDrawerPrintersMenuItem = new MenuItem("Printers");
+            cashDrawerPrintersMenuItem.Enabled = true;
+            cashDrawerPrintersMenuItem.Index = 1;
+            OpenCashDrawerButton.ContextMenu.MenuItems.Add(cashDrawerPrintersMenuItem);
+            
+            OpenCashDrawerButton.ContextMenu.Popup += delegate (object sen, EventArgs args)
+            {
+                buttonPressed = 3;
+                RetrievePrintersRequest request = new RetrievePrintersRequest();
+                cloverConnector.RetrievePrinters(request);
+            };
+            OpenCashDrawerButton.Click = new List<EventHandler>();
+            OpenCashDrawerButton.Click.Add(OpenCashDrawerButton_Click);
+            
+
             foreach (POSItem item in Store.AvailableItems)
             {
                 StoreItem si = new StoreItem();
@@ -236,6 +317,64 @@ namespace CloverExamplePOS
             }
             SubscribeToStoreChanges(Store);
             NewOrder(0);
+        }
+
+        private void PrintTextMenu_Click()
+        {
+            List<string> messages = new List<string>();
+            messages.Add(PrintTextBox.Text);
+            lastPrintJobId = ExternalIDUtil.GenerateRandomString(16);
+            PrintRequest req = new PrintRequest(messages, lastPrintJobId, null);
+            if (selectedPrinter != null)
+            {
+                req.printDeviceId = selectedPrinter.id;
+            }
+            cloverConnector.Print(req);
+        }
+
+        private void OpenCashDrawerMenu_Click()
+        {
+            OpenCashDrawerRequest req = new OpenCashDrawerRequest("Test");
+            if (selectedPrinter != null)
+            {
+                req.printerId = selectedPrinter.id;
+            }
+            cloverConnector.OpenCashDrawer(req);
+        }
+
+        private void PrintImageMenu_Click()
+        {
+            if (PrintURLTextBox.Text != null && PrintURLTextBox.Text != "")
+            {
+                try
+                {
+                    PrintImage.Load(PrintURLTextBox.Text);
+                }
+                catch (Exception ex)
+                {
+                    AlertForm.Show(this, "Invalid Image", ex.Message);
+                    return;
+                }
+                lastPrintJobId = ExternalIDUtil.GenerateRandomString(16);
+                PrintRequest req = new PrintRequest(PrintURLTextBox.Text, lastPrintJobId, null);
+                if(selectedPrinter != null)
+                {
+                    req.printDeviceId = selectedPrinter.id;
+                }
+                cloverConnector.Print(req);
+
+            }
+            else if (PrintImage.Image != null && PrintImage.Image is Bitmap)
+            {
+                lastPrintJobId = ExternalIDUtil.GenerateRandomString(16);
+                PrintRequest req = new PrintRequest((Bitmap)PrintImage.Image, lastPrintJobId, null);
+                cloverConnector.Print(req);
+               
+            }
+            else
+            {
+                AlertForm.Show(this, "Invalid Image", "Invalid Image");
+            }
         }
 
         private ClientTab GetCurrentTab()
@@ -1501,8 +1640,6 @@ namespace CloverExamplePOS
         }
 
 
-
-
         ////////////////// CloverSignatureListener Methods //////////////////////
         /// <summary>
         /// Handle a request from the Clover device to verify a signature
@@ -2158,7 +2295,7 @@ public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
             ContactlessCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS) == CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
         }
 
-        private void PrintTextButton_Click(object sender, EventArgs e)
+        private void PrintTextBtn_Click(object sender, EventArgs e)
         {
             List<string> messages = new List<string>();
             messages.Add(PrintTextBox.Text);
@@ -2204,6 +2341,7 @@ public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
                     return;
                 }
                 cloverConnector.PrintImageFromURL(PrintURLTextBox.Text);
+                
             }
             else if (PrintImage.Image != null && PrintImage.Image is Bitmap)
             {
@@ -2218,6 +2356,7 @@ public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
         private void DisplayMessageButton_Click(object sender, EventArgs e)
         {
             cloverConnector.ShowMessage(DisplayMessageTextbox.Text);
+            
         }
 
         private void ShowWelcomeButton_Click(object sender, EventArgs e)
@@ -2245,6 +2384,22 @@ public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
         private void OpenCashDrawerButton_Click(object sender, EventArgs e)
         {
             cloverConnector.OpenCashDrawer("Test");
+        }
+
+        private void RetrievePrintJobStatusButton_Click(object sender, EventArgs e)
+        {
+            PrintJobStatusRequest req = new PrintJobStatusRequest();
+            if(RetrievePrintJobStatusText.Text != "")
+            {
+                req.printRequestId = RetrievePrintJobStatusText.Text;
+            }
+            else
+            {
+                RetrievePrintJobStatusText.Text = lastPrintJobId;
+                req.printRequestId = lastPrintJobId;
+            }
+            
+            cloverConnector.RetrievePrintJobStatus(req);
         }
 
         private void CardDataButton_Click(object sender, EventArgs e)
@@ -2677,6 +2832,120 @@ public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
         private void disableReceiptOptionsCB_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        public void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            if(response.status != PrintJobStatus.PRINTING && response.status != PrintJobStatus.IN_QUEUE)
+            {
+                uiThread.Send(delegate (object state)
+                {
+                    AlertForm.Show(this, "Print Job Status", "Print Job Status: " + response.status + "\n" + "Print Request ID: " + response.printRequestId);
+                }, null);
+            }
+
+            
+        }
+
+        public void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            int numberOfPrinters = response.printers.Count;
+
+            if (buttonPressed == 1)
+            {
+
+                PopulatePrintTextDropDown(numberOfPrinters, response.printers);
+            }
+            else if (buttonPressed == 2)
+            {
+                PopulatePrintImageDropDown(numberOfPrinters, response.printers);
+            }
+            else if (buttonPressed == 3)
+            {
+                PopulateOpenCashDrawerDropDown(numberOfPrinters, response.printers);
+            }
+        }
+
+        private void PopulatePrintTextDropDown(int numberOfPrinters, List<Printer> printers)
+        {
+            
+            MenuItem menuItem;
+            if(numberOfPrinters != 0)
+            {
+                textPrintersMenuItem.MenuItems.Clear();
+                for (int i = 0; i < numberOfPrinters; i++)
+                {
+                    Printer printer = printers[i];
+                    menuItem = new MenuItem("ID: " + printer.id + " Name: " + printer.name + " Type: " + printer.type);
+                    menuItem.Enabled = true;
+                    menuItem.Visible = true;
+                    menuItem.Click += delegate (object sen, EventArgs args)
+                    {
+                        selectedPrinter = printer;
+                        PrintTextMenu_Click();
+                    };
+                    textPrintersMenuItem.MenuItems.Add(menuItem);
+                }
+
+                
+            }
+        }
+
+        private void PopulatePrintImageDropDown(int numberOfPrinters, List<Printer> printers)
+        {
+            MenuItem menuItem;
+            if (numberOfPrinters != 0)
+            {
+                imagePrintersMenuItem.MenuItems.Clear();
+                for (int i = 0; i < numberOfPrinters; i++)
+                {
+                    Printer printer = printers[i];
+                    menuItem = new MenuItem("ID: " + printer.id + " Name: " + printer.name + " Type: " + printer.type);
+                    menuItem.Enabled = true;
+                    menuItem.Click += delegate (object sen, EventArgs args)
+                    {
+                        selectedPrinter = printer;
+                        PrintImageMenu_Click();
+                    };
+
+                    imagePrintersMenuItem.MenuItems.Add(menuItem);
+
+                }
+            }
+            
+        }
+
+        private void PopulateOpenCashDrawerDropDown(int numberOfPrinters, List<Printer> printers)
+        {
+            MenuItem menuItem;
+            if (numberOfPrinters != 0)
+            {
+                cashDrawerPrintersMenuItem.MenuItems.Clear();
+                for (int i = 0; i < numberOfPrinters; i++)
+                {
+                    Printer printer = printers[i];
+                    menuItem = new MenuItem("ID: " + printer.id + " Name: " + printer.name + " Type: " + printer.type);
+                    menuItem.Enabled = true;
+                    menuItem.Click += delegate (object sen, EventArgs args)
+                    {
+                        selectedPrinter = printer;
+                        OpenCashDrawerMenu_Click();
+                    };
+
+                    cashDrawerPrintersMenuItem.MenuItems.Add(menuItem);
+
+                }
+            }
+        }
+        
+        public void OnRetrievePrintersRequest(RetrievePrintersRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 

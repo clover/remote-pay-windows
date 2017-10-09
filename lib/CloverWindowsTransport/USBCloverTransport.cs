@@ -698,7 +698,7 @@ namespace com.clover.remotepay.transport
                     ecWrite = writer.Write(((MemoryStream)writePacketBuffer.BaseStream).ToArray(), 2000, out bytesWritten);
                     if (ecWrite != ErrorCode.None)
                     {
-                        onDeviceError((int)ecWrite, "The Clover transport layer can see the USB device, but encountered an error when attempting to send it a message.  Try physically disconnecting/reconnecting the Clover device.");
+                        onDeviceError((int)ecWrite, null, "The Clover transport layer can see the USB device, but encountered an error when attempting to send it a message.  Try physically disconnecting/reconnecting the Clover device.");
                         TransportLog("ErrorCode: " + ecWrite + "The Clover transport layer can see the USB device, but encountered an error when attempting to send it a message.  Try physically disconnecting/reconnecting the Clover device.");
                     }
                     else

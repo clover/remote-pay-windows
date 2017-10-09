@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using com.clover.remotepay.transport;
 
 namespace com.clover.remotepay.sdk
@@ -163,6 +164,10 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage);
 
+        void OnPrintJobStatusResponse(PrintJobStatusResponse response);
+
+        void OnRetrievePrintersResponse(RetrievePrintersResponse response);
+
         ///<summary>
         /// Called when a custom activity is terminated in a normal flow
         ///</summary>
@@ -175,6 +180,10 @@ namespace com.clover.remotepay.sdk
         void OnResetDeviceResponse(ResetDeviceResponse response);
 
         void OnRetrievePaymentResponse(RetrievePaymentResponse response);
+
+        void OnRetrievePrintersRequest(RetrievePrintersRequest request);
+
+        void OnPrintJobStatusRequest(PrintJobStatusRequest request);
     }
 
     /// <summary>
@@ -349,5 +358,24 @@ namespace com.clover.remotepay.sdk
 
         }
 
+        public virtual void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            
+        }
+
+        public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+
+        }
+
+        public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            
+        }
+
+        public virtual void OnRetrievePrintersRequest(RetrievePrintersRequest request)
+        {
+
+        }
     }
 }

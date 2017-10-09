@@ -23,6 +23,7 @@ namespace com.clover.remotepay.transport
         string deviceId;
         bool enableLogging = false;
         int pingSleepSeconds = 1;
+        int maxCharInMessage = 10000;
         string remoteApplicationID;
 
         public USBCloverDeviceConfiguration(string remoteApplicationID, bool enableLogging):this("", remoteApplicationID, enableLogging, 1)
@@ -75,6 +76,11 @@ namespace com.clover.remotepay.transport
         public string getRemoteApplicationID()
         {
             return remoteApplicationID;
+        }
+
+        public int getMaxMessageCharacters()
+        {
+            return maxCharInMessage;
         }
     }
 }

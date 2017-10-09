@@ -145,7 +145,6 @@ namespace CloverExamplePOS
             }
             alertForm.Title = title;
             alertForm.Label = label;
-            System.Console.WriteLine("In alert form");
             alertForm.AutoScroll = true;
             alertForm.Show(toCover);
         }

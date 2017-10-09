@@ -204,6 +204,11 @@ namespace com.clover.remotepay.sdk
         void OpenCashDrawer(String reason);
 
         /// <summary>
+        /// Will trigger cash drawer to open that is connected to Clover Mini
+        /// </summary>
+        void OpenCashDrawer(OpenCashDrawerRequest request);
+
+        /// <summary>
         /// Show the DisplayOrder on the device. Replaces the existing DisplayOrder on the device.
         /// </summary>
         /// <param name="order"></param>
@@ -231,6 +236,23 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="ImgURL"></param>
         void PrintImageFromURL(String ImgURL);
+
+        /// <summary>
+        /// Print image from a PrintRequest
+        /// </summary>
+        void Print(PrintRequest request);
+
+        /// <summary>
+        /// Retrieve printer list from RetrievePrintersRequest
+        /// </summary>
+        void RetrievePrinters(RetrievePrintersRequest request);
+
+        /// <summary>
+        /// Retrieve printer job status from PrintJobStatusRequest
+        /// </summary>
+        void RetrievePrintJobStatus(PrintJobStatusRequest request);
+
+        
 
         /// <summary>
         /// Request a list of payments taken offline,
