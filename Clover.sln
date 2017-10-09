@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
@@ -14,13 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloverConnector", "lib\Clov
 	ProjectSection(ProjectDependencies) = postProject
 		{4030AC2F-4073-4F33-A529-6AF5B5D99B45} = {4030AC2F-4073-4F33-A529-6AF5B5D99B45}
 		{B1DD9531-BE27-429D-9F22-494142378E21} = {B1DD9531-BE27-429D-9F22-494142378E21}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestJson", "tests\TestJson\TestJson.csproj", "{2F71DCD1-6680-4348-9157-10BFE0E69058}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTransport", "tests\TestTransport\TestTransport.csproj", "{3BA66C19-EDFE-4F0A-B1D0-9E279E8CAD7F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4030AC2F-4073-4F33-A529-6AF5B5D99B45} = {4030AC2F-4073-4F33-A529-6AF5B5D99B45}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloverWindowsSDK", "lib\CloverWindowsSDK\CloverWindowsSDK.csproj", "{B1DD9531-BE27-429D-9F22-494142378E21}"
