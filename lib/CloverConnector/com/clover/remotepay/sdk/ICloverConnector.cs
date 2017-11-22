@@ -27,238 +27,330 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public interface ICloverConnector
     {
-        /// <summary>
-        /// Starts communication with the device.  This is called after the connector is created and listeners are added to the connector.
-        /// </summary>
+		/// <summary>
+		/// Initializes the connection and starts communication with the Clover device. 
+		/// This method is called after the connector has been created and listeners have 
+		/// been added to it. 
+		/// It must be called before any other method (other than those that add or remove 
+		/// listeners).
+		/// </summary>
+		/// <returns></returns>
         void InitializeConnection();
 
         /// <summary>
-        /// Adds a clover connector listener.
-        /// </summary>
-        /// <param name="connectorListener">The connector listener.</param>
+		/// Adds a Clover Connector listener.
+		/// </summary>
+		/// <param name="connectorListener">The connection listener.</param>
+		/// <returns></returns>
         void AddCloverConnectorListener(ICloverConnectorListener connectorListener);
 
         /// <summary>
-        /// Removes a clover connector listener.
-        /// </summary>
-        /// <param name="connectorListener">The connector listener.</param>
+		/// Removes a Clover Connector listener.
+		/// </summary>
+		/// <param name="connectorListener">The connection listener.</param>
+		/// <returns></returns>
         void RemoveCloverConnectorListener(ICloverConnectorListener connectorListener);
 
         /// <summary>
-        /// Sale method, aka "purchase"
-        /// </summary>
-        /// <param name="request">A SaleRequest object containing basic information needed for the transaction</param>
-        /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+		/// Requests a Sale transaction (i.e. purchase).
+		/// </summary>
+		/// <param name="request">A SaleRequest object containing basic information needed 
+		/// for the transaction.</param>
+		/// <returns>A status code: 0 for success, -1 for failure (need to use pre-defined 
+		/// constants).</returns>
         void Sale(SaleRequest request);
 
         /// <summary>
-        /// If signature is captured during a Sale, this method accepts the signature as entered
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// If a signature is captured during a transaction, this method accepts the 
+		/// signature as entered.
+		/// </summary>
+		/// <param name="request">The accepted VerifySignatureRequest the device passed to 
+		/// OnVerifySignatureRequest().</param>
+		/// <returns></returns>
         void AcceptSignature(VerifySignatureRequest request);
 
         /// <summary>
-        /// If signature is captured during a Sale, this method rejects the signature as entered
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// If a signature is captured during a transaction, this method rejects the 
+		/// signature as entered.
+		/// </summary>
+		/// <param name="request">The rejected VerifySignatureRequest the device passed to 
+		/// OnVerifySignatureRequest().</param>
+		/// <returns></returns>
         void RejectSignature(VerifySignatureRequest request);
 
         /// <summary>
-        /// If signature is captured during a Sale, this method accepts the signature as entered
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// If Payment confirmation is required during a transaction due to a Challenge, 
+		/// this method accepts the Payment. A Challenge may be triggered by a potential 
+		/// duplicate Payment or an offline Payment.
+		/// </summary>
+		/// <param name="payment">The Payment to accept.</param>
+		/// <returns></returns>
         void AcceptPayment(Payment payment);
 
         /// <summary>
-        /// If signature is captured during a Sale, this method rejects the signature as entered
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// If Payment confirmation is required during a transaction due to a Challenge, 
+		/// this method rejects the Payment. A Challenge may be triggered by a potential 
+		/// duplicate Payment or an offline Payment.
+		/// </summary>
+		/// <param name="payment">The Payment to accept.</param>
+		/// <param name="challenge">The Challenge that resulted in Payment 
+		/// rejection.</param>
+		/// <returns></returns>
         void RejectPayment(Payment payment, Challenge challenge);
 
-        /// <summary>
-        /// Auth method to obtain an Auth or Pre-Auth, based on the AuthRequest IsPreAuth flag
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// <summary>
+		/// Requests an Auth transaction. The tip for an Auth can be adjusted through the 
+		/// TipAdjustAuth() call until the batch Closeout is processed.
+		/// </summary>
+		/// <param name="request">The AuthRequest details.</param>
+		/// <returns></returns>
         void Auth(AuthRequest request);
 
         /// <summary>
-        /// Auth method to obtain an Auth or Pre-Auth, based on the AuthRequest IsPreAuth flag
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// Initiates a PreAuth transaction (a pre-authorization for a certain amount). 
+		/// This transaction lets the merchant know whether the account associated with a 
+		/// card has sufficient funds, without actually charging 
+		/// the card. When the merchant is ready to charge a final amount, the POS will 
+		/// call CapturePreAuth() to complete the Payment.
+		/// </summary>
+		/// <param name="request">The PreAuthRequest details.</param>
+		/// <returns></returns>
         void PreAuth(PreAuthRequest request);
 
         /// <summary>
-        /// Capture a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// Marks a PreAuth Payment for capture by a Closeout process. After a PreAuth is 
+		/// captured, it is effectively the same as an Auth Payment. Note: Should only be 
+		/// called if the request's PaymentID is from a PreAuthResponse.
+		/// </summary>
+		/// <param name="request">The CapturePreAuthRequest details.</param>
+		/// <returns></returns>
         void CapturePreAuth(CapturePreAuthRequest request);
 
         /// <summary>
-        /// Adjust the tip for a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// Adjusts the tip for a previous Auth transaction. This call can be made until 
+		/// the Auth Payment has been finalized by a Closeout. Note: Should only be called 
+		/// if the request's PaymentID is from an AuthResponse.
+		/// </summary>
+		/// <param name="request">The TipAdjustAuthRequest details.</param>
+		/// <returns></returns>
         void TipAdjustAuth(TipAdjustAuthRequest request);
 
         /// <summary>
-        /// Void a transaction, given a previously used order ID and/or payment ID
-        /// TBD - defining a payment or order ID to be used with a void without requiring a response from Sale()
-        /// </summary>
-        /// <param name="request">A VoidRequest object containing basic information needed to void the transaction</param>
-        /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+		/// Voids a transaction.
+		/// </summary>
+		/// <param name="request">A VoidRequest object containing basic information needed 
+		/// to void the transaction.</param>
+		/// <returns>A status code: 0 for success, -1 for failure (need to use pre-defined 
+		/// constants).</returns>
         void VoidPayment(VoidPaymentRequest request);
 
-
         /// <summary>
-        /// Refund a specific payment
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// Refunds the full or partial amount of a Payment.
+		/// </summary>
+		/// <param name="request">The RefundPaymentRequest details.</param>
+		/// <returns></returns>
         void RefundPayment(RefundPaymentRequest request);
 
+        /// <summary>
+		/// Initiates a Manual Refund transaction (a “Refund” or credit that is not 
+		/// associated with a previous Payment).
+		/// </summary>
+		/// <param name="request">A ManualRefundRequest object with the request 
+		/// details.</param>
+		/// <returns>A status code: 0 for success, -1 for failure (need to use pre-defined 
+		/// constants).</returns>
+        void ManualRefund(ManualRefundRequest request); 
 
         /// <summary>
-        /// Manual refund method, aka "naked credit"
-        /// </summary>
-        /// <param name="request">A ManualRefundRequest object</param>
-        /// <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
-        void ManualRefund(ManualRefundRequest request); // NakedRefund is a Transaction, with just negative amount
+		/// Asks the Clover device to capture card information and request a payment token 
+		/// from the payment gateway. The payment token can be used for future Sale and 
+		/// Auth requests in place of the card details. 
+		/// Note: the merchant account must be configured to allow payment tokens.
+		/// </summary>
+		/// <param name="CardEntryMethods">The card entry methods allowed to capture the 
+		/// payment token. 
+		/// If this parameter is null, the default values (CARD_ENTRY_METHOD_MAG_STRIPE, 
+		/// CARD_ENTRY_METHOD_ICC_CONTACT, and CARD_ENTRY_METHOD_NFC_CONTACTLESS) 
+		/// will be used.</param>
+		/// <returns>A status code: 0 for success, -1 for failure (need to use pre-defined 
+		/// constants).</returns>
+        void VaultCard(int CardEntryMethods);
 
         /// <summary>
-        /// Vault card, used to get payment token
-        /// </summary>
-        /// 
-        void VaultCard(int? CardEntryMethods);
-
-        /// <summary>
-        /// Retrieve Card Data
-        /// </summary>
-        /// 
+		/// Requests card information (specifically Track 1 and Track 2 card data).
+		/// </summary>
+		/// <param name="request">The ReadCardDataRequest details.</param>
+		/// <returns></returns>
         void ReadCardData(ReadCardDataRequest CardDataRequest);
 
         /// <summary>
-        /// Cancels the device from waiting for a payment card.
-        /// </summary>
-        /// <returns></returns>
+		/// Sends a "cancel" button press to the Clover device.
+		/// </summary>
+		/// <returns></returns>
+		[System.Obsolete("Use InvokeInputOption(InputOption) instead.")]
         void Cancel();
 
         /// <summary>
-        /// Send a request to the server to closeout all orders.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+		/// Sends a request to the Clover server to close out all transactions.
+		/// Note: The merchant account must be configured to allow transaction closeout.
+		/// </summary>
+		/// <param name="request">The CloseoutRequest details.</param>
+		/// <returns></returns>
         void Closeout(CloseoutRequest request);
 
         /// <summary>
-        /// Send a request to the server to reset the Clover device.
-        /// </summary>
-        /// <returns></returns>
+		/// Sends a request to reset the Clover device back to the welcome screen. Can be 
+		/// used when the device is in an unknown or invalid state from the perspective of 
+		/// the POS. 
+		/// Note: This request could cause the POS to miss a transaction or other 
+		/// information. Use cautiously as a last resort.
+		/// </summary>
+		/// <returns></returns>
         void ResetDevice();
 
         /// <summary>
-        /// Print simple lines of text to the Clover Mini printer
-        /// </summary>
-        /// <param name="messages"></param>
-        /// <returns></returns>
+		/// Prints custom messages in plain text through the Clover Mini's built-in 
+		/// printer.
+		/// </summary>
+		/// <param name="messages">An array of text messages to print.</param>
+		/// <returns></returns>
+		[System.Obsolete("Use Print(PrintRequest request) instead.")]
         void PrintText(List<string> messages);
 
         /// <summary>
-        /// Print an image on the Clover Mini printer
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
-        void PrintImage(Bitmap bitmap); //Bitmap img
+		/// Prints an image on paper receipts through the Clover Mini's built-in printer.
+		/// </summary>
+		/// <param name="bitmap">The image to print.</param>
+		/// <returns></returns>
+		[System.Obsolete("Use Print(PrintRequest request) instead.")]
+        void PrintImage(Bitmap bitmap); 
 
         /// <summary>
-        /// Show a message on the Clover Mini screen
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
+		/// Displays a string-based message on the Clover device's screen.
+		/// </summary>
+		/// <param name="message">The string message to display.</param>
+		/// <returns></returns>
         void ShowMessage(string message);
 
-        /// <summary>
-        /// Return the device to the Welcome Screen
-        /// </summary>
+       	/// <summary>
+		/// Displays the welcome screen on the Clover device.
+		/// </summary>
+		/// <returns></returns>
         void ShowWelcomeScreen();
 
         /// <summary>
-        /// Show the thank you screen on the device
-        /// </summary>
+		/// Displays the thank you screen on the Clover device.
+		/// </summary>
+		/// <returns></returns>
         void ShowThankYouScreen();
 
         /// <summary>
-        /// Show the customer facing receipt option screen for the specified payment.
-        /// </summary>
+		/// Displays the customer-facing receipt options (print, email, etc.) for a 
+		/// Payment on the Clover device. 
+		/// </summary>
+		/// <param name="paymentId">The ID of the Payment associated with the 
+		/// receipt.</param>
+		/// <param name="orderId">The ID of the Order associated with the receipt.</param>
+		/// <returns></returns>
         void DisplayPaymentReceiptOptions(String orderId, String paymentId);
 
         /// <summary>
-        /// Will trigger cash drawer to open that is connected to Clover Mini
-        /// </summary>
+		/// Opens the first cash drawer found connected to the Clover device.
+		/// </summary>
+		/// <param name="reason">The reason for opening the cash drawer.</param>
+		/// <returns></returns>
+		[System.Obsolete("Use OpenCashDrawer(OpenCashDrawerRequest request) instead.")]
         void OpenCashDrawer(String reason);
+        
+        /// <summary>
+		/// Opens the first cash drawer found connected to the Clover device. The reason 
+		/// for opening the cash drawer must be provided.
+		/// </summary>
+		/// <param name="request">Text specifying the reason for opening the cash 
+		/// drawer.</param>
+		/// <returns></returns>
+		void OpenCashDrawer(OpenCashDrawerRequest request); 
 
         /// <summary>
-        /// Show the DisplayOrder on the device. Replaces the existing DisplayOrder on the device.
-        /// </summary>
-        /// <param name="order"></param>
+		/// Displays an Order and associated line items on the Clover device. Will replace 
+		/// an Order that is already displayed on the device screen.
+		/// </summary>
+		/// <param name="order">The DisplayOrder to display.</param>
+		/// <returns></returns>
         void ShowDisplayOrder(DisplayOrder order);
 
-
         /// <summary>
-        /// Remove the DisplayOrder from the device.
-        /// </summary>
-        /// <param name="order"></param>
+		/// Removes the DisplayOrder object from the Clover device's screen.
+		/// </summary>
+		/// <param name="order">The DisplayOrder to remove.</param>
+		/// <returns></returns>
         void RemoveDisplayOrder(DisplayOrder order);
 
-
-        // 
+        /// <summary>
+		/// Disposes the connection to the Clover device. After this is called, the 
+		/// connection to the device is severed, and the CloverConnector object is no 
+		/// longer usable. Instantiate a new CloverConnector object in 
+		/// order to call InitializeConnection().
+		/// </summary>
+		/// <returns></returns>
         void Dispose();
 
         /// <summary>
-        /// Invoke the InputOption as sent in the DeviceActivityStart callback
-        /// </summary>
-        /// <param name="io"></param>
+		/// Sends a keystroke to the Clover device that invokes an input option (e.g. OK, 
+		/// CANCEL, DONE, etc.) on the customer's behalf. InputOptions are on the 
+		/// CloverDeviceEvent passed to OnDeviceActivityStart().
+		/// </summary>
+		/// <param name="io">The input option to invoke.</param>
+		/// <returns></returns>
         void InvokeInputOption(transport.InputOption io);
 
         /// <summary>
-        /// Print an image from a url
-        /// </summary>
-        /// <param name="ImgURL"></param>
+		/// Prints an image from the web on paper receipts through the Clover device's 
+		/// built-in printer.
+		/// </summary>
+		/// <param name="ImgURL">The URL for the image to print.</param>
+		/// <returns></returns>
+		[System.Obsolete("Use Print(PrintRequest request) instead.")]
         void PrintImageFromURL(String ImgURL);
 
         /// <summary>
-        /// Request a list of payments taken offline,
-        /// but that haven't been processed yet
-        /// </summary>
+		/// Retrieves a list of unprocessed Payments that were taken offline and are 
+		/// pending submission to the server.
+		/// </summary>
+		/// <returns></returns>
         void RetrievePendingPayments();
 
         /// <summary>
-        /// Request to start a Custom Activity on the Clover device
-        /// </summary>
+		/// Starts a Custom Activity on the Clover device.
+		/// Note: the Custom Activity must already be set up and configured on the Clover 
+		/// device.
+		/// </summary>
+		/// <param name="request">The CustomActivityRequest details.</param>
+		/// <returns></returns>
         void StartCustomActivity(CustomActivityRequest request);
 
         /// <summary>
-        /// Send a message to a running custom activity on the Clover device
-        /// </summary>
-        /// <param name="request"></param>
+		/// Sends a message to a Custom Activity running on a Clover device.
+		/// </summary>
+		/// <param name="request">The MessageToActivity details to send to the Custom 
+		/// Activity.</param>
+		/// <returns></returns>
         void SendMessageToActivity(MessageToActivity request);
 
         /// <summary>
-        /// Send a message requesting the current status of the device
-        /// </summary>
-        /// <param name="request"></param>
+		/// Sends a message requesting the current status of the Clover device.
+		/// </summary>
+		/// <param name="request">The RetrieveDeviceStatusRequest details.</param>
+		/// <returns></returns>
         void RetrieveDeviceStatus(RetrieveDeviceStatusRequest request);
 
         /// <summary>
-        /// Send a message requesting the Payment information corresponding the the provided External Payment Id 
-        /// </summary>
-        /// <param name="request"></param>
+		/// Requests the Payment information associated with the externalPaymentId passed 
+		/// in. Only valid for 
+		/// Payments made in the past 24 hours on the Clover device queried.
+		/// </summary>
+		/// <param name="request">The RetrievePaymentRequest details.</param>
+		/// <returns></returns>
         void RetrievePayment(RetrievePaymentRequest request);
     }
 }
