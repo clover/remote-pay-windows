@@ -149,19 +149,20 @@ namespace CloverExamplePOS
             this.DisplayMessageButton = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.PrintTextBox = new System.Windows.Forms.TextBox();
-            this.PrintTextButton = new System.Windows.Forms.Button();
+            this.PrintTextButton = new DropDownButton();
             this.tableLayoutPanel96 = new System.Windows.Forms.TableLayoutPanel();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.BrowseImageButton = new System.Windows.Forms.Button();
             this.PrintURLTextBox = new System.Windows.Forms.TextBox();
-            this.PrintImageButton = new System.Windows.Forms.Button();
+            this.PrintImageButton = new DropDownButton();
             this.PrintImage = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.ShowWelcomeButton = new System.Windows.Forms.Button();
             this.ShowThankYouButton = new System.Windows.Forms.Button();
-            this.OpenCashDrawerButton = new System.Windows.Forms.Button();
+            this.OpenCashDrawerButton = new DropDownButton();
+            this.RetrievePrintJobStatusButton = new System.Windows.Forms.Button();
             this.CardDataButton = new System.Windows.Forms.Button();
             this.labelTS = new System.Windows.Forms.Label();
             this.labelTipAmount = new System.Windows.Forms.Label();
@@ -212,8 +213,10 @@ namespace CloverExamplePOS
             this.automaticSignatureConfirmationCB = new System.Windows.Forms.CheckBox();
             this.automaticPaymentConfirmationCB = new System.Windows.Forms.CheckBox();
             this.RetrievePaymentLabel = new System.Windows.Forms.Label();
+            this.RetrievePrintJobstatusLabel = new System.Windows.Forms.Label();
             this.RetrievePaymentButton = new System.Windows.Forms.Button();
             this.RetrievePaymentText = new System.Windows.Forms.TextBox();
+            this.RetrievePrintJobStatusText = new System.Windows.Forms.TextBox();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.pendingPaymentListView = new System.Windows.Forms.ListView();
             this.paymentIdHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1223,6 +1226,19 @@ namespace CloverExamplePOS
             this.DeviceStatusButton.UseVisualStyleBackColor = false;
 
             // 
+            // PrintTextButton
+            // 
+            this.PrintTextButton.BackColor = System.Drawing.Color.White;
+            this.PrintTextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PrintTextButton.Location = new System.Drawing.Point(483, 72);
+            this.PrintTextButton.Margin = new System.Windows.Forms.Padding(4);
+            this.PrintTextButton.Name = "PrintTextButton";
+            this.PrintTextButton.Size = new System.Drawing.Size(100, 60);
+            this.PrintTextButton.TabIndex = 18;
+            this.PrintTextButton.Text = "Print";
+            this.PrintTextButton.UseVisualStyleBackColor = false;
+
+            // 
             // tableLayoutPanel7
             // 
             this.tableLayoutPanel7.ColumnCount = 4;
@@ -1587,10 +1603,14 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel16, 1, 2);
             this.tableLayoutPanel8.Controls.Add(this.PrintImageButton, 2, 2);
             this.tableLayoutPanel8.Controls.Add(this.PrintImage, 3, 2);
-            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel5, 0, 4);
+            this.tableLayoutPanel8.Controls.Add(this.flowLayoutPanel5, 0, 5);
             this.tableLayoutPanel8.Controls.Add(this.RetrievePaymentLabel, 0, 3);
             this.tableLayoutPanel8.Controls.Add(this.RetrievePaymentButton, 2, 3);
             this.tableLayoutPanel8.Controls.Add(this.RetrievePaymentText, 1, 3);
+            this.tableLayoutPanel8.Controls.Add(this.RetrievePrintJobstatusLabel, 0, 4);
+            this.tableLayoutPanel8.Controls.Add(this.RetrievePrintJobStatusText, 1, 4);
+            this.tableLayoutPanel8.Controls.Add(this.RetrievePrintJobStatusButton, 2, 4);
+
             this.tableLayoutPanel8.Location = new System.Drawing.Point(4, 4);
             this.tableLayoutPanel8.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
@@ -1748,19 +1768,8 @@ namespace CloverExamplePOS
             this.PrintTextBox.Name = "PrintTextBox";
             this.PrintTextBox.Size = new System.Drawing.Size(132, 22);
             this.PrintTextBox.TabIndex = 19;
-            // 
-            // PrintTextButton
-            // 
-            this.PrintTextButton.BackColor = System.Drawing.Color.White;
-            this.PrintTextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PrintTextButton.Location = new System.Drawing.Point(483, 72);
-            this.PrintTextButton.Margin = new System.Windows.Forms.Padding(4);
-            this.PrintTextButton.Name = "PrintTextButton";
-            this.PrintTextButton.Size = new System.Drawing.Size(100, 60);
-            this.PrintTextButton.TabIndex = 18;
-            this.PrintTextButton.Text = "Print";
-            this.PrintTextButton.UseVisualStyleBackColor = false;
-            this.PrintTextButton.Click += new System.EventHandler(this.PrintTextButton_Click);
+            
+            //new System.EventHandler(this.PrintTextButton_Click);
             // 
             // tableLayoutPanel96
             // 
@@ -1847,8 +1856,7 @@ namespace CloverExamplePOS
             this.PrintImageButton.TabIndex = 30;
             this.PrintImageButton.Text = "Print Image";
             this.PrintImageButton.UseVisualStyleBackColor = false;
-            this.PrintImageButton.Click += new System.EventHandler(this.PrintImageButton_Click);
-            // 
+            
             // PrintImage
             // 
             this.PrintImage.Location = new System.Drawing.Point(591, 140);
@@ -1914,8 +1922,8 @@ namespace CloverExamplePOS
             this.OpenCashDrawerButton.TabIndex = 28;
             this.OpenCashDrawerButton.Text = "Open Cash Drawer";
             this.OpenCashDrawerButton.UseVisualStyleBackColor = false;
-            this.OpenCashDrawerButton.Click += new System.EventHandler(this.OpenCashDrawerButton_Click);
             
+
             // 
             // CardDataButton
             // 
@@ -2514,6 +2522,40 @@ namespace CloverExamplePOS
             this.automaticPaymentConfirmationCB.TabIndex = 48;
             this.automaticPaymentConfirmationCB.Text = "Automatically Accept Payment Challenges";
             this.automaticPaymentConfirmationCB.UseVisualStyleBackColor = true;
+
+            //
+            // RetrievePrintJobStatusLabel
+            this.RetrievePrintJobstatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.RetrievePrintJobstatusLabel.AutoSize = true;
+            this.RetrievePrintJobstatusLabel.Location = new System.Drawing.Point(3, 230);
+            this.RetrievePrintJobstatusLabel.Name = "RetrievePaymentLabel";
+            this.RetrievePrintJobstatusLabel.Size = new System.Drawing.Size(137, 17);
+            this.RetrievePrintJobstatusLabel.TabIndex = 49;
+            this.RetrievePrintJobstatusLabel.Text = "Print Job Id:";
+
+            // 
+            // RetrievePrintJobStatusButton
+            // 
+            this.RetrievePrintJobStatusButton.BackColor = System.Drawing.Color.White;
+            this.RetrievePrintJobStatusButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RetrievePrintJobStatusButton.Location = new System.Drawing.Point(482, 209);
+            this.RetrievePrintJobStatusButton.Name = "RetrievePaymentButton";
+            this.RetrievePrintJobStatusButton.Size = new System.Drawing.Size(100, 60);
+            this.RetrievePrintJobStatusButton.TabIndex = 50;
+            this.RetrievePrintJobStatusButton.Text = "Retrieve Print Job Status";
+            this.RetrievePrintJobStatusButton.UseVisualStyleBackColor = false;
+            this.RetrievePrintJobStatusButton.Click += new System.EventHandler(this.RetrievePrintJobStatusButton_Click);
+
+            // 
+            // RetrievePaymentText
+            // 
+            this.RetrievePrintJobStatusText.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.RetrievePrintJobStatusText.Location = new System.Drawing.Point(338, 228);
+            this.RetrievePrintJobStatusText.Name = "RetrievePrintJobStatusText";
+            this.RetrievePrintJobStatusText.Size = new System.Drawing.Size(138, 22);
+            this.RetrievePrintJobStatusText.TabIndex = 51;
+
+
             // 
             // RetrievePaymentLabel
             // 
@@ -2525,6 +2567,8 @@ namespace CloverExamplePOS
             this.RetrievePaymentLabel.TabIndex = 49;
             this.RetrievePaymentLabel.Text = "External Payment Id:";
             this.RetrievePaymentLabel.Click += new System.EventHandler(this.label15_Click);
+
+           
             // 
             // RetrievePaymentButton
             // 
@@ -2989,17 +3033,17 @@ namespace CloverExamplePOS
         private FlowLayoutPanel UIStateButtonPanel;
         private Label label4;
         private Button DisplayMessageButton;
-        private Button PrintTextButton;
+        private DropDownButton PrintTextButton;
         private Button ShowWelcomeButton;
         private Button ShowReceiptButton;
         private Button ShowThankYouButton;
-        private Button OpenCashDrawerButton;
+        private DropDownButton OpenCashDrawerButton;
         private Button CardDataButton;
         private TableLayoutPanel tableLayoutPanel15;
         private Label label11;
         private Label label12;
         private Label label52;
-        private Button PrintImageButton;
+        private DropDownButton PrintImageButton;
         private TableLayoutPanel tableLayoutPanel16;
         private TableLayoutPanel tableLayoutPanel96;
         private TableLayoutPanel tableLayoutPanelTipAmount;
@@ -3092,6 +3136,9 @@ namespace CloverExamplePOS
         private Button SendMessageBtn;
         private DropDownButton DeviceStatusButton;
         private Label RetrievePaymentLabel;
+        private Label RetrievePrintJobstatusLabel;
+        private TextBox RetrievePrintJobStatusText;
+        private Button RetrievePrintJobStatusButton;
         private Button RetrievePaymentButton;
         private TextBox RetrievePaymentText;
     }

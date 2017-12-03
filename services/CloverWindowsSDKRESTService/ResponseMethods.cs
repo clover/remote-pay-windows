@@ -148,4 +148,16 @@ namespace CloverWindowsSDKREST
     {
         public CloverDeviceErrorEvent DeviceErrorEvent { get; set; }
     }
+
+    [XmlRoot(ElementName = "OnRetrievePrintersResponse")]
+    public class OnRetrievePrintersResponse
+    {
+        public RetrievePrintersResponse RetrievePrintersResponse { get; set; }
+    }
+
+    [XmlRoot(ElementName ="PrintJobStatusResponse")]
+    public class OnPrintJobStatusResponse
+    {
+        public PrintJobStatusResponse PrintJobStatusResponse { get; set; }
+    }
 }

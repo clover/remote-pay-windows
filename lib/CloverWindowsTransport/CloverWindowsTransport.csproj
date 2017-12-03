@@ -75,7 +75,7 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>CloverWindowsTransport.pfx</AssemblyOriginatorKeyFile>
@@ -88,6 +88,7 @@
       <HintPath>..\..\packages\Json70r1\lib\Net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="WebSocket4Net">
       <HintPath>..\..\packages\WebSocket4Net\net20\WebSocket4Net.dll</HintPath>
@@ -105,9 +106,6 @@
     <Compile Include="DefaultCloverDevice.cs" />
     <Compile Include="JsonUtils.cs" />
     <Compile Include="ObjectModel.cs" />
-    <Compile Include="TestCloverDevice.cs" />
-    <Compile Include="TestCloverDeviceConfiguration.cs" />
-    <Compile Include="TestCloverTransport.cs" />
     <Compile Include="USBCloverDeviceConfiguration.cs" />
     <Compile Include="USBCloverTransport.cs" />
     <Compile Include="CloverExample.cs" />

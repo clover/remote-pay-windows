@@ -247,7 +247,7 @@ namespace com.clover.remotepay.transport
             public int y;
         }
     }
-    public enum ResponseReasonCode { ORDER_NOT_FOUND, PAYMENT_NOT_FOUND, FAIL }
+    public enum ResponseReasonCode { NONE, ORDER_NOT_FOUND, PAYMENT_NOT_FOUND, FAIL }
     public enum TxState { START, SUCCESS, FAIL }
 
     public enum UiState

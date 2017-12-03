@@ -28,6 +28,7 @@ namespace com.clover.remotepay.transport
         public string remoteApplicationID;
         public bool enableLogging = false;
         public int pingSleepSeconds = 1;
+        int maxCharInMessage = 50000;
         public string posName;
         public string serialNumber;
         public string pairingAuthToken;
@@ -114,5 +115,9 @@ namespace com.clover.remotepay.transport
             return remoteApplicationID;
         }
 
+        public int getMaxMessageCharacters()
+        {
+            return maxCharInMessage;
+        }
     }
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using com.clover.remotepay.transport;
 
 namespace com.clover.remotepay.sdk
@@ -283,6 +284,10 @@ namespace com.clover.remotepay.sdk
 		/// <param name="response">The RetrievePaymentResponse details for the 
 		/// request.</param>
         void OnRetrievePaymentResponse(RetrievePaymentResponse response);
+
+        void OnRetrievePrintersRequest(RetrievePrintersRequest request);
+
+        void OnPrintJobStatusRequest(PrintJobStatusRequest request);
     }
 
     /// <summary>
@@ -457,5 +462,24 @@ namespace com.clover.remotepay.sdk
 
         }
 
+        public virtual void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            
+        }
+
+        public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+
+        }
+
+        public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            
+        }
+
+        public virtual void OnRetrievePrintersRequest(RetrievePrintersRequest request)
+        {
+
+        }
     }
 }

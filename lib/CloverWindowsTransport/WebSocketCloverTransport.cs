@@ -173,7 +173,7 @@ namespace com.clover.remotepay.transport
             }
             else
             {
-                base.onDeviceError(-201, "Error connecting: " + sslPolicyErrors);
+                base.onDeviceError(-201, null, "Error connecting: " + sslPolicyErrors);
                 shutdown = true;
                 return false;
             }

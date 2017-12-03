@@ -634,6 +634,38 @@ namespace com.clover.remotepay.transport.remote
             }
         }
 
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePrintersResponse$")]
+        public void RetrievePrintersResponse(HttpListenerContext context)
+        {
+            try
+            {
+                RetrievePrintersResponse rpr = ParseResponse<RetrievePrintersResponse>(context);
+                connectorListener.ForEach(listener => listener.OnRetrievePrintersResponse(rpr));
+            }
+            catch (Exception e)
+            {
+                context.Response.StatusCode = 400;
+                context.Response.StatusDescription = e.Message;
+                SendTextResponse(context, "error processing request");
+            }
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintJobStatusResponse$")]
+        public void PrintJobStatusResponse(HttpListenerContext context)
+        {
+            try
+            {
+                PrintJobStatusResponse pjsr = ParseResponse<PrintJobStatusResponse>(context);
+                connectorListener.ForEach(listener => listener.OnPrintJobStatusResponse(pjsr));
+            }
+            catch (Exception e)
+            {
+                context.Response.StatusCode = 400;
+                context.Response.StatusDescription = e.Message;
+                SendTextResponse(context, "error processing request");
+            }
+        }
+
 
         [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/MessageFromActivity")]
         public void MessageFromActivity(HttpListenerContext context)

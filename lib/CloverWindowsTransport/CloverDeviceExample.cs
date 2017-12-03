@@ -77,9 +77,9 @@ namespace com.clover.remotepay.transport
             Console.WriteLine("Device Connected");
         }
 
-        public void onDeviceError(int code, string message)
+        public void onDeviceError(int code, Exception cause, string message)
         {
-            Console.WriteLine("Code: " + code.ToString() + " //  Message: " + message);
+            Console.WriteLine("Code: " + code.ToString() + "//  Cause: " + cause +  " //  Message: " + message);
         }
     }
 }

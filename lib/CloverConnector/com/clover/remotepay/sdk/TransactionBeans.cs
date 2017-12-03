@@ -15,8 +15,10 @@
 using com.clover.remotepay.transport;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.order;
+using com.clover.sdk.v3.printer;
 using System.Collections.Generic;
 using System;
+using System.Drawing;
 
 namespace com.clover.remotepay.sdk
 {
@@ -104,6 +106,84 @@ namespace com.clover.remotepay.sdk
             this.ExternalId = null;
         }
         public string ExternalId { get; set; }
+    }
+
+    /// <summary>
+    /// This should be used for a print call.
+    /// </summary>
+    public class PrintRequest : BaseRequest
+    {
+        public List<Bitmap> images = new List<Bitmap>();
+        public List<string> imageURLs = new List<string>();
+        public List<string> text = new List<string>();
+        public string printRequestId;
+        public string printDeviceId;
+
+        public PrintRequest() { }
+
+        /// Create a PrintRequest to print a given Image
+        ///
+        /// - Parameters:
+        ///   - image: Image to print
+        ///   - printRequestId: Optional identifier to give to the print job, so it can later be queried
+        ///   - printDeviceId: Optional identifier to speciy which printer to use
+        public PrintRequest(Bitmap image, string printRequestId, string printDeviceId)
+        {
+            this.images.Add(image);
+            this.printRequestId = printRequestId;
+            this.printDeviceId = printDeviceId;
+
+        }
+
+        /// Create a PrintRequest to print an image at a given URL
+        ///
+        /// - Parameters:
+        ///   - imageURL: URL to the image to print
+        ///   - printRequestId: Optional identifier to give to the print job, so it can later be queried
+        ///   - printDeviceId: Optional identifier to speciy which printer to use
+        public PrintRequest(string imageURL, string printRequestId, string printDeviceId)
+        {
+            this.imageURLs.Add(imageURL);
+            this.printRequestId = printRequestId;
+            this.printDeviceId = printDeviceId;
+        }
+
+        /// Create a PrintRequest to print an array of strings to print
+        ///
+        /// - Parameters:
+        ///   - text: Array of strings to be printed
+        ///   - printRequestId: Optional identifier to give to the print job, so it can later be queried
+        ///   - printDeviceId: Optional identifier to speciy which printer to use
+        public PrintRequest(List<string> text, string printRequestId, string printDeviceId)
+        {
+            if (text.Count <1)
+            {
+                return; 
+            }
+
+            this.text = text;
+            this.printRequestId = printRequestId;
+            this.printDeviceId = printDeviceId;
+
+        }
+
+
+    }
+
+
+    public class OpenCashDrawerRequest : BaseRequest
+    {
+        public String reason { get; set; }
+        public String printerId {get; set;}
+
+        /// Create an object used to inform the Clover Connector's `openCashDrawer()` function of required/additional information when requesting the cash drawer be opened
+        ///
+        /// - Parameters:
+        ///   - reason: String describing the reason to open the drawer
+        public OpenCashDrawerRequest(String reason)
+        {
+            this.reason = reason;
+        }
     }
 
     /// <summary>
@@ -451,6 +531,68 @@ namespace com.clover.remotepay.sdk
     public class ManualRefundResponse : BaseResponse
     {
         public Credit Credit { get; set; }
+    }
+
+    public class RetrievePrintersResponse : BaseResponse
+    {
+        public List<Printer> printers = new List<Printer>();
+
+        public RetrievePrintersResponse() { }
+
+        public RetrievePrintersResponse(Printer printer)
+        {
+            this.printers.Add(printer);
+        }
+
+        public RetrievePrintersResponse(List<Printer> printers)
+        {
+            this.printers = printers;
+        }
+    }
+
+    public class PrintJobStatusRequest : BaseRequest
+    {
+        public String printRequestId;
+
+        public PrintJobStatusRequest()
+        {
+
+        }
+
+        public PrintJobStatusRequest(String printRequestId)
+        {
+            this.printRequestId = printRequestId;
+        }
+    }
+
+    public class PrintJobStatusResponse : BaseResponse
+    {
+        public String printRequestId;
+        public PrintJobStatus status;
+
+        public PrintJobStatusResponse(String printRequestId, String status)
+        {
+            this.printRequestId = printRequestId;
+            try
+            {
+                this.status = (PrintJobStatus) Enum.Parse(typeof(PrintJobStatus), status);
+            }
+            catch(ArgumentException)
+            {
+                Console.WriteLine("{0} is not a member of the PrintJobStatus enumeration.", status);
+                this.status = PrintJobStatus.UNKNOWN;
+            }
+        }
+    }
+
+    public enum PrintJobStatus
+    {
+        IN_QUEUE,
+        PRINTING,
+        DONE,
+        ERROR,
+        UNKNOWN,
+        NOT_FOUND
     }
 
     /// <summary>

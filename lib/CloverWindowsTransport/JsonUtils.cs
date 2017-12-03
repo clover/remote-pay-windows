@@ -28,7 +28,7 @@ namespace com.clover.remotepay.transport
     {
         public static T deserializeSDK<T>(String input)
         {
-            return deserialize<T>(input, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new StringEnumConverter() });
+            return deserialize<T>(input, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter() });
         }
 
         public static T deserialize<T>(String input)
@@ -59,7 +59,7 @@ namespace com.clover.remotepay.transport
 
         public static string serializeSDK(Object toSer)
         {
-            return serialize(toSer, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new StringEnumConverter() });
+            return serialize(toSer, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter() });
         }
 
         public static string serialize(Object toSer, JsonConverter[] converters)
@@ -213,6 +213,30 @@ namespace com.clover.remotepay.transport
             com.clover.sdk.v3.payments.VaultedCard result = JsonUtils.deserialize<com.clover.sdk.v3.payments.VaultedCard>(str, new JsonConverter[] { }); // reference for line items
             return result;
 
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(JsonUtils.serialize(value));
+        }
+    }
+
+    public class PrinterConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(com.clover.sdk.v3.printer.Printer));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if(reader.Value == null)
+            {
+                return null;
+            }
+            string str = reader.Value.ToString();
+            com.clover.sdk.v3.printer.Printer result = JsonUtils.deserialize<com.clover.sdk.v3.printer.Printer>(str, new JsonConverter[] { });
+            return result;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
-
+using com.clover.sdk.v3.printer;
 namespace com.clover.remotepay.sdk
 {
     /// <summary>
@@ -38,13 +38,11 @@ namespace com.clover.remotepay.sdk
         public const int CARD_ENTRY_METHOD_ICC_CONTACT = 2 | (2 << 8) | ENABLE_KIOSK_ENTRY_METHODS; //514 + the flag to indicate the flags are passed in
         public const int CARD_ENTRY_METHOD_NFC_CONTACTLESS = 4 | (4 << 8) | ENABLE_KIOSK_ENTRY_METHODS; //1028 + the flag to indicate the flags are passed in
         public const int CARD_ENTRY_METHOD_MANUAL = 8 | (8 << 8) | ENABLE_KIOSK_ENTRY_METHODS; // 2056 + the flag to indicate the flags are passed in
-
         public static readonly InputOption CANCEL_INPUT_OPTION = new InputOption(KeyPress.ESC, "Cancel");
-
         protected CloverDevice Device;
         protected CloverDeviceConfiguration Config;
         protected SDKInfo _SDKInfo = new SDKInfo();
-
+        public static long MAX_PAYLOAD_SIZE = 10000000;
         public SDKInfo SDKInfo
         {
             get { return _SDKInfo; }
@@ -288,17 +286,17 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In AcceptSignature : Device is not connected. "));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In AcceptSignature : Device is not connected. "));
                 return;
             }
             if (request == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In AcceptSignature : VerifySignatureRequest object cannot be null. "));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In AcceptSignature : VerifySignatureRequest object cannot be null. "));
                 return;
             }
             if (request.Payment == null || request.Payment.id == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In AcceptSignature : VerifySignatureRequest.Payment must have an ID. "));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In AcceptSignature : VerifySignatureRequest.Payment must have an ID. "));
                 return;
             }
             Device.doVerifySignature(request.Payment, true);
@@ -318,17 +316,17 @@ namespace com.clover.remotepay.sdk
 
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In RejectSignature : Device is not connected. "));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In RejectSignature : Device is not connected. "));
                 return;
             }
             if (request == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In RejectSignature : VerifySignatureRequest object cannot be null. "));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In RejectSignature : VerifySignatureRequest object cannot be null. "));
                 return;
             }
             if (request.Payment == null || request.Payment.id == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In RejectSignature : VerifySignatureRequest.Payment must have an ID. "));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In RejectSignature : VerifySignatureRequest.Payment must have an ID. "));
                 return;
             }
             Device.doVerifySignature(request.Payment, false);
@@ -788,7 +786,7 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In Closeout: CloseoutRequest - The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In Closeout: CloseoutRequest - The Clover device is not connected."));
             }
             else {
                 Device.doCloseout(request.AllowOpenTabs, request.BatchId); // TODO: pass in request UUID so it can be returned with CloseoutResponse
@@ -807,7 +805,7 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ResetDevice: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In ResetDevice: The Clover device is not connected."));
             }
             else {
                 Device.doResetDevice();
@@ -826,66 +824,13 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In Cancel: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In Cancel: The Clover device is not connected."));
             }
             else {
                 InvokeInputOption(CANCEL_INPUT_OPTION);
             }
         }
 
-        /// <summary>
-        /// Print simple lines of text to the Clover Mini printer
-        /// </summary>
-        /// <param name="messages"></param>
-        /// <returns></returns>
-        public void PrintText(List<string> messages)
-        {
-            if (deviceObserver == null && merchantInfo == null)
-            {
-                throw new Exception("InitializeConnection() has not been called on Clover Connector");
-            }
-            if (Device == null || !IsReady)
-            {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In PrintText: The Clover device is not connected."));
-                return;
-            }
-            if (messages == null)
-            {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In PrintText : message list cannot be null. "));
-                return;
-            }
-
-            Device.doPrintText(messages);
-        }
-
-        /// <summary>
-        /// Print an image on the Clover Mini printer
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
-        public void PrintImage(Bitmap bitmap) //Bitmap img
-        {
-            if (deviceObserver == null && merchantInfo == null)
-            {
-                throw new Exception("InitializeConnection() has not been called on Clover Connector");
-            }
-            if (Device == null || !IsReady)
-            {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In PrintImage: The Clover device is not connected."));
-                return;
-            }
-            if (bitmap == null)
-            {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In PrintImage : Bitmap object cannot be null. "));
-                return;
-            }
-            MemoryStream ms = new MemoryStream();
-            bitmap.Save(ms, ImageFormat.Png);
-            byte[] imgBytes = ms.ToArray();
-            string base64Image = Convert.ToBase64String(imgBytes);
-
-            Device.doPrintImage(base64Image);
-        }
 
         /// <summary>
         /// Show a message on the Clover Mini screen
@@ -900,7 +845,7 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowMessage: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In ShowMessage: The Clover device is not connected."));
                 return;
             }
 
@@ -918,7 +863,7 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowWelcomeScreen: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In ShowWelcomeScreen: The Clover device is not connected."));
                 return;
             }
 
@@ -936,7 +881,7 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowThankYouScreen: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In ShowThankYouScreen: The Clover device is not connected."));
                 return;
             }
             ShowOnDevice(showThankYouScreen: true);
@@ -1000,7 +945,7 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In VaultCard: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In VaultCard: The Clover device is not connected."));
                 return;
 
             }
@@ -1064,17 +1009,17 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In DisplayPaymentReceiptOptions: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In DisplayPaymentReceiptOptions: The Clover device is not connected."));
                 return;
             }
             if (orderId == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In DisplayPaymentReceiptOptions: The orderId cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In DisplayPaymentReceiptOptions: The orderId cannot be null."));
                 return;
             }
             if (paymentId == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In DisplayPaymentReceiptOptions: The paymentId cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In DisplayPaymentReceiptOptions: The paymentId cannot be null."));
                 return;
             }
 
@@ -1092,15 +1037,15 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In OpenCashDrawer: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In OpenCashDrawer: The Clover device is not connected."));
                 return;
             }
             if (reason == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In OpenCashDrawer : Reason string cannot be null. "));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In OpenCashDrawer : Reason string cannot be null. "));
                 return;
             }
-            Device.doOpenCashDrawer(reason);
+            Device.doOpenCashDrawer(reason, null);
         }
 
         /// <summary>
@@ -1115,12 +1060,12 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In ShowDisplayOrder: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In ShowDisplayOrder: The Clover device is not connected."));
                 return;
             }
             if (order == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In ShowDisplayOrder : DisplayOrder object cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In ShowDisplayOrder : DisplayOrder object cannot be null."));
                 return;
             }
             Device.doOrderUpdate(order, null);
@@ -1141,12 +1086,12 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In RemoveDisplayOrder: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In RemoveDisplayOrder: The Clover device is not connected."));
                 return;
             }
             if (order == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In RemoveDisplayOrder: DisplayOrder object cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In RemoveDisplayOrder: DisplayOrder object cannot be null."));
                 return;
             }
             Device.doOrderUpdate(order, dao);
@@ -1195,12 +1140,12 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In InvokeInputOption: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In InvokeInputOption: The Clover device is not connected."));
                 return;
             }
             if (io == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In InvokeInputOption: The InputOption object cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In InvokeInputOption: The InputOption object cannot be null."));
                 return;
             }
             Device.doKeyPress(io.keyPress);
@@ -1214,22 +1159,22 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In PrintImageFromURL: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In PrintImageFromURL: The Clover device is not connected."));
                 return;
             }
             if (ImgURL == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In PrintImageFromURL: The ImgURL string cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In PrintImageFromURL: The ImgURL string cannot be null."));
                 return;
             }
-            Device.doPrintImageURL(ImgURL);
+            Device.doPrintImageURL(ImgURL, null, null);
         }
 
         public T GetEnumFromString<T>(string stringValue, bool isCaseInsensitive = false) where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, "ArgumentException: T must be an enumerated type"));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, null, "ArgumentException: T must be an enumerated type"));
                 return default(T);
             }
             return (T)Enum.Parse(typeof(T), stringValue, isCaseInsensitive);
@@ -1248,12 +1193,12 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In AcceptPayment: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null,  "In AcceptPayment: The Clover device is not connected."));
                 return;
             }
             if (payment == null || payment.id == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In AcceptPayment: The Payment ID cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In AcceptPayment: The Payment ID cannot be null."));
                 return;
             }
             Device.doAcceptPayment(payment);
@@ -1267,12 +1212,12 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In RejectPayment: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In RejectPayment: The Clover device is not connected."));
                 return;
             }
             if (payment == null || payment.id == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In RejectPayment: The Payment ID cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In RejectPayment: The Payment ID cannot be null."));
                 return;
             }
             Device.doRejectPayment(payment, challenge);
@@ -1286,12 +1231,12 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In StartCustomActivity: The Clover device is not connected."));
                 return;
             }
             if (request.Action == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In StartCustomActivity: The Action cannot be null."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In StartCustomActivity: The Action cannot be null."));
                 return;
             }
             Device.doStartCustomActivity(request.Action, request.Payload, request.NonBlocking);
@@ -1305,12 +1250,12 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In StartCustomActivity: The Clover device is not connected."));
                 return;
             }
             else if (request.Action == null)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "In StartCustomActivity: The Action is required."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In StartCustomActivity: The Action is required."));
                 return;
             }
             Device.doSendMessageToActivity(request.Action, request.Payload);
@@ -1324,7 +1269,7 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In StartCustomActivity: The Clover device is not connected."));
                 return;
             }
             Device.doRetrieveDeviceStatus(request == null ? false : request.sendLastMessage);
@@ -1338,11 +1283,87 @@ namespace com.clover.remotepay.sdk
             }
             if (Device == null || !IsReady)
             {
-                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, "In StartCustomActivity: The Clover device is not connected."));
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In StartCustomActivity: The Clover device is not connected."));
                 return;
             }
             Device.doRetrievePayment(request.externalPaymentId);
         }
+
+        public void OpenCashDrawer(OpenCashDrawerRequest request)
+        {
+            Device.doOpenCashDrawer(request.reason, request.printerId);
+        }
+
+        public void Print(PrintRequest request)
+        {
+            if(request.text.Count > 0)
+            {
+                Device.doPrintText(request.text, request.printRequestId, request.printDeviceId);
+            }
+            else if(request.images.Count > 0)
+            {
+                Device.doPrintImage(request.images[0], request.printRequestId, request.printDeviceId);
+            }
+            else if(request.imageURLs.Count > 0)
+            {
+                Device.doPrintImageURL(request.imageURLs[0], request.printRequestId, request.printDeviceId);
+            }
+            else
+            {
+                Console.WriteLine("In Print: PrintRequest had no content or had an unhandled content type");
+            }
+        }
+
+        public void RetrievePrinters(RetrievePrintersRequest request)
+        {
+            Device.doRetrievePrinters(request);
+        }
+
+        public void RetrievePrintJobStatus(PrintJobStatusRequest request)
+        {
+            Device.doRetrievePrintJobStatus(request.printRequestId);
+        }
+
+        public void PrintText(List<string> messages)
+        {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+            if (Device == null || !IsReady)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In PrintText: The Clover device is not connected."));
+                return;
+            }
+            if (messages == null)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In PrintText : message list cannot be null. "));
+                return;
+            }
+
+            Device.doPrintText(messages, null, null);
+        }
+
+        public void PrintImage(Bitmap bitmap)
+        {
+            if (deviceObserver == null && merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+            if (Device == null || !IsReady)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In PrintImage: The Clover device is not connected."));
+                return;
+            }
+            if (bitmap == null)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0,null, "In PrintImage : Bitmap object cannot be null. "));
+                return;
+            }
+            
+            Device.doPrintImage(bitmap, null, null);
+        }
+
 
         private class InnerDeviceObserver : ICloverDeviceObserver
         {
@@ -1401,9 +1422,9 @@ namespace com.clover.remotepay.sdk
                 }
                 
             }
-            public void onDeviceError(int code, string message)
+            public void onDeviceError(int code, Exception cause, string message)
             {
-                cloverConnector.listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, code, message)));
+                cloverConnector.listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, code, cause, message)));
             }
 
             public void onTxState(TxState txState)
@@ -1470,7 +1491,7 @@ namespace com.clover.remotepay.sdk
                 cloverConnector.ShowOnDevice(msg: "CloverConnector.onKeyPressed() is not yet implemented!!!!");
             }
 
-            public void onRefundPaymentResponse(Refund refund, String orderId, String paymentId, TxState code, string msg)
+            public void onRefundPaymentResponse(Refund refund, String orderId, String paymentId, TxState code, string msg, ResponseReasonCode reason)
             {
                 RefundPaymentResponse prr = new RefundPaymentResponse();
                 prr.Refund = refund;
@@ -1486,6 +1507,7 @@ namespace com.clover.remotepay.sdk
                     prr.Result = ResponseCode.FAIL;
                 }
                 prr.Message = msg;
+                prr.Reason = reason.ToString();
                 lastPRR = prr;
                 // Don't send the response to the listeners just yet.  We need to wait
                 // until the FinishOK or FinishCancel are received to notify the listeners,
@@ -1592,7 +1614,7 @@ namespace com.clover.remotepay.sdk
                     cloverConnector.ShowOnDevice(showThankYouScreen: true,
                                                  milliSecondsTimeoutForThankYou: 3000,
                                                  showWelcomeScreen: true);
-                    cloverConnector.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "Failed to pair this response. " + payment));
+                    cloverConnector.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "Failed to pair this response. " + payment));
                 }
             }
 
@@ -1617,21 +1639,36 @@ namespace com.clover.remotepay.sdk
                 RefundPaymentResponse lastRefundResponse = lastPRR;
                 lastPRR = null;
 
-                if (lastRefundResponse != null)
+                if(refund.orderRef != null)
                 {
-                    if (lastRefundResponse.Refund.id.Equals(refund.id))
+                    RefundPaymentResponse response = new RefundPaymentResponse();
+                    response.OrderId = refund.orderRef.id;
+                    response.PaymentId = refund.payment.id;
+                    response.Refund = refund;
+                    response.Result = ResponseCode.SUCCESS;
+                    response.Reason = ResponseReasonCode.NONE.ToString();
+                    response.Success = true;
+                    cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(response));
+                }
+                else
+                {
+                    if(lastRefundResponse != null && lastRefundResponse.Refund.id == refund.id)
                     {
                         cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(lastRefundResponse));
                     }
                     else
                     {
-                        Console.WriteLine("The last PaymentRefundResponse has a different ID than this refund in finishOk");
+                        RefundPaymentResponse response = new RefundPaymentResponse();
+                        response.PaymentId = refund.payment.id;
+                        response.Refund = refund;
+                        response.Result = ResponseCode.SUCCESS;
+                        response.Reason = ResponseReasonCode.NONE.ToString();
+                        response.Success = true;
+                        cloverConnector.listeners.ForEach(listener => listener.OnRefundPaymentResponse(response));
                     }
                 }
-                else
-                {
-                    Console.WriteLine("Shouldn't get an onFinishOk without having gotten an onPaymentRefund!");
-                }
+
+
             }
 
             public void onFinishCancel()
@@ -2048,6 +2085,23 @@ namespace com.clover.remotepay.sdk
                 }
 
                 cloverConnector.listeners.ForEach(listener => listener.OnRetrievePaymentResponse(rpr));
+            }
+
+            public void onRetrievePrintersResponse(List<Printer> printers)
+            {
+                RetrievePrintersResponse rpr = new RetrievePrintersResponse(printers);
+                rpr.Result = printers != null ? ResponseCode.SUCCESS : ResponseCode.FAIL;
+                rpr.Success = rpr.Result == ResponseCode.SUCCESS;
+                cloverConnector.listeners.ForEach(listener => listener.OnRetrievePrintersResponse(rpr));
+
+            }
+
+            public void onRetrievePrintJobStatus(string printRequestId, string status)
+            {
+                PrintJobStatusResponse pjsr = new PrintJobStatusResponse(printRequestId, status);
+
+                cloverConnector.listeners.ForEach(listener => listener.OnPrintJobStatusResponse(pjsr));
+
             }
         }
     }
