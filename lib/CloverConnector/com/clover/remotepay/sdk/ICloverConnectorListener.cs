@@ -92,29 +92,22 @@ namespace com.clover.remotepay.sdk
         void OnVerifySignatureRequest(VerifySignatureRequest request);
         
         /// <summary>
-		/// Called when the Clover device encounters a Challenge at the payment gateway 
-		/// and requires confirmation. A Challenge is triggered by a potential duplicate 
-		/// Payment (DUPLICATE_CHALLENGE) or an offline Payment (OFFLINE_CHALLENGE). The 
-		/// device sends an OnConfirmPaymentRequest() asking the to reply by sending 
-		/// either an AcceptPayment() or RejectPayment() call.
-		///
-		/// Note: Duplicate Payment Challenges are raised when multiple Payments are made 
-		/// with the same  card type and last four digits within the same hour. For this 
-		/// reason, we recommend that you do not programmatically call 
-		/// CloverConnector.RejectPayment() on all instances of DUPLICATE_CHALLENGE. 
-		/// For more information, see {@link 
-		///	https://docs.clover.com/build/working-with-challenges/|Working with 
-		/// Challenges}. 
-		/// </summary>
-		/// <param name="request">The ConfirmPaymentRequest for confirmation.</param>
+        /// Called when the Clover device encounters a Challenge at the payment gateway 
+        /// and requires confirmation. A Challenge is triggered by a potential duplicate 
+        /// Payment (DUPLICATE_CHALLENGE) or an offline Payment (OFFLINE_CHALLENGE). The 
+        /// device sends an OnConfirmPaymentRequest() asking the merchant to reply by 
+        /// sending either an AcceptPayment() or RejectPayment() call.
+        ///
+        /// Note: Duplicate Payment Challenges are raised when multiple Payments are made 
+        /// with the same card type and last four digits within the same hour. For this 
+        /// reason, we recommend that you do not programmatically call 
+        /// CloverConnector.RejectPayment() on all instances of DUPLICATE_CHALLENGE. 
+        /// For more information, see {@link 
+        /// https://docs.clover.com/build/working-with-challenges/|Working with 
+        /// Challenges}. 
+        /// </summary>
+        /// <param name="request">The ConfirmPaymentRequest for confirmation.</param>
         void OnConfirmPaymentRequest(ConfirmPaymentRequest request);
-        
-        /// <summary>
-		/// Called in response to a Closeout() request.
-		/// </summary>
-		/// <param name="response">The CloseoutResponse details for the transaction 
-		/// request.</param>
-        void OnCloseoutResponse(CloseoutResponse response);
         
         /// <summary>
 		/// Called at the completion of a Sale() request. The SaleResponse contains a 

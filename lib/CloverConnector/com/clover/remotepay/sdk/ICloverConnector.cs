@@ -147,7 +147,7 @@ namespace com.clover.remotepay.sdk
 		/// Asks the Clover device to capture card information and request a payment token 
 		/// from the payment gateway. The payment token can be used for future Sale and 
 		/// Auth requests in place of the card details. 
-		/// Note: the merchant account must be configured to allow payment tokens.
+		/// Note: The merchant account must be configured to allow payment tokens.
 		/// </summary>
 		/// <param name="CardEntryMethods">The card entry methods allowed to capture the 
 		/// payment token. 
@@ -287,7 +287,7 @@ namespace com.clover.remotepay.sdk
 
         /// <summary>
 		/// Starts a Custom Activity on the Clover device.
-		/// Note: the Custom Activity must already be set up and configured on the Clover 
+		/// Note: The Custom Activity must already be set up and configured on the Clover 
 		/// device.
 		/// </summary>
 		/// <param name="request">The CustomActivityRequest details.</param>
