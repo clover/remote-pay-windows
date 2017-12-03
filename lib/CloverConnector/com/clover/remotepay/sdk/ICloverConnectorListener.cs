@@ -44,7 +44,6 @@ namespace com.clover.remotepay.sdk
 		/// device.
 		/// </summary>
 		/// <param name="deviceErrorEvent">The CloverDeviceErrorEvent event.</param>
-        /// <param name="deviceErrorEvent">The device error event.</param>
         void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent);
         
         /// <summary>

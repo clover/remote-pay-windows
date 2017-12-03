@@ -154,8 +154,6 @@ namespace com.clover.remotepay.sdk
 		/// If this parameter is null, the default values (CARD_ENTRY_METHOD_MAG_STRIPE, 
 		/// CARD_ENTRY_METHOD_ICC_CONTACT, and CARD_ENTRY_METHOD_NFC_CONTACTLESS) 
 		/// will be used.</param>
-		/// <returns>A status code: 0 for success, -1 for failure (need to use pre-defined 
-		/// constants).</returns>
         void VaultCard(int CardEntryMethods);
 
         /// <summary>
@@ -167,7 +165,6 @@ namespace com.clover.remotepay.sdk
         /// <summary>
 		/// Sends a "cancel" button press to the Clover device.
 		/// </summary>
-		/// <returns></returns>
 		[System.Obsolete("Use InvokeInputOption(InputOption) instead.")]
         void Cancel();
 

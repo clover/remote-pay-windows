@@ -52,7 +52,6 @@ namespace com.clover.remotepay.transport
 		/// <param name="endpoint">The network endpoint of the device to connect to.</param>
 		/// <param name="remoteApplicationID">The remote application ID.</param>
 		/// <param name="enableLogging"> A boolean value indicating whether to enable logging.</param>
-		/// <param name="enableLogging"> A boolean value indicating whether to enable logging.</param>
 		/// <param name="pingSleepSeconds">The amount of time between pings, in milliseconds.</param>
 		/// <param name="posName">The name of the point-of-sale app.</param>
 		/// <param name="serialNumber">The serial number of the POS terminal/device 
