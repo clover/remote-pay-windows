@@ -33,36 +33,35 @@ namespace com.clover.remotepay.transport
         public string serialNumber;
         public string pairingAuthToken;
 
-		/// <summary>
-		/// Constructor with basic parameters.
-		/// </summary>
-		/// <param name="endpoint">The network endpoint of the device to connect 
-	to.</param>
-		/// <param name="remoteApplicationID">The remote application ID.</param>
-		/// <param name="posName">The name of the point-of-sale app.</param>
-		/// <param name="serialNumber">The serial number of the POS terminal/device 
-		/// attaching to the Clover device.</param>
-		/// <param name="pairingAuthToken">The cached authentication token provided from a previous {@link PairingDeviceConfiguration#onPairingSuccess(String)} call.</param>
+        /// <summary>
+        /// Constructor with basic parameters.
+        /// </summary>
+        /// <param name="endpoint">The network endpoint of the device to connect to.</param>
+        /// <param name="remoteApplicationID">The remote application ID.</param>
+        /// <param name="posName">The name of the point-of-sale app.</param>
+        /// <param name="serialNumber">The serial number of the POS terminal/device 
+        /// attaching to the Clover device.</param>
+        /// <param name="pairingAuthToken">The cached authentication token provided from a previous {@link PairingDeviceConfiguration#onPairingSuccess(String)} call.</param>
         public WebSocketCloverDeviceConfiguration(string endpoint, String remoteApplicationID, string posName, string serialNumber, string pairingAuthToken) : this(endpoint, remoteApplicationID, false, 1, posName, serialNumber, pairingAuthToken, null, null)
         {
 
         }
         /// <summary>
-		/// Constructor with all available parameters.
-		/// </summary>
-		/// <param name="endpoint">The network endpoint of the device to connect to.</param>
-		/// <param name="remoteApplicationID">The remote application ID.</param>
-		/// <param name="enableLogging"> A boolean value indicating whether to enable logging.</param>
-		/// <param name="pingSleepSeconds">The amount of time between pings, in milliseconds.</param>
-		/// <param name="posName">The name of the point-of-sale app.</param>
-		/// <param name="serialNumber">The serial number of the POS terminal/device 
-		/// attaching to the Clover device.</param>
-		/// <param name="pairingAuthToken">The cached authentication token provided from a 
-		/// previous {@link PairingDeviceConfiguration#onPairingSuccess(String)} 
-		/// call.</param>
-		/// <param name="pairingCodeHandler">The response when a pairing code is received. 		</param>
-		/// <param name="pairingSuccessHandler">The response when a pairing code 
-		/// successfully completes.</param>
+        /// Constructor with all available parameters.
+        /// </summary>
+        /// <param name="endpoint">The network endpoint of the device to connect to.</param>
+        /// <param name="remoteApplicationID">The remote application ID.</param>
+        /// <param name="enableLogging"> A boolean value indicating whether to enable logging.</param>
+        /// <param name="pingSleepSeconds">The amount of time between pings, in milliseconds.</param>
+        /// <param name="posName">The name of the point-of-sale app.</param>
+        /// <param name="serialNumber">The serial number of the POS terminal/device 
+        /// attaching to the Clover device.</param>
+        /// <param name="pairingAuthToken">The cached authentication token provided from a 
+        /// previous {@link PairingDeviceConfiguration#onPairingSuccess(String)} 
+        /// call.</param>
+        /// <param name="pairingCodeHandler">The response when a pairing code is received. 		</param>
+        /// <param name="pairingSuccessHandler">The response when a pairing code 
+        /// successfully completes.</param>
         public WebSocketCloverDeviceConfiguration(string endpoint, string remoteApplicationID, bool enableLogging, int pingSleepSeconds, string posName, string serialNumber, string pairingAuthToken, OnPairingCodeHandler pairingCodeHandler, OnPairingSuccessHandler pairingSuccessHandler)
         {
             this.endpoint = endpoint;
