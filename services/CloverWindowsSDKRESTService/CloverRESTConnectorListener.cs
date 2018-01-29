@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -195,6 +195,21 @@ namespace CloverWindowsSDKREST
             Send("/RetrievePaymentResponse", Serialize(response));
         }
 
+        public virtual void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            Send("/PrintJobStatusResponse", Serialize(response));
+        }
+
+        public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            Send("/RetrievePrintersResponse", Serialize(response));
+        }
+
+        public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+            Send("/PrintJobStatusRequest", Serialize(request));
+        }
+
         public void ResendStatus()
         {
             switch (Status)
@@ -252,5 +267,7 @@ namespace CloverWindowsSDKREST
 
             }
         }
+
+        
     }
 }

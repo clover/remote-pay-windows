@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace com.clover.remotepay.transport
 {
@@ -23,25 +21,26 @@ namespace com.clover.remotepay.transport
         string deviceId;
         bool enableLogging = false;
         int pingSleepSeconds = 1;
+        int maxCharInMessage = 10000;
         string remoteApplicationID;
 
-        public USBCloverDeviceConfiguration(string remoteApplicationID, bool enableLogging):this("", remoteApplicationID, enableLogging, 1)
+        public USBCloverDeviceConfiguration(string remoteApplicationID, bool enableLogging) : this("", remoteApplicationID, enableLogging, 1)
         {
-            //
         }
-
 
         public USBCloverDeviceConfiguration(string deviceId, string remoteApplicationID, bool enableLogging, int pingSleepSeconds)
         {
             this.deviceId = deviceId;
-            if(remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
+            if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
             {
                 throw new ArgumentException("remoteApplicatoinID is required");
             }
+
             this.remoteApplicationID = remoteApplicationID;
             this.enableLogging = enableLogging;
             this.pingSleepSeconds = pingSleepSeconds;
         }
+
         public string getCloverDeviceTypeName()
         {
             return typeof(DefaultCloverDevice).AssemblyQualifiedName;
@@ -75,6 +74,11 @@ namespace com.clover.remotepay.transport
         public string getRemoteApplicationID()
         {
             return remoteApplicationID;
+        }
+
+        public int getMaxMessageCharacters()
+        {
+            return maxCharInMessage;
         }
     }
 }

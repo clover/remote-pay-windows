@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Clover Network, Inc.
+// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,10 +33,8 @@ namespace com.clover.remotepay.sdk
         public static string GenerateRandomString(int length)
         {
             int maxSize = length;
-            int minSize = 10;
             char[] chars = new char[62];
-            string a;
-            a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             chars = a.ToCharArray();
             int size = maxSize;
             byte[] data = new byte[1];

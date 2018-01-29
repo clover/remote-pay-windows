@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,12 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
-
 
 namespace com.clover.remotepay.data
 {
@@ -92,10 +86,14 @@ namespace com.clover.remotepay.data
         ACTIVITY_MESSAGE_TO_ACTIVITY,
         ACTIVITY_MESSAGE_FROM_ACTIVITY,
         RETRIEVE_PAYMENT_REQUEST,
-        RETRIEVE_PAYMENT_RESPONSE
+        RETRIEVE_PAYMENT_RESPONSE,
+        PRINT_JOB_STATUS_REQUEST,
+        PRINT_JOB_STATUS_RESPONSE,
+        GET_PRINTERS_REQUEST,
+        GET_PRINTERS_RESPONSE
     }
 
-public enum MessageTypes
+    public enum MessageTypes
     {
         COMMAND,
         QUERY,

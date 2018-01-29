@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
 
-/// <summary>
-/// contains service message payloads for the REST and WebSocket services, to enable auto-serialization
-/// </summary>
+//
+// contains service message payloads for the REST and WebSocket services, to enable auto-serialization
+//
 namespace com.clover.remotepay.sdk.service.client {
 
     [XmlRoot(ElementName = "ShowMessage")]
@@ -42,12 +42,6 @@ namespace com.clover.remotepay.sdk.service.client {
         public List<string> Messages { get; set; }
     }
 
-    [XmlRoot(ElementName = "OpenCashDrawer")]
-    public class OpenCashDrawer
-    {
-        public string Reason { get; set; }
-    }
-
     [XmlRoot(ElementName = "PrintImage")]
     public class PrintImage
     {
@@ -65,6 +59,34 @@ namespace com.clover.remotepay.sdk.service.client {
             return bp;
         }
 
+    }
+
+    [XmlRoot(ElementName = "PrintRequest64")]
+    public class PrintRequest64
+    {
+        public List<string> base64strings = new List<string>();
+        public List<string> imgUrls = new List<string>();
+        public List<string> textLines = new List<string>();
+        public string externalPrintJobId { get; set; }
+        public string printDeviceId { get; set; }
+
+        public PrintRequest64() { }
+        public void setBase64Strings(string img)
+        {
+            this.base64strings.Add(img);
+        }
+        public void setImageUrls(string url)
+        {
+            this.imgUrls.Add(url);
+        }
+        public void setText(List<string> textLine)
+        {
+            if(textLine.Count < 1)
+            {
+                return;
+            }
+            this.textLines = textLine;
+        }
     }
 
     [XmlRoot(ElementName = "LineItemAddedToDisplayOrder")]

@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Clover Network, Inc.
+// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
 using com.clover.remotepay.transport;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.order;
+using com.clover.sdk.v3.printer;
 using System.Collections.Generic;
 using System;
+using System.Drawing;
 
 namespace com.clover.remotepay.sdk
 {
@@ -104,6 +106,84 @@ namespace com.clover.remotepay.sdk
             this.ExternalId = null;
         }
         public string ExternalId { get; set; }
+    }
+
+    /// <summary>
+    /// This should be used for a print call.
+    /// </summary>
+    public class PrintRequest : BaseRequest
+    {
+        public List<Bitmap> images { get; set; } = new List<Bitmap>();
+        public List<string> imageURLs { get; set; } = new List<string>();
+        public List<string> text { get; set; } = new List<string>();
+        public string printRequestId { get; set; }
+        public string printDeviceId { get; set; }
+
+        public PrintRequest() { }
+
+        /// Create a PrintRequest to print a given Image
+        ///
+        /// - Parameters:
+        ///   - image: Image to print
+        ///   - printRequestId: Optional identifier to give to the print job, so it can later be queried
+        ///   - printDeviceId: Optional identifier to speciy which printer to use
+        public PrintRequest(Bitmap image, string printRequestId, string printDeviceId)
+        {
+            images.Add(image);
+            this.printRequestId = printRequestId;
+            this.printDeviceId = printDeviceId;
+
+        }
+
+        /// Create a PrintRequest to print an image at a given URL
+        ///
+        /// - Parameters:
+        ///   - imageURL: URL to the image to print
+        ///   - printRequestId: Optional identifier to give to the print job, so it can later be queried
+        ///   - printDeviceId: Optional identifier to speciy which printer to use
+        public PrintRequest(string imageURL, string printRequestId, string printDeviceId)
+        {
+            imageURLs.Add(imageURL);
+            this.printRequestId = printRequestId;
+            this.printDeviceId = printDeviceId;
+        }
+
+        /// Create a PrintRequest to print an array of strings to print
+        ///
+        /// - Parameters:
+        ///   - text: Array of strings to be printed
+        ///   - printRequestId: Optional identifier to give to the print job, so it can later be queried
+        ///   - printDeviceId: Optional identifier to speciy which printer to use
+        public PrintRequest(List<string> text, string printRequestId, string printDeviceId)
+        {
+            if (text.Count < 1)
+            {
+                return;
+            }
+
+            this.text = text;
+            this.printRequestId = printRequestId;
+            this.printDeviceId = printDeviceId;
+
+        }
+
+
+    }
+
+
+    public class OpenCashDrawerRequest : BaseRequest
+    {
+        public String reason { get; set; }
+        public String printerId { get; set; }
+
+        /// Create an object used to inform the Clover Connector's `openCashDrawer()` function of required/additional information when requesting the cash drawer be opened
+        ///
+        /// - Parameters:
+        ///   - reason: String describing the reason to open the drawer
+        public OpenCashDrawerRequest(String reason)
+        {
+            this.reason = reason;
+        }
     }
 
     /// <summary>
@@ -453,6 +533,70 @@ namespace com.clover.remotepay.sdk
         public Credit Credit { get; set; }
     }
 
+    public class RetrievePrintersResponse : BaseResponse
+    {
+        public List<Printer> printers { get; set; } = new List<Printer>();
+
+        public RetrievePrintersResponse()
+        {
+        }
+
+        public RetrievePrintersResponse(Printer printer)
+        {
+            printers.Add(printer);
+        }
+
+        public RetrievePrintersResponse(List<Printer> printers)
+        {
+            this.printers = printers;
+        }
+    }
+
+    public class PrintJobStatusRequest : BaseRequest
+    {
+        public String printRequestId { get; set; }
+
+        public PrintJobStatusRequest()
+        {
+
+        }
+
+        public PrintJobStatusRequest(String printRequestId)
+        {
+            this.printRequestId = printRequestId;
+        }
+    }
+
+    public class PrintJobStatusResponse : BaseResponse
+    {
+        public String printRequestId { get; set; }
+        public PrintJobStatus status { get; set; }
+
+        public PrintJobStatusResponse(String printRequestId, String status)
+        {
+            this.printRequestId = printRequestId;
+            try
+            {
+                this.status = (PrintJobStatus)Enum.Parse(typeof(PrintJobStatus), status);
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("{0} is not a member of the PrintJobStatus enumeration.", status);
+                this.status = PrintJobStatus.UNKNOWN;
+            }
+        }
+    }
+
+    public enum PrintJobStatus
+    {
+        IN_QUEUE,
+        PRINTING,
+        DONE,
+        ERROR,
+        UNKNOWN,
+        NOT_FOUND
+    }
+
     /// <summary>
     /// This request should be used to make a payment request
     /// using the RefundPayment method
@@ -530,7 +674,7 @@ namespace com.clover.remotepay.sdk
         /// <summary>
         /// List of payments taken offline and not yet processed
         /// </summary>
-        public List<PendingPaymentEntry> PendingPayments;
+        public List<PendingPaymentEntry> PendingPayments { get; set; }
     }
 
     /// <summary>
@@ -593,7 +737,7 @@ namespace com.clover.remotepay.sdk
     {
         public String Action { get; set; }
         public String Payload { get; set; }
-        public Boolean NonBlocking = false;
+        public Boolean NonBlocking { get; set; } = false;
     }
 
     /// <summary>
@@ -611,26 +755,26 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class ActivityMessage
     {
-        public string Action;
-        public string Payload;
+        public string Action { get; set; }
+        public string Payload { get; set; }
     }
 
     /// <summary>
     /// class for sending messages to a CustomActivity from POS
     /// </summary>
-    public class MessageToActivity 
+    public class MessageToActivity
     {
-        public string Action;
-        public string Payload;
+        public string Action { get; set; }
+        public string Payload { get; set; }
     }
 
     /// <summary>
     /// class for sending message from a CustomActivity to POS
     /// </summary>
-    public class MessageFromActivity 
+    public class MessageFromActivity
     {
-        public string Action;
-        public string Payload;
+        public string Action { get; set; }
+        public string Payload { get; set; }
     }
 
     /// <summary>

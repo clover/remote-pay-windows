@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace com.clover.remotepay.transport
 {
@@ -22,10 +20,15 @@ namespace com.clover.remotepay.transport
     {
         public static CloverDevice Get(CloverDeviceConfiguration configuration)
         {
-            string cloverDevicetypeName = configuration.getCloverDeviceTypeName();
+            string name = configuration.getCloverDeviceTypeName();
+            Type deviceType = Type.GetType(name);
 
-            return (CloverDevice)
-                Activator.CreateInstance(Type.GetType(cloverDevicetypeName), configuration);
+            if (deviceType == null)
+            {
+                throw new ArgumentException($"Cannot locate type \"{name}\" specified in Configuration.");
+            }
+
+            return (CloverDevice)Activator.CreateInstance(deviceType, configuration);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -259,15 +259,17 @@ namespace com.clover.remotepay.sdk
         {
 
         }
-        public CloverDeviceErrorEvent(CloverDeviceErrorType errorType, int code, string msg)
+        public CloverDeviceErrorEvent(CloverDeviceErrorType errorType, int code, Exception cause, string msg)
         {
             ErrorType = errorType;
             Code = code;
             Message = msg;
+            Cause = cause;
         }
 
         public CloverDeviceErrorType ErrorType { get; set; }
-        public int Code { get; set; }
+        public int? Code { get; set; }
+        public Exception Cause { get; set; }
         public string Message { get; set; }
     }
 }

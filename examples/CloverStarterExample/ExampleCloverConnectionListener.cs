@@ -78,7 +78,7 @@ namespace CloverStarterExample
                     Console.Error.WriteLine("Refund request failed - " + response.Reason);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 Console.Error.WriteLine("Error handling sale response");
             }

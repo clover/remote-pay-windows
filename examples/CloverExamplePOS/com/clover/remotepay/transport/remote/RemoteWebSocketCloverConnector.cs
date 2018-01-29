@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ using WebSocket4Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using com.clover.sdk.v3.payments;
+using com.clover.sdk.v3.printer;
 
 namespace com.clover.remotepay.transport.remote
 {
@@ -62,7 +63,6 @@ namespace com.clover.remotepay.transport.remote
 
         List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
         private CloverDeviceConfiguration config;
-
         WebSocket websocket;
         string endpoint = "ws://localhost:8889";
 
@@ -73,9 +73,9 @@ namespace com.clover.remotepay.transport.remote
         public RemoteWebSocketCloverConnector(CloverDeviceConfiguration config)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
-            _SDKInfo = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description + ":"
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
+            _SDKInfo = assembly.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>().Description + ":"
+                + (assembly.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>()).Version
+                + (assembly.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()).InformationalVersion;
             this.config = config;
             endpoint = ((RemoteWebSocketCloverConfiguration)config).endpoint;
         }
@@ -131,14 +131,14 @@ namespace com.clover.remotepay.transport.remote
             catch (Exception exc)
             {
                 Console.WriteLine(exc.Message + " => " + e.Message);
-                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, exc.Message + " => " + e.Message)));
+                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.EXCEPTION, 0, null, exc.Message + " => " + e.Message)));
                 return;
             }
 
             JToken method = jsonObj.GetValue(ServicePayloadConstants.PROP_METHOD);
             if (method == null)
             {
-                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, "Invalid message: " + e.Message)));
+                listeners.ForEach(listener => listener.OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "Invalid message: " + e.Message)));
                 return;
             }
             JObject payload = (JObject)jsonObj.GetValue(ServicePayloadConstants.PROP_PAYLOAD);
@@ -331,6 +331,24 @@ namespace com.clover.remotepay.transport.remote
                         {
                             RetrievePaymentResponse rpr = JsonUtils.deserialize<RetrievePaymentResponse>(payload.ToString());
                             listeners.ForEach(listener => listener.OnRetrievePaymentResponse(rpr));
+                            break;
+                        }
+                    case WebSocketMethod.RetrievePrintersResponse:
+                        {
+                            RetrievePrintersResponse rpr = JsonUtils.deserialize<RetrievePrintersResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnRetrievePrintersResponse(rpr));
+                            break;
+                        }
+                    case WebSocketMethod.PrintJobStatusRequest:
+                        {
+                            PrintJobStatusRequest pjsr = JsonUtils.deserialize<PrintJobStatusRequest>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintJobStatusRequest(pjsr));
+                            break;
+                        }
+                    case WebSocketMethod.PrintJobStatusResponse:
+                        {
+                            PrintJobStatusResponse pjsr = JsonUtils.deserialize<PrintJobStatusResponse>(payload.ToString());
+                            listeners.ForEach(listener => listener.OnPrintJobStatusResponse(pjsr));
                             break;
                         }
                 }
@@ -563,6 +581,8 @@ namespace com.clover.remotepay.transport.remote
             if (websocket != null)
             {
                 OpenCashDrawerRequestMessage message = new OpenCashDrawerRequestMessage();
+                OpenCashDrawerRequest drawer = new OpenCashDrawerRequest(reason);
+                message.payload = drawer;
                 websocket.Send(JsonUtils.serialize(message));
             }
         }
@@ -747,7 +767,8 @@ namespace com.clover.remotepay.transport.remote
             {
                 RetrieveDeviceStatusMessage msg = new RetrieveDeviceStatusMessage();
                 msg.payload = rdsr;
-                websocket.Send(JsonUtils.serialize(msg));
+                String ms = JsonUtils.serialize(msg);
+                websocket.Send(ms);
             }
         }
 
@@ -760,6 +781,69 @@ namespace com.clover.remotepay.transport.remote
                 websocket.Send(JsonUtils.serialize(msg));
             }
         }
+
+        public void OpenCashDrawer(OpenCashDrawerRequest request)
+        {
+            if(websocket != null)
+            {
+                OpenCashDrawerRequestMessage message = new OpenCashDrawerRequestMessage();
+                message.payload = request;
+                websocket.Send(JsonUtils.serialize(message));
+            }
+            
+        }
+
+        public void Print(sdk.PrintRequest request)
+        {
+            if(websocket != null)
+            {
+                PrintRequestMessage msg = new PrintRequestMessage();
+                PrintRequest64Message req = new PrintRequest64Message();
+                if(request.images.Count > 0)
+                {
+                    Bitmap bitmap = request.images[0];
+                    MemoryStream ms = new MemoryStream();
+                    bitmap.Save(ms, ImageFormat.Png);
+                    byte[] imgBytes = ms.ToArray();
+                    string base64Image = Convert.ToBase64String(imgBytes);
+                    req.setBase64Strings(base64Image);
+                }
+                else if(request.imageURLs.Count > 0)
+                {
+                    req.setImageUrl(request.imageURLs[0]);
+                }
+                else if(request.text.Count >0)
+                {
+                    req.setTextLines(request.text);
+                }
+                req.externalPrintJobId = request.printRequestId;
+                req.printDeviceId = request.printDeviceId;
+                msg.payload = req;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+
+        public void RetrievePrinters(RetrievePrintersRequest request)
+        {
+            if(websocket != null)
+            {
+                com.clover.sdk.remote.websocket.RetrievePrintersRequestMessage msg = new com.clover.sdk.remote.websocket.RetrievePrintersRequestMessage();
+                msg.payload = request;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public void RetrievePrintJobStatus(PrintJobStatusRequest request)
+        {
+            if(websocket != null)
+            {
+                RetrievePrintJobStatusRequestMessage msg = new RetrievePrintJobStatusRequestMessage();
+                msg.payload = request;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
 
         public class WebSocketSigVerRequestHandler : VerifySignatureRequest
         {

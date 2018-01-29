@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace com.clover.remotepay.transport
 {
     public interface CloverDeviceConfiguration
@@ -27,5 +23,6 @@ namespace com.clover.remotepay.transport
         int getPingSleepSeconds();
         string getRemoteApplicationID();
         CloverTransport getCloverTransport();
+        int getMaxMessageCharacters();
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ using System.Net;
 using System.IO;
 using System.Drawing.Imaging;
 using com.clover.sdk.v3.payments;
+using System.Drawing;
 
 namespace com.clover.remotepay.transport.remote
 {
@@ -44,9 +45,9 @@ namespace com.clover.remotepay.transport.remote
         public RemoteRESTCloverConnector(CloverDeviceConfiguration config)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
-            _SDKInfo = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description + ":"
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
+            _SDKInfo = assembly.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>().Description + ":"
+                + (assembly.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>()).Version
+                + (assembly.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()).InformationalVersion;
             Config = config;
         }
         public void InitializeConnection()
@@ -76,7 +77,6 @@ namespace com.clover.remotepay.transport.remote
         public bool DisableRestartTransactionOnFail { get; set; }
 
         List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
-        private CloverDeviceConfiguration config;
 
         public void AddCloverConnectorListener(ICloverConnectorListener connectorListener)
         {
@@ -174,6 +174,33 @@ namespace com.clover.remotepay.transport.remote
             Send("/Cancel", null);
         }
 
+        public void Print(PrintRequest request)
+        {
+            PrintRequest64 printRequest = new PrintRequest64();
+            if (request.images.Count >0)
+            {
+                Bitmap bitmap = request.images[0];
+                MemoryStream ms = new MemoryStream();
+                bitmap.Save(ms, ImageFormat.Png);
+                byte[] imgBytes = ms.ToArray();
+                string base64Image = Convert.ToBase64String(imgBytes);
+
+                printRequest.setBase64Strings(base64Image); 
+            }
+            else if(request.imageURLs.Count > 0) 
+            {
+                printRequest.setImageUrls(request.imageURLs[0]);
+            }
+            else if(request.text.Count > 0)
+            {
+                printRequest.setText(request.text);
+            }
+            printRequest.externalPrintJobId = request.printRequestId;
+            printRequest.printDeviceId = request.printDeviceId;
+            Send("/Print", printRequest);
+
+        }
+
         public void PrintText(List<string> messages)
         {
             PrintText pt = new PrintText();
@@ -225,8 +252,7 @@ namespace com.clover.remotepay.transport.remote
 
         public void OpenCashDrawer(string reason)
         {
-            OpenCashDrawer ocd = new OpenCashDrawer();
-            ocd.Reason = reason;
+            OpenCashDrawerRequest ocd = new OpenCashDrawerRequest(reason);
             Send("/OpenCashDrawer", ocd);
         }
 
@@ -334,6 +360,23 @@ namespace com.clover.remotepay.transport.remote
         {
             Send("/RetrievePayment", request);
         }
+
+        public void OpenCashDrawer(OpenCashDrawerRequest request)
+        {
+            Send("/OpenCashDrawer", request);
+        }
+
+        
+        public void RetrievePrinters(RetrievePrintersRequest request)
+        {
+            Send("/RetrievePrinters", request);
+        }
+
+        public void RetrievePrintJobStatus(PrintJobStatusRequest request)
+        {
+            Send("/RetrievePrintJobStatus", request);
+        }
+
 
         public class RESTSigVerRequestHandler : VerifySignatureRequest
         {

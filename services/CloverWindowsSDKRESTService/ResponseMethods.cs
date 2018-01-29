@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -147,5 +147,17 @@ namespace CloverWindowsSDKREST
     public class OnDeviceError
     {
         public CloverDeviceErrorEvent DeviceErrorEvent { get; set; }
+    }
+
+    [XmlRoot(ElementName = "OnRetrievePrintersResponse")]
+    public class OnRetrievePrintersResponse
+    {
+        public RetrievePrintersResponse RetrievePrintersResponse { get; set; }
+    }
+
+    [XmlRoot(ElementName ="PrintJobStatusResponse")]
+    public class OnPrintJobStatusResponse
+    {
+        public PrintJobStatusResponse PrintJobStatusResponse { get; set; }
     }
 }

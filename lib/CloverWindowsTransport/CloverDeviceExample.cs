@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace com.clover.remotepay.transport
 {
@@ -25,8 +23,7 @@ namespace com.clover.remotepay.transport
             // Send output to a file
             new CaptureLog();
 
-            CloverDeviceConfiguration configuration =
-                new USBCloverDeviceConfiguration("ThisWillBeTheDeviceId (possibly)", "com.clover.remotepay.transport.example.CloverDeviceExample", false, 1);
+            CloverDeviceConfiguration configuration = new USBCloverDeviceConfiguration("ThisWillBeTheDeviceId (possibly)", "com.clover.remotepay.transport.example.CloverDeviceExample", false, 1);
             CloverDevice device = CloverDeviceFactory.Get(configuration);
 
             device.Subscribe(new CloverListener(device));
@@ -45,13 +42,10 @@ namespace com.clover.remotepay.transport
         public void onDeviceReady(CloverTransport transport)
         {
             bool stop = false;
-            ConsoleKeyInfo info;
             do
             {
                 // Wait for user input..
-                info = Console.ReadKey();
-
-                switch (info.KeyChar)
+                switch (Console.ReadKey().KeyChar)
                 {
                     case 'x': stop = true; break;
                     case '1': device.doDiscoveryRequest(); break;
@@ -77,9 +71,9 @@ namespace com.clover.remotepay.transport
             Console.WriteLine("Device Connected");
         }
 
-        public void onDeviceError(int code, string message)
+        public void onDeviceError(int code, Exception cause, string message)
         {
-            Console.WriteLine("Code: " + code.ToString() + " //  Message: " + message);
+            Console.WriteLine("Code: " + code.ToString() + "//  Cause: " + cause + " //  Message: " + message);
         }
     }
 }

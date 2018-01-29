@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using LibUsbDotNet;
 using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Runtime.InteropServices;
+using LibUsbDotNet;
 using LibUsbDotNet.Main;
 
 namespace com.clover.remotepay.transport
 {
     class MiniInitializer
     {
-
         public static short ACCESSORY_STRING_MANUFACTURER = 0;
         public static short ACCESSORY_STRING_MODEL = 1;
         public static short ACCESSORY_STRING_DESCRIPTION = 2;
@@ -34,26 +31,26 @@ namespace com.clover.remotepay.transport
         public static byte ACCESSORY_SEND_STRING = 52;
         public static byte ACCESSORY_START = 53;
 
-        public static Boolean initializeDeviceConnectionAccessoryMode(UsbDevice device)
+        public static bool initializeDeviceConnectionAccessoryMode(UsbDevice device)
         {
-            Boolean r = false;
+            bool result = false;
 
             if (device != null)
             {
-                Boolean bOk = false;
-                Boolean shouldRun = true;
+                bool ok = false;
+                bool shouldRun = true;
 
-                bOk = checkProtocol(device);
+                ok = checkProtocol(device);
 
-                Console.WriteLine("checkProtocol:"+bOk+"\n");
+                Console.WriteLine("checkProtocol:" + ok + "\n");
 
                 if (shouldRun)
                 {
-                    bOk = sendControlMessage(device,
+                    ok = sendControlMessage(device,
                                              ACCESSORY_SEND_STRING,
                                              ACCESSORY_STRING_MANUFACTURER,
                                              "Clover");
-                    if (!bOk)
+                    if (!ok)
                     {
                         Console.WriteLine("SendControlMessage: ACCESSORY_STRING_MANUFACTURER\n");
                         shouldRun = false;
@@ -62,11 +59,11 @@ namespace com.clover.remotepay.transport
 
                 if (shouldRun)
                 {
-                    bOk = sendControlMessage(device,
+                    ok = sendControlMessage(device,
                                              ACCESSORY_SEND_STRING,
                                              ACCESSORY_STRING_MODEL,
                                              "Adapter");
-                    if (!bOk)
+                    if (!ok)
                     {
                         Console.WriteLine("SendControlMessage: ACCESSORY_STRING_MODEL\n");
                         shouldRun = false;
@@ -75,11 +72,11 @@ namespace com.clover.remotepay.transport
 
                 if (shouldRun)
                 {
-                    bOk = sendControlMessage(device,
+                    ok = sendControlMessage(device,
                                              ACCESSORY_SEND_STRING,
                                              ACCESSORY_STRING_DESCRIPTION,
                                              "Windows POS Device");
-                    if (!bOk)
+                    if (!ok)
                     {
                         Console.WriteLine("SendControlMessage: ACCESSORY_STRING_DESCRIPTION\n");
                         shouldRun = false;
@@ -88,11 +85,11 @@ namespace com.clover.remotepay.transport
 
                 if (shouldRun)
                 {
-                    bOk = sendControlMessage(device,
+                    ok = sendControlMessage(device,
                                              ACCESSORY_SEND_STRING,
                                              ACCESSORY_STRING_VERSION,
                                              "0.01");
-                    if (!bOk)
+                    if (!ok)
                     {
                         Console.WriteLine("SendControlMessage: ACCESSORY_STRING_VERSION\n");
                         shouldRun = false;
@@ -101,11 +98,11 @@ namespace com.clover.remotepay.transport
 
                 if (shouldRun)
                 {
-                    bOk = sendControlMessage(device,
+                    ok = sendControlMessage(device,
                                              ACCESSORY_SEND_STRING,
                                              ACCESSORY_STRING_URI,
                                              "market://details?id=com.clover.remote.protocol.usb");
-                    if (!bOk)
+                    if (!ok)
                     {
                         Console.WriteLine("SendControlMessage: ACCESSORY_STRING_URI\n");
                         shouldRun = false;
@@ -114,11 +111,11 @@ namespace com.clover.remotepay.transport
 
                 if (shouldRun)
                 {
-                    bOk = sendControlMessage(device,
+                    ok = sendControlMessage(device,
                                              ACCESSORY_SEND_STRING,
                                              ACCESSORY_STRING_SERIAL,
                                              "C415000");
-                    if (!bOk)
+                    if (!ok)
                     {
                         Console.WriteLine("SendControlMessage: ACCESSORY_STRING_SERIAL\n");
                         shouldRun = false;
@@ -127,43 +124,39 @@ namespace com.clover.remotepay.transport
 
                 if (shouldRun)
                 {
-                    bOk = sendControlMessage(device,
+                    ok = sendControlMessage(device,
                                              ACCESSORY_START,
                                              0,
                                              null);
-                    if (!bOk)
+                    if (!ok)
                     {
                         Console.WriteLine("SendControlMessage: ACCESSORY_START\n");
                         shouldRun = false;
                     }
                 }
 
-                r = shouldRun;
+                result = shouldRun;
             }
-                return r;
+            return result;
         }
 
-        public static Boolean sendControlMessage(UsbDevice device, byte requestCode, short index, string message)
+        public static bool sendControlMessage(UsbDevice device, byte requestCode, short index, string message)
         {
-            Boolean r = false;
-
             short messageLength = 0;
 
             if (message != null)
             {
-                messageLength = (short)(message.Length);
+                messageLength = (short)message.Length;
             }
-
 
             UsbSetupPacket setupPacket = new UsbSetupPacket();
             setupPacket.RequestType = (byte)((byte)UsbConstants.USB_DIR_OUT | (byte)UsbConstants.USB_TYPE_VENDOR);
 
-            setupPacket.Request = requestCode; // byte
+            setupPacket.Request = requestCode;
             setupPacket.Value = 0;
-            setupPacket.Index = index; // short
-            setupPacket.Length = messageLength; // short
+            setupPacket.Index = index;
+            setupPacket.Length = messageLength;
 
-            int resultTransferred;
             Console.WriteLine("RequestType:" + setupPacket.RequestType);
             Console.WriteLine("setupPacket.Request:" + setupPacket.Request);
             Console.WriteLine("setupPacket.Value:" + setupPacket.Value);
@@ -172,37 +165,28 @@ namespace com.clover.remotepay.transport
 
             Console.WriteLine("message:" + message);
 
-
             byte[] messageBytes = null;
             if (null != message)
             {
                 messageBytes = Encoding.UTF8.GetBytes(message);
             }
 
-            r = device.ControlTransfer(ref setupPacket, messageBytes, messageLength, out resultTransferred);
-
-            return r;
+            return device.ControlTransfer(ref setupPacket, messageBytes, messageLength, out int resultTransferred);
         }
 
-        public static Boolean checkProtocol(UsbDevice device)
+        public static bool checkProtocol(UsbDevice device)
         {
-            Boolean r = false;
-
             string message = "";
             short messageLength = 2;
 
             UsbSetupPacket setupPacket = new UsbSetupPacket();
-            setupPacket.RequestType = (byte)((byte)UsbConstants.USB_DIR_IN | (byte) UsbConstants.USB_TYPE_VENDOR);
+            setupPacket.RequestType = (byte)((byte)UsbConstants.USB_DIR_IN | (byte)UsbConstants.USB_TYPE_VENDOR);
             setupPacket.Request = (byte)ACCESSORY_GET_PROTOCOL;
             setupPacket.Value = 0;
             setupPacket.Index = 0;
             setupPacket.Length = 0;
 
-            int resultTransferred;
-
-            r = device.ControlTransfer(ref setupPacket, message, messageLength, out resultTransferred);
-
-            return r;
+            return device.ControlTransfer(ref setupPacket, message, messageLength, out int resultTransferred);
         }
 
         static byte[] GetBytes(string str)
@@ -211,6 +195,5 @@ namespace com.clover.remotepay.transport
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
-
     }
 }

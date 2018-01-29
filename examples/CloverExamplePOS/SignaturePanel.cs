@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ namespace CloverExamplePOS
     public partial class SignaturePanel : Control
     {
         private Signature2 sig;
-        public Signature2 Signature {
+        public Signature2 Signature
+        {
             get
             {
                 return sig;
@@ -34,9 +35,9 @@ namespace CloverExamplePOS
             set
             {
                 sig = value;
-                if(value != null)
+                if (value != null)
                 {
-                    SetBounds(0, 0, (int)(sig.width*scale), (int)(sig.height*scale));
+                    SetBounds(0, 0, (int)(sig.width * scale), (int)(sig.height * scale));
                 }
             }
         }
@@ -46,7 +47,7 @@ namespace CloverExamplePOS
         {
             base.OnPaint(e);
 
-            if(Signature != null)
+            if (Signature != null)
             {
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 

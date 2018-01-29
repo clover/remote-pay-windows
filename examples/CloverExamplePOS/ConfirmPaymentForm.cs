@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ namespace CloverExamplePOS
         private Form formToCover = null;
         private Challenge challenge = null;
         private bool lastChallenge = false;
-        private string title = "";
 
         public ConfirmPaymentForm(Form formToCover, Challenge challenge, bool lastChallenge) : base(formToCover)
         {
@@ -38,6 +37,23 @@ namespace CloverExamplePOS
             this.challenge = challenge;
             this.lastChallenge = lastChallenge;
             InitializeComponent();
+
+            // Customize display
+            label1.Text = challenge.message;
+
+            // Customize title
+            switch (challenge.type)
+            {
+                case ChallengeType.DUPLICATE_CHALLENGE:
+                    TitleTextBox.Text = "Confirm Payment - Duplicate Payment";
+                    break;
+                case ChallengeType.OFFLINE_CHALLENGE:
+                    TitleTextBox.Text = "Confirm Payment - Offline Payment";
+                    break;
+                default:
+                    TitleTextBox.Text = "Confirm Payment";
+                    break;
+            }
         }
 
         private void ConfirmPaymentForm_Load(object sender, EventArgs e)
@@ -82,7 +98,8 @@ namespace CloverExamplePOS
             if (lastChallenge)
             {
                 Status = DialogResult.OK; // set to OK when accepting the last challenge
-            } else                        // this is used to trigger the PaymentConfirmedMessage
+            }
+            else                        // this is used to trigger the PaymentConfirmedMessage
             {
                 Status = DialogResult.Yes; // set to Yes when accepting challenges preceeding
             }                              // the last challenge

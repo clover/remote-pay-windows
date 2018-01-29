@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace CloverExamplePOS
         private static readonly string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
         CloverDeviceConfiguration selectedConfig;
 
-        const String APPLICATION_ID = "com.clover.CloverExamplePOS:1.3";
+        const String APPLICATION_ID = "com.clover.CloverExamplePOS:1.4.0";
 
         CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", APPLICATION_ID, false, 1);
         CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, APPLICATION_ID, false, 1);
@@ -73,11 +73,11 @@ namespace CloverExamplePOS
             {
                 isSdkInstalled = ((int)IsSDK == 1);
             }
-            catch (InvalidCastException ice)
+            catch (InvalidCastException)
             {
                 isSdkInstalled = false;
             }
-            catch (NullReferenceException nre)
+            catch (NullReferenceException)
             {
                 isSdkInstalled = false;
             }
@@ -86,11 +86,11 @@ namespace CloverExamplePOS
             {
                 isRESTInstalled = ((int)IsREST == 1);
             }
-            catch (InvalidCastException ice)
+            catch (InvalidCastException)
             {
                 isRESTInstalled = false;
             }
-            catch (NullReferenceException nre)
+            catch (NullReferenceException)
             {
                 isRESTInstalled = false;
             }
@@ -99,11 +99,11 @@ namespace CloverExamplePOS
             {
                 isWSInstalled = ((int)IsWS == 1);
             }
-            catch (InvalidCastException ice)
+            catch (InvalidCastException)
             {
                 isWSInstalled = false;
             }
-            catch (NullReferenceException nre)
+            catch (NullReferenceException)
             {
                 isWSInstalled = false;
             }

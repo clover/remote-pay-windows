@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace com.clover.remotepay.transport
 {
     public static class AssemblyUtils
     {
-        public static T GetAssemblyAttribute<T>(this System.Reflection.Assembly ass) where T : Attribute
+        public static T GetAssemblyAttribute<T>(this System.Reflection.Assembly assembly) where T : Attribute
         {
-            object[] attributes = ass.GetCustomAttributes(typeof(T), false);
+            object[] attributes = assembly.GetCustomAttributes(typeof(T), false);
             if (attributes == null || attributes.Length == 0)
+            {
                 return null;
+            }
             return attributes.OfType<T>().SingleOrDefault();
         }
-
     }
 }

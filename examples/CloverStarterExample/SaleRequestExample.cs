@@ -36,13 +36,12 @@ namespace CloverStarterExample
     class SaleRequestExample
     {
         public static ICloverConnector cloverConnector;
-        private static SaleRequest pendingSale;
 
         static void Main(string[] args)
         {
-           
 
-            cloverConnector = new CloverConnector(SampleUtils.GetNetworkConfiguration());
+
+            cloverConnector = CloverConnectorFactory.createICloverConnector(SampleUtils.GetNetworkConfiguration());
             var ccl = new ExampleCloverConnectionListener(cloverConnector);
             cloverConnector.AddCloverConnectorListener(ccl);
             cloverConnector.InitializeConnection();

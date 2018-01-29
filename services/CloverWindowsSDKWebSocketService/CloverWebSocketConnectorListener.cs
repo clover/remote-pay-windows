@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -258,6 +258,26 @@ namespace CloverWindowsSDKWebSocketService
            Send(Serialize(message));
         }
 
+        public virtual void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            OnPrintJobStatusResponseMessage msg = new OnPrintJobStatusResponseMessage();
+            msg.payload = response;
+            WebSocket.Send(Serialize(msg));
+        }
+
+        public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+            OnPrintJobStatusRequestMessage msg = new OnPrintJobStatusRequestMessage();
+            msg.payload = request;
+            WebSocket.Send(Serialize(msg));
+        }
+
+        public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            OnRetrievePrintersResponseMessage msg = new OnRetrievePrintersResponseMessage();
+            msg.payload = response;
+            WebSocket.Send(Serialize(msg));
+        }
 
         internal void SendConnectionStatus()
         {
@@ -289,5 +309,6 @@ namespace CloverWindowsSDKWebSocketService
             }
         }
 
+        
     }
 }

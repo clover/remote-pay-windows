@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace CloverWindowsSDKWebSocketService {
+namespace CloverWindowsSDKWebSocketService 
+{
     /*
     [XmlRoot(ElementName = "OnTipAdded")]
     public class OnTipAdded

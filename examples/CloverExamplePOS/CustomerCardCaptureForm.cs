@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ namespace CloverExamplePOS
         public Payment Payment { get; private set; }
         public POSCard Card { get; private set; }
 
-        public CustomerCardCaptureForm (Form toCover) : base(toCover)
+        public CustomerCardCaptureForm(Form toCover) : base(toCover)
         {
             InitializeComponent();
         }
@@ -264,8 +264,8 @@ namespace CloverExamplePOS
         private void CustomerCardCaptureForm_Load(object sender, EventArgs e)
         {
             DateTime start = DateTime.Now;
-            
-            for(int i=0; i<10; i++)
+
+            for (int i = 0; i < 10; i++)
             {
                 this.YearComboBox.Items.Add(start.ToString("yy"));
                 start = start.AddYears(1);

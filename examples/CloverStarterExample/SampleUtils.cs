@@ -11,9 +11,9 @@ namespace CloverStarterExample
     public class SampleUtils
     {
         
-        private static readonly String APP_ID = "com.cloverconnector.windows.simple.sample:1.3.1";
-        private static readonly String POS_NAME = "Clover Simple Sample Windows";
-        private static readonly String DEVICE_NAME = "Clover Device";
+        // private static readonly String APP_ID = "com.cloverconnector.windows.simple.sample:1.3.1";
+        // private static readonly String POS_NAME = "Clover Simple Sample Windows";
+        // private static readonly String DEVICE_NAME = "Clover Device";
         
         private SampleUtils() { }
 
@@ -29,7 +29,7 @@ namespace CloverStarterExample
             PairingDeviceConfiguration.OnPairingSuccessHandler pairingsuccessHandler = new PairingDeviceConfiguration.OnPairingSuccessHandler(OnPairingSuccess);
            
             // ws vs wss must match Network Pay Display setting. wss requires Clover root CA
-            var endpoint = "ws://192.168.0.136:12345/remote_pay";
+            var endpoint = "ws://192.168.0.6:12345/remote_pay";
 
             // Network Pay Display must be installed and configured to allow 
             // insecure connections for the above configuration

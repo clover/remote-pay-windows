@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,42 +13,48 @@
 // limitations under the License.
 
 using System;
-using com.clover.remotepay.data;
-using com.clover.remotepay.transport;
-using com.clover.sdk.v3.order;
-using com.clover.sdk.v3.payments;
-using System.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Net;
+using System.Threading;
 using com.clover.remote.order;
 using com.clover.remote.order.operation;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Threading;
+using com.clover.remotepay.data;
+using com.clover.sdk.v3.order;
+using com.clover.sdk.v3.payments;
+using com.clover.sdk.v3.printer;
 
 namespace com.clover.remotepay.transport
 {
     public class DefaultCloverDevice : CloverDevice, CloverTransportObserver
     {
-        private RefundResponseMessage lastRefundResponseMessage { get; set; }
+        public int maxMessageSizeInChars = 1000;
+        public long MAX_PAYLOAD_SIZE = 10000000;
 
-        // Used to halt auto-accept of signature when payment confirmation is requested.
+        /// <summary>
+        /// Used to halt auto-accept of signature when payment confirmation is requested.
+        /// </summary>
         private ManualResetEventSlim paymentConfirmationIdle = new ManualResetEventSlim(true);
         private bool paymentRejected = false;
         private object ackLock = new object();
-        private Dictionary<String, BackgroundWorker> msgIdToTask = new Dictionary<string, BackgroundWorker>();
+        private Dictionary<string, BackgroundWorker> msgIdToTask = new Dictionary<string, BackgroundWorker>();
+        private int remoteMessageVersion = 1;
 
-        public DefaultCloverDevice(CloverDeviceConfiguration configuration) :
-            this(configuration.getMessagePackageName(), configuration.getCloverTransport(), configuration.getRemoteApplicationID())
+        public DefaultCloverDevice(CloverDeviceConfiguration configuration) : base(configuration)
         {
         }
 
-        public DefaultCloverDevice(String packageName, CloverTransport transport, String remoteApplicationID) : base(packageName, transport, remoteApplicationID)
+        public override void Initialize(CloverDeviceConfiguration configuration)
         {
+            base.Initialize(configuration);
+
             transport.Subscribe(this);
+            maxMessageSizeInChars = Math.Max(maxMessageSizeInChars, configuration.getMaxMessageCharacters());
         }
 
-        //---------------------------------------------------
         public void onDeviceConnected(CloverTransport transport)
         {
             deviceObservers.ForEach(x => x.onDeviceConnected());
@@ -64,9 +70,9 @@ namespace com.clover.remotepay.transport
             doDiscoveryRequest();
         }
 
-        public void onDeviceError(int code, string message)
+        public void onDeviceError(int code, Exception cause, string message)
         {
-            deviceObservers.ForEach(x => x.onDeviceError(code, message));
+            deviceObservers.ForEach(x => x.onDeviceError(code, cause, message));
         }
 
         private void setPaymentConfirmationIdle(bool value)
@@ -74,11 +80,13 @@ namespace com.clover.remotepay.transport
             if (value)
             {
                 paymentConfirmationIdle.Set();
-            } else
+            }
+            else
             {
                 paymentConfirmationIdle.Reset();
             }
         }
+
         /// <summary>
         /// This handles parsing the generic message and figuring
         /// out which handler should be used for processing
@@ -92,6 +100,8 @@ namespace com.clover.remotepay.transport
             //CloverTransportObserver
             // Deserialize the message object to a real object, and figure
             RemoteMessage rMessage = JsonUtils.deserializeSDK<RemoteMessage>(message);
+            remoteMessageVersion = Math.Max(remoteMessageVersion, rMessage.version);
+
             switch (rMessage.method)
             {
                 case Methods.BREAK:
@@ -112,7 +122,8 @@ namespace com.clover.remotepay.transport
                     notifyObserversDiscoveryResponse(drMessage);
                     break;
                 case Methods.FINISH_CANCEL:
-                    notifyObserversFinishCancel();
+                    FinishCancelMessage finishCancelMessage = JsonUtils.deserializeSDK<FinishCancelMessage>(rMessage.payload);
+                    notifyObserversFinishCancel(finishCancelMessage.requestInfo);
                     break;
                 case Methods.FINISH_OK:
                     FinishOkMessage fokmsg = JsonUtils.deserializeSDK<FinishOkMessage>(rMessage.payload);
@@ -247,6 +258,14 @@ namespace com.clover.remotepay.transport
                     RetrievePaymentResponseMessage rprm = JsonUtils.deserializeSDK<RetrievePaymentResponseMessage>(rMessage.payload);
                     notifyObserversRetrievePaymentResponse(rprm);
                     break;
+                case Methods.GET_PRINTERS_RESPONSE:
+                    RetrievePrintersResponseMessage rtrm = JsonUtils.deserializeSDK<RetrievePrintersResponseMessage>(rMessage.payload);
+                    notifyObserversRetrievePrinterResponse(rtrm);
+                    break;
+                case Methods.PRINT_JOB_STATUS_RESPONSE:
+                    PrintJobStatusResponseMessage pjsrm = JsonUtils.deserializeSDK<PrintJobStatusResponseMessage>(rMessage.payload);
+                    notifyObserversRetrievePrintJobStatus(pjsrm);
+                    break;
                 case Methods.PRINT_IMAGE:
                     //Outbound no-op
                     break;
@@ -302,13 +321,14 @@ namespace com.clover.remotepay.transport
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
                 bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message);
-                });
+                    delegate (object o, DoWorkEventArgs args)
+                    {
+                        observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message, rrm.reason);
+                    });
                 bw.RunWorkerAsync();
             }
         }
+
         public void notifyObserversTipAdjusted(TipAdjustResponseMessage tarm)
         {
             foreach (ICloverDeviceObserver observer in deviceObservers)
@@ -319,107 +339,119 @@ namespace com.clover.remotepay.transport
                     delegate (object o, DoWorkEventArgs args)
                     {
                         observer.onAuthTipAdjusted(tarm.paymentId, tarm.amount, tarm.success);
-                });
+                    });
                 bw.RunWorkerAsync();
             }
         }
+
         public void notifyObserversVaultCardResponse(VaultCardResponseMessage vcrm)
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
-                    observer.onVaultCardResponse(vcrm);
-                }
-            });
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
+                    {
+                        observer.onVaultCardResponse(vcrm);
+                    }
+                });
             bw.RunWorkerAsync();
         }
+
         public void notifyObserversReadCardDataResponse(ReadCardDataResponseMessage cdrm)
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
-                    observer.onReadCardDataResponse(cdrm);
-                }
-            });
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
+                    {
+                        observer.onReadCardDataResponse(cdrm);
+                    }
+                });
             bw.RunWorkerAsync();
         }
+
         public void notifyObserversDiscoveryResponse(DiscoveryResponseMessage drMessage)
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
-                    if( drMessage.ready )
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
                     {
-                        observer.onDeviceReady(this, drMessage);
+                        if (drMessage.ready)
+                        {
+                            observer.onDeviceReady(this, drMessage);
+                        }
+                        else
+                        {
+                            observer.onDeviceConnected();
+                        }
                     }
-                    else 
-                    {
-                        observer.onDeviceConnected(); 
-                    }
-                }
-            });
+                });
             bw.RunWorkerAsync();
         }
+
         public void notifyObserversCapturePreAuthResponse(CapturePreAuthResponseMessage carm)
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
-                    observer.onCapturePreAuthResponse(carm.paymentId, carm.amount, carm.tipAmount, carm.status, carm.reason);
-                }
-            });
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
+                    {
+                        observer.onCapturePreAuthResponse(carm.paymentId, carm.amount, carm.tipAmount, carm.status, carm.reason);
+                    }
+                });
             bw.RunWorkerAsync();
         }
+
         public void notifyObserversCloseoutResponse(CloseoutResponseMessage crm)
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
-                    observer.onCloseoutResponse(crm.status, crm.reason, crm.batch);
-                }
-            });
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
+                    {
+                        observer.onCloseoutResponse(crm.status, crm.reason, crm.batch);
+                    }
+                });
             bw.RunWorkerAsync();
         }
+
         public void notifyObserversPendingPaymentsResponse(RetrievePendingPaymentsResponseMessage rpprm)
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
-                    observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
-                }
-            });
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
+                    {
+                        observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
+                    }
+                });
             bw.RunWorkerAsync();
         }
+
         public void notifyObserversActivityResponse(ActivityResponseMessage arm)
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args) {
-                ResultStatus status = arm.resultCode == -1 ? ResultStatus.SUCCESS : ResultStatus.CANCEL;
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
-                    observer.onActivityResponse(status, arm.action, arm.payload, arm.failReason);
-                }
-            });
+                    ResultStatus status = arm.resultCode == -1 ? ResultStatus.SUCCESS : ResultStatus.CANCEL;
+                    foreach (ICloverDeviceObserver observer in deviceObservers)
+                    {
+                        observer.onActivityResponse(status, arm.action, arm.payload, arm.failReason);
+                    }
+                });
             bw.RunWorkerAsync();
         }
+
         public void notifyObserversKeyPressed(KeyPressMessage keyPress)
         {
             foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                    delegate (object o, DoWorkEventArgs args)
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                     {
-                        BackgroundWorker b = o as BackgroundWorker;
                         observer.onKeyPressed(keyPress.keyPress);
-                });
+                    });
                 bw.RunWorkerAsync();
             }
         }
@@ -429,13 +461,10 @@ namespace com.clover.remotepay.transport
             foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    BackgroundWorker b = o as BackgroundWorker;
-                    observer.onCashbackSelected(cbSelected.cashbackAmount);
-                });
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+                    {
+                        observer.onCashbackSelected(cbSelected.cashbackAmount);
+                    });
                 bw.RunWorkerAsync();
             }
         }
@@ -446,28 +475,24 @@ namespace com.clover.remotepay.transport
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    BackgroundWorker b = o as BackgroundWorker;
-                    observer.onConfirmPayment(message.payment, message.challenges);
-                });
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+                    {
+                        observer.onConfirmPayment(message.payment, message.challenges);
+                    });
                 bw.RunWorkerAsync();
             }
         }
 
         public void notifyObserversTipAdded(TipAddedMessage tipAdded)
         {
-            foreach(ICloverDeviceObserver observer in deviceObservers)
+            foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    BackgroundWorker b = o as BackgroundWorker;
-                    observer.onTipAdded(tipAdded.tipAmount);
-                });
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+                    {
+                        observer.onTipAdded(tipAdded.tipAmount);
+                    });
                 bw.RunWorkerAsync();
             }
         }
@@ -478,12 +503,10 @@ namespace com.clover.remotepay.transport
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    BackgroundWorker b = o as BackgroundWorker;
-                    observer.onTxStartResponse(txsrm.result, txsrm.externalId);
-                });
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+                   {
+                       observer.onTxStartResponse(txsrm.result, txsrm.externalId);
+                   });
                 bw.RunWorkerAsync();
             }
         }
@@ -494,12 +517,10 @@ namespace com.clover.remotepay.transport
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    BackgroundWorker b = o as BackgroundWorker;
-                    observer.onPartialAuth(partialAuth.partialAuthAmount);
-                });
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+                   {
+                       observer.onPartialAuth(partialAuth.partialAuthAmount);
+                   });
                 bw.RunWorkerAsync();
             }
         }
@@ -510,12 +531,10 @@ namespace com.clover.remotepay.transport
             {
                 BackgroundWorker bw = new BackgroundWorker();
                 // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    BackgroundWorker b = o as BackgroundWorker;
-                    observer.onPaymentVoided(payment, reason);
-                });
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+                   {
+                       observer.onPaymentVoided(payment, reason);
+                   });
                 bw.RunWorkerAsync();
             }
         }
@@ -546,21 +565,21 @@ namespace com.clover.remotepay.transport
             }
         }
 
-        public void notifyObserversFinishCancel()
+        public void notifyObserversFinishCancel(TxType requestInfo)
         {
             foreach (ICloverDeviceObserver observer in deviceObservers)
             {
-                observer.onFinishCancel();
+                observer.onFinishCancel(requestInfo);
             }
         }
-        public void notifyObserversFinishOk(FinishOkMessage msg)
 
+        public void notifyObserversFinishOk(FinishOkMessage msg)
         {
             foreach (ICloverDeviceObserver observer in deviceObservers)
             {
                 if (msg.payment != null)
                 {
-                    observer.onFinishOk(msg.payment, msg.signature);
+                    observer.onFinishOk(msg.payment, msg.signature, msg.requestInfo);
                 }
                 else if (msg.credit != null)
                 {
@@ -579,27 +598,21 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserverAck(AcknowledgementMessage ackMessage)
         {
-            lock(ackLock)
+            lock (ackLock)
             {
-                BackgroundWorker worker = null;
-                if(msgIdToTask.TryGetValue(ackMessage.sourceMessageId, out worker))
+                if (msgIdToTask.TryGetValue(ackMessage.sourceMessageId, out BackgroundWorker worker))
                 {
-                	// this allows DCD to register an action, initially void payment
+                    // this allows DCD to register an action, initially void payment
                     if (worker != null)
                     {
                         msgIdToTask.Remove(ackMessage.sourceMessageId);
                         worker.RunWorkerAsync();
                     }
-
-					// this allows other listeners to register a listener
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        observer.onMessageAck(ackMessage.sourceMessageId);
-                    }
                 }
-                else
+
+                foreach (ICloverDeviceObserver observer in deviceObservers)
                 {
-                    // No task for messageId
+                    observer.onMessageAck(ackMessage.sourceMessageId);
                 }
             }
         }
@@ -685,6 +698,22 @@ namespace com.clover.remotepay.transport
             }
         }
 
+        public void notifyObserversRetrievePrinterResponse(RetrievePrintersResponseMessage response)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onRetrievePrintersResponse(response.printers);
+
+            }
+        }
+
+        public void notifyObserversRetrievePrintJobStatus(PrintJobStatusResponseMessage response)
+        {
+            foreach (ICloverDeviceObserver observer in deviceObservers)
+            {
+                observer.onRetrievePrintJobStatus(response.externalPrintJobId, response.status);
+            }
+        }
 
         public override void doShowPaymentReceiptScreen(string orderId, string paymentId)
         {
@@ -696,17 +725,6 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new LogMessage(logLevel, messages));
         }
 
-        /*
-        public override void doShowRefundReceiptScreen(string orderId, string refundId)
-        {
-            sendObjectMessage(new RefundReceiptMessage(orderId, refundId));
-        }
-
-        public override void doShowCreditReceiptScreen(string orderId, string creditId)
-        {
-            sendObjectMessage(new CreditReceiptMessage(orderId, creditId));
-        }
-        */
         public override void doKeyPress(KeyPress keyPress)
         {
             sendObjectMessage(new KeyPressMessage(keyPress));
@@ -741,9 +759,15 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new TerminalMessage(text));
         }
 
-        public override void doOpenCashDrawer(string reason)
+        public override void doOpenCashDrawer(string reason, string deviceId)
         {
-            sendObjectMessage(new OpenCashDrawerMessage(reason));
+            Printer printer = null;
+            if (deviceId != null)
+            {
+                printer = new Printer();
+                printer.id = deviceId;
+            }
+            sendObjectMessage(new OpenCashDrawerMessage(reason, printer));
         }
 
         public override void doVaultCard(int? CardEntryMethods)
@@ -753,7 +777,7 @@ namespace com.clover.remotepay.transport
 
         public override void doReadCardData(PayIntent payIntent)
         {
-            sendObjectMessage(new ReadCardDataMessage(payIntent)); 
+            sendObjectMessage(new ReadCardDataMessage(payIntent));
         }
 
         public override void doCloseout(bool allowOpenTabs, string batchId)
@@ -766,9 +790,9 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new BreakMessage());
         }
 
-        public override void doTxStart(PayIntent payIntent, Order order)
+        public override void doTxStart(PayIntent payIntent, Order order, TxType requestInfo)
         {
-            sendObjectMessage(new TxStartRequestMessage(payIntent, order));
+            sendObjectMessage(new TxStartRequestMessage(payIntent, order, requestInfo));
         }
 
         public override void doTipAdjustAuth(string orderId, string paymentId, long amount)
@@ -781,47 +805,96 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new CapturePreAuthMessage(paymentID, amount, tipAmount));
         }
 
-        public override void doPrintText(List<string> textLines)
+        public override void doPrintText(List<string> textLines, string printRequestId, string printDeviceId)
         {
             TextPrintMessage tpm = new TextPrintMessage();
+            tpm.externalPrintJobId = printRequestId;
             foreach (string line in textLines)
             {
                 tpm.textLines.Add(line);
             }
+
             sendObjectMessage(tpm);
         }
 
-        public override void doPrintImage(string base64String)
+        public override void doPrintImageURL(string base64String, string printRequestId, string printDeviceId)
         {
+            WebRequest request = WebRequest.Create(base64String);
+            WebResponse response = request.GetResponse();
+            Stream responseStream = response.GetResponseStream();
+            Bitmap bitmap = new Bitmap(responseStream);
+            MemoryStream ms = new MemoryStream();
+            bitmap.Save(ms, ImageFormat.Png);
+            byte[] imgBytes = ms.ToArray();
+
             ImagePrintMessage ipm = new ImagePrintMessage();
-            ipm.png = base64String;
-            sendObjectMessage(ipm);
+            ipm.externalPrintJobId = printRequestId;
+            if (printDeviceId != null)
+            {
+                Printer printer = new Printer();
+                printer.id = printDeviceId;
+                ipm.printer = printer;
+            }
+
+            if (remoteMessageVersion > 1)
+            {
+                sendCommandMessage(ipm, ipm.method, version: 2, attachmentData: imgBytes);
+            }
+            else
+            {
+                string base64Image = Convert.ToBase64String(imgBytes);
+                ipm.png = base64Image;
+                sendObjectMessage(ipm);
+            }
         }
 
-        public override void doPrintImageURL(string urlString)
+        public override void doPrintImage(Bitmap img, string printRequestId, string printDeviceId)
         {
-            ImagePrintMessage ipm = new ImagePrintMessage();
-            ipm.urlString = urlString;
-            sendObjectMessage(ipm);
+            if (img != null)
+            {
+                ImagePrintMessage ipm = new ImagePrintMessage();
+                ipm.externalPrintJobId = printRequestId;
+
+                if (printDeviceId != null)
+                {
+                    Printer printer = new Printer();
+                    printer.id = printDeviceId;
+                    ipm.printer = printer;
+                }
+
+                if (remoteMessageVersion > 1)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    img.Save(ms, ImageFormat.Png);
+                    byte[] imgBytes = ms.ToArray();
+                    sendCommandMessage(ipm, ipm.method, version: 2, attachmentData: imgBytes);
+                }
+                else
+                {
+                    MemoryStream ms = new MemoryStream();
+                    img.Save(ms, ImageFormat.Png);
+                    byte[] imgBytes = ms.ToArray();
+                    string base64Image = Convert.ToBase64String(imgBytes);
+                    ipm.png = base64Image;
+                    sendObjectMessage(ipm);
+                }
+            }
         }
 
         public override void doVoidPayment(Payment payment, VoidReason reason)
         {
-            lock(ackLock)
+            lock (ackLock)
             {
                 VoidPaymentMessage vpm = new VoidPaymentMessage();
                 vpm.payment = payment;
                 vpm.voidReason = reason;
                 string msgId = sendObjectMessage(vpm);
 
-
                 BackgroundWorker bw = new BackgroundWorker();
-                bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    notifyObserversPaymentVoided(payment, reason);
-                });
-
+                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+                    {
+                        notifyObserversPaymentVoided(payment, reason);
+                    });
 
                 if (!SupportsAcks)
                 {
@@ -850,7 +923,6 @@ namespace com.clover.remotepay.transport
             updateMessage.setOperation(operation);
 
             sendObjectMessage(updateMessage);
-            
         }
 
         public override void doAcceptPayment(Payment payment)
@@ -897,19 +969,26 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(rdsrm);
         }
 
+        public override void doRetrievePrinters(RetrievePrintersRequest request)
+        {
+            RetrievePrintersRequestMessage message = new RetrievePrintersRequestMessage();
+            message.category = request.category;
+
+            sendObjectMessage(message);
+        }
+
         public override void doRetrievePayment(string externalPaymentId)
         {
-          PaymentRequestMessage rprm = new PaymentRequestMessage();
+            PaymentRequestMessage rprm = new PaymentRequestMessage();
             rprm.externalPaymentId = externalPaymentId;
             sendObjectMessage(rprm);
         }
 
         private string sendObjectMessage(Message message)
         {
-            RemoteMessage remoteMessage = RemoteMessage.createMessage(
-                message.method, MessageTypes.COMMAND, message, this.packageName, remoteSourceSDK, remoteApplicationID
-            );
+            RemoteMessage remoteMessage = RemoteMessage.createMessage(message.method, MessageTypes.COMMAND, message, this.packageName, remoteSourceSDK, remoteApplicationID);
             string msg = JsonUtils.serializeSDK(remoteMessage);
+
             transport.sendMessage(msg);
 #if DEBUG
             Console.WriteLine("Sent message: " + msg);
@@ -917,6 +996,155 @@ namespace com.clover.remotepay.transport
             return remoteMessage.id;
         }
 
+        private string sendCommandMessage(Message payload, Methods method, int version = 1, string attachment = null, string attachmentEncoding = null, byte[] attachmentData = null, string attachmentUrl = null)
+        {
+            RemoteMessage rm = RemoteMessage.createMessage(method, MessageTypes.COMMAND, payload, this.packageName, remoteSourceSDK, remoteApplicationID);
+            rm.attachment = attachment;
+            rm.attachmentEncoding = attachmentEncoding;
 
+            return sendRemoteMessage(rm, version, attachmentData, attachmentUrl, attachmentEncoding);
+        }
+
+        private string sendRemoteMessage(RemoteMessage remoteMsg, int version = 1, byte[] attachmentData = null, string attachmentUrl = null, string attachmentEncoding = null)
+        {
+            remoteMsg.packageName = this.packageName;
+            remoteMsg.remoteApplicationID = remoteApplicationID;
+            remoteMsg.remoteSourceSDK = remoteSourceSDK;
+            remoteMsg.version = version;
+
+            if (remoteMsg.version > 1)
+            {
+                bool hasAttachmentURI = attachmentUrl != null;
+                bool hasAttachmentData = attachmentData != null;
+                int payloadHelper = 0;
+                if (remoteMsg.attachment != null)
+                {
+                    payloadHelper = (remoteMsg.attachment.Length != 0 ? remoteMsg.attachment.Length : 0);
+                }
+
+                if (remoteMsg.payload != null)
+                {
+                    payloadHelper += (remoteMsg.payload.Length != 0 ? remoteMsg.payload.Length : 0);
+                }
+
+                // maxMessageSizeInChars is controlled by user, make sure it is a positive number or use a reasonable default to avoid infinite loop etc. problems
+                int maxSize = maxMessageSizeInChars <= 0 ? 1000 : maxMessageSizeInChars;
+                bool payloadTooLarge = payloadHelper > maxSize;
+                bool shouldFrag = hasAttachmentURI || payloadTooLarge || hasAttachmentData;
+                if (shouldFrag)
+                {
+
+                    if ((remoteMsg.attachment != null && remoteMsg.attachment.Length > MAX_PAYLOAD_SIZE))
+                    {
+                        Console.WriteLine("Error sending message - payload size is greater than the maximum allowed");
+                        return null;
+                    }
+
+                    int fragmentIndex = 0;
+                    string payloadStr = remoteMsg.payload != null ? remoteMsg.payload : "";
+
+                    int startIndex = 0;
+                    while (startIndex < payloadStr.Length)
+                    {
+                        int length = (maxSize < payloadStr.Length ? maxSize : payloadStr.Length);
+                        string fPayload = payloadStr.Substring(startIndex, length);
+                        startIndex += length;
+                        bool attachmentAvailable = ((remoteMsg.attachment != null && remoteMsg.attachment.Length > 0 ? remoteMsg.attachment.Length : 0) == 0); //if attachment not null and is nonzero return false, otherwise return true
+                        bool attachmentUriAvailable = ((remoteMsg.attachmentUri != null && remoteMsg.attachmentUri.Length > 0 ? remoteMsg.attachmentUri.Length : 0) == 0); //if attachment not null and is nonzero return false, otherwise return true
+                        bool lastFragment = payloadStr.Length == 0 && (attachmentAvailable && attachmentUriAvailable);
+                        sendMessageFragment(remoteMsg, fPayload, null, fragmentIndex++, lastFragment);
+                    }
+
+                    // now let's fragment the attachment or attachmentData
+                    string attach = remoteMsg.attachment;
+                    if (attach != null)
+                    {
+                        if (remoteMsg.attachmentEncoding == "BASE64")
+                        {
+                            remoteMsg.attachmentEncoding = "BASE64.ATTACHMENT";
+                            int start = 0;
+                            while (attach.Length > 0)
+                            {
+                                string aPayload = attach.Substring(start, maxSize < attach.Length ? maxSize : attach.Length);
+                                start += maxSize < attach.Length ? maxSize : attach.Length;
+                                sendMessageFragment(remoteMsg, null, aPayload, fragmentIndex++, attach.Length == 0);
+                            }
+                        }
+                        else
+                        {
+                            // TODO: chunk as-is
+                        }
+                    }
+                    else if (attachmentData != null)
+                    {
+                        int start = 0;
+                        int count = attachmentData.Length;
+                        remoteMsg.attachmentEncoding = "BASE64.FRAGMENT";
+                        while (start < count)
+                        {
+                            int length = Math.Min(maxSize, count - start);
+                            byte[] chunkData = new byte[length];
+                            Array.Copy(attachmentData, start, chunkData, 0, length);
+                            start = start + maxSize;
+
+                            //FRAGMENT Payload
+                            string fAttachment = Convert.ToBase64String(chunkData);
+                            sendMessageFragment(remoteMsg: remoteMsg, fPayload: null, fAttachment: fAttachment, fragmentIndex: fragmentIndex++, lastFragment: start > count);
+                        }
+                    }
+                }
+                else //we DON'T need to fragment
+                {
+                    // note: attachmentData is always null here because we take earlier if branch "if shouldFrag" when it's not
+                    if (attachmentData != null)
+                    {
+                        string base64string = Convert.ToBase64String(attachmentData);
+                        doPrintImage(base64string);
+                    }
+                }
+            }
+
+            return remoteMsg.id;
+        }
+
+        private void sendMessageFragment(RemoteMessage remoteMsg, string fPayload, string fAttachment, int fragmentIndex, bool lastFragment)
+        {
+            RemoteMessage fRemoteMessage = new RemoteMessage();
+            fRemoteMessage.id = remoteMsg.id;
+            fRemoteMessage.method = remoteMsg.method;
+            fRemoteMessage.type = remoteMsg.type;
+            fRemoteMessage.packageName = remoteMsg.packageName;
+            fRemoteMessage.remoteApplicationID = remoteMsg.remoteApplicationID;
+            fRemoteMessage.remoteSourceSDK = remoteMsg.remoteSourceSDK;
+            fRemoteMessage.version = remoteMsg.version;
+
+            // changes for the fragment
+            fRemoteMessage.payload = fPayload;
+            fRemoteMessage.attachmentUri = null;
+            fRemoteMessage.attachmentEncoding = remoteMsg.attachmentEncoding != null ? remoteMsg.attachmentEncoding : "BASE64.FRAGMENT";
+            fRemoteMessage.attachment = fAttachment;
+            fRemoteMessage.fragmentIndex = fragmentIndex;
+            fRemoteMessage.lastFragment = lastFragment;
+
+            string msg = JsonUtils.serializeSDK(fRemoteMessage);
+            transport.sendMessage(msg);
+
+#if DEBUG
+            Console.WriteLine("Sent message: " + msg);
+#endif
+        }
+
+        public override void doRetrievePrintJobStatus(string printRequestId)
+        {
+            PrintJobStatusRequestMessage msg = new PrintJobStatusRequestMessage(printRequestId);
+            sendObjectMessage(msg);
+        }
+
+        public override void doPrintImage(string base64String)
+        {
+            ImagePrintMessage ipm = new ImagePrintMessage();
+            ipm.png = base64String;
+            sendObjectMessage(ipm);
+        }
     }
 }

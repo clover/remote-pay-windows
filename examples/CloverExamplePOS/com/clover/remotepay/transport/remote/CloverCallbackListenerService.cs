@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,8 @@ namespace com.clover.remotepay.transport.remote
     {
         public List<ICloverConnectorListener> connectorListener
         {
-            get {
+            get
+            {
                 return (Server as CloverRESTServer).cloverConnectorListeners;
             }
         }
@@ -625,6 +626,38 @@ namespace com.clover.remotepay.transport.remote
             {
                 ResetDeviceResponse rdr = ParseResponse<ResetDeviceResponse>(context);
                 connectorListener.ForEach(listener => listener.OnResetDeviceResponse(rdr));
+            }
+            catch (Exception e)
+            {
+                context.Response.StatusCode = 400;
+                context.Response.StatusDescription = e.Message;
+                SendTextResponse(context, "error processing request");
+            }
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/RetrievePrintersResponse$")]
+        public void RetrievePrintersResponse(HttpListenerContext context)
+        {
+            try
+            {
+                RetrievePrintersResponse rpr = ParseResponse<RetrievePrintersResponse>(context);
+                connectorListener.ForEach(listener => listener.OnRetrievePrintersResponse(rpr));
+            }
+            catch (Exception e)
+            {
+                context.Response.StatusCode = 400;
+                context.Response.StatusDescription = e.Message;
+                SendTextResponse(context, "error processing request");
+            }
+        }
+
+        [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/CloverCallback/PrintJobStatusResponse$")]
+        public void PrintJobStatusResponse(HttpListenerContext context)
+        {
+            try
+            {
+                PrintJobStatusResponse pjsr = ParseResponse<PrintJobStatusResponse>(context);
+                connectorListener.ForEach(listener => listener.OnPrintJobStatusResponse(pjsr));
             }
             catch (Exception e)
             {

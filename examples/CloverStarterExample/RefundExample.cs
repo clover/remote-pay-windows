@@ -44,7 +44,7 @@ namespace CloverStarterExample
         {
 
 
-            var cloverConnector = new CloverConnector(SampleUtils.GetNetworkConfiguration());
+            var cloverConnector = CloverConnectorFactory.createICloverConnector(SampleUtils.GetNetworkConfiguration());
             var ccl = new ExampleCloverConnectionListener(cloverConnector);
             cloverConnector.AddCloverConnectorListener(ccl);
             cloverConnector.InitializeConnection();
