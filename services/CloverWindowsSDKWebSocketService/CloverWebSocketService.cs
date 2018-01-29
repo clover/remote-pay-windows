@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ namespace CloverWindowsSDKWebSocketService
 
         public static readonly string SERVICE_NAME = "Clover Connector WebSocket Service";
 
-        CloverConnector cloverConnector = null;
+        ICloverConnector cloverConnector = null;
         List<IWebSocketConnection> clientConnections = new List<IWebSocketConnection>();
         CloverWebSocketConnectorListener connectorListener = new CloverWebSocketConnectorListener();
         private bool Debug = false;
@@ -97,7 +97,7 @@ namespace CloverWindowsSDKWebSocketService
                             string timerSeconds = timerString.Substring(index + 1);
                             Timer = Convert.ToInt32(timerSeconds);
                         }
-                        catch (Exception e)
+                        catch
                         {
                             Timer = 1;
                             EventLog.WriteEntry(SERVICE_NAME, "Error parsing the -timer command line argument.  Setting timer to 1 second.");
@@ -474,9 +474,9 @@ namespace CloverWindowsSDKWebSocketService
                 config = new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer);
             }
 
-            cloverConnector = new CloverConnector(config);
-            cloverConnector.InitializeConnection();
+            cloverConnector = CloverConnectorFactory.createICloverConnector(config);
             cloverConnector.AddCloverConnectorListener(connectorListener);
+            cloverConnector.InitializeConnection();
         }
 
         private String getPOSNameAndVersion()

@@ -3073,9 +3073,6 @@ namespace CloverExamplePOS
         private ColumnHeader Exp_Year;
         private ColumnHeader Token;
         private ListView ratingsListView;
-        private ColumnHeader RatingID;
-        private ColumnHeader RatingQuestion;
-        private ColumnHeader RatingValue;
         private Button VaultCardBtn;
         private TableLayoutPanel tableLayoutPanel17;
         private TableLayoutPanel tableLayoutPanelForceOffline;

@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -203,11 +203,6 @@ namespace CloverWindowsSDKREST
         public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
         {
             Send("/RetrievePrintersResponse", Serialize(response));
-        }
-
-        public virtual void OnRetrievePrintersRequest(RetrievePrintersRequest request)
-        {
-            Send("/RetrievePrintersRequest", Serialize(request));
         }
 
         public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)

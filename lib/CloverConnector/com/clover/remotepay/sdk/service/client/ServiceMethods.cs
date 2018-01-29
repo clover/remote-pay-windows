@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
 
-/// <summary>
-/// contains service message payloads for the REST and WebSocket services, to enable auto-serialization
-/// </summary>
+//
+// contains service message payloads for the REST and WebSocket services, to enable auto-serialization
+//
 namespace com.clover.remotepay.sdk.service.client {
 
     [XmlRoot(ElementName = "ShowMessage")]

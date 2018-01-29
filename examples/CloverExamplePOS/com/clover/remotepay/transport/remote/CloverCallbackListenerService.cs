@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,8 @@ namespace com.clover.remotepay.transport.remote
     {
         public List<ICloverConnectorListener> connectorListener
         {
-            get {
+            get
+            {
                 return (Server as CloverRESTServer).cloverConnectorListeners;
             }
         }

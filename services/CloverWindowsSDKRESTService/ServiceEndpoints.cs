@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public sealed class ServiceEndpoints : RESTResource
 
     public CloverRESTServer GetServer
     {
-        get 
+        get
         {
             return (CloverRESTServer)Server;
         }
@@ -47,7 +47,7 @@ public sealed class ServiceEndpoints : RESTResource
 
 
 
-    [RESTRoute(Method =Grapevine.HttpMethod.GET, PathInfo = @"^/Clover/Status$")]
+    [RESTRoute(Method = Grapevine.HttpMethod.GET, PathInfo = @"^/Clover/Status$")]
     public void Status(HttpListenerContext context)
     {
         GetServer.ForwardToClientListener.ResendStatus();
@@ -164,13 +164,13 @@ public sealed class ServiceEndpoints : RESTResource
             GetServer.CloverConnector.PreAuth(message);
             this.SendTextResponse(context, "");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             context.Response.StatusCode = 400;
             context.Response.StatusDescription = e.Message;
             this.SendTextResponse(context, "error processing request");
         }
-        
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Sale$")]
@@ -182,7 +182,7 @@ public sealed class ServiceEndpoints : RESTResource
             GetServer.CloverConnector.Sale(message);
             this.SendTextResponse(context, "");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             context.Response.StatusCode = 400;
             context.Response.StatusDescription = e.Message;
@@ -192,7 +192,7 @@ public sealed class ServiceEndpoints : RESTResource
         //Console.WriteLine(context.Response.StatusCode);
         //Console.WriteLine(context.Response.StatusDescription);
         //context.Response.StatusCode
-        
+
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/VoidPayment$")]
@@ -369,9 +369,9 @@ public sealed class ServiceEndpoints : RESTResource
             PrintRequest request = null;
             if (message != null)
             {
-                if(message.base64strings.Count > 0)
+                if (message.base64strings.Count > 0)
                 {
-                    
+
                     byte[] imgBytes = Convert.FromBase64String(message.base64strings[0]);
                     MemoryStream ms = new MemoryStream();
                     ms.Write(imgBytes, 0, imgBytes.Length);
@@ -379,11 +379,11 @@ public sealed class ServiceEndpoints : RESTResource
                     ms.Close();
                     request = new PrintRequest(bp, message.externalPrintJobId, message.printDeviceId);
                 }
-                else if(message.imgUrls.Count > 0)
+                else if (message.imgUrls.Count > 0)
                 {
                     request = new PrintRequest(message.imgUrls[0], message.externalPrintJobId, message.printDeviceId);
                 }
-                else if(message.textLines.Count > 0)
+                else if (message.textLines.Count > 0)
                 {
                     request = new PrintRequest(message.textLines, message.externalPrintJobId, message.printDeviceId);
                 }
@@ -442,7 +442,7 @@ public sealed class ServiceEndpoints : RESTResource
     public void OpenCashDrawer(HttpListenerContext context)
     {
         try
-        {   
+        {
             OpenCashDrawerRequest message = ParseRequest<OpenCashDrawerRequest>(context);
             GetServer.CloverConnector.OpenCashDrawer(message);
             this.SendTextResponse(context, "");
@@ -654,7 +654,8 @@ public sealed class ServiceEndpoints : RESTResource
             RetrievePrintersRequest message = ParseRequest<RetrievePrintersRequest>(context);
             GetServer.CloverConnector.RetrievePrinters(message);
             this.SendTextResponse(context, "");
-        } catch(Exception e)
+        }
+        catch (Exception e)
         {
             context.Response.StatusCode = 400;
             context.Response.StatusDescription = e.Message;

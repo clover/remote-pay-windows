@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using LibUsbDotNet;
-using LibUsbDotNet.LibUsb;
-using LibUsbDotNet.Main;
-using LibUsbDotNet.WinUsb;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,29 +22,35 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Timers;
+using LibUsbDotNet;
+using LibUsbDotNet.LibUsb;
+using LibUsbDotNet.Main;
+using LibUsbDotNet.WinUsb;
 
 namespace com.clover.remotepay.transport
 {
     public class USBCloverTransport : CloverTransport
     {
-        private UsbDevice MyUsbDevice;
-        private System.Timers.Timer _timer = new System.Timers.Timer();
         public static Dictionary<string, List<UsbDeviceFinder>> VendorToFinder = new Dictionary<string, List<UsbDeviceFinder>>();
         public static List<UsbDeviceFinder> MerchantUsbFinders = new List<UsbDeviceFinder>();
         public static List<UsbDeviceFinder> CustomerUsbFinders = new List<UsbDeviceFinder>();
+
+        private UsbDevice MyUsbDevice;
+        private System.Timers.Timer _timer = new System.Timers.Timer();
+
         private static readonly uint REMOTE_STRING_MAGIC_START_TOKEN = 0xcc771122;
         private static readonly int REMOTE_STRING_HEADER_BYTE_COUNT = 4 + 4; // 2 ints
         // Defined by AOA
         private static readonly int MAX_PACKET_BYTES = 16384;
-        // A short
         private static readonly short PACKET_HEADER_SIZE = 2;
         private static readonly int REMOTE_STRING_LENGTH_MAX = 4 * 1024 * 1024;
 
+        private static int EMPTY_STRING = 1;
+        private readonly int ERROR_LIMIT = 3;
+
         private UsbEndpointReader reader;
         private UsbEndpointWriter writer;
-        private static int EMPTY_STRING = 1;
         private bool shutdown = false;
-        private readonly int ERROR_LIMIT = 3;
         private BackgroundWorker receiveMessagesThread = new BackgroundWorker();
         private BackgroundWorker sendMessagesThread = new BackgroundWorker();
         private DoWorkEventHandler receiveMessagesDoWorkHandler;
@@ -59,8 +61,10 @@ namespace com.clover.remotepay.transport
 
         BlockingQueue<string> messageQueue = new BlockingQueue<string>();
 
+        public override string ShortTitle() => "USB";
+
         /// <summary>
-        /// 
+        /// Create a USB Clover Transport with a specific list of merchant and customer USB devices
         /// </summary>
         /// <param name="merchantDevices"></param>
         /// <param name="customerDevices"></param>
@@ -74,10 +78,12 @@ namespace com.clover.remotepay.transport
             {
                 AddCustomerDevice(device.VID, device.PID);
             }
+
             init();
         }
+
         /// <summary>
-        /// 
+        /// Create a USB Clover Transport given a device id
         /// </summary>
         /// <param name="deviceId">The device id (like the one obtained from 'adb devices')</param>
         public USBCloverTransport(string deviceId)
@@ -86,6 +92,12 @@ namespace com.clover.remotepay.transport
             init();
         }
 
+        /// <summary>
+        /// Create a USB Clover Transport given device id and flags
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="enableLogging"></param>
+        /// <param name="pingSleepSeconds"></param>
         public USBCloverTransport(string deviceId, bool enableLogging, int pingSleepSeconds)
         {
             loadDevicesFromConfig();
@@ -97,15 +109,20 @@ namespace com.clover.remotepay.transport
             {
                 EnablePinging(pingSleepSeconds);
             }
+
             init();
         }
 
+        /// <summary>
+        /// Initialize the USB Clover Transport and start watching USB events
+        /// </summary>
         private void init()
         {
             //start listening for connection events
             listenForUSB();
             initializeBGWDoWorkHandlers();
             ConnectDevice();
+
             // Create a timer that will check the connection to 
             // ensure that it is still up and healthy.  There
             // are circumstances where Windows might put the 
@@ -114,10 +131,14 @@ namespace com.clover.remotepay.transport
             // it if necessary.
             if (getPingSleepSeconds() > 0)
             {
-                if(_timer != null)
+                if (_timer != null)
                 {
                     _timer.Close();
                     Console.WriteLine("Timer thread closed");
+                }
+                else
+                {
+                    _timer = new System.Timers.Timer();
                 }
                 _timer.AutoReset = false;
                 _timer.Interval = getPingSleepSeconds() * 1000;
@@ -131,6 +152,7 @@ namespace com.clover.remotepay.transport
         {
             // attempt to open the device as if it is already in customer mode
             DeviceSetToAccessoryMode();
+
             // if opening in cust mode fails, then try merchant mode, 
             // which will retrigger the accessory mode call
             if (MyUsbDevice == null)
@@ -144,37 +166,33 @@ namespace com.clover.remotepay.transport
             UsbDeviceFinder deviceFinder = new UsbDeviceFinder(vid, pid);
             MerchantUsbFinders.Add(deviceFinder);
 
-            string vidString = String.Format("{0:x}", vid).ToUpper();
-            List<UsbDeviceFinder> finders = null;
-            if (VendorToFinder.TryGetValue(vidString, out finders))
+            string vidString = $"{vid:X}";
+            if (VendorToFinder.TryGetValue(vidString, out List<UsbDeviceFinder> finders))
             {
                 finders.Add(deviceFinder);
             }
             else
             {
-                finders = new List<UsbDeviceFinder>();
-                finders.Add(deviceFinder);
-                VendorToFinder.Add(vidString, finders);
+                VendorToFinder.Add(vidString, new List<UsbDeviceFinder> { deviceFinder });
             }
         }
+
         private void AddCustomerDevice(int vid, int pid)
         {
             UsbDeviceFinder deviceFinder = new UsbDeviceFinder(vid, pid);
             CustomerUsbFinders.Add(deviceFinder);
 
-            string vidString = String.Format("{0:x}", vid).ToUpper();
-            List<UsbDeviceFinder> finders = null;
-            if (VendorToFinder.TryGetValue(vidString, out finders))
+            string vidString = $"{vid:X}";
+            if (VendorToFinder.TryGetValue(vidString, out List<UsbDeviceFinder> finders))
             {
                 finders.Add(deviceFinder);
             }
             else
             {
-                finders = new List<UsbDeviceFinder>();
-                finders.Add(deviceFinder);
-                VendorToFinder.Add(vidString, finders);
+                VendorToFinder.Add(vidString, new List<UsbDeviceFinder> { deviceFinder });
             }
         }
+
         private void loadDevicesFromConfig()
         {
             string merchantDevices = System.Configuration.ConfigurationSettings.AppSettings["merchant_devices"];
@@ -232,17 +250,15 @@ namespace com.clover.remotepay.transport
             return MAX_PACKET_BYTES - PACKET_HEADER_SIZE;
         }
 
-        // return the GUID of the interface for MI_00
         public bool IsUsbDeviceConnected(string pid, string vid, string mi)
         {
-            using (var searcher =
-              new ManagementObjectSearcher(@"Select * From Win32_USBControllerDevice"))
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"Select * From Win32_USBControllerDevice"))
             {
-                using (var collection = searcher.Get())
+                using (ManagementObjectCollection collection = searcher.Get())
                 {
-                    foreach (var device in collection)
+                    foreach (ManagementBaseObject device in collection)
                     {
-                        var usbDevice = Convert.ToString(device);
+                        string usbDevice = Convert.ToString(device);
 
                         if (usbDevice.Contains(pid) && usbDevice.Contains(vid))
                         {
@@ -266,7 +282,7 @@ namespace com.clover.remotepay.transport
         /// Called when the device is INITIALLY connected.  This sets the mini device to accessory mode,
         /// at which point the mini device disconnects.
         /// </summary>
-        private Boolean DeviceInitiallyConnected()
+        private bool DeviceInitiallyConnected()
         {
             lock (DeviceInitSyncLock)
             {
@@ -286,12 +302,11 @@ namespace com.clover.remotepay.transport
                         }
                     }
 
-
                     UsbDevice TempMyUsbDevice = null;
                     try
                     {
                         // Find and open the usb device.
-                        foreach (UsbDeviceFinder merchUsbFinder in MerchantUsbFinders)
+                        foreach (UsbDeviceFinder merchUsbFinder in MerchantUsbFinders.ToArray())
                         {
 
                             TempMyUsbDevice = UsbDevice.OpenUsbDevice(merchUsbFinder);
@@ -328,6 +343,7 @@ namespace com.clover.remotepay.transport
                 {
                     onDeviceConnected();
                 }
+
                 return initialized;
             }
         }
@@ -340,33 +356,30 @@ namespace com.clover.remotepay.transport
             try
             {
                 ConnectDevice();
-                if(_timer != null)
+                if (_timer != null)
                 {
                     _timer.Close();
+                    _timer.Start();
                 }
-                _timer.Start();
-            } catch (Exception ex)
-            {
-                _timer.Close();
-                Console.WriteLine("OnTimerEvent Exception : " + ex.Message);
-                // Ignore the exception if we are trying to reconnect
             }
-
+            catch (Exception ex)
+            {
+                // Ignore the exception if we are trying to reconnect
+                _timer?.Close();
+                Console.WriteLine("OnTimerEvent Exception : " + ex.Message);
+            }
         }
-
 
         /// <summary>
         /// Opens the device in accessory mode.  Sets up the read and write streams.
         /// </summary>
-        /// 
-        private Boolean DeviceSetToAccessoryMode()
+        private bool DeviceSetToAccessoryMode()
         {
             lock (DeviceAccessorySyncLock)
             {
-                Boolean initialized = false;
+                bool initialized = false;
                 if (MyUsbDevice == null || !MyUsbDevice.IsOpen || !MyUsbDevice.UsbRegistryInfo.IsAlive)
                 {
-
                     // If the device is open and  we no longer have this device in the bus enumeration, close it to try to
                     // get it back to a sane state
                     if (MyUsbDevice != null && !MyUsbDevice.UsbRegistryInfo.IsAlive)
@@ -385,6 +398,7 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog("DeviceSetToAccessoryMode(): MyUsbDevice.IsOpen = false.  Attempting to reopen using WinUSB lib.");
                     }
+
                     try
                     {
                         for (int i = 0; i < UsbDevice.AllWinUsbDevices.Count && MyUsbDevice == null; i++)
@@ -408,7 +422,9 @@ namespace com.clover.remotepay.transport
                                 }
                             }
                         }
-                        if (MyUsbDevice == null) // try libusb, but current WinUsb is the driver of choice
+
+                        // try libusb, but current WinUsb is the driver of choice
+                        if (MyUsbDevice == null)
                         {
                             TransportLog("DeviceSetToAccessoryMode(): MyUsbDevice is null.  Attempting to recreate/reopen using LibUSB driver");
                             for (int i = 0; i < UsbDevice.AllLibUsbDevices.Count; i++)
@@ -432,6 +448,7 @@ namespace com.clover.remotepay.transport
                                 }
                             }
                         }
+
                         if (MyUsbDevice == null)
                         {
                             throw new Exception("Obtaining handle to the usb device failed.");
@@ -441,9 +458,7 @@ namespace com.clover.remotepay.transport
                         // it will have an IUsbDevice interface. If not (WinUSB) the 
                         // variable will be null indicating this is an interface of a 
                         // device.
-
-                        IUsbDevice wholeUsbDevice = MyUsbDevice as IUsbDevice;
-                        if (!ReferenceEquals(wholeUsbDevice, null))
+                        if (MyUsbDevice is IUsbDevice wholeUsbDevice)
                         {
                             // This is a "whole" USB device. Before it can be used, 
                             // the desired configuration and interface must be selected.
@@ -474,7 +489,6 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog(Environment.NewLine);
                         TransportLog(ex.Message);
-                        //Console.WriteLine("DeviceSetToAccessoryMode Exception : " + ex.Message);
                     }
                     TransportLog("Exiting DeviceSetToAccessoryMode");
                     if (initialized)
@@ -491,6 +505,12 @@ namespace com.clover.remotepay.transport
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Queue a message to send to the device
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public override int sendMessage(string message)
         {
             if (isConnected())
@@ -504,80 +524,79 @@ namespace com.clover.remotepay.transport
             return 0;
         }
 
-
         private void messageSendLoop()
         {
-            
-            
-            if(!sendMessagesThread.IsBusy)
+            if (!sendMessagesThread.IsBusy)
             {
                 sendMessagesThread.RunWorkerAsync();
             }
-            
         }
 
         private void initializeBGWDoWorkHandlers()
         {
             Console.WriteLine("sendMessagesDoWorkHandler created");
             sendMessagesDoWorkHandler = new DoWorkEventHandler(
-            delegate (object o, DoWorkEventArgs args)
-            {
-                TransportLog("Starting send message loop in BGW.DoWork().");
-                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting sendMessagesThread");
-
-                do
+                delegate (object o, DoWorkEventArgs args)
                 {
-                    try
+                    TransportLog("Starting send message loop in BGW.DoWork().");
+                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting sendMessagesThread");
+
+                    do
                     {
-                        while (messageQueue.Count > 0)
+                        try
                         {
-                            TransportLog("In sendMessagesDoWorkHandler() just before the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
-                            String message = messageQueue.Dequeue();
-                            TransportLog("In sendMessagesDoWorkHandler() just after the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
-                            if (message != null)
+                            while (messageQueue.Count > 0)
                             {
-                                sendMessageSync(message);
-                            }
-                            else
-                            {
-                                TransportLog("Dequeued a null message");  // this should never happen, but just in case, let's log it
+                                TransportLog("In sendMessagesDoWorkHandler() just before the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
+                                string message = messageQueue.Dequeue();
+                                TransportLog("In sendMessagesDoWorkHandler() just after the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
+                                if (message != null)
+                                {
+                                    sendMessageSync(message);
+                                }
+                                else
+                                {
+                                    TransportLog("Dequeued a null message");  // this should never happen, but just in case, let's log it
+                                }
                             }
                         }
+                        catch (Exception e)
+                        {
+                            TransportLog("Error occurred in sendMessageSync(): " + e.Message);
+                            TransportLog(e.StackTrace);
+                            Console.WriteLine("initializeBGWDoWorkHandler Exception : " + e.Message);
+                        }
+                        lock (messageQueue)
+                        {
+#if DEBUG
+                            GC.Collect(); // use to test for memory leaks
+#endif
+                            Monitor.Wait(messageQueue, 1000); // wake up every second and check if it is shutdown...
+                        }
+                    } while (!shutdown);
+
+                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating sendMessagesThread");
+                    Console.WriteLine("Terminating sendMessagesThread");
+                });
+
+            Console.WriteLine("receiveMessagesDoWorkHandler created");
+            receiveMessagesDoWorkHandler = new DoWorkEventHandler(
+                delegate (object o, DoWorkEventArgs args)
+                {
+                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting receiveMessagesThread");
+                    try
+                    {
+                        getMessages();
                     }
                     catch (Exception e)
                     {
-                        TransportLog("Error occurred in sendMessageSync(): " + e.Message);
-                        TransportLog(e.StackTrace);
-                        Console.WriteLine("initializeBGWDoWorkHandler Exception : " + e.Message);
+                        TransportLog("receiveMessagesThread Exception: " + e.Message);
+                        Console.WriteLine("receiveMessagesThread Exception: " + e.Message);
                     }
-                    lock (messageQueue)
-                    {
-#if DEBUG
-                        GC.Collect(); // use to test for memory leaks
-#endif
-                        Monitor.Wait(messageQueue, 1000); // wake up every second and check if it is shutdown...
-                    }
-                } while (!shutdown);
-                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating sendMessagesThread");
-                Console.WriteLine("Terminating sendMessagesThread");
-            });
-            Console.WriteLine("receiveMessagesDoWorkHandler created");
-            receiveMessagesDoWorkHandler = new DoWorkEventHandler(
-            delegate (object o, DoWorkEventArgs args)
-            {
-                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting receiveMessagesThread");
-                try
-                {
-                    getMessages();
-                }
-                catch (Exception e)
-                {
-                    TransportLog("receiveMessagesThread Exception: " + e.Message);
-                    Console.WriteLine("receiveMessagesThread Exception: " + e.Message);
-                }
-                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating receiveMessagesThread");
-                Console.WriteLine("Terminating receiveMessagesThread");
-            });
+                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating receiveMessagesThread");
+                    Console.WriteLine("Terminating receiveMessagesThread");
+                });
+
             receiveMessagesThread.DoWork += receiveMessagesDoWorkHandler;
             sendMessagesThread.DoWork += sendMessagesDoWorkHandler;
         }
@@ -589,7 +608,7 @@ namespace com.clover.remotepay.transport
             TransportLog("Entering sendMessageSync() with message content = " + message);
             TransportLog(message);
             int errorcode = 0;
-            if (!String.IsNullOrEmpty(message))
+            if (!string.IsNullOrEmpty(message))
             {
                 byte[] stringBytes = Encoding.UTF8.GetBytes(message);
                 try
@@ -598,7 +617,7 @@ namespace com.clover.remotepay.transport
                     mOutPacketBuffer.Write(IPAddress.HostToNetworkOrder((int)REMOTE_STRING_MAGIC_START_TOKEN));
                     mOutPacketBuffer.Write(IPAddress.HostToNetworkOrder(stringBytes.Length));
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("Writing magic : " + e.Message);
                 }
@@ -617,9 +636,11 @@ namespace com.clover.remotepay.transport
                     // Figure out the size that we can send.
                     int sizeOfBuffer = ((MemoryStream)mOutPacketBuffer.BaseStream).Capacity;
                     int remainingSpace = (int)(sizeOfBuffer - mOutPacketBuffer.BaseStream.Position);
+
                     // It is the lesser of either the remaining size of the message,
                     // or the remaining size of the buffer.
                     int packetLength = Math.Min(remainingBytes, remainingSpace);
+
                     // Write the bytes into the buffer
                     try
                     {
@@ -629,10 +650,12 @@ namespace com.clover.remotepay.transport
                     {
                         Console.WriteLine("Max length : " + e.Message);
                     }
+
                     // current position is set to the maximum that can be written.
                     // Current position is reset zero
                     writePacket(mOutPacketBuffer);
                     TransportLog("Just wrote to the output buffer for the next " + packetLength + " bytes of the message");
+
                     // We have either nothing left to write, or we wrote the packetLength,
                     // and have more to write.
                     remainingBytes = Math.Max(0, remainingBytes - packetLength);
@@ -641,6 +664,7 @@ namespace com.clover.remotepay.transport
                         TransportLog("Finished writing to the output buffer for the message");
                         break;
                     }
+
                     // If we need to send additional packets use SetLength(0) to clear out the contents of the buffer
                     // so the remote side doesn't try to interpret old data as continuation info.
                     // See CloverUsbAccessoryManager.PacketReader.extractPacket() and handlng of mTrailingReadBytes
@@ -683,7 +707,7 @@ namespace com.clover.remotepay.transport
                     writePacketBuffer.Write(IPAddress.HostToNetworkOrder((short)outDataSize));
                     writePacketBuffer.Write(((MemoryStream)outDataBuffer.BaseStream).ToArray());
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("outDataSize : " + e.Message);
                 }
@@ -725,14 +749,12 @@ namespace com.clover.remotepay.transport
         public void startListeningForMessages()
         {
             TransportLog("Starting a new receiveMessagesThread.");
-            //Console.WriteLine("Starting a new receiveMessagesThread");
-            
+
             // what to do in the background thread
-            if(!receiveMessagesThread.IsBusy)
+            if (!receiveMessagesThread.IsBusy)
             {
                 receiveMessagesThread.RunWorkerAsync();
             }
-            
         }
 
         /// <summary>
@@ -744,10 +766,11 @@ namespace com.clover.remotepay.transport
             TransportLog("Thread Start: getMessages()");
             do
             {
-                String message = receiveString();
+                string message = receiveString();
                 if (!shutdown)
                 {
-                    /*  This code is for debugging.  If needed, just uncomment the code
+                    // This code is for debugging. It logs message info to the TransportLog. If needed, just uncomment the code
+                    /*
                     {
                         JObject obj = (JObject)JsonConvert.DeserializeObject(message);
                         JToken methodToken = obj.GetValue("method");
@@ -779,7 +802,9 @@ namespace com.clover.remotepay.transport
                     catch(Exception e)
                     {
                         TransportLog("Got message: " + message);
-                    }  */
+                    }  
+                    */
+
                     // End of the debugging code block 
                     try
                     {
@@ -803,8 +828,7 @@ namespace com.clover.remotepay.transport
             uint startInt = (uint)IPAddress.NetworkToHostOrder(inputPacketBuffer.ReadInt32());
             if (startInt != REMOTE_STRING_MAGIC_START_TOKEN)
             {
-                throw new IOException("Unexpected start token: " + String.Format("{0:x2}", startInt));
-                // Integer.toHexString(startInt));
+                throw new IOException("Unexpected start token: " + string.Format("{0:x2}", startInt));
             }
 
             uint totalStringLength = (uint)IPAddress.NetworkToHostOrder(inputPacketBuffer.ReadInt32());
@@ -828,7 +852,7 @@ namespace com.clover.remotepay.transport
                 inputPacketBuffer = readPacket();
             } while (!shutdown);
 
-            String returnString = null;
+            string returnString = null;
             if (!shutdown)
             {
                 returnString = Encoding.UTF8.GetString(messageBuffer.ToArray());
@@ -843,7 +867,7 @@ namespace com.clover.remotepay.transport
             {
                 throw new IOException("USB accessory not connected");
             }
-            int numBytesRead =0;
+            int numBytesRead = 0;
             byte[] readPacket = new byte[MAX_PACKET_BYTES];
 
             ErrorCode ecRead;
@@ -852,46 +876,40 @@ namespace com.clover.remotepay.transport
             {
                 do
                 {
-
                     ecRead = reader.Read(readPacket, 1000, out numBytesRead);
                     //TransportLog("Read  :{0} ErrorCode:{1}", numBytesRead, ecRead);
-                    if (ecRead != ErrorCode.Success
-                        &&
-                        ecRead != ErrorCode.IoTimedOut
-                        &&
-                        ecRead != ErrorCode.IoCancelled)
+                    if (ecRead != ErrorCode.Success && ecRead != ErrorCode.IoTimedOut && ecRead != ErrorCode.IoCancelled)
                     {
                         throw new IOException("Error reading USB message: " + ecRead.ToString());
                     }
                 }
                 while (numBytesRead <= 0 && !shutdown);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("ecRead Exception: " + e.Message);
             }
-            
 
             if (!shutdown)
             {
-
                 if (numBytesRead < PACKET_HEADER_SIZE)
                 {
                     throw new IOException("Read failed, " + numBytesRead + " bytes returned");
                 }
 
                 BinaryReader inPacketBuffer = new BinaryReader(new MemoryStream(readPacket));
-                short inDataSize=0;
+                short inDataSize = 0;
                 try
                 {
                     inDataSize = IPAddress.NetworkToHostOrder(
                     inPacketBuffer.ReadInt16()
                     );
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("inPacketBuffer : " + e.Message);
                 }
+
                 if (inDataSize <= 0)
                 {
                     throw new IOException("Invalid data size " + inDataSize + " bytes");
@@ -909,47 +927,54 @@ namespace com.clover.remotepay.transport
 
         public bool isConnected()
         {
-            return (MyUsbDevice != null) && (MyUsbDevice.IsOpen);
+            return MyUsbDevice != null && MyUsbDevice.IsOpen;
         }
 
-        private byte[] processOutputData(byte[] outputData)
-        {
-            System.Collections.ArrayList alist = new System.Collections.ArrayList();
+        /// <summary>
+        /// Helper to wrap output data bytes[] to array with header data
+        /// Uncomment if needed
+        /// </summary>
+        //private byte[] processOutputData(byte[] outputData)
+        //{
+        //    System.Collections.ArrayList alist = new System.Collections.ArrayList();
 
-            // Write two bytes for the size of the 'chunk'
-            // I thought that the usb driver did this, but apparently not...
-            short chunkLength = (short)(4 + 4 + outputData.Length);
-            byte[] chunkArr = BitConverter.GetBytes(chunkLength);
-            Array.Reverse(chunkArr); // Endian fun
-            for (int i = 0; i < chunkArr.Length; i++)
-            {
-                alist.Add(chunkArr[i]);
-            }
+        //    // Write two bytes for the size of the 'chunk'
+        //    // I thought that the usb driver did this, but apparently not...
+        //    short chunkLength = (short)(4 + 4 + outputData.Length);
+        //    byte[] chunkArr = BitConverter.GetBytes(chunkLength);
+        //    Array.Reverse(chunkArr); // Endian fun
+        //    for (int i = 0; i < chunkArr.Length; i++)
+        //    {
+        //        alist.Add(chunkArr[i]);
+        //    }
 
-            // Write the four byte magic number
-            byte[] mst = BitConverter.GetBytes(REMOTE_STRING_MAGIC_START_TOKEN);
-            Array.Reverse(mst); // Endian fun
-            for (int i = 0; i < mst.Length; i++)
-            {
-                alist.Add(mst[i]);
-            }
-            // Write the length of the string message
-            byte[] outLen = BitConverter.GetBytes(outputData.Length);
-            Array.Reverse(outLen);// Endian fun
-            for (int i = 0; i < outLen.Length; i++)
-            {
-                alist.Add(outLen[i]);
-            }
-            // Write the message
-            for (int i = 0; i < outputData.Length; i++)
-            {
-                alist.Add(outputData[i]);
-            }
-            byte[] returnVal = new byte[alist.Count];
-            alist.CopyTo(returnVal);
-            return returnVal;
-        }
+        //    // Write the four byte magic number
+        //    byte[] mst = BitConverter.GetBytes(REMOTE_STRING_MAGIC_START_TOKEN);
+        //    Array.Reverse(mst); // Endian fun
+        //    for (int i = 0; i < mst.Length; i++)
+        //    {
+        //        alist.Add(mst[i]);
+        //    }
+        //    // Write the length of the string message
+        //    byte[] outLen = BitConverter.GetBytes(outputData.Length);
+        //    Array.Reverse(outLen);// Endian fun
+        //    for (int i = 0; i < outLen.Length; i++)
+        //    {
+        //        alist.Add(outLen[i]);
+        //    }
+        //    // Write the message
+        //    for (int i = 0; i < outputData.Length; i++)
+        //    {
+        //        alist.Add(outputData[i]);
+        //    }
+        //    byte[] returnVal = new byte[alist.Count];
+        //    alist.CopyTo(returnVal);
+        //    return returnVal;
+        //}
 
+        /// <summary>
+        /// Destructor to insure releasing USB resources
+        /// </summary>
         ~USBCloverTransport()
         {
             disconnect();
@@ -966,6 +991,7 @@ namespace com.clover.remotepay.transport
                 {
                     Monitor.PulseAll(messageQueue);
                 }
+
                 if (MyUsbDevice != null)
                 {
                     UsbDevice TempUsbDevice = MyUsbDevice;
@@ -996,7 +1022,7 @@ namespace com.clover.remotepay.transport
                         {
                             reader.Dispose();
                         }
-                        if (writer != null && !reader.IsDisposed)
+                        if (writer != null && !writer.IsDisposed)
                         {
                             writer.Dispose();
                         }
@@ -1022,9 +1048,10 @@ namespace com.clover.remotepay.transport
 
             //use a "watcher", to run the query
             ManagementEventWatcher watch = new ManagementEventWatcher(w);
-            watch.EventArrived += new EventArrivedEventHandler(DeviceInsertedEvent);
+            watch.EventArrived += DeviceInsertedEvent;
             watch.Start();
         }
+
         private void listenForUSBRemovals()
         {
             //create a query to look for usb devices
@@ -1035,8 +1062,7 @@ namespace com.clover.remotepay.transport
 
             //use a "watcher", to run the query
             ManagementEventWatcher watch = new ManagementEventWatcher(w);
-            watch.EventArrived += new
-            EventArrivedEventHandler(DeviceRemovedEvent);
+            watch.EventArrived += DeviceRemovedEvent;
             watch.Start();
         }
 
@@ -1044,10 +1070,12 @@ namespace com.clover.remotepay.transport
         private void DeviceEvent(object sender, EventArrivedEventArgs e, bool inserted)
         {
             TransportLog("DeviceEvent: " + Thread.CurrentThread.ManagedThreadId);
+
             ManagementBaseObject instance = (ManagementBaseObject)e.NewEvent["TargetInstance"];
             instance.GetPropertyValue("Dependent");
             string value = instance.GetPropertyValue("Dependent").ToString();
             string upperValue = value.ToUpper();
+
             TransportLog("Device was " + (inserted ? "inserted" : "removed") + ", device id:" + value);
 
             bool found = false;
@@ -1056,9 +1084,9 @@ namespace com.clover.remotepay.transport
                 int customerVid = customerFinder.Vid;
                 int customerPid = customerFinder.Pid;
 
-                if (upperValue.Contains("VID_" + String.Format("{0:x}", customerVid).ToUpper()))
+                if (upperValue.Contains("VID_" + $"{customerVid:X}"))
                 {
-                    if (upperValue.Contains("PID_" + String.Format("{0:x}", customerPid).ToUpper()))
+                    if (upperValue.Contains("PID_" + $"{customerPid:X}"))
                     {
                         found = true;
                         if (inserted)
@@ -1072,6 +1100,7 @@ namespace com.clover.remotepay.transport
                     }
                 }
             }
+
             if (!found)
             {
                 foreach (UsbDeviceFinder merchantFinder in MerchantUsbFinders)
@@ -1079,9 +1108,9 @@ namespace com.clover.remotepay.transport
                     int merchantVid = merchantFinder.Vid;
                     int merchantPid = merchantFinder.Pid;
 
-                    if (upperValue.Contains("VID_" + String.Format("{0:x}", merchantVid).ToUpper()))
+                    if (upperValue.Contains("VID_" + $"{merchantVid:X}"))
                     {
-                        if (upperValue.Contains("PID_" + String.Format("{0:x}", merchantPid).ToUpper()))
+                        if (upperValue.Contains("PID_" + $"{merchantPid:X}"))
                         {
                             found = true;
                             if (inserted)
@@ -1099,7 +1128,6 @@ namespace com.clover.remotepay.transport
                     }
                 }
             }
-
         }
 
         private void DeviceInsertedEvent(object sender, EventArrivedEventArgs e)
@@ -1121,14 +1149,10 @@ namespace com.clover.remotepay.transport
             if (receiveMessagesThread != null)
             {
                 TransportLog(receiveMessagesThread.ToString() + " : receiveMessagesThread removing DoWorkHandler");
-                
-                
             }
             if (sendMessagesThread != null)
             {
                 TransportLog(sendMessagesThread.ToString() + " : sendMessagesThread removing DoWorkHandler");
-                
-               
             }
             base.onDeviceDisconnected();
         }
@@ -1169,12 +1193,11 @@ namespace com.clover.remotepay.transport
                 }
             }
         }
-
-        ~BlockingQueue()
-        {
-        }
     }
 
+    /// <summary>
+    /// USB Device definition: Vendor and Product IDs
+    /// </summary>
     public class USBDevice
     {
         public int VID { get; set; }

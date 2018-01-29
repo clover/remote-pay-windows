@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ namespace com.clover.sdk.remote.websocket
     {
         public SaleRequestMessage() : base(WebSocketMethod.Sale)
         {
-            
+
         }
     }
     public class AuthRequestMessage : WebSocketMessage<AuthRequest>
@@ -224,7 +224,7 @@ namespace com.clover.sdk.remote.websocket
 
     public class PrintRequestMessage : WebSocketMessage<PrintRequest64Message>
     {
-        
+
         public PrintRequestMessage() : base(WebSocketMethod.PrintRequest)
         {
 
@@ -249,17 +249,17 @@ namespace com.clover.sdk.remote.websocket
         }
         public void setTextLines(List<string> textLines)
         {
-            if(textLines.Count < 1)
+            if (textLines.Count < 1)
             {
                 return;
             }
             this.textLines = textLines;
         }
 
-        
+
     }
 
-    
+
     public class PrintImageRequestMessage : WebSocketMessage<PrintImage>
     {
         public PrintImageRequestMessage() : base(WebSocketMethod.PrintImage)
@@ -416,7 +416,7 @@ namespace com.clover.sdk.remote.websocket
 
     public class RetrievePrintJobStatusRequestMessage : WebSocketMessage<PrintJobStatusRequest>
     {
-        public RetrievePrintJobStatusRequestMessage() : base (WebSocketMethod.PrintJobStatusRequest) { }
+        public RetrievePrintJobStatusRequestMessage() : base(WebSocketMethod.PrintJobStatusRequest) { }
     }
 
     public class RetrievePrintersRequestMessage : WebSocketMessage<RetrievePrintersRequest>
@@ -535,7 +535,7 @@ namespace com.clover.sdk.remote.websocket
         {
         }
     }
-    
+
     public class OnCapturePreAuthResponseMessage : WebSocketMessage<CapturePreAuthResponse>
     {
         public OnCapturePreAuthResponseMessage() : base(WebSocketMethod.CapturePreAuthResponse)
@@ -563,8 +563,8 @@ namespace com.clover.sdk.remote.websocket
     }
     public class OnRetrievePendingPaymentsResponseMessage : WebSocketMessage<RetrievePendingPaymentsResponse>
     {
-        public OnRetrievePendingPaymentsResponseMessage() : base(WebSocketMethod.RetrievePendingPaymentsResponse) 
-        {   
+        public OnRetrievePendingPaymentsResponseMessage() : base(WebSocketMethod.RetrievePendingPaymentsResponse)
+        {
         }
     }
 
@@ -596,7 +596,7 @@ namespace com.clover.sdk.remote.websocket
     public class OnPrintManualRefundDeclinedReceiptMessage : WebSocketMessage<PrintManualRefundDeclineReceiptMessage>
     {
         public OnPrintManualRefundDeclinedReceiptMessage() : base(WebSocketMethod.PrintManualRefundDeclinedReceipt)
-        { 
+        {
         }
     }
     public class OnPrintPaymentMerchatCopyReceiptMessage : WebSocketMessage<PrintPaymentMerchantCopyReceiptMessage>
@@ -657,15 +657,7 @@ namespace com.clover.sdk.remote.websocket
     }
 
     public class OnRetrievePrintersResponseMessage : WebSocketMessage<RetrievePrintersResponse>
-    { 
+    {
         public OnRetrievePrintersResponseMessage() : base(WebSocketMethod.RetrievePrintersResponse) { }
     }
-
-    public class OnRetrievePrintersRequestMessage : WebSocketMessage<RetrievePrintersRequest>
-    {
-        public OnRetrievePrintersRequestMessage() : base(WebSocketMethod.RetrievePrintersRequest) { }
-    }
-
-
-
 }

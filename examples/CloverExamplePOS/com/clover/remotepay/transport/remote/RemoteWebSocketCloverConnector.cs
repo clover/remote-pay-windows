@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -63,7 +63,6 @@ namespace com.clover.remotepay.transport.remote
 
         List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
         private CloverDeviceConfiguration config;
-        private Printer selectedPrinter;
         WebSocket websocket;
         string endpoint = "ws://localhost:8889";
 
@@ -74,9 +73,9 @@ namespace com.clover.remotepay.transport.remote
         public RemoteWebSocketCloverConnector(CloverDeviceConfiguration config)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
-            _SDKInfo = AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>(assembly).Description + ":"
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>(assembly)).Version
-                + (AssemblyUtils.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(assembly)).InformationalVersion;
+            _SDKInfo = assembly.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>().Description + ":"
+                + (assembly.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>()).Version
+                + (assembly.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()).InformationalVersion;
             this.config = config;
             endpoint = ((RemoteWebSocketCloverConfiguration)config).endpoint;
         }
@@ -352,13 +351,6 @@ namespace com.clover.remotepay.transport.remote
                             listeners.ForEach(listener => listener.OnPrintJobStatusResponse(pjsr));
                             break;
                         }
-                    case WebSocketMethod.RetrievePrintersRequest:
-                        {
-                            RetrievePrintersRequest rpr = JsonUtils.deserialize<RetrievePrintersRequest>(payload.ToString());
-                            listeners.ForEach(listener => listener.OnRetrievePrintersRequest(rpr));
-                            break;
-                        }
-                    
                 }
             }
             catch(Exception ex)

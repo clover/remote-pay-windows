@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,9 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.order;
+using com.clover.sdk.v3.payments;
 
 namespace com.clover.remotepay.transport
 {
@@ -30,6 +29,7 @@ namespace com.clover.remotepay.transport
             DATA,
             BALANCE_INQUIRY
         }
+
         public string action { get; set; }
         public long amount { get; set; }
         public long? tipAmount { get; set; }
@@ -43,38 +43,30 @@ namespace com.clover.remotepay.transport
         public List<TaxableAmountRate> taxableAmountRateList { get; set; }
         public ServiceChargeAmount serviceChargeAmount { get; set; }
         [Obsolete("use TransactionSettings instead")]
-        public Boolean isDisableCashBack { get; set; }
-        public Boolean isTesting { get; set; }
+        public bool isDisableCashBack { get; set; }
+        public bool isTesting { get; set; }
         [Obsolete("use TransactionSettings instead")]
         public long cardEntryMethods { get; set; }
         public string voiceAuthCode { get; set; }
         public string postalCode { get; set; }
         public string streetAddress { get; set; }
-        public Boolean isCardNotPresent { get; set; }
+        public bool isCardNotPresent { get; set; }
         public string cardDataMessage { get; set; }
         [Obsolete("use TransactionSettings instead")]
-        public Boolean remotePrint { get; set; }
+        public bool remotePrint { get; set; }
         public string transactionNo { get; set; }
         [Obsolete("use TransactionSettings instead")]
-        public Boolean isForceSwipePinEntry { get; set; }
+        public bool isForceSwipePinEntry { get; set; }
         [Obsolete("use TransactionSettings instead")]
         public bool? disableRestartTransactionWhenFailed { get; set; }
-        private static readonly String BUNDLE_KEY_ACTION = "a";
+        private static readonly string BUNDLE_KEY_ACTION = "a";
         [Obsolete("use TransactionSettings instead")]
         public bool? allowOfflinePayment { get; set; }
         [Obsolete("use TransactionSettings instead")]
         public bool? approveOfflinePaymentWithoutPrompt { get; set; }
         public bool? requiresRemoteConfirmation { get; set; }
         public TransactionSettings transactionSettings { get; set; }
-        public bool allowPartialAuth {
-            get {
-                return _allowPartialAuth;
-            }
-            set {
-                _allowPartialAuth = value;
-            }
-        }
-        private bool _allowPartialAuth = true;
+        public bool allowPartialAuth { get; set; } = true;
     }
 
     public enum ResultStatus
@@ -119,6 +111,7 @@ namespace com.clover.remotepay.transport
         DIGIT_9 = ((byte)0x61),
         DIGIT_0 = ((byte)0x62)
     }
+
     public class InputOption
     {
         public InputOption() { }
@@ -130,6 +123,7 @@ namespace com.clover.remotepay.transport
         public KeyPress keyPress;
         public string description;
     }
+
     public enum ChallengeType
     {
         DUPLICATE_CHALLENGE,
@@ -149,82 +143,82 @@ namespace com.clover.remotepay.transport
 
     public class PayloadMessage
     {
-        public PayloadMessage(String PayloadClassName, MessageType MessageType)
+        public PayloadMessage(string PayloadClassName, MessageType MessageType)
         {
             payloadClassName = PayloadClassName;
             messageType = MessageType;
         }
 
-        public String payloadClassName;
+        public string payloadClassName;
         public MessageType messageType;
     }
 
     public class CustomerInfo
     {
-        public String phoneNumber;
-        public String customerName;
+        public string phoneNumber;
+        public string customerName;
     }
-    
+
     public class CustomerInfoMessage
     {
         public CustomerInfo customerInfo;
-        public String payloadClassName;
-        public String messageType;
+        public string payloadClassName;
+        public string messageType;
     }
 
     public class PhoneNumberMessage
     {
-        public String phoneNumber;
-        public String payloadClassName;
+        public string phoneNumber;
+        public string payloadClassName;
         public MessageType messageType;
     }
 
     public class Rating
     {
-        public String id;
-        public String question;
+        public string id;
+        public string question;
         public int value;
     }
 
     public class RatingsMessage
     {
-        public String payloadClassName;
-        public String messageType;
+        public string payloadClassName;
+        public string messageType;
         public Rating[] ratings;
     }
 
     public class RequestRatingsMessage
     {
-        public String payloadClassName;
+        public string payloadClassName;
         public MessageType messageType;
     }
 
     public class WebViewMessage
     {
-        public String payloadClassName;
-        public String messageType;
-        public String url;
-        public String html;
+        public string payloadClassName;
+        public string messageType;
+        public string url;
+        public string html;
     }
 
 
     public class ConversationQuestionMessage
     {
-        public String payloadClassName;
-        public String messageType;
-        public String message;
+        public string payloadClassName;
+        public string messageType;
+        public string message;
     }
 
     public class ConversationResponseMessage
     {
-        public String payloadClassName;
-        public String messageType;
-        public String message;
+        public string payloadClassName;
+        public string messageType;
+        public string message;
     }
 
     public class Challenge
     {
-        public String message;
+        public string message;
         public ChallengeType type;
         public VoidReason reason;
     }
@@ -247,8 +241,21 @@ namespace com.clover.remotepay.transport
             public int y;
         }
     }
-    public enum ResponseReasonCode { NONE, ORDER_NOT_FOUND, PAYMENT_NOT_FOUND, FAIL }
-    public enum TxState { START, SUCCESS, FAIL }
+
+    public enum ResponseReasonCode
+    {
+        NONE,
+        ORDER_NOT_FOUND,
+        PAYMENT_NOT_FOUND,
+        FAIL
+    }
+
+    public enum TxState
+    {
+        START,
+        SUCCESS,
+        FAIL
+    }
 
     public enum UiState
     {
@@ -309,30 +316,34 @@ namespace com.clover.remotepay.transport
         // starting custom activity, called from RTKA
         STARTING_CUSTOM_ACTIVITY
     }
-    public enum UiDirection { ENTER, EXIT }
+
+    public enum UiDirection
+    {
+        ENTER,
+        EXIT
+    }
 
     public class PendingPaymentEntry
     {
-        public String paymentId;
+        public string paymentId;
         public long amount;
     }
 
     public class CardData
     {
-        public String Track1 { get; set; }
-        public String Track2 { get; set; }
-        public String Track3 { get; set; }
+        public string Track1 { get; set; }
+        public string Track2 { get; set; }
+        public string Track3 { get; set; }
         public bool Encrypted { get; set; }
-        public String MaskedTrack1 { get; set; }
-        public String MaskedTrack2 { get; set; }
-        public String MaskedTrack3 { get; set; }
-        public String Pan { get; set; }
-        public String CardholderName { get; set; }
-        public String FirstName { get; set; }
-        public String LastName { get; set; }
-        public String Exp { get; set; }
-        public String Last4 { get; set; }
-        public String First6 { get; set; }
-
+        public string MaskedTrack1 { get; set; }
+        public string MaskedTrack2 { get; set; }
+        public string MaskedTrack3 { get; set; }
+        public string Pan { get; set; }
+        public string CardholderName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Exp { get; set; }
+        public string Last4 { get; set; }
+        public string First6 { get; set; }
     }
 }

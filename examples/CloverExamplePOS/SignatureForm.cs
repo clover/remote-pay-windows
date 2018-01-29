@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,11 +28,14 @@ namespace CloverExamplePOS
     {
         private VerifySignatureRequest signatureVerifyRequest;
 
-        public VerifySignatureRequest VerifySignatureRequest {
-            get {
+        public VerifySignatureRequest VerifySignatureRequest
+        {
+            get
+            {
                 return signatureVerifyRequest;
             }
-            set {
+            set
+            {
                 signatureVerifyRequest = value;
                 signaturePanel1.Signature = signatureVerifyRequest.Signature;
             }

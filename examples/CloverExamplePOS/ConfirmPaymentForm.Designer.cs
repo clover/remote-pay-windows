@@ -32,22 +32,10 @@ namespace CloverExamplePOS
         /// </summary>
         private void InitializeComponent()
         {
-            switch (challenge.type)
-            {
-                case ChallengeType.DUPLICATE_CHALLENGE:
-                    title = "Confirm Payment - Duplicate Payment";
-                    break;
-                case ChallengeType.OFFLINE_CHALLENGE:
-                    title = "Confirm Payment - Offline Payment";
-                    break;
-                default:
-                    title = "Confirm Payment";
-                    break;
-            }
             this.TitleTextBox = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.AcceptButton = new System.Windows.Forms.Button();
+            this.OkButton = new System.Windows.Forms.Button();
             this.RejectButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -59,11 +47,10 @@ namespace CloverExamplePOS
             this.TitleTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TitleTextBox.ForeColor = System.Drawing.Color.White;
             this.TitleTextBox.Location = new System.Drawing.Point(0, 0);
-            this.TitleTextBox.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.TitleTextBox.Name = "TitleTextBox";
-            this.TitleTextBox.Size = new System.Drawing.Size(622, 54);
+            this.TitleTextBox.Size = new System.Drawing.Size(311, 28);
             this.TitleTextBox.TabIndex = 4;
-            this.TitleTextBox.Text = title;
+            this.TitleTextBox.Text = "Confirm Payment";
             this.TitleTextBox.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel1
@@ -72,42 +59,37 @@ namespace CloverExamplePOS
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.TitleTextBox);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.AcceptButton);
+            this.panel1.Controls.Add(this.OkButton);
             this.panel1.Controls.Add(this.RejectButton);
-            this.panel1.Location = new System.Drawing.Point(118, 98);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panel1.Location = new System.Drawing.Point(59, 51);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 358);
+            this.panel1.Size = new System.Drawing.Size(311, 186);
             this.panel1.TabIndex = 5;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(68, 96);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label1.Name = "ChallengeMessage";
-            this.label1.Size = new System.Drawing.Size(478, 110);
+            this.label1.Location = new System.Drawing.Point(34, 50);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(239, 57);
             this.label1.TabIndex = 0;
-            this.label1.Text = this.challenge.message;
             // 
-            // AcceptButton
+            // OkButton
             // 
-            this.AcceptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AcceptButton.Location = new System.Drawing.Point(250, 265);
-            this.AcceptButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.AcceptButton.Name = "AcceptButton";
-            this.AcceptButton.Size = new System.Drawing.Size(150, 44);
-            this.AcceptButton.TabIndex = 2;
-            this.AcceptButton.Text = "Accept";
-            this.AcceptButton.UseVisualStyleBackColor = true;
-            this.AcceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
+            this.OkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OkButton.Location = new System.Drawing.Point(125, 138);
+            this.OkButton.Name = "OkButton";
+            this.OkButton.Size = new System.Drawing.Size(75, 23);
+            this.OkButton.TabIndex = 2;
+            this.OkButton.Text = "Accept";
+            this.OkButton.UseVisualStyleBackColor = true;
+            this.OkButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
             // RejectButton
             // 
             this.RejectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RejectButton.Location = new System.Drawing.Point(417, 265);
-            this.RejectButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.RejectButton.Location = new System.Drawing.Point(208, 138);
             this.RejectButton.Name = "RejectButton";
-            this.RejectButton.Size = new System.Drawing.Size(150, 44);
+            this.RejectButton.Size = new System.Drawing.Size(75, 23);
             this.RejectButton.TabIndex = 2;
             this.RejectButton.Text = "Reject";
             this.RejectButton.UseVisualStyleBackColor = true;
@@ -115,11 +97,10 @@ namespace CloverExamplePOS
             // 
             // ConfirmPaymentForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(856, 600);
+            this.ClientSize = new System.Drawing.Size(428, 312);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "ConfirmPaymentForm";
             this.Text = "ConfirmPaymentForm";
             this.Load += new System.EventHandler(this.ConfirmPaymentForm_Load);
@@ -133,7 +114,7 @@ namespace CloverExamplePOS
         private System.Windows.Forms.Label TitleTextBox;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button AcceptButton;
+        private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.Button RejectButton;
     }
 }

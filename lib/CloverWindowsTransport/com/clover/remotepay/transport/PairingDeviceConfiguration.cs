@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Clover Network, Inc.
+// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
 namespace com.clover.remotepay.transport
 {
     public class PairingDeviceConfiguration
     {
-        public delegate void OnPairingCodeHandler(String pairingCode);
-        public delegate void OnPairingSuccessHandler(String authToken);
+        public delegate void OnPairingCodeHandler(string pairingCode);
+        public delegate void OnPairingSuccessHandler(string authToken);
 
         public OnPairingCodeHandler OnPairingCode;
         public OnPairingSuccessHandler OnPairingSuccess;

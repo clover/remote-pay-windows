@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -97,21 +97,22 @@ namespace CloverExamplePOS
         }
         public void ModifyTipAmount(String paymentID, long amount)
         {
-            foreach(Object paymentObject in Payments) {
-                if (paymentObject is POSPayment && ((POSPayment)paymentObject).PaymentID == paymentID)
+            foreach(POSExchange paymentObject in Payments)
+            {
+                if (paymentObject is POSPayment payment && payment.PaymentID == paymentID)
                 {
-                    ((POSPayment)paymentObject).TipAmount = amount;
+                    payment.TipAmount = amount;
                     onOrderChange(this, OrderChangeTarget.PAYMENT);
                 }
             }
         }
         public void ModifyPaymentStatus(string paymentID, POSPayment.Status status)
         {
-            foreach (Object paymentObject in Payments)
+            foreach (POSExchange paymentObject in Payments)
             {
-                if (paymentObject is POSPayment && ((POSPayment)paymentObject).PaymentID == paymentID)
+                if (paymentObject is POSPayment payment && payment.PaymentID == paymentID)
                 {
-                    ((POSPayment)paymentObject).PaymentStatus = status;
+                    payment.PaymentStatus = status;
                     onOrderChange(this, OrderChangeTarget.PAYMENT);
                 }
             }
@@ -613,7 +614,8 @@ namespace CloverExamplePOS
         private void DeletePendingOrder()
         {
             POSOrder delOrder = null;
-            foreach (POSOrder order in Orders) {
+            foreach (POSOrder order in Orders)
+            {
                 if (order.Status == POSOrder.OrderStatus.PENDING)
                 {
                     delOrder = order;

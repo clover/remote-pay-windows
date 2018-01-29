@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,10 +25,12 @@ namespace CloverExamplePOS
     public partial class StoreItem : UserControl
     {
         POSItem _item = new POSItem("abc", "Sample Item", 1099);
-        public POSItem Item {
-            set {
+        public POSItem Item
+        {
+            set
+            {
                 _item = value;
-                ItemPrice.Text = (_item.Price/100.0).ToString("C2");
+                ItemPrice.Text = (_item.Price / 100.0).ToString("C2");
                 ItemButton.Text = _item.Name;
             }
             get
@@ -62,10 +64,10 @@ namespace CloverExamplePOS
 
         private void ItemNumber_ParentChanged(object sender, EventArgs e)
         {
-            if(Parent != null)
+            if (Parent != null)
             {
                 int index = Parent.Controls.IndexOf(this);
-                ItemNumber.Text = (index+1).ToString();
+                ItemNumber.Text = (index + 1).ToString();
             }
         }
     }

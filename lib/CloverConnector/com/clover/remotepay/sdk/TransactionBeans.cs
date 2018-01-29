@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Clover Network, Inc.
+// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -113,11 +113,11 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class PrintRequest : BaseRequest
     {
-        public List<Bitmap> images = new List<Bitmap>();
-        public List<string> imageURLs = new List<string>();
-        public List<string> text = new List<string>();
-        public string printRequestId;
-        public string printDeviceId;
+        public List<Bitmap> images { get; set; } = new List<Bitmap>();
+        public List<string> imageURLs { get; set; } = new List<string>();
+        public List<string> text { get; set; } = new List<string>();
+        public string printRequestId { get; set; }
+        public string printDeviceId { get; set; }
 
         public PrintRequest() { }
 
@@ -129,7 +129,7 @@ namespace com.clover.remotepay.sdk
         ///   - printDeviceId: Optional identifier to speciy which printer to use
         public PrintRequest(Bitmap image, string printRequestId, string printDeviceId)
         {
-            this.images.Add(image);
+            images.Add(image);
             this.printRequestId = printRequestId;
             this.printDeviceId = printDeviceId;
 
@@ -143,7 +143,7 @@ namespace com.clover.remotepay.sdk
         ///   - printDeviceId: Optional identifier to speciy which printer to use
         public PrintRequest(string imageURL, string printRequestId, string printDeviceId)
         {
-            this.imageURLs.Add(imageURL);
+            imageURLs.Add(imageURL);
             this.printRequestId = printRequestId;
             this.printDeviceId = printDeviceId;
         }
@@ -156,9 +156,9 @@ namespace com.clover.remotepay.sdk
         ///   - printDeviceId: Optional identifier to speciy which printer to use
         public PrintRequest(List<string> text, string printRequestId, string printDeviceId)
         {
-            if (text.Count <1)
+            if (text.Count < 1)
             {
-                return; 
+                return;
             }
 
             this.text = text;
@@ -174,7 +174,7 @@ namespace com.clover.remotepay.sdk
     public class OpenCashDrawerRequest : BaseRequest
     {
         public String reason { get; set; }
-        public String printerId {get; set;}
+        public String printerId { get; set; }
 
         /// Create an object used to inform the Clover Connector's `openCashDrawer()` function of required/additional information when requesting the cash drawer be opened
         ///
@@ -535,13 +535,15 @@ namespace com.clover.remotepay.sdk
 
     public class RetrievePrintersResponse : BaseResponse
     {
-        public List<Printer> printers = new List<Printer>();
+        public List<Printer> printers { get; set; } = new List<Printer>();
 
-        public RetrievePrintersResponse() { }
+        public RetrievePrintersResponse()
+        {
+        }
 
         public RetrievePrintersResponse(Printer printer)
         {
-            this.printers.Add(printer);
+            printers.Add(printer);
         }
 
         public RetrievePrintersResponse(List<Printer> printers)
@@ -552,7 +554,7 @@ namespace com.clover.remotepay.sdk
 
     public class PrintJobStatusRequest : BaseRequest
     {
-        public String printRequestId;
+        public String printRequestId { get; set; }
 
         public PrintJobStatusRequest()
         {
@@ -567,17 +569,17 @@ namespace com.clover.remotepay.sdk
 
     public class PrintJobStatusResponse : BaseResponse
     {
-        public String printRequestId;
-        public PrintJobStatus status;
+        public String printRequestId { get; set; }
+        public PrintJobStatus status { get; set; }
 
         public PrintJobStatusResponse(String printRequestId, String status)
         {
             this.printRequestId = printRequestId;
             try
             {
-                this.status = (PrintJobStatus) Enum.Parse(typeof(PrintJobStatus), status);
+                this.status = (PrintJobStatus)Enum.Parse(typeof(PrintJobStatus), status);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 Console.WriteLine("{0} is not a member of the PrintJobStatus enumeration.", status);
                 this.status = PrintJobStatus.UNKNOWN;
@@ -672,7 +674,7 @@ namespace com.clover.remotepay.sdk
         /// <summary>
         /// List of payments taken offline and not yet processed
         /// </summary>
-        public List<PendingPaymentEntry> PendingPayments;
+        public List<PendingPaymentEntry> PendingPayments { get; set; }
     }
 
     /// <summary>
@@ -735,7 +737,7 @@ namespace com.clover.remotepay.sdk
     {
         public String Action { get; set; }
         public String Payload { get; set; }
-        public Boolean NonBlocking = false;
+        public Boolean NonBlocking { get; set; } = false;
     }
 
     /// <summary>
@@ -753,26 +755,26 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class ActivityMessage
     {
-        public string Action;
-        public string Payload;
+        public string Action { get; set; }
+        public string Payload { get; set; }
     }
 
     /// <summary>
     /// class for sending messages to a CustomActivity from POS
     /// </summary>
-    public class MessageToActivity 
+    public class MessageToActivity
     {
-        public string Action;
-        public string Payload;
+        public string Action { get; set; }
+        public string Payload { get; set; }
     }
 
     /// <summary>
     /// class for sending message from a CustomActivity to POS
     /// </summary>
-    public class MessageFromActivity 
+    public class MessageFromActivity
     {
-        public string Action;
-        public string Payload;
+        public string Action { get; set; }
+        public string Payload { get; set; }
     }
 
     /// <summary>

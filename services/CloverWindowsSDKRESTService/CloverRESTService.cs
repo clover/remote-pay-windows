@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ namespace CloverWindowsSDKREST
                             string timerSeconds = timerString.Substring(index + 1);
                             Timer = Convert.ToInt32(timerSeconds);
                         }
-                        catch (Exception e)
+                        catch
                         {
                             Timer = 1;
                             EventLog.WriteEntry(SERVICE_NAME, "Error parsing the -timer command line argument.  Setting timer to 1 second.");
@@ -130,9 +130,9 @@ namespace CloverWindowsSDKREST
             Console.WriteLine("callback endpoint: " + callbackEndpoint);
             connectorListener.RestClient = new RestSharp.RestClient(callbackEndpoint);
             server.ForwardToClientListener = connectorListener;
-            server.CloverConnector = new CloverConnector(new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer));
-            server.CloverConnector.InitializeConnection();
+            server.CloverConnector = (CloverConnector) CloverConnectorFactory.createICloverConnector(new USBCloverDeviceConfiguration(null, getPOSNameAndVersion(), Debug, Timer));
             server.CloverConnector.AddCloverConnectorListener(connectorListener);
+            server.CloverConnector.InitializeConnection();
             StartRESTListener();
             server.OnAfterStart += new ToggleServerHandler(this.OnServerStart);
             server.OnStop += new ToggleServerHandler(this.OnServerStop);
@@ -236,7 +236,7 @@ namespace CloverWindowsSDKREST
             }
         }
 
-        public void AcceptSignature(VerifySignatureRequest request)
+        public new void AcceptSignature(VerifySignatureRequest request)
         {
             if (Device != null)
             {
@@ -244,7 +244,7 @@ namespace CloverWindowsSDKREST
             }
         }
 
-        public void RejectSignature(VerifySignatureRequest request)
+        public new void RejectSignature(VerifySignatureRequest request)
         {
             if (Device != null)
             {
@@ -252,7 +252,7 @@ namespace CloverWindowsSDKREST
             }
         }
 
-        public void AcceptPayment(Payment payment)
+        public new void AcceptPayment(Payment payment)
         {
             if (Device != null)
             {

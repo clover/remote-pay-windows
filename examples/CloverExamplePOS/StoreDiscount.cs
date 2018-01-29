@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ namespace CloverExamplePOS
     public partial class StoreDiscount : UserControl
     {
         private POSDiscount _discount = new POSDiscount();
-        public POSDiscount Discount {
+        public POSDiscount Discount
+        {
             get
             {
                 return _discount;
@@ -63,10 +64,10 @@ namespace CloverExamplePOS
 
         private void DiscountNumber_ParentChanged(object sender, EventArgs e)
         {
-            if(Parent != null)
+            if (Parent != null)
             {
                 int index = Parent.Controls.IndexOf(this);
-                DiscountNumber.Text = (index+1).ToString();
+                DiscountNumber.Text = (index + 1).ToString();
             }
         }
     }

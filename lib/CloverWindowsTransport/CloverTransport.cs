@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,42 +15,61 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Diagnostics;
 
 namespace com.clover.remotepay.transport
 {
     public abstract class CloverTransport
     {
-        private List<CloverTransportObserver> observers = new List<CloverTransportObserver>();
+        List<CloverTransportObserver> observers = new List<CloverTransportObserver>();
         bool ready = false;
         bool enableLogging = false;
         int pingSleepSeconds = 0;
 
+        /// <summary>
+        /// Turn transport logging on (default off)
+        /// </summary>
         protected void EnableLogging()
         {
-            this.enableLogging = true;
+            enableLogging = true;
         }
 
+        /// <summary>
+        /// Is transport logging on?
+        /// </summary>
+        /// <returns></returns>
         protected bool LoggingEnabled()
         {
-            return this.enableLogging;
+            return enableLogging;
         }
 
+        /// <summary>
+        /// Enable / disable ping
+        /// </summary>
+        /// <param name="pingSleepSeconds"></param>
         protected void EnablePinging(int pingSleepSeconds)
         {
             this.pingSleepSeconds = pingSleepSeconds;
         }
 
+        /// <summary>
+        /// Configured seconds between pings
+        /// </summary>
+        /// <returns></returns>
         protected int getPingSleepSeconds()
         {
-            return this.pingSleepSeconds;
+            return pingSleepSeconds;
         }
+
+        /// <summary>
+        /// Log a message to the transport log
+        /// </summary>
+        /// <param name="msg"></param>
         protected void TransportLog(string msg)
         {
             if (enableLogging)
             {
-                if(msg.Length > 5000)
+                if (msg.Length > 5000)
                 {
                     msg = msg.Substring(0, 5000) + "...";
                 }
@@ -58,24 +77,43 @@ namespace com.clover.remotepay.transport
             }
         }
 
+        /// <summary>
+        /// Device was connected, communication channel able to be established
+        /// </summary>
         protected void onDeviceConnected()
         {
             observers.ForEach(x => x.onDeviceConnected(this));
         }
 
+        /// <summary>
+        /// Device connection is initialized and ready for communication
+        /// </summary>
         protected virtual void onDeviceReady()
         {
             ready = true;
             observers.ForEach(x => x.onDeviceReady(this));
         }
 
+        /// <summary>
+        /// Device communication was lost: device was disconnected, powered off, or communication link otherwise broken
+        /// </summary>
         protected virtual void onDeviceDisconnected()
         {
             ready = false;
             observers.ForEach(x => x.onDeviceDisconnected(this));
         }
 
+        /// <summary>
+        /// Standard .Net resources cleanup
+        /// </summary>
         public abstract void Dispose();
+
+        /// <summary>
+        /// Error from device or SDK layer
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="cause"></param>
+        /// <param name="message"></param>
         protected void onDeviceError(int code, Exception cause, string message)
         {
             observers.ForEach(x => x.onDeviceError(code, cause, message));
@@ -90,36 +128,59 @@ namespace com.clover.remotepay.transport
             observers.ForEach(x => x.onMessage(message));
         }
 
+        /// <summary>
+        /// Add observer listener to this transport
+        /// </summary>
+        /// <param name="observer"></param>
         public void Subscribe(CloverTransportObserver observer)
         {
-            CloverTransport me = this;
-            if (ready)
+            if (observer != null && !observers.Contains(observer))
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
+                CloverTransport me = this;
+                if (ready)
+                {
+                    BackgroundWorker bw = new BackgroundWorker();
+                    // what to do in the background thread
+                    bw.DoWork += new DoWorkEventHandler(
                 delegate (object o, DoWorkEventArgs args)
                 {
-                    BackgroundWorker b = o as BackgroundWorker;
                     observer.onDeviceReady(me);
                 });
-                bw.RunWorkerAsync();
+                    bw.RunWorkerAsync();
+                }
+                observers.Add(observer);
             }
-            observers.Add(observer);
         }
 
+        /// <summary>
+        /// Remove observer listener from this transport
+        /// </summary>
+        /// <param name="observer"></param>
         public void Unsubscribe(CloverTransportObserver observer)
         {
-            observers.Remove(observer);
+            if (observer != null && observers.Contains(observer))
+            {
+                observers.Remove(observer);
+            }
         }
 
-        // Implement this to send info
+        /// <summary>
+        /// Implement this to send info to the device
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public abstract int sendMessage(string message);
 
+        /// <summary>
+        /// Remote message version, always 1 in current version
+        /// </summary>
+        /// <returns></returns>
         public int getRemoteMessageVersion()
         {
             return 1;
         }
+
+        public abstract string ShortTitle();
     }
 
     public interface CloverTransportObserver
@@ -140,7 +201,18 @@ namespace com.clover.remotepay.transport
         /// <param name="transport"></param>
         void onDeviceDisconnected(CloverTransport transport);
 
+        /// <summary>
+        /// Message received from device
+        /// </summary>
+        /// <param name="message"></param>
         void onMessage(string message);
+
+        /// <summary>
+        /// Error from device or SDK layer
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="cause"></param>
+        /// <param name="message"></param>
         void onDeviceError(int code, Exception cause, string message);
     }
 }

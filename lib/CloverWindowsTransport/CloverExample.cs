@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 Clover Network, Inc.
+﻿// Copyright (C) 2018 Clover Network, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace com.clover.remotepay.transport
 {
@@ -30,23 +28,24 @@ namespace com.clover.remotepay.transport
 
     class USBCloverTransportListener : CloverTransportObserver
     {
-
         CloverTransport device;
 
         public USBCloverTransportListener(CloverTransport device)
         {
             this.device = device;
         }
+
         public void onDeviceReady(CloverTransport device)
         {
-
-            string message = "{" +
+            string message =
+                "{" +
                 "\"id\":\"208\"," +
                 "\"method\":\"DISCOVERY_REQUEST\"," +
                 "\"packageName\":\"com.clover.remote.protocol.usb\"," +
                 "\"payload\":\"{\\\"method\\\":\\\"DISCOVERY_REQUEST\\\",\\\"version\\\":1}\"," +
                 "\"type\":\"COMMAND\"" +
                 "}";
+
             ConsoleKeyInfo info;
             do
             {
@@ -54,8 +53,6 @@ namespace com.clover.remotepay.transport
                 // Wait for user input..
                 info = Console.ReadKey();
             } while (info.KeyChar != 'x');
-
-
         }
 
         public void onDeviceDisconnected(CloverTransport device)

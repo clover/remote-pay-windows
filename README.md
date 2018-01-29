@@ -4,7 +4,7 @@
 
 ## Version
 
-Current version: 1.4.0
+Current version: 1.4.1
 
 ## Overview
 
@@ -14,6 +14,10 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
   * Windows 10
   * Windows 8
   * Windows 7
+  
+**.NET Frameworks supported:**
+  * .NET 4.5 (and later)
+  * .NET 4.0 "backwards compatibility"
   
 ## Connecting to a Clover device 
 
@@ -31,8 +35,13 @@ To work with the project effectively, you will need:
 
 ## Installing the SDK and Services
 
+There are two sets of binaries supplied, targeting different .NET Frameworks, the .NET 4.5 and .NET 4.0 backwards compatible.
 
-There are four separate installers.
+* The .NET 4.5 binaries are able to use TLS 1.2 network security when talking to Clover Devices using Secure Network Pay Display.
+* The .NET 4.0 binaries are the same platform as the previous releases of the Clover Windows SDK, and are provided for backwards compatibility.
+
+
+There are four separate installers for each .NET Framework Target.
 
 ### For development:
 
@@ -120,6 +129,6 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
-- [API Documentation](http://clover.github.io/remote-pay-windows/1.4.0/cloverconnector/html/index.html)
+- [API Documentation](http://clover.github.io/remote-pay-windows/1.4.1/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
 	
