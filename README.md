@@ -37,7 +37,7 @@ To work with the project effectively, you will need:
 
 There are two sets of binaries supplied, targeting different .NET Frameworks, the .NET 4.5 and .NET 4.0 backwards compatible.
 
-* The .NET 4.5 binaries are able to use TLS 1.2 network security when talking to Clover Devices using Secure Network Pay Display.
+* The .NET 4.5 binaries are able to use TLS 1.2 network security when talking to Clover Devices using [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/).
 * The .NET 4.0 binaries are the same platform as the previous releases of the Clover Windows SDK, and are provided for backwards compatibility.
 
 
@@ -128,6 +128,7 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 ## Additional resources 
 
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
+- [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
 - [API Documentation](http://clover.github.io/remote-pay-windows/1.4.1/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
