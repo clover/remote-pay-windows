@@ -920,12 +920,19 @@ namespace com.clover.remotepay.transport
 
     public class RetrieveDeviceStatusRequestMessage : Message
     {
-        public RetrieveDeviceStatusRequest request { get; set; }
+        public bool sendLastMessage { get; set; }
 
         public RetrieveDeviceStatusRequestMessage()
             : base(Methods.RETRIEVE_DEVICE_STATUS_REQUEST)
         {
+            this.sendLastMessage = false;
         }
+
+        public RetrieveDeviceStatusRequestMessage(bool sendLastMessage) : base(Methods.RETRIEVE_DEVICE_STATUS_REQUEST)
+        {
+            this.sendLastMessage = sendLastMessage;
+        }
+
     }
 
     public class RetrieveDeviceStatusResponseMessage : Message

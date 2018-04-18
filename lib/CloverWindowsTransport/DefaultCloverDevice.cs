@@ -963,9 +963,7 @@ namespace com.clover.remotepay.transport
 
         public override void doRetrieveDeviceStatus(bool sendLastMessage)
         {
-            RetrieveDeviceStatusRequestMessage rdsrm = new RetrieveDeviceStatusRequestMessage();
-            rdsrm.request = new RetrieveDeviceStatusRequest();
-            rdsrm.request.sendLastMessage = sendLastMessage;
+            RetrieveDeviceStatusRequestMessage rdsrm = new RetrieveDeviceStatusRequestMessage(sendLastMessage);
             sendObjectMessage(rdsrm);
         }
 
