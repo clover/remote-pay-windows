@@ -1,0 +1,27 @@
+var classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item =
+[
+    [ "alternateName", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#ad92d1b639e56f340f573b3d8bd606bc2", null ],
+    [ "binName", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#affc95093a64dd7cec95299968248d447", null ],
+    [ "createdTime", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a4303cdd6593131df5dd2f1648d1f9658", null ],
+    [ "discountAmount", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#aaf7ca9189ecde44c059eed82bcfd0c79", null ],
+    [ "discounts", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a737ffc56f0b96d031ebdbd490b9c2559", null ],
+    [ "exchanged", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a9ced72773ee611e1ccc95177a2a31f86", null ],
+    [ "exchangedLineItem", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a4deea9f670c4fbfe68ea9423192cfd84", null ],
+    [ "id", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a887dd9857582ed71e9ca16c9e2bb5753", null ],
+    [ "isRevenue", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a287202191b4ff40b5234589dd8071431", null ],
+    [ "item", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#aa64477b9aa862583358c5a9c93e74900", null ],
+    [ "itemCode", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a0b8291a33c76f6f1489156e7eaf58c3a", null ],
+    [ "modifications", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a01fe5e70f36a74a944c5d7d71b29e62a", null ],
+    [ "name", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#ad97f1e272f7fbe6da7e6d80fae59d53e", null ],
+    [ "note", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a517fcf34f1f00f709c5288fd9819b11e", null ],
+    [ "orderClientCreatedTime", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#aa34fe449b5aff5a12f58f9fbd55a5c7f", null ],
+    [ "orderRef", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#ac67beb7ddb5e2fbc1e74724e616be1e1", null ],
+    [ "payments", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a4f6f64ae18b773281567764a88ba5ffa", null ],
+    [ "price", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a6cc5649f0e04eadb9a99745e5234ba59", null ],
+    [ "printed", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a5fe8c21f2e556a6c8242fa10bb88e8a6", null ],
+    [ "refunded", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#ae7792bf5ce3b06c0bccbfc69d96f8f5a", null ],
+    [ "taxRates", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#aac4d7e3fea611b0a54dff02492658ac4", null ],
+    [ "unitName", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a6dc74dc1423afa31c2be208f4ab525d8", null ],
+    [ "unitQty", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a92ddb3af9ce72f7fb31afbef9a969e32", null ],
+    [ "userData", "classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_line_item.html#a8d4d1f1cb89bf99aa0bbc936e137a1b8", null ]
+];

@@ -1,0 +1,26 @@
+var classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment =
+[
+    [ "amount", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a1fb932f232dd871adb368bd19dcd9ee3", null ],
+    [ "cardTransaction", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a31305742a90feeadee5ed273822f8cd6", null ],
+    [ "cashbackAmount", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a400f034c598f32cab84cd4a6d05c07db", null ],
+    [ "cashTendered", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#ae0e3b81ceba51f3543026985ebb18cd5", null ],
+    [ "clientCreatedTime", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#aa9c2fecfc6a7df3caa188524a74da1fa", null ],
+    [ "createdTime", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a900ea8c8b2091902f5bf38e8343ead00", null ],
+    [ "device", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a1b8b9f84b368df44ad6b203ae74ac59e", null ],
+    [ "employee", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a9d11a012f89ae999fa4147b89499dd09", null ],
+    [ "externalPaymentId", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#afc446c973d90752e59a5d8ba34e6d169", null ],
+    [ "id", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a2997fca0b5f9e92d9ad1fc81b0602cd0", null ],
+    [ "lineItemPayments", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a576d3b704d1e6a5cb5f222beda590c24", null ],
+    [ "modifiedTime", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a1ba3cec2bc2d9195c5df4bf0ccfeba90", null ],
+    [ "note", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a7c2ec32ed514f03ac272e7b29e5c36fb", null ],
+    [ "offline", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a34801161ba730307156e5862cbe622f2", null ],
+    [ "order", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#ac5b27c5889d5cd387f5af14aaddf6ef0", null ],
+    [ "refunds", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#aa50b9a6d0dc9e7e9b3aa990a95e0f934", null ],
+    [ "result", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a40e0939245f119baf218d64521da4550", null ],
+    [ "serviceCharge", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#ab6703c1a25417778ce48675f3d8b0806", null ],
+    [ "taxAmount", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#acab292836bbf46766b345fd905cde857", null ],
+    [ "taxRates", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#ad0434f3d49e81b763ac429c12e388d61", null ],
+    [ "tender", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#ac60d98c319840e11aaf744accfa3b82c", null ],
+    [ "tipAmount", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#acc7b1bbf6cc2e5132c1c9c08a6af3c23", null ],
+    [ "voidReason", "classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_payment.html#a037af65f45c8fd866641b93efb74cfb5", null ]
+];
