@@ -1089,19 +1089,23 @@ namespace com.clover.remotepay.transport
                     if (upperValue.Contains("PID_" + $"{customerPid:X}"))
                     {
                         found = true;
-                        if (inserted)
-                        {
-                            DeviceSetToAccessoryMode();
-                        }
-                        else
-                        {
-                            disconnect();
-                        }
+                        break;
                     }
                 }
             }
 
-            if (!found)
+            if (found)
+            {
+                if (inserted)
+                {
+                    DeviceSetToAccessoryMode();
+                }
+                else
+                {
+                    disconnect();
+                }
+            }
+            else
             {
                 foreach (UsbDeviceFinder merchantFinder in MerchantUsbFinders)
                 {
