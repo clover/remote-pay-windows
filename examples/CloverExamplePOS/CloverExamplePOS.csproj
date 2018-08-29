@@ -249,7 +249,6 @@
     <EmbeddedResource Include="VaultedCardListForm.resx">
       <DependentUpon>VaultedCardListForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -286,7 +285,6 @@
   <ItemGroup>
     <Content Include="clover-256rgb.ico" />
     <Content Include="clover.ico" />
-    <None Include="Properties\star.ico" />
     <None Include="Resources\star16.png" />
   </ItemGroup>
   <ItemGroup />
