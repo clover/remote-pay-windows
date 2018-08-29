@@ -29,7 +29,7 @@ public class Refund {
   /// <summary>
   /// Unique identifier
   /// </summary>
-  public String id { get; set; }
+  public string id { get; set; }
 
   /// <summary>
   /// The order with which the refund is associated
@@ -44,22 +44,22 @@ public class Refund {
   /// <summary>
   /// Total amount refunded, including tax
   /// </summary>
-  public Int64 amount { get; set; }
+  public long? amount { get; set; }
 
   /// <summary>
   /// Tax amount refunded
   /// </summary>
-  public Int64 taxAmount { get; set; }
+  public long? taxAmount { get; set; }
 
   /// <summary>
   /// The time when the refund was recorded on the server
   /// </summary>
-  public Int64 createdTime { get; set; }
+  public long? createdTime { get; set; }
 
   /// <summary>
   /// The time when the refund was recorded on the client
   /// </summary>
-  public Int64 clientCreatedTime { get; set; }
+  public long? clientCreatedTime { get; set; }
 
   /// <summary>
   /// The payment with which the refund is associated

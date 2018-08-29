@@ -30,15 +30,40 @@ namespace com.clover.remotepay.sdk
         protected BaseRequest()
         {
         }
-        protected String RequestId
-        {
-            get; set;
-        }
+
+        protected string RequestId { get; set; }
     }
 
     public enum ResponseCode
     {
         SUCCESS, FAIL, UNSUPPORTED, CANCEL, ERROR
+    }
+
+    public static class ResponseCodeExtension
+    {
+        public static ResponseCode ToResponseCode(this ResultStatus status)
+        {
+            switch (status)
+            {
+                case ResultStatus.FAIL: return ResponseCode.FAIL;
+                case ResultStatus.SUCCESS: return ResponseCode.SUCCESS;
+                case ResultStatus.CANCEL: return ResponseCode.CANCEL;
+            }
+            return ResponseCode.FAIL;
+        }
+
+        public static ResultStatus ToResultCode(this  ResponseCode code)
+        {
+            switch (code)
+            {
+                case ResponseCode.FAIL:
+                case ResponseCode.UNSUPPORTED:
+                case ResponseCode.ERROR: return ResultStatus.FAIL;
+                case ResponseCode.SUCCESS: return ResultStatus.SUCCESS;
+                case ResponseCode.CANCEL:  return ResultStatus.CANCEL;
+            }
+            return ResultStatus.FAIL;
+        }
     }
 
     public enum TipMode
@@ -66,33 +91,40 @@ namespace com.clover.remotepay.sdk
         /// <summary>
         /// Optional information about result.
         /// </summary>
-        public String Reason { get; set; }
+        public string Reason { get; set; }
         /// <summary>
         /// Detailed information about result.
         /// </summary>
-        public String Message { get; set; }
+        public string Message { get; set; }
 
     }
 
     /// <summary>
-    ///
+    /// Base Sale/Auth/Refund/PreAuth Transaction Request
     /// </summary>
-    public abstract class TransactionRequest : BaseRequest
+    public abstract class BaseTransactionRequest : BaseRequest
     {
         public bool? DisablePrinting { get; set; }
         public bool? CardNotPresent { get; set; }
         public bool? DisableRestartTransactionOnFail { get; set; }
         public long Amount { get; set; }
-        public long? CardEntryMethods { get; set; }
+        public int? CardEntryMethods { get; set; }
         public VaultedCard VaultedCard { get; set; }
         public string ExternalId { get; set; }
 
         public PayIntent.TransactionType Type { get; set; }
+        public bool? DisableDuplicateChecking { get; set; }
+        public bool? DisableReceiptSelection { get; set; }
+        public bool? AutoAcceptPaymentConfirmations { get; set; }
+    }
+
+    /// <summary>
+    /// Extended Sale/Auth Transaction Request
+    /// </summary>
+    public abstract class TransactionRequest : BaseTransactionRequest
+    {
         public long? SignatureThreshold { get; set; }
         public DataEntryLocation? SignatureEntryLocation { get; set; }
-        public bool? DisableReceiptSelection { get; set; }
-        public bool? DisableDuplicateChecking { get; set; }
-        public bool? AutoAcceptPaymentConfirmations { get; set; }
         public bool? AutoAcceptSignature { get; set; }
     }
 
@@ -173,14 +205,14 @@ namespace com.clover.remotepay.sdk
 
     public class OpenCashDrawerRequest : BaseRequest
     {
-        public String reason { get; set; }
-        public String printerId { get; set; }
+        public string reason { get; set; }
+        public string printerId { get; set; }
 
         /// Create an object used to inform the Clover Connector's `openCashDrawer()` function of required/additional information when requesting the cash drawer be opened
         ///
         /// - Parameters:
-        ///   - reason: String describing the reason to open the drawer
-        public OpenCashDrawerRequest(String reason)
+        ///   - reason: string describing the reason to open the drawer
+        public OpenCashDrawerRequest(string reason)
         {
             this.reason = reason;
         }
@@ -219,8 +251,6 @@ namespace com.clover.remotepay.sdk
         /// If true then offline payments will be approved without a prompt.  Currently must be true.
         /// </summary>
         public bool? ApproveOfflinePaymentWithoutPrompt { get; set; }
-        [System.Obsolete("DisableTipOnScreen is deprecated, please use TipMode of None instead.")]
-        public bool? DisableTipOnScreen { get; set; } //Soon to perish        
         /// <summary>
         /// Gets or sets the tip amount.
         /// </summary>
@@ -317,7 +347,7 @@ namespace com.clover.remotepay.sdk
     /// please change your code to use PreAuthRequest/PreAuthResponse
     /// for all PreAuth transactions.
     /// </summary>
-    public class PreAuthRequest : TransactionRequest
+    public class PreAuthRequest : BaseTransactionRequest
     {
         public PreAuthRequest()
         {
@@ -420,7 +450,7 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class ReadCardDataRequest : BaseRequest
     {
-        public long? CardEntryMethods { get; set; }
+        public int? CardEntryMethods { get; set; }
         public bool? IsForceSwipePinEntry { get; set; }
     }
 
@@ -439,7 +469,7 @@ namespace com.clover.remotepay.sdk
     {
         public string PaymentId { get; set; }
         public long Amount { get; set; }
-        public long TipAmount { get; set; }
+        public long? TipAmount { get; set; }
     }
 
     /// <summary>
@@ -468,7 +498,7 @@ namespace com.clover.remotepay.sdk
     {
         public string PaymentID { get; set; }
         public string OrderID { get; set; }
-        public long TipAmount { get; set; }
+        public long? TipAmount { get; set; }
     }
 
     /// <summary>
@@ -477,7 +507,7 @@ namespace com.clover.remotepay.sdk
     public class TipAdjustAuthResponse : BaseResponse
     {
         public string PaymentId { get; set; }
-        public long TipAmount { get; set; }
+        public long? TipAmount { get; set; }
     }
 
 
@@ -498,10 +528,26 @@ namespace com.clover.remotepay.sdk
     public class VoidPaymentRequest : BaseRequest
     {
         public string PaymentId { get; set; }
-        public string VoidReason { get; set; } // {USER_CANCEL}
+        /// <summary>
+        /// Reason for void, must be one of the recognized categories, see VoidPaymentRequest consts for common options
+        /// use VoidPaymentRequest.USER_CANCEL as default
+        /// </summary>
+        public string VoidReason { get; set; }
 
-        public string EmployeeId { get; set; }//optional TODO: Revisit
-        public string OrderId { get; set; } //optional TODO: Revisit
+        public string EmployeeId { get; set; }
+        public string OrderId { get; set; }
+
+        // Valid VoidReason values - use USER_CANCEL by default
+        public const string USER_CANCEL = "USER_CANCEL";
+        public const string NOT_APPROVED = "NOT_APPROVED";
+        public const string FAILED = "FAILED";
+        public const string REJECT_SIGNATURE = "REJECT_SIGNATURE";
+        public const string REJECT_PARTIAL_AUTH = "REJECT_PARTIAL_AUTH";
+        public const string REJECT_DUPLICATE = "REJECT_DUPLICATE";
+        public const string REJECT_OFFLINE = "REJECT_OFFLINE";
+        public const string AUTH_CLOSED_NEW_CARD = "AUTH_CLOSED_NEW_CARD";
+        public const string DEVELOPER_PAY_PARTIAL_AUTH = "DEVELOPER_PAY_PARTIAL_AUTH";
+        public const string TRANSPORT_ERROR = "TRANSPORT_ERROR";
     }
 
     /// <summary>
@@ -510,19 +556,18 @@ namespace com.clover.remotepay.sdk
     public class VoidPaymentResponse : BaseResponse
     {
         public string PaymentId { get; set; }
+        public Payment Payment { get; set; }
     }
 
     /// <summary>
     /// This should be used to request a manual refund via the ManualRefund method
     /// </summary>
-    public class ManualRefundRequest : TransactionRequest
+    public class ManualRefundRequest : BaseTransactionRequest
     {
         public ManualRefundRequest()
         {
             this.Type = PayIntent.TransactionType.CREDIT;
         }
-        public long Amount { get; set; }
-        public long? CardEntryMethods { get; set; }
     }
 
     /// <summary>
@@ -554,14 +599,13 @@ namespace com.clover.remotepay.sdk
 
     public class PrintJobStatusRequest : BaseRequest
     {
-        public String printRequestId { get; set; }
+        public string printRequestId { get; set; }
 
         public PrintJobStatusRequest()
         {
-
         }
 
-        public PrintJobStatusRequest(String printRequestId)
+        public PrintJobStatusRequest(string printRequestId)
         {
             this.printRequestId = printRequestId;
         }
@@ -569,10 +613,10 @@ namespace com.clover.remotepay.sdk
 
     public class PrintJobStatusResponse : BaseResponse
     {
-        public String printRequestId { get; set; }
+        public string printRequestId { get; set; }
         public PrintJobStatus status { get; set; }
 
-        public PrintJobStatusResponse(String printRequestId, String status)
+        public PrintJobStatusResponse(string printRequestId, string status)
         {
             this.printRequestId = printRequestId;
             try
@@ -581,7 +625,7 @@ namespace com.clover.remotepay.sdk
             }
             catch (ArgumentException)
             {
-                Console.WriteLine("{0} is not a member of the PrintJobStatus enumeration.", status);
+                // Console.WriteLine("{0} is not a member of the PrintJobStatus enumeration.", status);
                 this.status = PrintJobStatus.UNKNOWN;
             }
         }
@@ -607,6 +651,8 @@ namespace com.clover.remotepay.sdk
         public string OrderId { get; set; }
         public string PaymentId { get; set; }
         public long Amount { get; set; } // optional
+        public bool? DisablePrinting { get; set; }
+        public bool? DisableReceiptSelection { get; set; }
     }
 
     /// <summary>
@@ -653,7 +699,7 @@ namespace com.clover.remotepay.sdk
         /// <summary>
         /// Tip amount
         /// </summary>
-        public long TipAmount { get; set; }
+        public long? TipAmount { get; set; }
     }
 
     /// <summary>
@@ -663,6 +709,7 @@ namespace com.clover.remotepay.sdk
     {
         public string OrderID { get; set; }
         public string PaymentID { get; set; }
+        public bool DisablePrinting { get; set; }
     }
 
     /// <summary>
@@ -735,9 +782,9 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class CustomActivityRequest : BaseRequest
     {
-        public String Action { get; set; }
-        public String Payload { get; set; }
-        public Boolean NonBlocking { get; set; } = false;
+        public string Action { get; set; }
+        public string Payload { get; set; }
+        public bool NonBlocking { get; set; } = false;
     }
 
     /// <summary>
@@ -746,8 +793,8 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class CustomActivityResponse : BaseResponse
     {
-        public String Action { get; set; }
-        public String Payload { get; set; }
+        public string Action { get; set; }
+        public string Payload { get; set; }
     }
 
     /// <summary>
@@ -817,10 +864,6 @@ namespace com.clover.remotepay.sdk
         public ExternalDeviceState State { get; set; }
     }
 
-    //public enum QueryStatus
-    //{
-    //    FOUND, NOT_FOUND, IN_PROGRESS
-    //}
     /// <summary>
     /// response to RetrievePayment call
     /// </summary>
@@ -829,7 +872,52 @@ namespace com.clover.remotepay.sdk
         public string ExternalPaymentId { get; set; }
         public QueryStatus QueryStatus { get; set; }
         public Payment Payment { get; set; }
-
     }
 
+    public class DisplayReceiptOptionsRequest : BaseRequest
+    {
+        public string orderId { get; set; }
+        public string paymentId { get; set; }
+        public string refundId { get; set; }
+        public string creditId { get; set; }
+        public bool disablePrinting { get; set; }
+    }
+
+    public class DisplayReceiptOptionsResponse : BaseResponse
+    {
+        public ResultStatus status { get; set; }
+    }
+
+    public static class CloverConnectorExtensions
+    {
+        public static com.clover.sdk.v3.payments.TipMode? GetAltTipMode(this com.clover.remotepay.sdk.TipMode? value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+            switch (value)
+            {
+                case TipMode.NO_TIP: return clover.sdk.v3.payments.TipMode.NO_TIP;
+                case TipMode.ON_SCREEN_BEFORE_PAYMENT: return clover.sdk.v3.payments.TipMode.ON_SCREEN_BEFORE_PAYMENT;
+                case TipMode.TIP_PROVIDED: return clover.sdk.v3.payments.TipMode.TIP_PROVIDED;
+                default: return (com.clover.sdk.v3.payments.TipMode)Enum.Parse(typeof(TipMode), value.ToString());
+            }
+        }
+
+        public static com.clover.remotepay.sdk.TipMode? GetAltTipMode(this com.clover.sdk.v3.payments.TipMode? value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+            switch (value)
+            {
+                case clover.sdk.v3.payments.TipMode.NO_TIP: return TipMode.NO_TIP;
+                case clover.sdk.v3.payments.TipMode.ON_SCREEN_BEFORE_PAYMENT: return TipMode.ON_SCREEN_BEFORE_PAYMENT;
+                case clover.sdk.v3.payments.TipMode.TIP_PROVIDED: return TipMode.TIP_PROVIDED;
+                default: return (com.clover.remotepay.sdk.TipMode)Enum.Parse(typeof(com.clover.remotepay.sdk.TipMode), value.ToString());
+            }
+        }
+    }
 }

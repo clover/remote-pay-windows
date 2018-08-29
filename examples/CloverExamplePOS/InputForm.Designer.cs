@@ -40,9 +40,10 @@
             // OkButton
             // 
             this.OkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OkButton.Location = new System.Drawing.Point(198, 133);
+            this.OkButton.Location = new System.Drawing.Point(156, 164);
+            this.OkButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(75, 23);
+            this.OkButton.Size = new System.Drawing.Size(100, 28);
             this.OkButton.TabIndex = 2;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
@@ -50,18 +51,20 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(34, 50);
+            this.label1.Location = new System.Drawing.Point(45, 62);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(239, 23);
+            this.label1.Size = new System.Drawing.Size(319, 28);
             this.label1.TabIndex = 0;
             this.label1.Text = "label1";
             // 
             // CxButton
             // 
             this.CxButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CxButton.Location = new System.Drawing.Point(117, 133);
+            this.CxButton.Location = new System.Drawing.Point(264, 164);
+            this.CxButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.CxButton.Name = "CxButton";
-            this.CxButton.Size = new System.Drawing.Size(75, 23);
+            this.CxButton.Size = new System.Drawing.Size(100, 28);
             this.CxButton.TabIndex = 3;
             this.CxButton.Text = "Cancel";
             this.CxButton.UseVisualStyleBackColor = true;
@@ -69,9 +72,10 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(33, 76);
+            this.textBox1.Location = new System.Drawing.Point(44, 94);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(236, 20);
+            this.textBox1.Size = new System.Drawing.Size(313, 22);
             this.textBox1.TabIndex = 1;
             // 
             // TitleTextBox
@@ -81,8 +85,9 @@
             this.TitleTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TitleTextBox.ForeColor = System.Drawing.Color.White;
             this.TitleTextBox.Location = new System.Drawing.Point(0, 0);
+            this.TitleTextBox.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.TitleTextBox.Name = "TitleTextBox";
-            this.TitleTextBox.Size = new System.Drawing.Size(311, 28);
+            this.TitleTextBox.Size = new System.Drawing.Size(415, 34);
             this.TitleTextBox.TabIndex = 4;
             this.TitleTextBox.Text = "label2";
             this.TitleTextBox.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -96,18 +101,20 @@
             this.panel1.Controls.Add(this.CxButton);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.OkButton);
-            this.panel1.Location = new System.Drawing.Point(23, 33);
+            this.panel1.Location = new System.Drawing.Point(31, 41);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(311, 186);
+            this.panel1.Size = new System.Drawing.Size(415, 229);
             this.panel1.TabIndex = 4;
             // 
             // InputForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(357, 294);
+            this.ClientSize = new System.Drawing.Size(476, 362);
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "InputForm";
             this.Text = "InputForm";
             this.Load += new System.EventHandler(this.InputForm_Load);

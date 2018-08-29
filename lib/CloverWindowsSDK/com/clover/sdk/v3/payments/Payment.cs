@@ -21,102 +21,106 @@
 using System;
 using System.Collections.Generic;
 
-namespace com.clover.sdk.v3.payments {
+namespace com.clover.sdk.v3.payments
+{
 
 
-public class Payment {
+    public class Payment
+    {
 
-  /// <summary>
-  /// Unique identifier
-  /// </summary>
-  public String id { get; set; }
+        /// <summary>
+        /// Unique identifier
+        /// </summary>
+        public string id { get; set; }
 
-  /// <summary>
-  /// The order with which the payment is associated
-  /// </summary>
-  public com.clover.sdk.v3.base_.Reference order { get; set; }
+        /// <summary>
+        /// The order with which the payment is associated
+        /// </summary>
+        public com.clover.sdk.v3.base_.Reference order { get; set; }
 
-  /// <summary>
-  /// Device which processed the transaction for this payment
-  /// </summary>
-  public com.clover.sdk.v3.base_.Reference device { get; set; }
+        /// <summary>
+        /// Device which processed the transaction for this payment
+        /// </summary>
+        public com.clover.sdk.v3.base_.Reference device { get; set; }
 
-  /// <summary>
-  /// The tender type associated with this payment, e.g. credit card, cash, etc.
-  /// </summary>
-  public com.clover.sdk.v3.base_.Tender tender { get; set; }
+        /// <summary>
+        /// The tender type associated with this payment, e.g. credit card, cash, etc.
+        /// </summary>
+        public com.clover.sdk.v3.base_.Tender tender { get; set; }
 
-  /// <summary>
-  /// Total amount paid
-  /// </summary>
-  public Int64 amount { get; set; }
+        /// <summary>
+        /// Total amount paid
+        /// </summary>
+        public long amount { get; set; }
 
-  /// <summary>
-  /// Amount paid in tips
-  /// </summary>
-  public Int64 tipAmount { get; set; }
+        /// <summary>
+        /// Amount paid in tips
+        /// </summary>
+        public long? tipAmount { get; set; }
 
-  /// <summary>
-  /// Amount paid in tax
-  /// </summary>
-  public Int64 taxAmount { get; set; }
+        /// <summary>
+        /// Amount paid in tax
+        /// </summary>
+        public long taxAmount { get; set; }
 
-  /// <summary>
-  /// Amount given back in a cash back transaction
-  /// </summary>
-  public Int64 cashbackAmount { get; set; }
+        /// <summary>
+        /// Amount given back in a cash back transaction
+        /// </summary>
+        public long cashbackAmount { get; set; }
 
-  /// <summary>
-  /// Amount of cash given by the customer
-  /// </summary>
-  public Int64 cashTendered { get; set; }
+        /// <summary>
+        /// Amount of cash given by the customer
+        /// </summary>
+        public long? cashTendered { get; set; }
 
-  public String externalPaymentId { get; set; }
+        public string externalPaymentId { get; set; }
 
-  /// <summary>
-  /// The employee who processed the payment
-  /// </summary>
-  public com.clover.sdk.v3.base_.Reference employee { get; set; }
+        /// <summary>
+        /// The employee who processed the payment
+        /// </summary>
+        public com.clover.sdk.v3.base_.Reference employee { get; set; }
 
-  /// <summary>
-  /// Time payment was recorded on server
-  /// </summary>
-  public Int64 createdTime { get; set; }
+        /// <summary>
+        /// Time payment was recorded on server
+        /// </summary>
+        public long createdTime { get; set; }
 
-  public Int64 clientCreatedTime { get; set; }
+        public long clientCreatedTime { get; set; }
 
-  /// <summary>
-  /// Last modified time of the payment
-  /// </summary>
-  public Int64 modifiedTime { get; set; }
+        /// <summary>
+        /// Last modified time of the payment
+        /// </summary>
+        public long modifiedTime { get; set; }
 
-  public Boolean offline { get; set; }
+        public bool offline { get; set; }
 
-  public com.clover.sdk.v3.payments.Result result { get; set; }
+        public com.clover.sdk.v3.payments.Result result { get; set; }
 
-  /// <summary>
-  /// Information about the card used for credit/debit card payments
-  /// </summary>
-  public com.clover.sdk.v3.payments.CardTransaction cardTransaction { get; set; }
+        /// <summary>
+        /// Information about the card used for credit/debit card payments
+        /// </summary>
+        public com.clover.sdk.v3.payments.CardTransaction cardTransaction { get; set; }
 
-  /// <summary>
-  /// Amount record as a service charge
-  /// </summary>
-  public com.clover.sdk.v3.payments.ServiceChargeAmount serviceCharge { get; set; }
+        /// <summary>
+        /// Amount record as a service charge
+        /// </summary>
+        public com.clover.sdk.v3.payments.ServiceChargeAmount serviceCharge { get; set; }
 
-  public List<com.clover.sdk.v3.payments.PaymentTaxRate> taxRates { get; set; }
+        public List<com.clover.sdk.v3.payments.PaymentTaxRate> taxRates { get; set; }
 
-  public List<com.clover.sdk.v3.payments.Refund> refunds { get; set; }
+        public List<com.clover.sdk.v3.payments.Refund> refunds { get; set; }
 
-  public String note { get; set; }
+        public string note { get; set; }
 
-  public List<com.clover.sdk.v3.payments.LineItemPayment> lineItemPayments { get; set; }
+        public List<com.clover.sdk.v3.payments.LineItemPayment> lineItemPayments { get; set; }
 
-  /// <summary>
-  /// If voided, the reason why (when available)
-  /// </summary>
-  public com.clover.sdk.v3.order.VoidReason voidReason { get; set; }
+        public List<com.clover.sdk.v3.payments.AdditionalChargeAmount> additionalCharges { get; set; }
 
-}
+        /// <summary>
+        /// If voided, the reason why (when available)
+        /// </summary>
+        public com.clover.sdk.v3.order.VoidReason voidReason { get; set; }
+
+    }
 
 }

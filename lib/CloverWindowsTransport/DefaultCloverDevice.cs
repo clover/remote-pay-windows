@@ -57,12 +57,12 @@ namespace com.clover.remotepay.transport
 
         public void onDeviceConnected(CloverTransport transport)
         {
-            deviceObservers.ForEach(x => x.onDeviceConnected());
+            NotifyObservers(observer => observer.onDeviceConnected());
         }
 
         public void onDeviceDisconnected(CloverTransport transport)
         {
-            deviceObservers.ForEach(x => x.onDeviceDisconnected());
+            NotifyObservers(observer => observer.onDeviceDisconnected());
         }
 
         public void onDeviceReady(CloverTransport device)
@@ -72,7 +72,7 @@ namespace com.clover.remotepay.transport
 
         public void onDeviceError(int code, Exception cause, string message)
         {
-            deviceObservers.ForEach(x => x.onDeviceError(code, cause, message));
+            NotifyObservers(observer => observer.onDeviceError(code, cause, message));
         }
 
         private void setPaymentConfirmationIdle(bool value)
@@ -88,8 +88,7 @@ namespace com.clover.remotepay.transport
         }
 
         /// <summary>
-        /// This handles parsing the generic message and figuring
-        /// out which handler should be used for processing
+        /// Parse the generic message and figure out which handler should be used for processing
         /// </summary>
         /// <param name="message">The message.</param>
         public void onMessage(string message)
@@ -97,485 +96,425 @@ namespace com.clover.remotepay.transport
 #if DEBUG
             Console.WriteLine("Received raw message: " + message);
 #endif
-            //CloverTransportObserver
-            // Deserialize the message object to a real object, and figure
-            RemoteMessage rMessage = JsonUtils.deserializeSDK<RemoteMessage>(message);
-            remoteMessageVersion = Math.Max(remoteMessageVersion, rMessage.version);
-
-            switch (rMessage.method)
+            RemoteMessage rMessage = null;
+            try
             {
-                case Methods.BREAK:
-                    break;
-                case Methods.ACK:
-                    AcknowledgementMessage ackMessage = JsonUtils.deserializeSDK<AcknowledgementMessage>(rMessage.payload);
-                    notifyObserverAck(ackMessage);
-                    break;
-                case Methods.CASHBACK_SELECTED:
-                    CashbackSelectedMessage cbsMessage = JsonUtils.deserializeSDK<CashbackSelectedMessage>(rMessage.payload);
-                    notifyObserversCashbackSelected(cbsMessage);
-                    break;
-                case Methods.DISCOVERY_RESPONSE:
-                    DiscoveryResponseMessage drMessage = JsonUtils.deserializeSDK<DiscoveryResponseMessage>(rMessage.payload);
-                    deviceInfo.name = drMessage.name;
-                    deviceInfo.serial = drMessage.serial;
-                    deviceInfo.model = drMessage.model;
-                    notifyObserversDiscoveryResponse(drMessage);
-                    break;
-                case Methods.FINISH_CANCEL:
-                    FinishCancelMessage finishCancelMessage = JsonUtils.deserializeSDK<FinishCancelMessage>(rMessage.payload);
-                    notifyObserversFinishCancel(finishCancelMessage.requestInfo);
-                    break;
-                case Methods.FINISH_OK:
-                    FinishOkMessage fokmsg = JsonUtils.deserializeSDK<FinishOkMessage>(rMessage.payload);
-                    notifyObserversFinishOk(fokmsg);
-                    break;
-                case Methods.KEY_PRESS:
-                    KeyPressMessage kpm = JsonUtils.deserializeSDK<KeyPressMessage>(rMessage.payload);
-                    notifyObserversKeyPressed(kpm);
-                    break;
-                case Methods.ORDER_ACTION_RESPONSE:
-                    break;
-                case Methods.PARTIAL_AUTH:
-                    PartialAuthMessage partialAuth = JsonUtils.deserializeSDK<PartialAuthMessage>(rMessage.payload);
-                    notifyObserversPartialAuth(partialAuth);
-                    break;
-                case Methods.PAYMENT_VOIDED:
-                    // this seems to only gets called if a Signature is "Canceled" on the device
-                    break;
-                case Methods.CONFIRM_PAYMENT_MESSAGE:
-                    setPaymentConfirmationIdle(false);
-                    ConfirmPaymentMessage confirmPaymentMessage = JsonUtils.deserializeSDK<ConfirmPaymentMessage>(rMessage.payload);
-                    notifyObserversConfirmPayment(confirmPaymentMessage);
-                    break;
-                case Methods.TIP_ADDED:
-                    TipAddedMessage tipMessage = JsonUtils.deserializeSDK<TipAddedMessage>(rMessage.payload);
-                    notifyObserversTipAdded(tipMessage);
-                    break;
-                case Methods.TX_START_RESPONSE:
-                    TxStartResponseMessage txsrm = JsonUtils.deserializeSDK<TxStartResponseMessage>(rMessage.payload);
-                    notifyObserversTxStartResponse(txsrm);
-                    break;
-                case Methods.TX_STATE:
-                    TxStateMessage txStateMsg = JsonUtils.deserializeSDK<TxStateMessage>(rMessage.payload);
-                    notifyObserversTxState(txStateMsg);
-                    break;
-                case Methods.UI_STATE:
-                    UiStateMessage uiStateMsg = JsonUtils.deserializeSDK<UiStateMessage>(rMessage.payload);
-                    notifyObserversUiState(uiStateMsg);
-                    break;
-                case Methods.VERIFY_SIGNATURE:
-                    paymentRejected = false;
-                    VerifySignatureMessage vsigMsg = JsonUtils.deserializeSDK<VerifySignatureMessage>(rMessage.payload);
-                    notifyObserversVerifySignature(vsigMsg);
-                    break;
-                case Methods.REFUND_RESPONSE:
-                    RefundResponseMessage refRespMsg = JsonUtils.deserializeSDK<RefundResponseMessage>(rMessage.payload);
-                    notifyObserversRefundPaymentResponse(refRespMsg);
-                    break;
-                case Methods.TIP_ADJUST_RESPONSE:
-                    TipAdjustResponseMessage tipAdjustMsg = JsonUtils.deserializeSDK<TipAdjustResponseMessage>(rMessage.payload);
-                    notifyObserversTipAdjusted(tipAdjustMsg);
-                    break;
-                case Methods.REFUND_REQUEST:
-                    //Outbound no-op
-                    break;
-                case Methods.VAULT_CARD_RESPONSE:
-                    VaultCardResponseMessage vcrMsg = JsonUtils.deserializeSDK<VaultCardResponseMessage>(rMessage.payload);
-                    notifyObserversVaultCardResponse(vcrMsg);
-                    break;
-                case Methods.CARD_DATA_RESPONSE:
-                    ReadCardDataResponseMessage rcdrMsg = JsonUtils.deserializeSDK<ReadCardDataResponseMessage>(rMessage.payload);
-                    notifyObserversReadCardDataResponse(rcdrMsg);
-                    break;
-                case Methods.CAPTURE_PREAUTH_RESPONSE:
-                    CapturePreAuthResponseMessage carMsg = JsonUtils.deserializeSDK<CapturePreAuthResponseMessage>(rMessage.payload);
-                    notifyObserversCapturePreAuthResponse(carMsg);
-                    break;
-                case Methods.CLOSEOUT_RESPONSE:
-                    CloseoutResponseMessage crMsg = JsonUtils.deserializeSDK<CloseoutResponseMessage>(rMessage.payload);
-                    notifyObserversCloseoutResponse(crMsg);
-                    break;
-                case Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE:
-                    RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.deserializeSDK<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
-                    notifyObserversPendingPaymentsResponse(rpprMsg);
-                    break;
-                case Methods.ACTIVITY_RESPONSE:
-                    ActivityResponseMessage arm = JsonUtils.deserializeSDK<ActivityResponseMessage>(rMessage.payload);
-                    notifyObserversActivityResponse(arm);
-                    break;
-                case Methods.ACTIVITY_MESSAGE_FROM_ACTIVITY:
-                    ActivityMessageFromActivity amfa = JsonUtils.deserializeSDK<ActivityMessageFromActivity>(rMessage.payload);
-                    notifyObserversActivityMessage(amfa);
-                    break;
-                case Methods.RESET_DEVICE_RESPONSE:
-                    ResetDeviceResponseMessage rdrm = JsonUtils.deserializeSDK<ResetDeviceResponseMessage>(rMessage.payload);
-                    notifyObserversDeviceReset(rdrm);
-                    break;
-                case Methods.RETRIEVE_DEVICE_STATUS_RESPONSE:
-                    RetrieveDeviceStatusResponseMessage rdsrm = JsonUtils.deserializeSDK<RetrieveDeviceStatusResponseMessage>(rMessage.payload);
-                    notifyObserversRetrieveDeviceStatusResponse(rdsrm);
-                    break;
-                case Methods.DISCOVERY_REQUEST:
-                    //Outbound no-op
-                    break;
-                case Methods.ORDER_ACTION_ADD_DISCOUNT:
-                    //Outbound no-op
-                    break;
-                case Methods.ORDER_ACTION_ADD_LINE_ITEM:
-                    //Outbound no-op
-                    break;
-                case Methods.ORDER_ACTION_REMOVE_LINE_ITEM:
-                    //Outbound no-op
-                    break;
-                case Methods.ORDER_ACTION_REMOVE_DISCOUNT:
-                    //Outbound no-op
-                    break;
-                case Methods.PRINT_CREDIT:
-                    CreditPrintMessage cpm = JsonUtils.deserializeSDK<CreditPrintMessage>(rMessage.payload);
-                    notifyObserversPrintCredit(cpm);
-                    break;
-                case Methods.PRINT_CREDIT_DECLINE:
-                    DeclineCreditPrintMessage dcpm = JsonUtils.deserializeSDK<DeclineCreditPrintMessage>(rMessage.payload);
-                    notifyObserversPrintCreditDecline(dcpm);
-                    break;
-                case Methods.PRINT_PAYMENT:
-                    PaymentPrintMessage ppm = JsonUtils.deserializeSDK<PaymentPrintMessage>(rMessage.payload);
-                    notifyObserversPrintPayment(ppm);
-                    break;
-                case Methods.PRINT_PAYMENT_DECLINE:
-                    DeclinePaymentPrintMessage dppm = JsonUtils.deserializeSDK<DeclinePaymentPrintMessage>(rMessage.payload);
-                    notifyObserversPrintPaymentDecline(dppm);
-                    break;
-                case Methods.PRINT_PAYMENT_MERCHANT_COPY:
-                    PaymentPrintMerchantCopyMessage ppmcm = JsonUtils.deserializeSDK<PaymentPrintMerchantCopyMessage>(rMessage.payload);
-                    notifyObserversPrintMerchantCopy(ppmcm);
-                    break;
-                case Methods.REFUND_PRINT_PAYMENT:
-                    RefundPaymentPrintMessage rppm = JsonUtils.deserializeSDK<RefundPaymentPrintMessage>(rMessage.payload);
-                    notifyObserversPrintRefund(rppm);
-                    break;
-                case Methods.RETRIEVE_PAYMENT_RESPONSE:
-                    RetrievePaymentResponseMessage rprm = JsonUtils.deserializeSDK<RetrievePaymentResponseMessage>(rMessage.payload);
-                    notifyObserversRetrievePaymentResponse(rprm);
-                    break;
-                case Methods.GET_PRINTERS_RESPONSE:
-                    RetrievePrintersResponseMessage rtrm = JsonUtils.deserializeSDK<RetrievePrintersResponseMessage>(rMessage.payload);
-                    notifyObserversRetrievePrinterResponse(rtrm);
-                    break;
-                case Methods.PRINT_JOB_STATUS_RESPONSE:
-                    PrintJobStatusResponseMessage pjsrm = JsonUtils.deserializeSDK<PrintJobStatusResponseMessage>(rMessage.payload);
-                    notifyObserversRetrievePrintJobStatus(pjsrm);
-                    break;
-                case Methods.PRINT_IMAGE:
-                    //Outbound no-op
-                    break;
-                case Methods.PRINT_TEXT:
-                    //Outbound no-op
-                    break;
-                case Methods.SHOW_ORDER_SCREEN:
-                    //Outbound no-op
-                    break;
-                case Methods.SHOW_PAYMENT_RECEIPT_OPTIONS:
-                    //Outbound no-op
-                    break;
-                case Methods.SHOW_REFUND_RECEIPT_OPTIONS:
-                    //Outbound no-op
-                    break;
-                case Methods.SHOW_CREDIT_RECEIPT_OPTIONS:
-                    //Outbound no-op
-                    break;
-                case Methods.SHOW_THANK_YOU_SCREEN:
-                    //Outbound no-op
-                    break;
-                case Methods.SHOW_WELCOME_SCREEN:
-                    //Outbound no-op
-                    break;
-                case Methods.SIGNATURE_VERIFIED:
-                    //Outbound no-op
-                    break;
-                case Methods.TERMINAL_MESSAGE:
-                    //Outbound no-op
-                    break;
-                case Methods.TX_START:
-                    //Outbound no-op
-                    break;
-                case Methods.VOID_PAYMENT:
-                    //Outbound no-op
-                    break;
-                case Methods.CLOSEOUT_REQUEST:
-                    //Outbound no-op
-                    break;
-                case Methods.VAULT_CARD:
-                    //Outbound no-op
-                    break;
-                case Methods.CARD_DATA:
-                    //Outbound no-op
-                    break;
+                // NB: This handling was changed after the 1.4.2 release to properly suppress uknown messages.
+                //     Old versions of the WinSDK will crash with unknown messages, and old versions are still expected to be in customer's hands.
+                //     When testing releases, make sure any suppressed errors here are paid proper backwards-compatible attention and tested
+
+                // Deserialize the message object to a real object
+                rMessage = JsonUtils.deserializeSDK<RemoteMessage>(message);
+                remoteMessageVersion = Math.Max(remoteMessageVersion, rMessage.version);
+            }
+            catch (Exception exception)
+            {
+                // if a remote message can't be parsed, ignore this unknown message; log as appropriate
+                // - and verify backwards compatiblility story since old WinSDK releases will crash
+
+                // TODO: Log message and exception in new logging
+            }
+
+            // Handle and route known messages appropriately
+            if (rMessage != null)
+            {
+                switch (rMessage.method)
+                {
+                    case Methods.BREAK:
+                        break;
+                    case Methods.ACK:
+                        AcknowledgementMessage ackMessage = JsonUtils.deserializeSDK<AcknowledgementMessage>(rMessage.payload);
+                        notifyObserverAck(ackMessage);
+                        break;
+                    case Methods.CASHBACK_SELECTED:
+                        CashbackSelectedMessage cbsMessage = JsonUtils.deserializeSDK<CashbackSelectedMessage>(rMessage.payload);
+                        notifyObserversCashbackSelected(cbsMessage);
+                        break;
+                    case Methods.DISCOVERY_RESPONSE:
+                        DiscoveryResponseMessage drMessage = JsonUtils.deserializeSDK<DiscoveryResponseMessage>(rMessage.payload);
+                        deviceInfo.name = drMessage.name;
+                        deviceInfo.serial = drMessage.serial;
+                        deviceInfo.model = drMessage.model;
+                        notifyObserversDiscoveryResponse(drMessage);
+                        break;
+                    case Methods.FINISH_CANCEL:
+                        FinishCancelMessage finishCancelMessage = JsonUtils.deserializeSDK<FinishCancelMessage>(rMessage.payload);
+                        notifyObserversFinishCancel(finishCancelMessage.requestInfo);
+                        break;
+                    case Methods.FINISH_OK:
+                        FinishOkMessage fokmsg = JsonUtils.deserializeSDK<FinishOkMessage>(rMessage.payload);
+                        notifyObserversFinishOk(fokmsg);
+                        break;
+                    case Methods.KEY_PRESS:
+                        KeyPressMessage kpm = JsonUtils.deserializeSDK<KeyPressMessage>(rMessage.payload);
+                        notifyObserversKeyPressed(kpm);
+                        break;
+                    case Methods.ORDER_ACTION_RESPONSE:
+                        break;
+                    case Methods.PARTIAL_AUTH:
+                        PartialAuthMessage partialAuth = JsonUtils.deserializeSDK<PartialAuthMessage>(rMessage.payload);
+                        notifyObserversPartialAuth(partialAuth);
+                        break;
+                    case Methods.PAYMENT_VOIDED:
+                        // this seems to only gets called if a Signature is "Canceled" on the device
+                        break;
+                    case Methods.CONFIRM_PAYMENT_MESSAGE:
+                        setPaymentConfirmationIdle(false);
+                        ConfirmPaymentMessage confirmPaymentMessage = JsonUtils.deserializeSDK<ConfirmPaymentMessage>(rMessage.payload);
+                        notifyObserversConfirmPayment(confirmPaymentMessage);
+                        break;
+                    case Methods.TIP_ADDED:
+                        TipAddedMessage tipMessage = JsonUtils.deserializeSDK<TipAddedMessage>(rMessage.payload);
+                        notifyObserversTipAdded(tipMessage);
+                        break;
+                    case Methods.TX_START_RESPONSE:
+                        TxStartResponseMessage txsrm = JsonUtils.deserializeSDK<TxStartResponseMessage>(rMessage.payload);
+                        notifyObserversTxStartResponse(txsrm);
+                        break;
+                    case Methods.TX_STATE:
+                        TxStateMessage txStateMsg = JsonUtils.deserializeSDK<TxStateMessage>(rMessage.payload);
+                        notifyObserversTxState(txStateMsg);
+                        break;
+                    case Methods.UI_STATE:
+                        UiStateMessage uiStateMsg = JsonUtils.deserializeSDK<UiStateMessage>(rMessage.payload);
+                        notifyObserversUiState(uiStateMsg);
+                        break;
+                    case Methods.VERIFY_SIGNATURE:
+                        paymentRejected = false;
+                        VerifySignatureMessage vsigMsg = JsonUtils.deserializeSDK<VerifySignatureMessage>(rMessage.payload);
+                        notifyObserversVerifySignature(vsigMsg);
+                        break;
+                    case Methods.REFUND_RESPONSE:
+                        RefundResponseMessage refRespMsg = JsonUtils.deserializeSDK<RefundResponseMessage>(rMessage.payload);
+                        notifyObserversRefundPaymentResponse(refRespMsg);
+                        break;
+                    case Methods.TIP_ADJUST_RESPONSE:
+                        TipAdjustResponseMessage tipAdjustMsg = JsonUtils.deserializeSDK<TipAdjustResponseMessage>(rMessage.payload);
+                        notifyObserversTipAdjusted(tipAdjustMsg);
+                        break;
+                    case Methods.REFUND_REQUEST:
+                        //Outbound no-op
+                        break;
+                    case Methods.VAULT_CARD_RESPONSE:
+                        VaultCardResponseMessage vcrMsg = JsonUtils.deserializeSDK<VaultCardResponseMessage>(rMessage.payload);
+                        notifyObserversVaultCardResponse(vcrMsg);
+                        break;
+                    case Methods.CARD_DATA_RESPONSE:
+                        ReadCardDataResponseMessage rcdrMsg = JsonUtils.deserializeSDK<ReadCardDataResponseMessage>(rMessage.payload);
+                        notifyObserversReadCardDataResponse(rcdrMsg);
+                        break;
+                    case Methods.CAPTURE_PREAUTH_RESPONSE:
+                        CapturePreAuthResponseMessage carMsg = JsonUtils.deserializeSDK<CapturePreAuthResponseMessage>(rMessage.payload);
+                        notifyObserversCapturePreAuthResponse(carMsg);
+                        break;
+                    case Methods.CLOSEOUT_RESPONSE:
+                        CloseoutResponseMessage crMsg = JsonUtils.deserializeSDK<CloseoutResponseMessage>(rMessage.payload);
+                        notifyObserversCloseoutResponse(crMsg);
+                        break;
+                    case Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE:
+                        RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.deserializeSDK<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
+                        notifyObserversPendingPaymentsResponse(rpprMsg);
+                        break;
+                    case Methods.ACTIVITY_RESPONSE:
+                        ActivityResponseMessage arm = JsonUtils.deserializeSDK<ActivityResponseMessage>(rMessage.payload);
+                        notifyObserversActivityResponse(arm);
+                        break;
+                    case Methods.ACTIVITY_MESSAGE_FROM_ACTIVITY:
+                        ActivityMessageFromActivity amfa = JsonUtils.deserializeSDK<ActivityMessageFromActivity>(rMessage.payload);
+                        notifyObserversActivityMessage(amfa);
+                        break;
+                    case Methods.RESET_DEVICE_RESPONSE:
+                        ResetDeviceResponseMessage rdrm = JsonUtils.deserializeSDK<ResetDeviceResponseMessage>(rMessage.payload);
+                        notifyObserversDeviceReset(rdrm);
+                        break;
+                    case Methods.RETRIEVE_DEVICE_STATUS_RESPONSE:
+                        RetrieveDeviceStatusResponseMessage rdsrm = JsonUtils.deserializeSDK<RetrieveDeviceStatusResponseMessage>(rMessage.payload);
+                        notifyObserversRetrieveDeviceStatusResponse(rdsrm);
+                        break;
+                    case Methods.DISCOVERY_REQUEST:
+                        //Outbound no-op
+                        break;
+                    case Methods.ORDER_ACTION_ADD_DISCOUNT:
+                        //Outbound no-op
+                        break;
+                    case Methods.ORDER_ACTION_ADD_LINE_ITEM:
+                        //Outbound no-op
+                        break;
+                    case Methods.ORDER_ACTION_REMOVE_LINE_ITEM:
+                        //Outbound no-op
+                        break;
+                    case Methods.ORDER_ACTION_REMOVE_DISCOUNT:
+                        //Outbound no-op
+                        break;
+                    case Methods.PRINT_CREDIT:
+                        CreditPrintMessage cpm = JsonUtils.deserializeSDK<CreditPrintMessage>(rMessage.payload);
+                        notifyObserversPrintCredit(cpm);
+                        break;
+                    case Methods.PRINT_CREDIT_DECLINE:
+                        DeclineCreditPrintMessage dcpm = JsonUtils.deserializeSDK<DeclineCreditPrintMessage>(rMessage.payload);
+                        notifyObserversPrintCreditDecline(dcpm);
+                        break;
+                    case Methods.PRINT_PAYMENT:
+                        PaymentPrintMessage ppm = JsonUtils.deserializeSDK<PaymentPrintMessage>(rMessage.payload);
+                        notifyObserversPrintPayment(ppm);
+                        break;
+                    case Methods.PRINT_PAYMENT_DECLINE:
+                        DeclinePaymentPrintMessage dppm = JsonUtils.deserializeSDK<DeclinePaymentPrintMessage>(rMessage.payload);
+                        notifyObserversPrintPaymentDecline(dppm);
+                        break;
+                    case Methods.PRINT_PAYMENT_MERCHANT_COPY:
+                        PaymentPrintMerchantCopyMessage ppmcm = JsonUtils.deserializeSDK<PaymentPrintMerchantCopyMessage>(rMessage.payload);
+                        notifyObserversPrintMerchantCopy(ppmcm);
+                        break;
+                    case Methods.REFUND_PRINT_PAYMENT:
+                        RefundPaymentPrintMessage rppm = JsonUtils.deserializeSDK<RefundPaymentPrintMessage>(rMessage.payload);
+                        notifyObserversPrintRefund(rppm);
+                        break;
+                    case Methods.RETRIEVE_PAYMENT_RESPONSE:
+                        RetrievePaymentResponseMessage rprm = JsonUtils.deserializeSDK<RetrievePaymentResponseMessage>(rMessage.payload);
+                        notifyObserversRetrievePaymentResponse(rprm);
+                        break;
+                    case Methods.GET_PRINTERS_RESPONSE:
+                        RetrievePrintersResponseMessage rtrm = JsonUtils.deserializeSDK<RetrievePrintersResponseMessage>(rMessage.payload);
+                        notifyObserversRetrievePrinterResponse(rtrm);
+                        break;
+                    case Methods.PRINT_JOB_STATUS_RESPONSE:
+                        PrintJobStatusResponseMessage pjsrm = JsonUtils.deserializeSDK<PrintJobStatusResponseMessage>(rMessage.payload);
+                        notifyObserversRetrievePrintJobStatus(pjsrm);
+                        break;
+                    case Methods.SHOW_RECEIPT_OPTIONS_RESPONSE:
+                        ShowReceiptOptionsResponseMessage srorm = JsonUtils.deserializeSDK<ShowReceiptOptionsResponseMessage>(rMessage.payload);
+                        notifyObserverDisplayReceiptOptionsResponse(srorm);
+                        break;
+                    case Methods.PRINT_IMAGE:
+                        //Outbound no-op
+                        break;
+                    case Methods.PRINT_TEXT:
+                        //Outbound no-op
+                        break;
+                    case Methods.SHOW_ORDER_SCREEN:
+                        //Outbound no-op
+                        break;
+                    case Methods.SHOW_PAYMENT_RECEIPT_OPTIONS:
+                        //Outbound no-op
+                        break;
+                    case Methods.SHOW_REFUND_RECEIPT_OPTIONS:
+                        //Outbound no-op
+                        break;
+                    case Methods.SHOW_CREDIT_RECEIPT_OPTIONS:
+                        //Outbound no-op
+                        break;
+                    case Methods.SHOW_THANK_YOU_SCREEN:
+                        //Outbound no-op
+                        break;
+                    case Methods.SHOW_WELCOME_SCREEN:
+                        //Outbound no-op
+                        break;
+                    case Methods.SIGNATURE_VERIFIED:
+                        //Outbound no-op
+                        break;
+                    case Methods.TERMINAL_MESSAGE:
+                        //Outbound no-op
+                        break;
+                    case Methods.TX_START:
+                        //Outbound no-op
+                        break;
+                    case Methods.VOID_PAYMENT:
+                        //Outbound no-op
+                        break;
+                    case Methods.VOID_PAYMENT_RESPONSE:
+                        VoidPaymentResponseMessage vprm = JsonUtils.deserializeSDK<VoidPaymentResponseMessage>(rMessage.payload);
+                        notifyObserversPaymentVoided(vprm);
+                        break;
+                    case Methods.CLOSEOUT_REQUEST:
+                        //Outbound no-op
+                        break;
+                    case Methods.VAULT_CARD:
+                        //Outbound no-op
+                        break;
+                    case Methods.CARD_DATA:
+                        //Outbound no-op
+                        break;
+                    case Methods.CLOVER_DEVICE_LOG_REQUEST:
+                        //Outbound no-op
+                        break;
+                }
             }
         }
 
         public void notifyObserversRefundPaymentResponse(RefundResponseMessage rrm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                    delegate (object o, DoWorkEventArgs args)
-                    {
-                        observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message, rrm.reason);
-                    });
-                bw.RunWorkerAsync();
-            }
+                observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message, rrm.reason);
+            });
         }
 
         public void notifyObserversTipAdjusted(TipAdjustResponseMessage tarm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(
-                    delegate (object o, DoWorkEventArgs args)
-                    {
-                        observer.onAuthTipAdjusted(tarm.paymentId, tarm.amount, tarm.success);
-                    });
-                bw.RunWorkerAsync();
-            }
+                observer.onAuthTipAdjusted(tarm.paymentId, tarm.amount, tarm.success);
+            });
         }
 
         public void notifyObserversVaultCardResponse(VaultCardResponseMessage vcrm)
         {
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                {
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        observer.onVaultCardResponse(vcrm);
-                    }
-                });
-            bw.RunWorkerAsync();
+            NotifyObservers(observer =>
+            {
+                observer.onVaultCardResponse(vcrm);
+            });
         }
 
         public void notifyObserversReadCardDataResponse(ReadCardDataResponseMessage cdrm)
         {
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                {
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        observer.onReadCardDataResponse(cdrm);
-                    }
-                });
-            bw.RunWorkerAsync();
+            NotifyObservers(observer =>
+            {
+                observer.onReadCardDataResponse(cdrm);
+            });
         }
 
         public void notifyObserversDiscoveryResponse(DiscoveryResponseMessage drMessage)
         {
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
+            NotifyObservers(observer =>
+            {
+                if (drMessage.ready)
                 {
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        if (drMessage.ready)
-                        {
-                            observer.onDeviceReady(this, drMessage);
-                        }
-                        else
-                        {
-                            observer.onDeviceConnected();
-                        }
-                    }
-                });
-            bw.RunWorkerAsync();
+                    observer.onDeviceReady(this, drMessage);
+                }
+                else
+                {
+                    observer.onDeviceConnected();
+                }
+            });
         }
 
         public void notifyObserversCapturePreAuthResponse(CapturePreAuthResponseMessage carm)
         {
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                {
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        observer.onCapturePreAuthResponse(carm.paymentId, carm.amount, carm.tipAmount, carm.status, carm.reason);
-                    }
-                });
-            bw.RunWorkerAsync();
+            NotifyObservers(observer =>
+            {
+                observer.onCapturePreAuthResponse(carm.paymentId, carm.amount, carm.tipAmount, carm.status, carm.reason);
+            });
         }
 
         public void notifyObserversCloseoutResponse(CloseoutResponseMessage crm)
         {
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                {
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        observer.onCloseoutResponse(crm.status, crm.reason, crm.batch);
-                    }
-                });
-            bw.RunWorkerAsync();
+            NotifyObservers(observer =>
+            {
+                observer.onCloseoutResponse(crm.status, crm.reason, crm.batch);
+            });
         }
 
         public void notifyObserversPendingPaymentsResponse(RetrievePendingPaymentsResponseMessage rpprm)
         {
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                {
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
-                    }
-                });
-            bw.RunWorkerAsync();
+            NotifyObservers(observer =>
+            {
+                observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
+            });
         }
 
         public void notifyObserversActivityResponse(ActivityResponseMessage arm)
         {
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                {
-                    ResultStatus status = arm.resultCode == -1 ? ResultStatus.SUCCESS : ResultStatus.CANCEL;
-                    foreach (ICloverDeviceObserver observer in deviceObservers)
-                    {
-                        observer.onActivityResponse(status, arm.action, arm.payload, arm.failReason);
-                    }
-                });
-            bw.RunWorkerAsync();
+            NotifyObservers(observer =>
+            {
+                ResultStatus status = arm.resultCode == -1 ? ResultStatus.SUCCESS : ResultStatus.CANCEL;
+                observer.onActivityResponse(status, arm.action, arm.payload, arm.failReason);
+            });
         }
 
         public void notifyObserversKeyPressed(KeyPressMessage keyPress)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                    {
-                        observer.onKeyPressed(keyPress.keyPress);
-                    });
-                bw.RunWorkerAsync();
-            }
+                observer.onKeyPressed(keyPress.keyPress);
+            });
         }
 
         public void notifyObserversCashbackSelected(CashbackSelectedMessage cbSelected)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                    {
-                        observer.onCashbackSelected(cbSelected.cashbackAmount);
-                    });
-                bw.RunWorkerAsync();
-            }
+                observer.onCashbackSelected(cbSelected.cashbackAmount);
+            });
         }
 
         public void notifyObserversConfirmPayment(ConfirmPaymentMessage message)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                    {
-                        observer.onConfirmPayment(message.payment, message.challenges);
-                    });
-                bw.RunWorkerAsync();
-            }
+                observer.onConfirmPayment(message.payment, message.challenges);
+            });
         }
 
         public void notifyObserversTipAdded(TipAddedMessage tipAdded)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                    {
-                        observer.onTipAdded(tipAdded.tipAmount);
-                    });
-                bw.RunWorkerAsync();
-            }
+                observer.onTipAdded(tipAdded.tipAmount);
+            });
         }
 
         public void notifyObserversTxStartResponse(TxStartResponseMessage txsrm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                   {
-                       observer.onTxStartResponse(txsrm.result, txsrm.externalId);
-                   });
-                bw.RunWorkerAsync();
-            }
+                observer.onTxStartResponse(txsrm.result, txsrm.externalId);
+            });
         }
 
         public void notifyObserversPartialAuth(PartialAuthMessage partialAuth)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                   {
-                       observer.onPartialAuth(partialAuth.partialAuthAmount);
-                   });
-                bw.RunWorkerAsync();
-            }
+                observer.onPartialAuth(partialAuth.partialAuthAmount);
+            });
         }
 
-        public void notifyObserversPaymentVoided(Payment payment, VoidReason reason)
+        public void notifyObserversPaymentVoided(VoidPaymentResponseMessage vprm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                // what to do in the background thread
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                   {
-                       observer.onPaymentVoided(payment, reason);
-                   });
-                bw.RunWorkerAsync();
-            }
+                observer.onPaymentVoided(vprm.payment, vprm.voidReason, vprm.status, vprm.reason, vprm.message);
+            });
         }
 
         public void notifyObserversVerifySignature(VerifySignatureMessage verifySigMsg)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onVerifySignature(verifySigMsg.payment, verifySigMsg.signature);
-            }
+            });
         }
 
 
         public void notifyObserversUiState(UiStateMessage uiStateMsg)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onUiState(uiStateMsg.uiState, uiStateMsg.uiText, uiStateMsg.uiDirection, uiStateMsg.inputOptions);
-            }
+            });
         }
 
 
         public void notifyObserversTxState(TxStateMessage txStateMsg)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onTxState(txStateMsg.txState);
-            }
+            });
         }
 
         public void notifyObserversFinishCancel(TxType requestInfo)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onFinishCancel(requestInfo);
-            }
+            });
         }
 
         public void notifyObserversFinishOk(FinishOkMessage msg)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 if (msg.payment != null)
                 {
@@ -591,9 +530,9 @@ namespace com.clover.remotepay.transport
                 }
                 else
                 {
-                    Console.WriteLine("Don't know what to do with this Finish OK message: " + JsonUtils.serialize(msg));
+                    // Console.WriteLine("Don't know what to do with this Finish OK message: " + JsonUtils.serialize(msg));
                 }
-            }
+            });
         }
 
         public void notifyObserverAck(AcknowledgementMessage ackMessage)
@@ -610,114 +549,148 @@ namespace com.clover.remotepay.transport
                     }
                 }
 
-                foreach (ICloverDeviceObserver observer in deviceObservers)
+                NotifyObservers(observer =>
                 {
                     observer.onMessageAck(ackMessage.sourceMessageId);
-                }
+                });
             }
         }
 
         public void notifyObserversPrintCredit(CreditPrintMessage cpm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onPrintCredit(cpm.credit);
-            }
+            });
         }
 
         public void notifyObserversPrintCreditDecline(DeclineCreditPrintMessage dcpm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onPrintCreditDecline(dcpm.credit, dcpm.reason);
-            }
+            });
         }
 
         public void notifyObserversPrintPayment(PaymentPrintMessage ppm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onPrintPayment(ppm.payment, ppm.order);
-            }
+            });
         }
 
         public void notifyObserversPrintPaymentDecline(DeclinePaymentPrintMessage dppm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onPrintPaymentDecline(dppm.payment, dppm.reason);
-            }
+            });
         }
 
         public void notifyObserversPrintMerchantCopy(PaymentPrintMerchantCopyMessage ppmcm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onPrintMerchantReceipt(ppmcm.payment);
-            }
+            });
         }
 
         public void notifyObserversPrintRefund(RefundPaymentPrintMessage rppm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onPrintRefundPayment(rppm.payment, rppm.order, rppm.refund);
-            }
+            });
         }
 
 
         public void notifyObserversActivityMessage(ActivityMessageFromActivity amfa)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onMessageFromActivity(amfa.action, amfa.payload);
-            }
+            });
         }
 
         public void notifyObserversDeviceReset(ResetDeviceResponseMessage rdrm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onResetDeviceResponse(ResultStatus.SUCCESS, rdrm.reason, rdrm.state);
-            }
+            });
         }
 
         public void notifyObserversRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponseMessage rdsrm)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onDeviceStatusResponse(ResultStatus.SUCCESS, rdsrm.reason, rdsrm.state, rdsrm.data);
-            }
+            });
         }
 
         public void notifyObserversRetrievePaymentResponse(RetrievePaymentResponseMessage rpr)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onRetrievePaymentResponse(ResultStatus.SUCCESS, rpr.reason, rpr.externalPaymentId, rpr.queryStatus, rpr.payment);
-            }
+            });
         }
 
         public void notifyObserversRetrievePrinterResponse(RetrievePrintersResponseMessage response)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onRetrievePrintersResponse(response.printers);
-
-            }
+            });
         }
 
         public void notifyObserversRetrievePrintJobStatus(PrintJobStatusResponseMessage response)
         {
-            foreach (ICloverDeviceObserver observer in deviceObservers)
+            NotifyObservers(observer =>
             {
                 observer.onRetrievePrintJobStatus(response.externalPrintJobId, response.status);
+            });
+        }
+
+        public void notifyObserverDisplayReceiptOptionsResponse(ShowReceiptOptionsResponseMessage srorm)
+        {
+            NotifyObservers(observer =>
+            {
+                observer.onDisplayReceiptOptionsResponse(srorm.status, srorm.reason);
+            });
+        }
+
+        private void NotifyObservers(Action<ICloverDeviceObserver> action)
+        {
+            List<ICloverDeviceObserver> localObservers = new List<ICloverDeviceObserver>(deviceObservers);
+            foreach (ICloverDeviceObserver observer in localObservers)
+            {
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += delegate
+                {
+                    try
+                    {
+                        action(observer);
+                    }
+                    catch (Exception exception)
+                    {
+                        // eat unhandled user exceptions - any logging other than debug?
+                        System.Diagnostics.Debug.WriteLine("DefaultCloverDevice: Error calling custom code: " + exception);
+                    }
+                };
+                bw.RunWorkerAsync();
             }
         }
 
-        public override void doShowPaymentReceiptScreen(string orderId, string paymentId)
+        public override void doShowPaymentReceiptScreen(string orderId, string paymentId, bool disablePrinting)
         {
-            sendObjectMessage(new PaymentReceiptMessage(orderId, paymentId));
+            sendObjectMessage(new ShowPaymentReceiptOptionsMessage(orderId, paymentId, disablePrinting));
+        }
+
+        public override void doShowReceiptScreen(string orderId, string paymentId, string refundId, string creditId, bool disablePrinting)
+        {
+            sendObjectMessage(new ShowReceiptOptionsMessage(orderId, paymentId, refundId, creditId, disablePrinting));
         }
 
         public override void doLogMessages(LogLevelEnum logLevel, Dictionary<string, string> messages)
@@ -759,6 +732,11 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new TerminalMessage(text));
         }
 
+        public override void doSendDebugLog(string message)
+        {
+            sendObjectMessage(new CloverDeviceLogMessage(message));
+        }
+
         public override void doOpenCashDrawer(string reason, string deviceId)
         {
             Printer printer = null;
@@ -795,7 +773,7 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new TxStartRequestMessage(payIntent, order, requestInfo));
         }
 
-        public override void doTipAdjustAuth(string orderId, string paymentId, long amount)
+        public override void doTipAdjustAuth(string orderId, string paymentId, long? amount)
         {
             sendObjectMessage(new TipAdjustAuthMessage(orderId, paymentId, amount));
         }
@@ -888,28 +866,13 @@ namespace com.clover.remotepay.transport
                 VoidPaymentMessage vpm = new VoidPaymentMessage();
                 vpm.payment = payment;
                 vpm.voidReason = reason;
-                string msgId = sendObjectMessage(vpm);
-
-                BackgroundWorker bw = new BackgroundWorker();
-                bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
-                    {
-                        notifyObserversPaymentVoided(payment, reason);
-                    });
-
-                if (!SupportsAcks)
-                {
-                    bw.RunWorkerAsync();
-                }
-                else
-                {
-                    msgIdToTask.Add(msgId, bw);
-                }
+                sendObjectMessage(vpm);
             }
         }
 
-        public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund)
+        public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection)
         {
-            sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund));
+            sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund, disableCloverPrinting, disableReceiptSelection));
         }
 
         public override void doDiscoveryRequest()
@@ -1034,12 +997,12 @@ namespace com.clover.remotepay.transport
 
                     if ((remoteMsg.attachment != null && remoteMsg.attachment.Length > MAX_PAYLOAD_SIZE))
                     {
-                        Console.WriteLine("Error sending message - payload size is greater than the maximum allowed");
+                        // Console.WriteLine("Error sending message - payload size is greater than the maximum allowed");
                         return null;
                     }
 
                     int fragmentIndex = 0;
-                    string payloadStr = remoteMsg.payload != null ? remoteMsg.payload : "";
+                    string payloadStr = remoteMsg.payload ?? "";
 
                     int startIndex = 0;
                     while (startIndex < payloadStr.Length)
@@ -1047,9 +1010,9 @@ namespace com.clover.remotepay.transport
                         int length = (maxSize < payloadStr.Length ? maxSize : payloadStr.Length);
                         string fPayload = payloadStr.Substring(startIndex, length);
                         startIndex += length;
-                        bool attachmentAvailable = ((remoteMsg.attachment != null && remoteMsg.attachment.Length > 0 ? remoteMsg.attachment.Length : 0) == 0); //if attachment not null and is nonzero return false, otherwise return true
-                        bool attachmentUriAvailable = ((remoteMsg.attachmentUri != null && remoteMsg.attachmentUri.Length > 0 ? remoteMsg.attachmentUri.Length : 0) == 0); //if attachment not null and is nonzero return false, otherwise return true
-                        bool lastFragment = payloadStr.Length == 0 && (attachmentAvailable && attachmentUriAvailable);
+                        bool noAttachmentAvailable = string.IsNullOrEmpty(remoteMsg.attachment);
+                        bool noAttachmentUriAvailable = string.IsNullOrEmpty(remoteMsg.attachmentUri);
+                        bool lastFragment = payloadStr.Length == 0 && (noAttachmentAvailable && noAttachmentUriAvailable);
                         sendMessageFragment(remoteMsg, fPayload, null, fragmentIndex++, lastFragment);
                     }
 
@@ -1119,7 +1082,7 @@ namespace com.clover.remotepay.transport
             // changes for the fragment
             fRemoteMessage.payload = fPayload;
             fRemoteMessage.attachmentUri = null;
-            fRemoteMessage.attachmentEncoding = remoteMsg.attachmentEncoding != null ? remoteMsg.attachmentEncoding : "BASE64.FRAGMENT";
+            fRemoteMessage.attachmentEncoding = remoteMsg.attachmentEncoding ?? "BASE64.FRAGMENT";
             fRemoteMessage.attachment = fAttachment;
             fRemoteMessage.fragmentIndex = fragmentIndex;
             fRemoteMessage.lastFragment = lastFragment;

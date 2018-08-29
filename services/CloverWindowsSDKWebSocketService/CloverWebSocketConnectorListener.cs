@@ -279,6 +279,13 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(msg));
         }
 
+        public virtual void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
+        {
+            OnDisplayReceiptOptionsResponseMessage msg = new OnDisplayReceiptOptionsResponseMessage();
+            msg.payload = response;
+            WebSocket.Send(Serialize(msg));
+        }
+
         internal void SendConnectionStatus()
         {
             if ("Disconnected".Equals(CurrentConnectionStatus))

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using com.clover.remotepay.transport;
 
 namespace com.clover.remotepay.sdk
@@ -213,51 +212,51 @@ namespace com.clover.remotepay.sdk
         /// Called when a user requests a paper receipt for a Manual Refund. Will only be 
         /// called if DisablePrinting = true on the ManualRefund() request.
         /// </summary>
-        /// <param name="printManualRefundReceiptMessage">A callback that asks the POS to 
+        /// <param name="message">A callback that asks the POS to 
         /// print a receipt for a ManualRefund. Contains a Credit object.</param>
-        void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage);
+        void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage message);
 
         /// <summary>
         /// Called when a user requests a paper receipt for a declined Manual Refund. Will 
         /// only be called if DisablePrinting = true on the ManualRefund() request.
         /// </summary>
-        /// <param name="printManualRefundDeclineReceiptMessage">The 
+        /// <param name="message">The 
         /// PrintManualRefundDeclineReceiptMessage.</param>
-        void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage);
+        void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage message);
 
         /// <summary>
         /// Called when a user requests a paper receipt for a Payment. Will only be called 
         /// if DisablePrinting = true on the Sale(), Auth(), or PreAuth() request.
         /// </summary>
-        /// <param name="printPaymentReceiptMessage">The PrintPaymentReceiptMessage 
+        /// <param name="message">The PrintPaymentReceiptMessage 
         /// details.</param>
-        void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage);
+        void OnPrintPaymentReceipt(PrintPaymentReceiptMessage message);
 
         /// <summary>
         /// Called when a user requests a paper receipt for a declined Payment.  Will only 
         /// be called if DisablePrinting = true on the Sale(), Auth(), or PreAuth() 
         /// request.
         /// </summary>
-        /// <param name="printPaymentDeclineReceiptMessage">The 
+        /// <param name="message">The 
         /// PrintPaymentDeclineReceiptMessage details.</param>
-        void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage);
+        void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage message);
 
         /// <summary>
         /// Called when a user requests a merchant copy of a Payment receipt. Will only be 
         /// called if DisablePrinting = true on the Sale(), Auth(), or PreAuth() request.
         /// </summary>
-        /// <param name="printPaymentMerchantCopyReceiptMessage">The 
+        /// <param name="message">The 
         /// PrintPaymentMerchantCopyReceiptMessage details.</param>
-        void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage);
+        void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage message);
 
         /// <summary>
         /// Called when a user requests a paper receipt for a Payment Refund. Will only be 
         /// called if DisablePrinting = true on the Sale(), Auth(), PreAuth() or 
         /// ManualRefund() request.
         /// </summary>
-        /// <param name="printRefundPaymentReceiptMessage">The 
+        /// <param name="message">The 
         /// PrintRefundPaymentReceiptMessage details.</param>
-        void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage);
+        void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage message);
 
         /// <summary>
         /// Called in response to a RetrievePrintJobStatus() request.
@@ -309,16 +308,25 @@ namespace com.clover.remotepay.sdk
         /// <summary>
         /// Called in response to a RetrievePrintJobStatus() request.
         /// </summary>
-        /// <param name="response">The PrintJobStatusResponse details for the 
+        /// <param name="request">The PrintJobStatusResponse details for the 
         /// request.</param>
         void OnPrintJobStatusRequest(PrintJobStatusRequest request);
+
+        /// <summary>
+        /// Called in response to a DisplayReceiptOptions request.
+        /// </summary>
+        /// <param name="response">The DisplayReceiptOptionsResponse details for the response.</param>
+        void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response);
     }
 
     /// <summary>
-    ///  This is a default implementation of the ICloverConnectorListener
-    ///  that can be used for quickly creating example applications
-    ///  by simply overriding the appropriate listener method(s) needed
-    ///  for testing a particular remote call.
+    /// This is a default implementation of the ICloverConnectorListener
+    /// that can be used for quickly creating applications by 
+    /// simply overriding the appropriate listener method(s) needed
+    /// for testing a particular remote call.
+    ///
+    /// Also see the CloverEventConnector for another option to receive
+    /// events instead of overriding the class and receiving method calls
     /// </summary>
     public abstract class DefaultCloverConnectorListener : ICloverConnectorListener
     {
@@ -436,32 +444,32 @@ namespace com.clover.remotepay.sdk
 
         }
 
-        public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
+        public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage message)
         {
 
         }
 
-        public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage)
+        public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage message)
         {
 
         }
 
-        public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage)
+        public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage message)
         {
 
         }
 
-        public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage)
+        public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage message)
         {
 
         }
 
-        public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage)
+        public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage message)
         {
 
         }
 
-        public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
+        public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage message)
         {
 
         }
@@ -497,6 +505,11 @@ namespace com.clover.remotepay.sdk
         }
 
         public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+
+        }
+
+        public virtual void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
         {
 
         }

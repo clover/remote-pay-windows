@@ -29,7 +29,7 @@
     <NoWarn>1591, 1587</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNet45|AnyCPU'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <OutputPath>bin\DebugNet45\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>DEBUG;TRACE;NET45</DefineConstants>
@@ -62,7 +62,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet45|AnyCPU'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <OutputPath>bin\ReleaseNet45\</OutputPath>
     <DefineConstants>TRACE;NET45</DefineConstants>
     <Optimize>true</Optimize>
@@ -136,6 +136,9 @@
     <Compile Include="com\clover\sdk\v3\order\PayType.cs" />
     <Compile Include="com\clover\sdk\v3\order\SystemOrderType.cs" />
     <Compile Include="com\clover\sdk\v3\order\VoidReason.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\AdditionalCharge.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\AdditionalChargeAmount.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\AdditionalChargeType.cs" />
     <Compile Include="com\clover\sdk\v3\payments\Authorization.cs" />
     <Compile Include="com\clover\sdk\v3\payments\AVSResult.cs" />
     <Compile Include="com\clover\sdk\v3\payments\Batch.cs" />

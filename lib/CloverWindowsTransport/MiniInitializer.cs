@@ -37,12 +37,10 @@ namespace com.clover.remotepay.transport
 
             if (device != null)
             {
-                bool ok = false;
                 bool shouldRun = true;
+                bool ok = checkProtocol(device);
 
-                ok = checkProtocol(device);
-
-                Console.WriteLine("checkProtocol:" + ok + "\n");
+                // Console.WriteLine("checkProtocol:" + ok + "\n");
 
                 if (shouldRun)
                 {
@@ -52,7 +50,7 @@ namespace com.clover.remotepay.transport
                                              "Clover");
                     if (!ok)
                     {
-                        Console.WriteLine("SendControlMessage: ACCESSORY_STRING_MANUFACTURER\n");
+                        // Console.WriteLine("SendControlMessage: ACCESSORY_STRING_MANUFACTURER\n");
                         shouldRun = false;
                     }
                 }
@@ -65,7 +63,7 @@ namespace com.clover.remotepay.transport
                                              "Adapter");
                     if (!ok)
                     {
-                        Console.WriteLine("SendControlMessage: ACCESSORY_STRING_MODEL\n");
+                        // Console.WriteLine("SendControlMessage: ACCESSORY_STRING_MODEL\n");
                         shouldRun = false;
                     }
                 }
@@ -78,7 +76,7 @@ namespace com.clover.remotepay.transport
                                              "Windows POS Device");
                     if (!ok)
                     {
-                        Console.WriteLine("SendControlMessage: ACCESSORY_STRING_DESCRIPTION\n");
+                        // Console.WriteLine("SendControlMessage: ACCESSORY_STRING_DESCRIPTION\n");
                         shouldRun = false;
                     }
                 }
@@ -91,7 +89,7 @@ namespace com.clover.remotepay.transport
                                              "0.01");
                     if (!ok)
                     {
-                        Console.WriteLine("SendControlMessage: ACCESSORY_STRING_VERSION\n");
+                        // Console.WriteLine("SendControlMessage: ACCESSORY_STRING_VERSION\n");
                         shouldRun = false;
                     }
                 }
@@ -104,7 +102,7 @@ namespace com.clover.remotepay.transport
                                              "market://details?id=com.clover.remote.protocol.usb");
                     if (!ok)
                     {
-                        Console.WriteLine("SendControlMessage: ACCESSORY_STRING_URI\n");
+                        // Console.WriteLine("SendControlMessage: ACCESSORY_STRING_URI\n");
                         shouldRun = false;
                     }
                 }
@@ -117,7 +115,7 @@ namespace com.clover.remotepay.transport
                                              "C415000");
                     if (!ok)
                     {
-                        Console.WriteLine("SendControlMessage: ACCESSORY_STRING_SERIAL\n");
+                        // Console.WriteLine("SendControlMessage: ACCESSORY_STRING_SERIAL\n");
                         shouldRun = false;
                     }
                 }
@@ -130,7 +128,7 @@ namespace com.clover.remotepay.transport
                                              null);
                     if (!ok)
                     {
-                        Console.WriteLine("SendControlMessage: ACCESSORY_START\n");
+                        // Console.WriteLine("SendControlMessage: ACCESSORY_START\n");
                         shouldRun = false;
                     }
                 }
@@ -157,13 +155,13 @@ namespace com.clover.remotepay.transport
             setupPacket.Index = index;
             setupPacket.Length = messageLength;
 
-            Console.WriteLine("RequestType:" + setupPacket.RequestType);
-            Console.WriteLine("setupPacket.Request:" + setupPacket.Request);
-            Console.WriteLine("setupPacket.Value:" + setupPacket.Value);
-            Console.WriteLine("setupPacket.Index:" + setupPacket.Index);
-            Console.WriteLine("setupPacket.Length:" + setupPacket.Length);
+            // Console.WriteLine("RequestType:" + setupPacket.RequestType);
+            // Console.WriteLine("setupPacket.Request:" + setupPacket.Request);
+            // Console.WriteLine("setupPacket.Value:" + setupPacket.Value);
+            // Console.WriteLine("setupPacket.Index:" + setupPacket.Index);
+            // Console.WriteLine("setupPacket.Length:" + setupPacket.Length);
 
-            Console.WriteLine("message:" + message);
+            // Console.WriteLine("message:" + message);
 
             byte[] messageBytes = null;
             if (null != message)
@@ -181,7 +179,7 @@ namespace com.clover.remotepay.transport
 
             UsbSetupPacket setupPacket = new UsbSetupPacket();
             setupPacket.RequestType = (byte)((byte)UsbConstants.USB_DIR_IN | (byte)UsbConstants.USB_TYPE_VENDOR);
-            setupPacket.Request = (byte)ACCESSORY_GET_PROTOCOL;
+            setupPacket.Request = ACCESSORY_GET_PROTOCOL;
             setupPacket.Value = 0;
             setupPacket.Index = 0;
             setupPacket.Length = 0;
@@ -192,7 +190,7 @@ namespace com.clover.remotepay.transport
         static byte[] GetBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
     }

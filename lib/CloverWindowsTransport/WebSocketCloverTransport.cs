@@ -105,7 +105,7 @@ namespace com.clover.remotepay.transport
                 {
                     string method = dynObj.method;
 
-                    if (PairingCodeMessage.METHOD.Equals(method))
+                    if (method == PairingCodeMessage.METHOD)
                     {
                         PairingCodeMessage pcm = JsonUtils.deserialize<PairingCodeMessage>(dynObj.payload);
                         if (config.OnPairingCode != null)
@@ -117,23 +117,31 @@ namespace com.clover.remotepay.transport
                             throw new Exception("OnPairingCode handler not set");
                         }
                     }
-                    else if (PairingResponse.METHOD.Equals(method))
+                    else if (method == PairingResponse.METHOD)
                     {
                         PairingResponse pr = JsonUtils.deserialize<PairingResponse>(dynObj.payload);
-                        if (PairingResponse.PAIRED.Equals(pr.pairingState) || PairingResponse.INITIAL.Equals(pr.pairingState))
+                        // TODO: There was a bug in the Device that sent INITIAL instead of PAIRED, fix committed around Aug 1, 2018 in Aug AppsCut and rolled to customers ??? thereafter - fall/winter '18.
+                        //       This was actually the only time INITIAL was sent; once the bug is fixed there is no further expected need for INITIAL. When bug clears back compat for customers, we can clean this workaround up.
+                        if (pr.pairingState == PairingResponse.PAIRED || pr.pairingState == PairingResponse.INITIAL)
                         {
                             isPairing = false;
                             pairingAuthToken = pr.authenticationToken;
-                            if (config.OnPairingSuccess != null)
-                            {
-                                config.OnPairingSuccess(pr.authenticationToken);
-                            }
+                            config.OnPairingSuccess?.Invoke(pr.authenticationToken);
                             onDeviceReady();
                         }
-                        else if (PairingResponse.FAILED.Equals(pr.pairingState))
+                        else if (pr.pairingState == PairingResponse.FAILED)
                         {
-                            pairingAuthToken = null; // 
+                            pairingAuthToken = null;
                             SendPairingRequest();
+                        }
+                        else if (pr.pairingState == PairingResponse.AUTHENTICATING)
+                        {
+                            config.OnPairingState?.Invoke(PairingResponse.AUTHENTICATING, "Enter security pin on device to begin pairing");
+                        }
+                        else
+                        {
+                            // Pass anything else from the device up to the user
+                            config.OnPairingState?.Invoke(pr.pairingState, "");
                         }
                     }
                 }
@@ -147,7 +155,7 @@ namespace com.clover.remotepay.transport
         private void websocket_Closed(object sender, EventArgs e)
         {
             onDeviceDisconnected();
-            Console.WriteLine("socket closed");
+            // Console.WriteLine("socket closed");
 
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += reconnect;
@@ -183,7 +191,7 @@ namespace com.clover.remotepay.transport
             }
             else
             {
-                base.onDeviceError(-201, null, "Error connecting: " + sslPolicyErrors);
+                onDeviceError(-201, null, "Error connecting: " + sslPolicyErrors);
                 shutdown = true;
                 return false;
             }
@@ -238,14 +246,14 @@ namespace com.clover.remotepay.transport
         {
             if (!shutdown)
             {
-                new Timer((obj) => { connect(endpoint); }, null, 3000, System.Threading.Timeout.Infinite);
+                new Timer((obj) => { connect(endpoint); }, null, 3000, Timeout.Infinite);
             }
         }
 
         private void websocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             // TOD: Trace error
-            Console.WriteLine("error: " + e.Exception);
+            // Console.WriteLine("error: " + e.Exception);
         }
 
         /// <summary>
@@ -292,9 +300,9 @@ namespace com.clover.remotepay.transport
         /// </summary>
         ~WebSocketCloverTransport()
         {
-            Console.WriteLine("Entering ~WebSocketCloverTransport");
+            // Console.WriteLine("Entering ~WebSocketCloverTransport");
             disconnect();
-            Console.WriteLine("Exiting ~WebSocketCloverTransport");
+            // Console.WriteLine("Exiting ~WebSocketCloverTransport");
         }
 
         /// <summary>
@@ -302,7 +310,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         public void disconnect()
         {
-            Console.WriteLine("Entering disconnect");
+            // Console.WriteLine("Entering disconnect");
 
             if (websocket != null)
             {
@@ -310,7 +318,7 @@ namespace com.clover.remotepay.transport
             }
 
             onDeviceDisconnected();
-            Console.WriteLine("Exiting disconnect");
+            // Console.WriteLine("Exiting disconnect");
         }
     }
 }

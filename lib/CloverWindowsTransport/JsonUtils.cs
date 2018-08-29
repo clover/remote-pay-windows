@@ -36,7 +36,7 @@ namespace com.clover.remotepay.transport
 
         public static T deserialize<T>(string input, JsonConverter[] converters)
         {
-            return JsonConvert.DeserializeObject<T>(input, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore, Converters = converters});
+            return JsonConvert.DeserializeObject<T>(input, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore, Converters = converters });
         }
 
         public static string serialize(object toSer)
@@ -51,7 +51,7 @@ namespace com.clover.remotepay.transport
 
         public static string serialize(object toSer, JsonConverter[] converters)
         {
-            return JsonConvert.SerializeObject(toSer, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Converters = converters });
+            return JsonConvert.SerializeObject(toSer, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Converters = converters });
         }
     }
 
@@ -76,7 +76,8 @@ namespace com.clover.remotepay.transport
             com.clover.sdk.v3.payments.Payment result = JsonUtils.deserialize<com.clover.sdk.v3.payments.Payment>(str, new JsonConverter[] {
                 new ListConverter<com.clover.sdk.v3.payments.PaymentTaxRate>(),
                 new ListConverter<com.clover.sdk.v3.payments.Refund>(),
-                new ListConverter<com.clover.sdk.v3.payments.LineItemPayment>()
+                new ListConverter<com.clover.sdk.v3.payments.LineItemPayment>(),
+                new ListConverter<com.clover.sdk.v3.payments.AdditionalChargeAmount>()
             });
             return result;
         }
@@ -276,7 +277,7 @@ namespace com.clover.remotepay.transport
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(System.Collections.Generic.List<T>));
+            return (objectType == typeof(List<T>));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

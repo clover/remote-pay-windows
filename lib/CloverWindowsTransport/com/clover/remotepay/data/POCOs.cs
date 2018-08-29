@@ -61,6 +61,7 @@ namespace com.clover.remotepay.data
         CASHBACK_SELECTED,
         PARTIAL_AUTH,
         VOID_PAYMENT,
+        VOID_PAYMENT_RESPONSE,
         ORDER_ACTION_ADD_DISCOUNT,
         ORDER_ACTION_REMOVE_DISCOUNT,
         ORDER_ACTION_ADD_LINE_ITEM,
@@ -90,7 +91,10 @@ namespace com.clover.remotepay.data
         PRINT_JOB_STATUS_REQUEST,
         PRINT_JOB_STATUS_RESPONSE,
         GET_PRINTERS_REQUEST,
-        GET_PRINTERS_RESPONSE
+        GET_PRINTERS_RESPONSE,
+        CLOVER_DEVICE_LOG_REQUEST,
+        SHOW_RECEIPT_OPTIONS,
+        SHOW_RECEIPT_OPTIONS_RESPONSE
     }
 
     public enum MessageTypes

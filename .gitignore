@@ -1,3 +1,39 @@
-bin/
-obj/
+*.exe
+*.o
+*.zip
+
+#VisualStudio Structures
+.suo
+*.suo
+*.cache
+*.user
+#DesignTimeResolveAssemblyReferencesInput.cache
+
+#VisualStudio Directories
 .vs/
+[Bb]in/
+[Oo]bj/
+build/
+[Dd]ebug/
+
+# Installer catalog files output from inf2cat
+*.cat
+
+# Prebuild (and maybe signed by MS) driver installers for including in product installers
+signed-usb-drivers/
+
+# IntelliJ
+.idea/
+*.iml
+
+# This one is a symlink, not a file:
+!xulquickdemo/chrome/content/clover-usb.dll
+
+# These are redistributable from MS:
+!windows-drivers/win-xp/*/*.dll
+
+.DS_Store
+/examples/CloverExamplePOS/packages.config
+/services/CloverWindowsSDKRESTService/packages.config
+/services/CloverWindowsSDKWebSocketService/packages.config
+/Clover.sln.DotSettings.user

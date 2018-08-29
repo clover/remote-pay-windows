@@ -115,7 +115,9 @@ namespace com.clover.sdk.remote.websocket
         RetrievePrintersRequest,
         RetrievePrintersResponse,
         OpenCashDrawerRequest,
-        PrintRequest
+        PrintRequest,
+        DisplayReceiptOptionsRequest,
+        DisplayReceiptOptionsResponse
     }
 
     public class WebSocketMessage<T>
@@ -424,6 +426,11 @@ namespace com.clover.sdk.remote.websocket
         public RetrievePrintersRequestMessage() : base(WebSocketMethod.RetrievePrintersRequest) { }
     }
 
+    public class DisplayReceiptOptionsRequestMessage : WebSocketMessage<DisplayReceiptOptionsRequest>
+    {
+        public DisplayReceiptOptionsRequestMessage() : base(WebSocketMethod.DisplayReceiptOptionsRequest) { }
+    }
+
 
 
 
@@ -659,5 +666,10 @@ namespace com.clover.sdk.remote.websocket
     public class OnRetrievePrintersResponseMessage : WebSocketMessage<RetrievePrintersResponse>
     {
         public OnRetrievePrintersResponseMessage() : base(WebSocketMethod.RetrievePrintersResponse) { }
+    }
+
+    public class OnDisplayReceiptOptionsResponseMessage : WebSocketMessage<DisplayReceiptOptionsResponse>
+    {
+        public OnDisplayReceiptOptionsResponseMessage() : base(WebSocketMethod.DisplayReceiptOptionsResponse) { }
     }
 }

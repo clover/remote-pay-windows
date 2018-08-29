@@ -163,12 +163,6 @@ namespace com.clover.remotepay.sdk
         void ReadCardData(ReadCardDataRequest request);
 
         /// <summary>
-        /// Sends a "cancel" button press to the Clover device.
-        /// </summary>
-        [System.Obsolete("Use InvokeInputOption(InputOption) instead.")]
-        void Cancel();
-
-        /// <summary>
         /// Sends a request to the Clover server to close out all transactions.
         /// Note: The merchant account must be configured to allow transaction closeout.
         /// </summary>
@@ -183,21 +177,6 @@ namespace com.clover.remotepay.sdk
         /// information. Use cautiously as a last resort.
         /// </summary>
         void ResetDevice();
-
-        /// <summary>
-        /// Prints custom messages in plain text through the Clover Mini's built-in 
-        /// printer.
-        /// </summary>
-        /// <param name="messages">An array of text messages to print.</param>
-        [System.Obsolete("Use Print(PrintRequest request) instead.")]
-        void PrintText(List<string> messages);
-
-        /// <summary>
-        /// Prints an image on paper receipts through the Clover Mini's built-in printer.
-        /// </summary>
-        /// <param name="bitmap">The image to print.</param>
-        [System.Obsolete("Use Print(PrintRequest request) instead.")]
-        void PrintImage(Bitmap bitmap);
 
         /// <summary>
         /// Displays a string-based message on the Clover device's screen.
@@ -219,23 +198,14 @@ namespace com.clover.remotepay.sdk
         /// Displays the customer-facing receipt options (print, email, etc.) for a 
         /// Payment on the Clover device. 
         /// </summary>
-        /// <param name="paymentId">The ID of the Payment associated with the 
-        /// receipt.</param>
-        /// <param name="orderId">The ID of the Order associated with the receipt.</param>
-        void DisplayPaymentReceiptOptions(String orderId, String paymentId);
-
-        /// <summary>
-        /// Opens the first cash drawer found connected to the Clover device.
-        /// </summary>
-        /// <param name="reason">The reason for opening the cash drawer.</param>
-        [System.Obsolete("Use OpenCashDrawer(OpenCashDrawerRequest request) instead.")]
-        void OpenCashDrawer(String reason);
+        /// <param name="request">The request with payment IDs, etc., to locate the receipt</param>
+        void DisplayPaymentReceiptOptions(DisplayPaymentReceiptOptionsRequest request);
 
         /// <summary>
         /// Opens the first cash drawer found connected to the Clover device. The reason 
         /// for opening the cash drawer must be provided.
         /// </summary>
-        /// <param name="request">Text specifying the reason for opening the cash 
+        /// <param name="request">Request with text specifying the reason for opening the cash 
         /// drawer.</param>
         void OpenCashDrawer(OpenCashDrawerRequest request);
 
@@ -267,14 +237,6 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="io">The input option to invoke.</param>
         void InvokeInputOption(transport.InputOption io);
-
-        /// <summary>
-        /// Prints an image from the web on paper receipts through the Clover device's 
-        /// built-in printer.
-        /// </summary>
-        /// <param name="ImgURL">The URL for the image to print.</param>
-        [System.Obsolete("Use Print(PrintRequest request) instead.")]
-        void PrintImageFromURL(String ImgURL);
 
         /// <summary>
         /// Sends a print request using the PrintRequest object. Used to print text, 
@@ -330,5 +292,11 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request">The RetrievePaymentRequest details.</param>
         void RetrievePayment(RetrievePaymentRequest request);
+
+        /// <summary>
+        /// Display receipt options for a Credit, Refund, or Payment
+        /// </summary>
+        /// <param name="request">The DisplayReceiptOptionsRequest details</param>
+        void DisplayReceiptOptions(DisplayReceiptOptionsRequest request);
     }
 }
