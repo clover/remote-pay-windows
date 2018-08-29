@@ -19,7 +19,7 @@ namespace com.clover.sdk.v3.payments
         public TransactionSettings()
         {
         }
-        public long? cardEntryMethods { get; set; }
+        public int? cardEntryMethods { get; set; }
         public bool? disableCashBack { get; set; }
         public bool? cloverShouldHandleReceipts { get; set; }
         public bool? forcePinEntryOnSwipe { get; set; }

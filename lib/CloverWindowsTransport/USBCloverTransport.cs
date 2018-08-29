@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using LibUsbDotNet;
+using LibUsbDotNet.Info;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 using LibUsbDotNet.WinUsb;
@@ -123,9 +124,9 @@ namespace com.clover.remotepay.transport
             initializeBGWDoWorkHandlers();
             ConnectDevice();
 
-            // Create a timer that will check the connection to 
+            // Create a timer that will check the connection to
             // ensure that it is still up and healthy.  There
-            // are circumstances where Windows might put the 
+            // are circumstances where Windows might put the
             // USB port to sleep and not wake it up, so this code
             // proactively checks the connection and re-establishes
             // it if necessary.
@@ -134,7 +135,7 @@ namespace com.clover.remotepay.transport
                 if (_timer != null)
                 {
                     _timer.Close();
-                    Console.WriteLine("Timer thread closed");
+                    // Console.WriteLine("Timer thread closed");
                 }
                 else
                 {
@@ -142,8 +143,8 @@ namespace com.clover.remotepay.transport
                 }
                 _timer.AutoReset = false;
                 _timer.Interval = getPingSleepSeconds() * 1000;
-                _timer.Elapsed += new ElapsedEventHandler(OnTimerEvent);
-                Console.WriteLine("Timer Thread created");
+                _timer.Elapsed += OnTimerEvent;
+                // Console.WriteLine("Timer Thread created");
                 _timer.Start();
             }
         }
@@ -153,7 +154,7 @@ namespace com.clover.remotepay.transport
             // attempt to open the device as if it is already in customer mode
             DeviceSetToAccessoryMode();
 
-            // if opening in cust mode fails, then try merchant mode, 
+            // if opening in cust mode fails, then try merchant mode,
             // which will retrigger the accessory mode call
             if (MyUsbDevice == null)
             {
@@ -207,8 +208,8 @@ namespace com.clover.remotepay.transport
                     {
                         throw new Exception("Invalid device specified. It should be VID1:PID1,VID2:PID2 e.g. 0x28F3:0x3003");
                     }
-                    int vid = (int)new System.ComponentModel.Int32Converter().ConvertFromString(dev[0].Trim());
-                    int pid = (int)new System.ComponentModel.Int32Converter().ConvertFromString(dev[1].Trim());
+                    int vid = (int)new Int32Converter().ConvertFromString(dev[0].Trim());
+                    int pid = (int)new Int32Converter().ConvertFromString(dev[1].Trim());
                     AddMerchantDevice(vid, pid);
                 }
             }
@@ -216,8 +217,11 @@ namespace com.clover.remotepay.transport
             {
                 AddMerchantDevice(0x28F3, 0x3003);
                 AddMerchantDevice(0x28F3, 0x3000);
+                AddMerchantDevice(0x28F3, 0x3020);
+                AddMerchantDevice(0x28F3, 0x3023);
                 AddMerchantDevice(0x28F3, 0x2000);
                 AddMerchantDevice(0x28F3, 0x4000);
+                AddMerchantDevice(0x28F3, 0x4003);
             }
 
             string customerDevices = System.Configuration.ConfigurationSettings.AppSettings["customer_devices"];
@@ -231,8 +235,8 @@ namespace com.clover.remotepay.transport
                     {
                         throw new Exception("Invalid device specified. It should be VID1:PID1,VID2:PID2");
                     }
-                    int vid = (int)new System.ComponentModel.Int32Converter().ConvertFromString(dev[0].Trim());
-                    int pid = (int)new System.ComponentModel.Int32Converter().ConvertFromString(dev[1].Trim());
+                    int vid = (int)new Int32Converter().ConvertFromString(dev[0].Trim());
+                    int pid = (int)new Int32Converter().ConvertFromString(dev[1].Trim());
                     AddCustomerDevice(vid, pid);
                 }
             }
@@ -240,8 +244,11 @@ namespace com.clover.remotepay.transport
             {
                 AddCustomerDevice(0x28F3, 0x3002);
                 AddCustomerDevice(0x28F3, 0x3004);
+                AddCustomerDevice(0x28F3, 0x3022);
+                AddCustomerDevice(0x28F3, 0x3024);
                 AddCustomerDevice(0x18D1, 0x2D01);
                 AddCustomerDevice(0x28F3, 0x4002);
+                AddCustomerDevice(0x28F3, 0x4004);
             }
         }
 
@@ -330,7 +337,7 @@ namespace com.clover.remotepay.transport
                     catch (Exception ex)
                     {
                         TransportLog(ex.Message);
-                        Console.WriteLine("DeviceInitiallyConnected : " + ex.Message);
+                        // Console.WriteLine("DeviceInitiallyConnected : " + ex.Message);
                     }
                     TransportLog("Exiting DeviceInitiallyConnected initialized=" + initialized);
                 }
@@ -352,7 +359,7 @@ namespace com.clover.remotepay.transport
         {
             // The ConnectDevice() call will ensure the device reference is still valid
             // and the connection is healthy.  If not, it will attempt to re-establish
-            // the device and connection. 
+            // the device and connection.
             try
             {
                 ConnectDevice();
@@ -366,7 +373,7 @@ namespace com.clover.remotepay.transport
             {
                 // Ignore the exception if we are trying to reconnect
                 _timer?.Close();
-                Console.WriteLine("OnTimerEvent Exception : " + ex.Message);
+                // Console.WriteLine("OnTimerEvent Exception : " + ex.Message);
             }
         }
 
@@ -455,12 +462,12 @@ namespace com.clover.remotepay.transport
                         }
 
                         // If this is a "whole" usb device (libusb-win32, linux libusb)
-                        // it will have an IUsbDevice interface. If not (WinUSB) the 
-                        // variable will be null indicating this is an interface of a 
+                        // it will have an IUsbDevice interface. If not (WinUSB) the
+                        // variable will be null indicating this is an interface of a
                         // device.
                         if (MyUsbDevice is IUsbDevice wholeUsbDevice)
                         {
-                            // This is a "whole" USB device. Before it can be used, 
+                            // This is a "whole" USB device. Before it can be used,
                             // the desired configuration and interface must be selected.
 
                             // Select config #1
@@ -470,26 +477,61 @@ namespace com.clover.remotepay.transport
                             wholeUsbDevice.ClaimInterface(0);
                         }
 
-                        // open read endpoint 1.
-                        reader = MyUsbDevice.OpenEndpointReader(ReadEndpointID.Ep01);
-                        if (null != reader)
+                        // Find the endpoint read/write pair from the device
+                        if (ExtractEndpointPair(MyUsbDevice, out ReadEndpointID readId, out WriteEndpointID writeId))
                         {
-                            // open write endpoint 1.
-                            writer = MyUsbDevice.OpenEndpointWriter(WriteEndpointID.Ep02);
-                            if (null != writer)
+                            reader = MyUsbDevice.OpenEndpointReader(readId);
+                            writer = MyUsbDevice.OpenEndpointWriter(writeId);
+
+                            if (reader != null && writer != null)
                             {
                                 shutdown = false;
                                 startListeningForMessages();
                                 messageSendLoop();
                                 initialized = true;
                             }
+                            else
+                            {
+                                // Report open failure and make sure we are in a clean state
+                                TransportLog($"Failed to open reader and/or writer (r:{(reader != null ? "open" : "failed")}, w:{(writer != null ? "open" : "failed")}) for detected device {MyUsbDevice.UsbRegistryInfo.Vid:X}:{MyUsbDevice.UsbRegistryInfo.Pid:X}. thread " + Thread.CurrentThread.GetHashCode());
+
+                                reader?.Dispose();
+                                reader = null;
+
+                                writer?.Dispose();
+                                writer = null;
+
+                                if (MyUsbDevice.IsOpen)
+                                {
+                                    MyUsbDevice.Close();
+                                }
+                                MyUsbDevice = null;
+                            }
+                        }
+                        else
+                        {
+                            TransportLog($"Couldn't find read/write endpoint pair for detected device {MyUsbDevice.UsbRegistryInfo.Vid:X}:{MyUsbDevice.UsbRegistryInfo.Pid:X}. thread " + Thread.CurrentThread.GetHashCode());
+
+                            if (MyUsbDevice.IsOpen)
+                            {
+                                MyUsbDevice.Close();
+                            }
+                            MyUsbDevice = null;
                         }
                     }
                     catch (Exception ex)
                     {
                         TransportLog(Environment.NewLine);
                         TransportLog(ex.Message);
+
+
+                        if (MyUsbDevice != null && MyUsbDevice.IsOpen)
+                        {
+                            MyUsbDevice.Close();
+                        }
+                        MyUsbDevice = null;
                     }
+
                     TransportLog("Exiting DeviceSetToAccessoryMode");
                     if (initialized)
                     {
@@ -503,6 +545,43 @@ namespace com.clover.remotepay.transport
                 }
                 return initialized;
             }
+        }
+
+        private bool ExtractEndpointPair(UsbDevice device, out ReadEndpointID readId, out WriteEndpointID writeId)
+        {
+            // Init to zero for compiler
+            readId = 0;
+            writeId = 0;
+
+            // Current scenario for our Clover devices is the basic 1 config with 1 interface with 2 bulk endpoints
+            foreach (UsbConfigInfo config in device.Configs)
+            {
+                foreach (UsbInterfaceInfo info in config.InterfaceInfoList)
+                {
+                    // Reset to zero, read/write must be a pair on a single interface
+                    readId = 0;
+                    writeId = 0;
+                    foreach (UsbEndpointInfo endpoint in info.EndpointInfoList)
+                    {
+                        // Assume we won't expect more than 1 read and 1 right, no need to quickexit loop
+                        // Readers have high bit set
+                        if ((endpoint.Descriptor.EndpointID & 0x80) > 0 && readId == 0)
+                        {
+                            readId = (ReadEndpointID)endpoint.Descriptor.EndpointID;
+                        }
+                        if ((endpoint.Descriptor.EndpointID & 0x80) == 0 && writeId == 0)
+                        {
+                            writeId = (WriteEndpointID)endpoint.Descriptor.EndpointID;
+                        }
+                    }
+                    if (readId > 0 && writeId > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -534,68 +613,66 @@ namespace com.clover.remotepay.transport
 
         private void initializeBGWDoWorkHandlers()
         {
-            Console.WriteLine("sendMessagesDoWorkHandler created");
-            sendMessagesDoWorkHandler = new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
+            // Console.WriteLine("sendMessagesDoWorkHandler created");
+            sendMessagesDoWorkHandler = delegate
+            {
+                TransportLog("Starting send message loop in BGW.DoWork().");
+                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting sendMessagesThread");
+
+                do
                 {
-                    TransportLog("Starting send message loop in BGW.DoWork().");
-                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting sendMessagesThread");
-
-                    do
-                    {
-                        try
-                        {
-                            while (messageQueue.Count > 0)
-                            {
-                                TransportLog("In sendMessagesDoWorkHandler() just before the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
-                                string message = messageQueue.Dequeue();
-                                TransportLog("In sendMessagesDoWorkHandler() just after the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
-                                if (message != null)
-                                {
-                                    sendMessageSync(message);
-                                }
-                                else
-                                {
-                                    TransportLog("Dequeued a null message");  // this should never happen, but just in case, let's log it
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            TransportLog("Error occurred in sendMessageSync(): " + e.Message);
-                            TransportLog(e.StackTrace);
-                            Console.WriteLine("initializeBGWDoWorkHandler Exception : " + e.Message);
-                        }
-                        lock (messageQueue)
-                        {
-#if DEBUG
-                            GC.Collect(); // use to test for memory leaks
-#endif
-                            Monitor.Wait(messageQueue, 1000); // wake up every second and check if it is shutdown...
-                        }
-                    } while (!shutdown);
-
-                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating sendMessagesThread");
-                    Console.WriteLine("Terminating sendMessagesThread");
-                });
-
-            Console.WriteLine("receiveMessagesDoWorkHandler created");
-            receiveMessagesDoWorkHandler = new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting receiveMessagesThread");
                     try
                     {
-                        getMessages();
+                        while (messageQueue.Count > 0)
+                        {
+                            TransportLog("In sendMessagesDoWorkHandler() just before the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
+                            string message = messageQueue.Dequeue();
+                            TransportLog("In sendMessagesDoWorkHandler() just after the Dequeue: messageQueue.Count = " + messageQueue.Count.ToString());
+                            if (message != null)
+                            {
+                                sendMessageSync(message);
+                            }
+                            else
+                            {
+                                TransportLog("Dequeued a null message");  // this should never happen, but just in case, let's log it
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
-                        TransportLog("receiveMessagesThread Exception: " + e.Message);
-                        Console.WriteLine("receiveMessagesThread Exception: " + e.Message);
+                        TransportLog("Error occurred in sendMessageSync(): " + e.Message);
+                        TransportLog(e.StackTrace);
+                        // Console.WriteLine("initializeBGWDoWorkHandler Exception : " + e.Message);
                     }
-                    TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating receiveMessagesThread");
-                    Console.WriteLine("Terminating receiveMessagesThread");
-                });
+                    lock (messageQueue)
+                    {
+#if DEBUG
+                            GC.Collect(); // use to test for memory leaks
+#endif
+                        Monitor.Wait(messageQueue, 1000); // wake up every second and check if it is shutdown...
+                    }
+                } while (!shutdown);
+
+                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating sendMessagesThread");
+                // Console.WriteLine("Terminating sendMessagesThread");
+            };
+
+            // Console.WriteLine("receiveMessagesDoWorkHandler created");
+            receiveMessagesDoWorkHandler = delegate
+            {
+                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting receiveMessagesThread");
+                try
+                {
+                    getMessages();
+                }
+                catch (Exception e)
+                {
+                    TransportLog("receiveMessagesThread Exception: " + e.Message);
+                    // Console.WriteLine("receiveMessagesThread Exception: " + e.Message);
+                }
+                TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating receiveMessagesThread");
+                // Console.WriteLine("Terminating receiveMessagesThread");
+            };
 
             receiveMessagesThread.DoWork += receiveMessagesDoWorkHandler;
             sendMessagesThread.DoWork += sendMessagesDoWorkHandler;
@@ -619,7 +696,7 @@ namespace com.clover.remotepay.transport
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Writing magic : " + e.Message);
+                    // Console.WriteLine("Writing magic : " + e.Message);
                 }
 
                 int stringByteLength = stringBytes.Length;
@@ -648,7 +725,7 @@ namespace com.clover.remotepay.transport
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Max length : " + e.Message);
+                        // Console.WriteLine("Max length : " + e.Message);
                     }
 
                     // current position is set to the maximum that can be written.
@@ -709,7 +786,7 @@ namespace com.clover.remotepay.transport
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("outDataSize : " + e.Message);
+                    // Console.WriteLine("outDataSize : " + e.Message);
                 }
 
                 outDataBuffer.Seek(0, SeekOrigin.Begin);
@@ -762,7 +839,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         private void getMessages()
         {
-            Console.WriteLine("getMessage() thread start ");
+            // Console.WriteLine("getMessage() thread start ");
             TransportLog("Thread Start: getMessages()");
             do
             {
@@ -802,10 +879,10 @@ namespace com.clover.remotepay.transport
                     catch(Exception e)
                     {
                         TransportLog("Got message: " + message);
-                    }  
+                    }
                     */
 
-                    // End of the debugging code block 
+                    // End of the debugging code block
                     try
                     {
                         onMessage(message);
@@ -814,7 +891,7 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog("Error parsing message: " + message);
                         TransportLog(e.Message);
-                        Console.WriteLine("Error parsing message: " + e.Message);
+                        // Console.WriteLine("Error parsing message: " + e.Message);
                     }
                 }
             } while (shutdown != true);
@@ -887,7 +964,7 @@ namespace com.clover.remotepay.transport
             }
             catch (Exception e)
             {
-                Console.WriteLine("ecRead Exception: " + e.Message);
+                // Console.WriteLine("ecRead Exception: " + e.Message);
             }
 
             if (!shutdown)
@@ -907,7 +984,7 @@ namespace com.clover.remotepay.transport
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("inPacketBuffer : " + e.Message);
+                    // Console.WriteLine("inPacketBuffer : " + e.Message);
                 }
 
                 if (inDataSize <= 0)
@@ -1001,9 +1078,9 @@ namespace com.clover.remotepay.transport
                         if (TempUsbDevice.IsOpen)
                         {
                             // If this is a "whole" usb device (libusb-win32, linux libusb-1.0)
-                            // it exposes an IUsbDevice interface. If not (WinUSB) the 
-                            // 'wholeUsbDevice' variable will be null indicating this is 
-                            // an interface of a device; it does not require or support 
+                            // it exposes an IUsbDevice interface. If not (WinUSB) the
+                            // 'wholeUsbDevice' variable will be null indicating this is
+                            // an interface of a device; it does not require or support
                             // configuration and interface selection.
                             IUsbDevice wholeUsbDevice = TempUsbDevice as IUsbDevice;
                             if (!ReferenceEquals(wholeUsbDevice, null))
@@ -1017,15 +1094,9 @@ namespace com.clover.remotepay.transport
                     }
                     finally
                     {
-                        // Free usb resources
-                        if (reader != null && !reader.IsDisposed)
-                        {
-                            reader.Dispose();
-                        }
-                        if (writer != null && !writer.IsDisposed)
-                        {
-                            writer.Dispose();
-                        }
+                        // Free usb resources. UsbEndpointReader.Dispose is safe to call multiple times
+                        reader?.Dispose();
+                        writer?.Dispose();
                         UsbDevice.Exit();
                     }
                 }

@@ -48,7 +48,7 @@ namespace com.clover.remotepay.sdk.service.client {
         public string Bitmap { get; set; }
         public string Url { get; set; }
 
-        public System.Drawing.Bitmap GetBitmap()
+        public Bitmap GetBitmap()
         {
             byte[] imgBytes = Convert.FromBase64String(Bitmap);
 
@@ -92,28 +92,28 @@ namespace com.clover.remotepay.sdk.service.client {
     [XmlRoot(ElementName = "LineItemAddedToDisplayOrder")]
     public class LineItemAddedToDisplayOrder
     {
-        public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
+        public DisplayOrder DisplayOrder { get; set; }
         public DisplayLineItem DisplayLineItem { get; set; }
     }
 
     [XmlRoot(ElementName = "LineItemRemovedFromDisplayOrder")]
     public class LineItemRemovedFromDisplayOrder
     {
-        public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
+        public DisplayOrder DisplayOrder { get; set; }
         public DisplayLineItem DisplayLineItem { get; set; }
     }
 
     [XmlRoot(ElementName = "DiscountAddedToDisplayOrder")]
     public class DiscountAddedToDisplayOrder
     {
-        public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
+        public DisplayOrder DisplayOrder { get; set; }
         public DisplayDiscount DisplayDiscount { get; set; }
     }
 
     [XmlRoot(ElementName = "DiscountRemovedFromDisplayOrder")]
     public class DiscountRemovedFromDisplayOrder
     {
-        public com.clover.remote.order.DisplayOrder DisplayOrder { get; set; }
+        public DisplayOrder DisplayOrder { get; set; }
         public DisplayDiscount DisplayDiscount { get; set; }
     }
 

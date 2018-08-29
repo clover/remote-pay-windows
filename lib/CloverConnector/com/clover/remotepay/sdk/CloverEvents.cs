@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using com.clover.remotepay.transport;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using com.clover.remotepay.transport;
 
 namespace com.clover.remotepay.sdk
 {
@@ -75,7 +73,12 @@ namespace com.clover.remotepay.sdk
             // tender handling flow
             HANDLE_TENDER,
             CUSTOM_ACTIVITY,
-            STARTING_CUSTOM_ACTIVITY
+            STARTING_CUSTOM_ACTIVITY,
+
+            SELECT_WITHDRAW_FROM_ACCOUNT,
+            VERIFY_SURCHARGES,
+            VOID_CONFIRM
+
         }
 
         public CloverDeviceEvent()
@@ -250,9 +253,10 @@ namespace com.clover.remotepay.sdk
         public static int Ok = 0;
 
         public enum CloverDeviceErrorType
-        { COMMUNICATION_ERROR,
-          VALIDATION_ERROR,
-          EXCEPTION
+        {
+            COMMUNICATION_ERROR,
+            VALIDATION_ERROR,
+            EXCEPTION
         }
 
         public CloverDeviceErrorEvent()

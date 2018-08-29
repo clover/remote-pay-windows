@@ -40,7 +40,7 @@ namespace com.clover.remotepay.transport
         /// <param name="serialNumber">The serial number of the POS terminal/device 
         /// attaching to the Clover device.</param>
         /// <param name="pairingAuthToken">The cached authentication token provided from a previous {@link PairingDeviceConfiguration#onPairingSuccess(String)} call.</param>
-        public WebSocketCloverDeviceConfiguration(string endpoint, string remoteApplicationID, string posName, string serialNumber, string pairingAuthToken) : this(endpoint, remoteApplicationID, false, 1, posName, serialNumber, pairingAuthToken, null, null)
+        public WebSocketCloverDeviceConfiguration(string endpoint, string remoteApplicationID, string posName, string serialNumber, string pairingAuthToken) : this(endpoint, remoteApplicationID, false, 1, posName, serialNumber, pairingAuthToken, null, null, null)
         {
         }
 
@@ -60,7 +60,7 @@ namespace com.clover.remotepay.transport
         /// <param name="pairingCodeHandler">The response when a pairing code is received.</param>
         /// <param name="pairingSuccessHandler">The response when a pairing code 
         /// successfully completes.</param>
-        public WebSocketCloverDeviceConfiguration(string endpoint, string remoteApplicationID, bool enableLogging, int pingSleepSeconds, string posName, string serialNumber, string pairingAuthToken, OnPairingCodeHandler pairingCodeHandler, OnPairingSuccessHandler pairingSuccessHandler)
+        public WebSocketCloverDeviceConfiguration(string endpoint, string remoteApplicationID, bool enableLogging, int pingSleepSeconds, string posName, string serialNumber, string pairingAuthToken, OnPairingCodeHandler pairingCodeHandler, OnPairingSuccessHandler pairingSuccessHandler, OnPairingStateHandler pairingStateHandler)
         {
             this.endpoint = endpoint;
             if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
@@ -77,6 +77,7 @@ namespace com.clover.remotepay.transport
 
             OnPairingCode = pairingCodeHandler;
             OnPairingSuccess = pairingSuccessHandler;
+            OnPairingState = pairingStateHandler;
         }
 
         public string getCloverDeviceTypeName()

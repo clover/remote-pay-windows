@@ -18,19 +18,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
+namespace com.clover.sdk.v3.base_
+{
+    public class Reference
+    {
 
-namespace com.clover.sdk.v3.base_ {
+        /// <summary>
+        /// Unique identifier
+        /// </summary>
+        public string id { get; set; }
 
-
-public class Reference {
-
-  /// <summary>
-  /// Unique identifier
-  /// </summary>
-  public String id { get; set; }
-
-}
-
+        public Reference() { }
+        public Reference(string id) => this.id = id;
+    }
 }

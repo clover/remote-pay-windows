@@ -141,11 +141,10 @@ namespace com.clover.remotepay.transport
                 {
                     BackgroundWorker bw = new BackgroundWorker();
                     // what to do in the background thread
-                    bw.DoWork += new DoWorkEventHandler(
-                delegate (object o, DoWorkEventArgs args)
-                {
-                    observer.onDeviceReady(me);
-                });
+                    bw.DoWork += delegate
+                    {
+                        observer.onDeviceReady(me);
+                    };
                     bw.RunWorkerAsync();
                 }
                 observers.Add(observer);
@@ -175,7 +174,7 @@ namespace com.clover.remotepay.transport
         /// Remote message version, always 1 in current version
         /// </summary>
         /// <returns></returns>
-        public int getRemoteMessageVersion()
+        public virtual int getRemoteMessageVersion()
         {
             return 1;
         }

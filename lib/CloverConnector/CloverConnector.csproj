@@ -37,7 +37,7 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNet45|AnyCPU'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -64,7 +64,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet45|AnyCPU'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <OutputPath>bin\ReleaseNet45\</OutputPath>
     <DefineConstants>TRACE;NET45</DefineConstants>
     <DocumentationFile>bin\ReleaseNet45\CloverConnector.XML</DocumentationFile>
@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="com\clover\remotepay\sdk\Access\CloverEventConnector.cs" />
     <Compile Include="com\clover\remotepay\sdk\CloverConnectorFactory.cs" />
     <Compile Include="com\clover\remotepay\sdk\ExternalIDUtil.cs" />
     <Compile Include="com\clover\remotepay\sdk\CloverConnector.cs" />
@@ -104,6 +105,7 @@
       <Name>CloverWindowsTransport</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

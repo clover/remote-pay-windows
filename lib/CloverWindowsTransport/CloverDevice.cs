@@ -158,11 +158,13 @@ namespace com.clover.remotepay.transport
         public abstract void doOrderUpdate(DisplayOrder order, DisplayOperation operation);
         public abstract void doVerifySignature(Payment payment, bool verified);
         public abstract void doTerminalMessage(string text);
-        public abstract void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund); // manual refunds are handled via doTxStart
-        public abstract void doTipAdjustAuth(string orderId, string paymentId, long amount);
+        public abstract void doSendDebugLog(string message);
+        public abstract void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection);
+        public abstract void doTipAdjustAuth(string orderId, string paymentId, long? amount);
         public abstract void doPrintText(List<string> textLines, string printRequestId, string printDeviceId);
         public abstract void doShowWelcomeScreen();
-        public abstract void doShowPaymentReceiptScreen(string orderId, string paymentId);
+        public abstract void doShowPaymentReceiptScreen(string orderId, string paymentId, bool disablePrinting);
+        public abstract void doShowReceiptScreen(string orderId, string paymentId, string refundId, string creditId, bool disablePrinting);
         public abstract void doShowThankYouScreen();
         public abstract void doOpenCashDrawer(string reason, string deviceId);
         public abstract void doPrintImage(string base64String);
@@ -272,7 +274,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         /// <param name="payment">The payment.</param>
         /// <param name="voidReason">The void reason.</param>
-        void onPaymentVoided(Payment payment, VoidReason voidReason);
+        void onPaymentVoided(Payment payment, VoidReason voidReason, ResultStatus status, string reason, string message);
 
         /// <summary>
         /// Called when a key is pressed.
@@ -326,7 +328,7 @@ namespace com.clover.remotepay.transport
         /// <param name="tipAmount"></param>
         /// <param name="status"></param>
         /// <param name="reason"></param>
-        void onCapturePreAuthResponse(string paymentId, long amount, long tipAmount, ResultStatus status, string reason);
+        void onCapturePreAuthResponse(string paymentId, long amount, long? tipAmount, ResultStatus status, string reason);
 
         /// <summary>
         /// Called when a device is ready to receive messages.
@@ -460,6 +462,13 @@ namespace com.clover.remotepay.transport
         /// <param name="printRequestId"></param>
         /// <param name="status"></param>
         void onRetrievePrintJobStatus(string printRequestId, string status);
+
+        /// <summary>
+        /// Retrieved print job status from the device
+        /// </summary>
+        /// <param name="printRequestId"></param>
+        /// <param name="status"></param>
+        void onDisplayReceiptOptionsResponse(ResultStatus status, string reason);
     }
 
     public class DeviceInfo

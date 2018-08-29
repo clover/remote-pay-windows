@@ -27,46 +27,34 @@ namespace com.clover.remotepay.transport
             CREDIT,
             AUTH,
             DATA,
-            BALANCE_INQUIRY
+            BALANCE_INQUIRY,
+            CAPTURE_PREAUTH
         }
 
         public string action { get; set; }
         public long amount { get; set; }
         public long? tipAmount { get; set; }
         public long? taxAmount { get; set; }
-        public long? tippableAmount { get; set; }
-        public string externalPaymentId { get; set; }
-        public VaultedCard vaultedCard { get; set; }
         public string orderId { get; set; }
+        public string paymentId { get; set; }
         public string employeeId { get; set; }
-        public PayIntent.TransactionType transactionType { get; set; }
+        public TransactionType transactionType { get; set; }
         public List<TaxableAmountRate> taxableAmountRateList { get; set; }
         public ServiceChargeAmount serviceChargeAmount { get; set; }
-        [Obsolete("use TransactionSettings instead")]
-        public bool isDisableCashBack { get; set; }
         public bool isTesting { get; set; }
-        [Obsolete("use TransactionSettings instead")]
-        public long cardEntryMethods { get; set; }
         public string voiceAuthCode { get; set; }
         public string postalCode { get; set; }
         public string streetAddress { get; set; }
         public bool isCardNotPresent { get; set; }
         public string cardDataMessage { get; set; }
-        [Obsolete("use TransactionSettings instead")]
-        public bool remotePrint { get; set; }
         public string transactionNo { get; set; }
-        [Obsolete("use TransactionSettings instead")]
-        public bool isForceSwipePinEntry { get; set; }
-        [Obsolete("use TransactionSettings instead")]
-        public bool? disableRestartTransactionWhenFailed { get; set; }
-        private static readonly string BUNDLE_KEY_ACTION = "a";
-        [Obsolete("use TransactionSettings instead")]
-        public bool? allowOfflinePayment { get; set; }
-        [Obsolete("use TransactionSettings instead")]
-        public bool? approveOfflinePaymentWithoutPrompt { get; set; }
+        public string externalPaymentId { get; set; }
+        public VaultedCard vaultedCard { get; set; }
         public bool? requiresRemoteConfirmation { get; set; }
-        public TransactionSettings transactionSettings { get; set; }
         public bool allowPartialAuth { get; set; } = true;
+        public TransactionSettings transactionSettings { get; set; }
+
+        private static readonly string BUNDLE_KEY_ACTION = "a";
     }
 
     public enum ResultStatus
@@ -227,12 +215,12 @@ namespace com.clover.remotepay.transport
     {
         public int width;
         public int height;
-        public List<Signature2.Stroke> strokes;
+        public List<Stroke> strokes;
 
 
         public class Stroke
         {
-            public List<Signature2.Point> points;
+            public List<Point> points;
         }
 
         public class Point
@@ -314,7 +302,12 @@ namespace com.clover.remotepay.transport
         // custom activity, optionally called from custom activity
         CUSTOM_ACTIVITY,
         // starting custom activity, called from RTKA
-        STARTING_CUSTOM_ACTIVITY
+        STARTING_CUSTOM_ACTIVITY,
+
+        VERIFY_SURCHARGES,
+        SELECT_WITHDRAW_FROM_ACCOUNT,
+        VOID_CONFIRM
+
     }
 
     public enum UiDirection

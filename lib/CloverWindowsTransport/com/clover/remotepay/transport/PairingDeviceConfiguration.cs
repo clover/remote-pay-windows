@@ -18,8 +18,10 @@ namespace com.clover.remotepay.transport
     {
         public delegate void OnPairingCodeHandler(string pairingCode);
         public delegate void OnPairingSuccessHandler(string authToken);
+        public delegate void OnPairingStateHandler(string state, string message);
 
         public OnPairingCodeHandler OnPairingCode;
         public OnPairingSuccessHandler OnPairingSuccess;
+        public OnPairingStateHandler OnPairingState;
     }
 }

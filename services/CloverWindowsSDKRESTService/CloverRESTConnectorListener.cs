@@ -210,6 +210,11 @@ namespace CloverWindowsSDKREST
             Send("/PrintJobStatusRequest", Serialize(request));
         }
 
+        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
+        {
+            Send("/DisplayReceiptOptionsResponse", Serialize(response));
+        }
+
         public void ResendStatus()
         {
             switch (Status)

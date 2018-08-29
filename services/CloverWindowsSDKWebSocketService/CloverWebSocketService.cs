@@ -190,11 +190,6 @@ namespace CloverWindowsSDKWebSocketService
                                     cloverConnector.ShowWelcomeScreen();
                                     break;
                                 }
-                            case WebSocketMethod.Cancel:
-                                {
-                                    cloverConnector.Cancel();
-                                    break;
-                                }
                             case WebSocketMethod.Break: // deprecated. use ResetDevice
                             case WebSocketMethod.ResetDevice:
                                 {
@@ -209,7 +204,7 @@ namespace CloverWindowsSDKWebSocketService
                                     {
                                         messageList.Add(msg);
                                     }
-                                    cloverConnector.PrintText(messageList);
+                                    cloverConnector.Print(new PrintRequest() { text = messageList });
                                     break;
                                 }
                             case WebSocketMethod.PrintImage:
@@ -220,13 +215,13 @@ namespace CloverWindowsSDKWebSocketService
                                     ms.Write(imgBytes, 0, imgBytes.Length);
                                     Bitmap bp = new Bitmap(ms);
                                     ms.Close();
-                                    cloverConnector.PrintImage(bp);
+                                    cloverConnector.Print(new PrintRequest() { images = new List<Bitmap> { bp } });
                                     break;
                                 }
                             case WebSocketMethod.PrintImageFromURL:
                                 {
                                     string url = ((JObject)payload).GetValue("Url").Value<string>();
-                                    cloverConnector.PrintImageFromURL(url);
+                                    cloverConnector.Print(new PrintRequest() { imageURLs = new List<string> { url } });
                                     break;
                                 }
                             case WebSocketMethod.Auth:
@@ -286,7 +281,7 @@ namespace CloverWindowsSDKWebSocketService
                             case WebSocketMethod.DisplayPaymentReceiptOptions:
                                 {
                                     DisplayPaymentReceiptOptionsRequest request = JsonUtils.deserialize<DisplayPaymentReceiptOptionsRequest>(payload.ToString());
-                                    cloverConnector.DisplayPaymentReceiptOptions(request.OrderID, request.PaymentID);
+                                    cloverConnector.DisplayPaymentReceiptOptions(request);
                                     break;
                                 }
                             case WebSocketMethod.ShowDisplayOrder:

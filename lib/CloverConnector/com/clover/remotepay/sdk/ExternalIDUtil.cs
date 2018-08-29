@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -32,22 +31,18 @@ namespace com.clover.remotepay.sdk
         /// <returns></returns>
         public static string GenerateRandomString(int length)
         {
-            int maxSize = length;
-            char[] chars = new char[62];
-            string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            chars = a.ToCharArray();
-            int size = maxSize;
-            byte[] data = new byte[1];
+            char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
             RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
+
+            byte[] data = new byte[length];
             crypto.GetNonZeroBytes(data);
-            size = maxSize;
-            data = new byte[size];
-            crypto.GetNonZeroBytes(data);
-            StringBuilder result = new StringBuilder(size);
+
+            StringBuilder result = new StringBuilder(length);
             foreach (byte b in data)
             {
                 result.Append(chars[b % (chars.Length - 1)]);
             }
+
             return result.ToString();
         }
     }

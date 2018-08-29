@@ -30,6 +30,15 @@ namespace com.clover.remotepay.sdk
         public bool supportsManualRefunds { get; set; }
         public bool supportsTipAdjust { get; set; }
 
+        public bool supportsRemoteConfirmation { get; set; }
+        public bool supportsNakedCredit { get; set; }
+        public bool supportsMultiPayToken { get; set; }
+        public bool supportsAcknowledgement { get; set; }
+        public bool supportsVoidPaymentResponse { get; set; }
+        public bool supportsPreAuth { get; set; }
+        public bool supportsAuth { get; set; }
+        public bool supportsVaultCard { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -39,14 +48,26 @@ namespace com.clover.remotepay.sdk
             supportsTipAdjust = true;
             supportsVaultCards = true;
             supportsPreAuths = true;
+            supportsRemoteConfirmation = true;
+            supportsNakedCredit = true;
+            supportsMultiPayToken = true;
+            supportsAcknowledgement = true;
+            supportsVoidPaymentResponse = true;
+            supportsPreAuth = true;
+            supportsAuth = true;
+            supportsVaultCard = true;
+
             merchantID = "";
             merchantMId = "";
             merchantName = "";
 
-            Device = new DeviceInfo();
-            Device.Name = "";
-            Device.Serial = "";
-            Device.Model = "";
+
+            Device = new DeviceInfo
+            {
+                Name = "",
+                Serial = "",
+                Model = ""
+            };
         }
         /// <summary>
         /// Contains merchant information about the device
@@ -56,17 +77,28 @@ namespace com.clover.remotepay.sdk
         {
             supportsManualRefunds = drm.supportsManualRefund;
             supportsTipAdjust = drm.supportsTipAdjust;
-            supportsVaultCards = drm.supportsMultiPayToken;
-            supportsPreAuths = drm.supportsTipAdjust;
+            supportsVaultCards = drm.supportsVaultCard;
+            supportsPreAuths = drm.supportsPreAuth;
+            supportsRemoteConfirmation = drm.supportsRemoteConfirmation;
+            supportsNakedCredit = drm.supportsNakedCredit;
+            supportsMultiPayToken = drm.supportsMultiPayToken;
+            supportsAcknowledgement = drm.supportsAcknowledgement;
+            supportsVoidPaymentResponse = drm.supportsVoidPaymentResponse;
+            supportsPreAuth = drm.supportsPreAuth;
+            supportsAuth = drm.supportsAuth;
+            supportsVaultCard = drm.supportsVaultCard;
+
             merchantID = drm.merchantId;
             merchantMId = drm.merchantMId;
             merchantName = drm.merchantName;
 
-            Device = new DeviceInfo();
-            Device.Name = drm.name;
-            Device.Serial = drm.serial;
-            Device.Model = drm.model;
-            Device.SupportsAcks = drm.supportsAcknowledgement;
+            Device = new DeviceInfo
+            {
+                Name = drm.name,
+                Serial = drm.serial,
+                Model = drm.model,
+                SupportsAcks = drm.supportsAcknowledgement
+            };
         }
 
     }

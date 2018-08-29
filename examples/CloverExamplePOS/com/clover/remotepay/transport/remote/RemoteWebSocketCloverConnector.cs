@@ -533,15 +533,12 @@ namespace com.clover.remotepay.transport.remote
             ShowWelcomeScreen();
         }
 
-        public void DisplayPaymentReceiptOptions(String orderId, String paymentId)
+        public void DisplayPaymentReceiptOptions(DisplayPaymentReceiptOptionsRequest request)
         {
             if (websocket != null)
             {
                 DisplayPaymentReceiptOptionsRequestMessage message = new DisplayPaymentReceiptOptionsRequestMessage();
-                DisplayPaymentReceiptOptionsRequest req = new DisplayPaymentReceiptOptionsRequest();
-                req.OrderID = orderId;
-                req.PaymentID = paymentId;
-                message.payload = req;
+                message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
             }
         }
@@ -790,7 +787,6 @@ namespace com.clover.remotepay.transport.remote
                 message.payload = request;
                 websocket.Send(JsonUtils.serialize(message));
             }
-            
         }
 
         public void Print(sdk.PrintRequest request)
@@ -839,6 +835,16 @@ namespace com.clover.remotepay.transport.remote
             if(websocket != null)
             {
                 RetrievePrintJobStatusRequestMessage msg = new RetrievePrintJobStatusRequestMessage();
+                msg.payload = request;
+                websocket.Send(JsonUtils.serialize(msg));
+            }
+        }
+
+        public void DisplayReceiptOptions(DisplayReceiptOptionsRequest request)
+        {
+            if (websocket != null)
+            {
+                DisplayReceiptOptionsRequestMessage msg = new DisplayReceiptOptionsRequestMessage();
                 msg.payload = request;
                 websocket.Send(JsonUtils.serialize(msg));
             }

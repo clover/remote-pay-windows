@@ -105,35 +105,11 @@ public sealed class ServiceEndpoints : RESTResource
         this.SendTextResponse(context, "");
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Cancel$")]
-    public void Cancel(HttpListenerContext context)
-    {
-        GetServer.CloverConnector.Cancel();
-        this.SendTextResponse(context, "");
-    }
-
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/ShowThankYouScreen$")]
     public void ShowThankYouScreen(HttpListenerContext context)
     {
         this.GetServer.CloverConnector.ShowThankYouScreen();
         this.SendTextResponse(context, "");
-    }
-
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintText$")]
-    public void PrintText(HttpListenerContext context)
-    {
-        try
-        {
-            PrintText message = ParseRequest<PrintText>(context);
-            GetServer.CloverConnector.PrintText(message.Messages);
-            this.SendTextResponse(context, "");
-        }
-        catch (Exception e)
-        {
-            context.Response.StatusCode = 400;
-            context.Response.StatusDescription = e.Message;
-            this.SendTextResponse(context, "error processing request");
-        }
     }
 
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Auth$")]
@@ -338,27 +314,6 @@ public sealed class ServiceEndpoints : RESTResource
         }
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintImage$")]
-    public void PrintImage(HttpListenerContext context)
-    {
-        try
-        {
-            PrintImage message = ParseRequest<PrintImage>(context);
-            if (message.Bitmap != null)
-            {
-                GetServer.CloverConnector.PrintImage(message.GetBitmap());
-                this.SendTextResponse(context, "");
-            }
-        }
-        catch (Exception e)
-        {
-            context.Response.StatusCode = 400;
-            context.Response.StatusDescription = e.Message;
-            this.SendTextResponse(context, "error processing request");
-        }
-
-    }
-
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/Print$")]
     public void Print(HttpListenerContext context)
     {
@@ -399,34 +354,13 @@ public sealed class ServiceEndpoints : RESTResource
         }
     }
 
-    [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/PrintImageFromURL$")]
-    public void PrintImageFromURL(HttpListenerContext context)
-    {
-        try
-        {
-            PrintImage message = ParseRequest<PrintImage>(context);
-            if (message.Url != null)
-            {
-                GetServer.CloverConnector.PrintImageFromURL(message.Url);
-                this.SendTextResponse(context, "");
-            }
-        }
-        catch (Exception e)
-        {
-            context.Response.StatusCode = 400;
-            context.Response.StatusDescription = e.Message;
-            this.SendTextResponse(context, "error processing request");
-        }
-
-    }
-
     [RESTRoute(Method = Grapevine.HttpMethod.POST, PathInfo = @"^/Clover/DisplayPaymentReceiptOptions$")]
     public void DisplayPaymentReceiptOptions(HttpListenerContext context)
     {
         try
         {
             DisplayPaymentReceiptOptionsRequest message = ParseRequest<DisplayPaymentReceiptOptionsRequest>(context);
-            GetServer.CloverConnector.DisplayPaymentReceiptOptions(message.OrderID, message.PaymentID);
+            GetServer.CloverConnector.DisplayPaymentReceiptOptions(message);
             this.SendTextResponse(context, "");
         }
         catch (Exception e)

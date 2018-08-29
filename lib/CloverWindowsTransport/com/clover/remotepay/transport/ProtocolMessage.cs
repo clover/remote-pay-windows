@@ -64,6 +64,11 @@ namespace com.clover.remotepay.transport
         public readonly bool supportsManualRefund;
         public readonly bool supportsMultiPayToken;
         public readonly bool supportsRemoteConfirmation;
+        public readonly bool supportsNakedCredit;
+        public readonly bool supportsVoidPaymentResponse;
+        public readonly bool supportsPreAuth;
+        public readonly bool supportsAuth;
+        public readonly bool supportsVaultCard;
 
         public DiscoveryResponseMessage(string merchantId,
                                         string merchantName,
@@ -73,9 +78,16 @@ namespace com.clover.remotepay.transport
                                         string model,
                                         bool ready,
                                         bool? supportsAcknowledgement,
-                                        bool? supportsTipAdjust,
-                                        bool? supportsManualRefund,
-                                        bool? supportsMultiPayToken)
+                                        bool? supportsTipAdjust = null,
+                                        bool? supportsManualRefund = null,
+                                        bool? supportsMultiPayToken = null,
+                                        bool? supportsRemoteConfirmation = null,
+                                        bool? supportsNakedCredit = null,
+                                        bool? supportsVoidPaymentResponse = null,
+                                        bool? supportsPreAuth = null,
+                                        bool? supportsAuth = null,
+                                        bool? supportsVaultCard = null
+            )
             : base(Methods.DISCOVERY_RESPONSE)
         {
             this.merchantId = merchantId;
@@ -85,24 +97,36 @@ namespace com.clover.remotepay.transport
             this.serial = serial;
             this.model = model;
             this.ready = ready;
-            this.supportsAcknowledgement = supportsAcknowledgement.HasValue ? supportsAcknowledgement.Value : false;
-            this.supportsTipAdjust = supportsTipAdjust.HasValue ? supportsTipAdjust.Value : true;
-            this.supportsManualRefund = supportsManualRefund.HasValue ? supportsManualRefund.Value : true;
-            this.supportsMultiPayToken = supportsMultiPayToken.HasValue ? supportsMultiPayToken.Value : true;
+
+            this.supportsAcknowledgement = supportsAcknowledgement ?? false;
+            this.supportsTipAdjust = supportsTipAdjust ?? true;
+            this.supportsManualRefund = supportsManualRefund ?? true;
+            this.supportsMultiPayToken = supportsMultiPayToken ?? true;
+
+            this.supportsRemoteConfirmation = supportsRemoteConfirmation ?? true;
+            this.supportsNakedCredit = supportsNakedCredit ?? true;
+            this.supportsVoidPaymentResponse = supportsVoidPaymentResponse ?? true;
+            this.supportsPreAuth = supportsPreAuth ?? true;
+            this.supportsAuth = supportsAuth ?? true;
+            this.supportsVaultCard = supportsVaultCard ?? true;
+
         }
     }
 
-    public class PaymentReceiptMessage : Message
+    public class ShowPaymentReceiptOptionsMessage : Message
     {
         public string orderId { get; set; }
         public string paymentId { get; set; }
+        public bool disableCloverPrinting { get; set; }
 
-        public PaymentReceiptMessage(string orderId, string paymentId)
+        public ShowPaymentReceiptOptionsMessage(string orderId, string paymentId, bool disableCloverPrinting)
             : base(Methods.SHOW_PAYMENT_RECEIPT_OPTIONS, 2) //automatically sets the version to the newer, preferable version
         {
             this.orderId = orderId;
             this.paymentId = paymentId;
+            this.disableCloverPrinting = disableCloverPrinting;
         }
+
     }
 
     public class RefundReceiptMessage : Message
@@ -204,17 +228,6 @@ namespace com.clover.remotepay.transport
         public readonly PayIntent payIntent;
         public readonly Order order;
         public TxType requestInfo { get; set; }
-        [Obsolete("use TipMode in PayIntent.transactionSettings instead")]
-        public readonly bool? suppressOnScreenTips;
-
-        public TxStartRequestMessage(PayIntent payIntent, Order order, TxType type, bool suppressOnScreenTips)
-            : base(Methods.TX_START)
-        {
-            this.payIntent = payIntent;
-            this.order = order;
-            requestInfo = type;
-            this.suppressOnScreenTips = suppressOnScreenTips;
-        }
 
         public TxStartRequestMessage(PayIntent payIntent, Order order, TxType type)
             : base(Methods.TX_START, 2)
@@ -222,7 +235,6 @@ namespace com.clover.remotepay.transport
             this.payIntent = payIntent;
             this.order = order;
             requestInfo = type;
-            suppressOnScreenTips = null;
         }
     }
 
@@ -313,18 +325,22 @@ namespace com.clover.remotepay.transport
         public string paymentId { get; set; }
         public long? amount { get; set; }
         public bool? fullRefund { get; set; }
+        public bool? disableCloverPrinting { get; set; }
+        public bool? disableReceiptSelection { get; set; }
 
-        public RefundRequestMessage() : base(Methods.REFUND_REQUEST, 2)
+        public RefundRequestMessage() : base(Methods.REFUND_REQUEST, 3)
         {
         }
 
-        public RefundRequestMessage(string oid, string pid, long? amt, bool? fullRefund)
+        public RefundRequestMessage(string oid, string pid, long? amt, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection)
             : base(Methods.REFUND_REQUEST, 2)
         {
             this.orderId = oid;
             this.paymentId = pid;
             this.amount = amt;
             this.fullRefund = fullRefund;
+            this.disableCloverPrinting = disableCloverPrinting;
+            this.disableReceiptSelection = disableReceiptSelection;
         }
     }
 
@@ -332,9 +348,9 @@ namespace com.clover.remotepay.transport
     {
         public string orderId { get; set; }
         public string paymentId { get; set; }
-        public long tipAmount { get; set; }
+        public long? tipAmount { get; set; }
 
-        public TipAdjustAuthMessage(string orderId, string paymentId, long tipAmount)
+        public TipAdjustAuthMessage(string orderId, string paymentId, long? tipAmount)
             : base(Methods.TIP_ADJUST)
         {
             this.orderId = orderId;
@@ -465,7 +481,7 @@ namespace com.clover.remotepay.transport
         public VoidReason voidReason { get; set; }
         public Payment payment { get; set; }
 
-        public VoidPaymentMessage() : base(Methods.VOID_PAYMENT)
+        public VoidPaymentMessage() : base(Methods.VOID_PAYMENT, 2)
         {
         }
     }
@@ -488,6 +504,27 @@ namespace com.clover.remotepay.transport
         public VaultCardMessage(int? CardEntryMethods) : base(Methods.VAULT_CARD)
         {
             this.cardEntryMethods = CardEntryMethods;
+        }
+    }
+
+    public class VoidPaymentResponseMessage : Message
+    {
+        public Payment payment { get; set; }
+        public VoidReason voidReason { get; set; }
+        public bool success { get; set; }
+        public ResultStatus status { get; set; }
+        public string reason { get; set; }
+        public string message { get; set; }
+
+        public VoidPaymentResponseMessage(Payment payment, VoidReason voidReason, bool success, ResultStatus status, string reason, string message)
+            : base(Methods.VOID_PAYMENT_RESPONSE)
+        {
+            this.payment = payment;
+            this.voidReason = voidReason;
+            this.success = success;
+            this.status = status;
+            this.reason = reason;
+            this.message = message;
         }
     }
 
@@ -886,6 +923,52 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class ShowReceiptOptionsMessage : Message
+    {
+        public string orderId;
+        public string paymentId;
+        public string refundId;
+        public string creditId;
+        public bool disableCloverPrinting;
+        public Payment payment;
+        public Credit credit;
+        public Refund refund;
+        public bool isReprint;
+
+        protected ShowReceiptOptionsMessage(Payment payment, Credit credit, Refund refund, bool isReprint)
+            : base(Methods.SHOW_RECEIPT_OPTIONS)
+        {
+            this.disableCloverPrinting = false;
+            this.payment = payment;
+            this.credit = credit;
+            this.refund = refund;
+            this.isReprint = isReprint;
+        }
+
+        public ShowReceiptOptionsMessage(string orderId, string paymentId, string refundId, string creditId, bool disableCloverPrinting)
+            : base(Methods.SHOW_RECEIPT_OPTIONS)
+        {
+            this.orderId = orderId;
+            this.paymentId = paymentId;
+            this.refundId = refundId;
+            this.creditId = creditId;
+            this.disableCloverPrinting = disableCloverPrinting;
+        }
+    }
+
+    public class ShowReceiptOptionsResponseMessage : Message
+    {
+        public ResultStatus status;
+        public string reason;
+
+        public ShowReceiptOptionsResponseMessage(ResultStatus status, string reason)
+            : base(Methods.SHOW_RECEIPT_OPTIONS_RESPONSE)
+        {
+            this.status = status;
+            this.reason = reason;
+        }
+    }
+
     /// <summary>
     /// request to retrieve a payment associated with the provided externalPaymentId
     /// </summary>
@@ -1024,6 +1107,17 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class CloverDeviceLogMessage : Message
+    {
+        public string Message { get; set; }
+
+        public CloverDeviceLogMessage(string message)
+            : base(Methods.CLOVER_DEVICE_LOG_REQUEST)
+        {
+            Message = message;
+        }
+    }
+
     public class RefundPaymentPrintMessage : Message
     {
         public Payment payment { get; set; }
@@ -1081,10 +1175,13 @@ namespace com.clover.remotepay.transport
 
     public class PairingResponse : PairingRequest
     {
+        public const string METHOD = "PAIRING_RESPONSE";
+
         public const string PAIRED = "PAIRED";
         public const string INITIAL = "INITIAL";
         public const string FAILED = "FAILED";
-        public const string METHOD = "PAIRING_RESPONSE";
+        public const string AUTHENTICATING = "AUTHENTICATING";
+        public const string PAIRING = "PAIRING";
 
         public string pairingState { get; set; }
         public string applicationName { get; set; }
@@ -1122,7 +1219,7 @@ namespace com.clover.remotepay.transport
         /// <summary>
         /// Payment information
         /// </summary>
-        public com.clover.sdk.v3.payments.Payment payment { get; set; }
+        public Payment payment { get; set; }
 
         /// <summary>
         /// The externalPaymentId used when a payment was created

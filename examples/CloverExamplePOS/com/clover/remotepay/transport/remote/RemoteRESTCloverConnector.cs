@@ -242,12 +242,9 @@ namespace com.clover.remotepay.transport.remote
             Send("/RetrievePendingPayments", null);
         }
 
-        public void DisplayPaymentReceiptOptions(String orderId, String paymentId)
+        public void DisplayPaymentReceiptOptions(DisplayPaymentReceiptOptionsRequest request)
         {
-            DisplayPaymentReceiptOptionsRequest req = new DisplayPaymentReceiptOptionsRequest();
-            req.OrderID = orderId;
-            req.PaymentID = paymentId;
-            Send("/DisplayPaymentReceiptOptions", req);
+            Send("/DisplayPaymentReceiptOptions", request);
         }
 
         public void OpenCashDrawer(string reason)
@@ -366,7 +363,6 @@ namespace com.clover.remotepay.transport.remote
             Send("/OpenCashDrawer", request);
         }
 
-        
         public void RetrievePrinters(RetrievePrintersRequest request)
         {
             Send("/RetrievePrinters", request);
@@ -377,6 +373,10 @@ namespace com.clover.remotepay.transport.remote
             Send("/RetrievePrintJobStatus", request);
         }
 
+        public void DisplayReceiptOptions(DisplayReceiptOptionsRequest request)
+        {
+            Send("/DisplayReceiptOptions", request);
+        }
 
         public class RESTSigVerRequestHandler : VerifySignatureRequest
         {

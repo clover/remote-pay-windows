@@ -21,30 +21,33 @@ using System.Windows.Forms;
 
 namespace CloverExamplePOS
 {
-    
+
     public partial class StartupForm : OverlayForm
     {
         private static readonly string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
         CloverDeviceConfiguration selectedConfig;
 
-        const String APPLICATION_ID = "com.clover.CloverExamplePOS:1.4.2";
+        const String APPLICATION_ID = "com.clover.CloverExamplePOS:1.4.0";
 
         CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", APPLICATION_ID, false, 1);
         CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, APPLICATION_ID, false, 1);
         CloverDeviceConfiguration RemoteWebSocketConfig = new RemoteWebSocketCloverConfiguration("ws://localhost:8889", APPLICATION_ID);
-        
-        WebSocketCloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("wss://192.168.1.14:12345/remote_pay", APPLICATION_ID, false, 1, "Clover Windows Example POS", "POS-3", Properties.Settings.Default.pairingAuthToken, null, null); // set the 2 delegates in the ctor
+
+        WebSocketCloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("wss://192.168.1.14:12345/remote_pay", APPLICATION_ID, false, 1, "Clover Windows Example POS", "POS-3", Properties.Settings.Default.pairingAuthToken, null, null, null); // set the 3 delegates in the ctor
 
         PairingDeviceConfiguration.OnPairingCodeHandler pairingCodeHandler = null;
         PairingDeviceConfiguration.OnPairingSuccessHandler pairingSuccessHandler = null;
+        PairingDeviceConfiguration.OnPairingStateHandler pairingStateHandler = null;
 
 
-        public StartupForm(Form tocover, PairingDeviceConfiguration.OnPairingCodeHandler pairingHandler, PairingDeviceConfiguration.OnPairingSuccessHandler successHandler) : base(tocover)
+        public StartupForm(Form tocover, PairingDeviceConfiguration.OnPairingCodeHandler pairingHandler, PairingDeviceConfiguration.OnPairingSuccessHandler successHandler, PairingDeviceConfiguration.OnPairingStateHandler stateHandler) : base(tocover)
         {
-            this.pairingCodeHandler = pairingHandler;
-            this.pairingSuccessHandler = successHandler;
+            pairingCodeHandler = pairingHandler;
+            pairingSuccessHandler = successHandler;
+            pairingStateHandler = stateHandler;
             WebSocketConfig.OnPairingCode = pairingHandler;
             WebSocketConfig.OnPairingSuccess = successHandler;
+            WebSocketConfig.OnPairingState = stateHandler;
             Properties.Settings.Default.Reload();
             WebSocketConfig.endpoint = Properties.Settings.Default.lastWSEndpoint;
             if(WebSocketConfig.endpoint == null || "".Equals(WebSocketConfig.endpoint))
@@ -60,9 +63,9 @@ namespace CloverExamplePOS
         {
             // populate the combo box
 
-            Object IsSDK = Registry.GetValue(REG_KEY, "IsSDK", 0);
-            Object IsREST = Registry.GetValue(REG_KEY, "IsREST", 0);
-            Object IsWS = Registry.GetValue(REG_KEY, "IsWebSocket", 0);
+            Object IsSDK = Registry.GetValue(REG_KEY, "IsSDK", 0) ?? 0;
+            Object IsREST = Registry.GetValue(REG_KEY, "IsREST", 0) ?? 0;
+            Object IsWS = Registry.GetValue(REG_KEY, "IsWebSocket", 0) ?? 0;
 
             bool isSdkInstalled = false;
             bool isRESTInstalled = false;
@@ -121,7 +124,7 @@ namespace CloverExamplePOS
             {
                 dataSource.Add(new ConfigWrapper("Clover Connector Web Socket service", RemoteWebSocketConfig));
             }
-            
+
             dataSource.Add(new ConfigWrapper("Network Pay Display", WebSocketConfig));
 
             ConnectionType.DataSource = dataSource;
@@ -210,6 +213,7 @@ namespace CloverExamplePOS
                     selectedConfig = new WebSocketCloverDeviceConfiguration(endpoint, APPLICATION_ID, "Clover Windows Example POS","AISLE_3", Properties.Settings.Default.pairingAuthToken);
                     ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingCode = pairingCodeHandler;
                     ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingSuccess = pairingSuccessHandler;
+                    ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingState = pairingStateHandler;
                 }
                 ((CloverExamplePOSForm)this.Owner).InitializeConnector(selectedConfig);
                 this.Close();

@@ -140,44 +140,34 @@ namespace CloverWindowsSDKREST
 
         private String getPOSNameAndVersion()
         {
-            string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
+            string REG_KEY_OLD = @"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\CloverSDK";
+            string REG_KEY = @"HKEY_LOCAL_MACHINE\Software\Clover\RestServer";
+
             String name = "unset";
             String version = "unset";
+
+            // Check current and old keys for Point of Sale APP name
             try
             {
-                Object rName = Registry.GetValue(REG_KEY, "ExternalPOSName", "unset");
-                Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
-                name = rName.ToString();
-                version = rVersion.ToString();
-                
-
+                name = Registry.GetValue(REG_KEY, "AppID", null) as string ?? Registry.GetValue(REG_KEY_OLD, "ExternalPOSName", null) as string ?? "";
             }
             catch (Exception e)
             {
                 EventLog.WriteEntry(SERVICE_NAME, e.Message);
             }
-            // not needed if the target Platform in the build is set to x86. The previous key path will resolve to the WOW6443Node as needed
-            /*
-            if (name.Equals("unset"))
+            try
             {
-                REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
-                try
-                {
-                    Object rName = Registry.GetValue(REG_KEY, "ExternalPOSName", "unset");
-                    Object rVersion = Registry.GetValue(REG_KEY, "ExternalPOSVersion", "unset");
-                    name = rName.ToString();
-                    version = rVersion.ToString();
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.EventLog.WriteEntry(SERVICE_NAME, e.Message);
-                }
+                version = Registry.GetValue(REG_KEY, "AppVersion", null) as string ?? Registry.GetValue(REG_KEY_OLD, "ExternalPOSVersion", null) as string ?? "";
             }
-            */
-            if (name.Equals("unset") || version.Equals("unset"))
+            catch (Exception e)
             {
-                EventLog.WriteEntry(SERVICE_NAME, "POS Name or Version is not correctly set.  The service will not run until they are appropriately intialized.");
-                throw new Exception("Invalid external POS name or version. The REST service cannot run without correctly configured <ExternalPOSName> and <ExternalPOSVersion> registry keys.");
+                EventLog.WriteEntry(SERVICE_NAME, e.Message);
+            }
+
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(version))
+            {
+                EventLog.WriteEntry(SERVICE_NAME, $"POS Name or Version is not correctly set.  The service will not run until they are appropriately intialized. id=\"{name}\", version=\"{version}\"");
+                throw new Exception($"Invalid external POS name or version. The REST service cannot run without correctly configured ExternalPos AppID and ExternalPos AppVersion registry keys. id=\"{name}\", version=\"{version}\"");
             }
 
             EventLog.WriteEntry(SERVICE_NAME, "POS Name:Version from registry = " + name + ":" + version);

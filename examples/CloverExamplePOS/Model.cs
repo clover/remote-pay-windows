@@ -95,13 +95,13 @@ namespace CloverExamplePOS
             this.Payments.Add(payment);
             onOrderChange(this, OrderChangeTarget.PAYMENT);
         }
-        public void ModifyTipAmount(String paymentID, long amount)
+        public void ModifyTipAmount(String paymentID, long? amount)
         {
             foreach(POSExchange paymentObject in Payments)
             {
                 if (paymentObject is POSPayment payment && payment.PaymentID == paymentID)
                 {
-                    payment.TipAmount = amount;
+                    payment.TipAmount = amount ?? 0;
                     onOrderChange(this, OrderChangeTarget.PAYMENT);
                 }
             }
