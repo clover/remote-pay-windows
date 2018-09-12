@@ -23,7 +23,7 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
 
 The Windows project includes three options for connecting to a Clover device. 
 
-1. .NET DLL - CloverConnector.DLL can be used directly by a .NET application. This option requires .NET 4.0.
+1. .NET DLL - CloverConnector.DLL can be used directly by a .NET application. This option requires .NET 4.0 or 4.5.
 2. Clover Connector REST API Service - This option requires your POS to implement a REST service in order to receive callbacks.
 3. Clover Connector WebSocket API Service - This option requires your POS to implement a WebSocket client in order to communicate with the service and receive callbacks.
 
@@ -32,6 +32,14 @@ To work with the project effectively, you will need:
 - An IDE, such as [Visual Studio](https://www.visualstudio.com/downloads/).
 - To experience transactions end-to-end from the merchant and customer perspectives, we also recommend ordering a [Clover DevKit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).
 
+## NuGet Package
+
+Use NuGet references to easily include Remote Pay Windows in your .NET project
+https://www.nuget.org/packages/Clover.RemotePayWindows
+
+```
+Install-Package Clover.RemotePayWindows -Version 2.0.0 
+```
 
 ## Installing the SDK and Services
 
