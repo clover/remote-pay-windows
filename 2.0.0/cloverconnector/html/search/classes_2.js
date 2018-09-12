@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['capturepreauthrequest',['CapturePreAuthRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_request.html',1,'com::clover::remotepay::sdk']]],
+  ['capturepreauthresponse',['CapturePreAuthResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_response.html',1,'com::clover::remotepay::sdk']]],
+  ['capturepreauthresponseeventargs',['CapturePreAuthResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_capture_pre_auth_response_event_args.html',1,'Clover::RemotePay']]],
+  ['card',['Card',['../classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_card.html',1,'com::clover::sdk::v3::customers']]],
+  ['cardtransaction',['CardTransaction',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_card_transaction.html',1,'com::clover::sdk::v3::payments']]],
+  ['category',['Category',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_category.html',1,'com::clover::sdk::v3::inventory']]],
+  ['categoryitem',['CategoryItem',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_category_item.html',1,'com::clover::sdk::v3::inventory']]],
+  ['closeoutrequest',['CloseoutRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_request.html',1,'com::clover::remotepay::sdk']]],
+  ['closeoutresponse',['CloseoutResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_response.html',1,'com::clover::remotepay::sdk']]],
+  ['closeoutresponseeventargs',['CloseoutResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_closeout_response_event_args.html',1,'Clover::RemotePay']]],
+  ['cloverconnector',['CloverConnector',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector.html',1,'com::clover::remotepay::sdk']]],
+  ['cloverconnectorfactory',['CloverConnectorFactory',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_factory.html',1,'com::clover::remotepay::sdk']]],
+  ['cloverdeviceerrorevent',['CloverDeviceErrorEvent',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_error_event.html',1,'com::clover::remotepay::sdk']]],
+  ['cloverdeviceevent',['CloverDeviceEvent',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html',1,'com::clover::remotepay::sdk']]],
+  ['clovereventargs',['CloverEventArgs',['../class_clover_1_1_remote_pay_1_1_clover_event_args.html',1,'Clover::RemotePay']]],
+  ['clovereventconnector',['CloverEventConnector',['../class_clover_1_1_remote_pay_1_1_clover_event_connector.html',1,'Clover::RemotePay']]],
+  ['confirmpaymentrequest',['ConfirmPaymentRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_confirm_payment_request.html',1,'com::clover::remotepay::sdk']]],
+  ['confirmpaymentrequesteventargs',['ConfirmPaymentRequestEventArgs',['../class_clover_1_1_remote_pay_1_1_confirm_payment_request_event_args.html',1,'Clover::RemotePay']]],
+  ['countryinfo',['CountryInfo',['../classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_country_info.html',1,'com::clover::sdk::v3::base_']]],
+  ['credit',['Credit',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_credit.html',1,'com::clover::sdk::v3::payments']]],
+  ['customactivityrequest',['CustomActivityRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_request.html',1,'com::clover::remotepay::sdk']]],
+  ['customactivityresponse',['CustomActivityResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_response.html',1,'com::clover::remotepay::sdk']]],
+  ['customactivityresponseeventargs',['CustomActivityResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_custom_activity_response_event_args.html',1,'Clover::RemotePay']]],
+  ['customer',['Customer',['../classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_customer.html',1,'com::clover::sdk::v3::customers']]]
+];
