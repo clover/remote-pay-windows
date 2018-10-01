@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using LibUsbDotNet;
+using LibUsbDotNet.Info;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 using LibUsbDotNet.WinUsb;
@@ -216,8 +217,11 @@ namespace com.clover.remotepay.transport
             {
                 AddMerchantDevice(0x28F3, 0x3003);
                 AddMerchantDevice(0x28F3, 0x3000);
+                AddMerchantDevice(0x28F3, 0x3020);
+                AddMerchantDevice(0x28F3, 0x3023);
                 AddMerchantDevice(0x28F3, 0x2000);
                 AddMerchantDevice(0x28F3, 0x4000);
+                AddMerchantDevice(0x28F3, 0x4003);
             }
 
             string customerDevices = System.Configuration.ConfigurationSettings.AppSettings["customer_devices"];
@@ -240,8 +244,11 @@ namespace com.clover.remotepay.transport
             {
                 AddCustomerDevice(0x28F3, 0x3002);
                 AddCustomerDevice(0x28F3, 0x3004);
+                AddCustomerDevice(0x28F3, 0x3022);
+                AddCustomerDevice(0x28F3, 0x3024);
                 AddCustomerDevice(0x18D1, 0x2D01);
                 AddCustomerDevice(0x28F3, 0x4002);
+                AddCustomerDevice(0x28F3, 0x4004);
             }
         }
 
@@ -470,26 +477,61 @@ namespace com.clover.remotepay.transport
                             wholeUsbDevice.ClaimInterface(0);
                         }
 
-                        // open read endpoint 1.
-                        reader = MyUsbDevice.OpenEndpointReader(ReadEndpointID.Ep01);
-                        if (null != reader)
+                        // Find the endpoint read/write pair from the device
+                        if (ExtractEndpointPair(MyUsbDevice, out ReadEndpointID readId, out WriteEndpointID writeId))
                         {
-                            // open write endpoint 1.
-                            writer = MyUsbDevice.OpenEndpointWriter(WriteEndpointID.Ep02);
-                            if (null != writer)
+                            reader = MyUsbDevice.OpenEndpointReader(readId);
+                            writer = MyUsbDevice.OpenEndpointWriter(writeId);
+
+                            if (reader != null && writer != null)
                             {
                                 shutdown = false;
                                 startListeningForMessages();
                                 messageSendLoop();
                                 initialized = true;
                             }
+                            else
+                            {
+                                // Report open failure and make sure we are in a clean state
+                                TransportLog($"Failed to open reader and/or writer (r:{(reader != null ? "open" : "failed")}, w:{(writer != null ? "open" : "failed")}) for detected device {MyUsbDevice.UsbRegistryInfo.Vid:X}:{MyUsbDevice.UsbRegistryInfo.Pid:X}. thread " + Thread.CurrentThread.GetHashCode());
+
+                                reader?.Dispose();
+                                reader = null;
+
+                                writer?.Dispose();
+                                writer = null;
+
+                                if (MyUsbDevice.IsOpen)
+                                {
+                                    MyUsbDevice.Close();
+                                }
+                                MyUsbDevice = null;
+                            }
+                        }
+                        else
+                        {
+                            TransportLog($"Couldn't find read/write endpoint pair for detected device {MyUsbDevice.UsbRegistryInfo.Vid:X}:{MyUsbDevice.UsbRegistryInfo.Pid:X}. thread " + Thread.CurrentThread.GetHashCode());
+
+                            if (MyUsbDevice.IsOpen)
+                            {
+                                MyUsbDevice.Close();
+                            }
+                            MyUsbDevice = null;
                         }
                     }
                     catch (Exception ex)
                     {
                         TransportLog(Environment.NewLine);
                         TransportLog(ex.Message);
+
+
+                        if (MyUsbDevice != null && MyUsbDevice.IsOpen)
+                        {
+                            MyUsbDevice.Close();
+                        }
+                        MyUsbDevice = null;
                     }
+
                     TransportLog("Exiting DeviceSetToAccessoryMode");
                     if (initialized)
                     {
@@ -503,6 +545,43 @@ namespace com.clover.remotepay.transport
                 }
                 return initialized;
             }
+        }
+
+        private bool ExtractEndpointPair(UsbDevice device, out ReadEndpointID readId, out WriteEndpointID writeId)
+        {
+            // Init to zero for compiler
+            readId = 0;
+            writeId = 0;
+
+            // Current scenario for our Clover devices is the basic 1 config with 1 interface with 2 bulk endpoints
+            foreach (UsbConfigInfo config in device.Configs)
+            {
+                foreach (UsbInterfaceInfo info in config.InterfaceInfoList)
+                {
+                    // Reset to zero, read/write must be a pair on a single interface
+                    readId = 0;
+                    writeId = 0;
+                    foreach (UsbEndpointInfo endpoint in info.EndpointInfoList)
+                    {
+                        // Assume we won't expect more than 1 read and 1 right, no need to quickexit loop
+                        // Readers have high bit set
+                        if ((endpoint.Descriptor.EndpointID & 0x80) > 0 && readId == 0)
+                        {
+                            readId = (ReadEndpointID)endpoint.Descriptor.EndpointID;
+                        }
+                        if ((endpoint.Descriptor.EndpointID & 0x80) == 0 && writeId == 0)
+                        {
+                            writeId = (WriteEndpointID)endpoint.Descriptor.EndpointID;
+                        }
+                    }
+                    if (readId > 0 && writeId > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -719,7 +798,7 @@ namespace com.clover.remotepay.transport
 
                 if (null != writer && !writer.IsDisposed)
                 {
-                    ecWrite = writer.Write(((MemoryStream)writePacketBuffer.BaseStream).ToArray(), 2000, out bytesWritten);
+                    ecWrite = writer.Write(((MemoryStream)writePacketBuffer.BaseStream).ToArray(), 5000, out bytesWritten);
                     if (ecWrite != ErrorCode.None)
                     {
                         onDeviceError((int)ecWrite, null, "The Clover transport layer can see the USB device, but encountered an error when attempting to send it a message.  Try physically disconnecting/reconnecting the Clover device.");

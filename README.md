@@ -1,10 +1,10 @@
-![Clover logo](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
+﻿![Clover logo](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
 
 # Clover SDK for Windows POS integration
 
 ## Version
 
-Current version: 1.4.2
+Current version: 1.4.3
 
 ## Overview
 
@@ -130,6 +130,6 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 - [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
-- [API Documentation](http://clover.github.io/remote-pay-windows/1.4.2/cloverconnector/html/index.html)
+- [API Documentation](http://clover.github.io/remote-pay-windows/1.4.3/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
 	

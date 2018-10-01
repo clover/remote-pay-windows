@@ -27,7 +27,7 @@ namespace CloverExamplePOS
         private static readonly string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
         CloverDeviceConfiguration selectedConfig;
 
-        const String APPLICATION_ID = "com.clover.CloverExamplePOS:1.4.2";
+        const String APPLICATION_ID = "com.clover.CloverExamplePOS:1.4.3";
 
         CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", APPLICATION_ID, false, 1);
         CloverDeviceConfiguration RestConfig = new RemoteRESTCloverConfiguration("localhost", 8181, APPLICATION_ID, false, 1);

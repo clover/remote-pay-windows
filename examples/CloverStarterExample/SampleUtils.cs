@@ -11,7 +11,7 @@ namespace CloverStarterExample
     public class SampleUtils
     {
         
-        // private static readonly String APP_ID = "com.cloverconnector.windows.simple.sample:1.3.1";
+        // private static readonly String APP_ID = "com.cloverconnector.windows.simple.sample:1.4.3";
         // private static readonly String POS_NAME = "Clover Simple Sample Windows";
         // private static readonly String DEVICE_NAME = "Clover Device";
         
@@ -36,7 +36,7 @@ namespace CloverStarterExample
             // Create a WebSocketDeviceConfiguration with appropriate
             // remoteApplicationID (see above), POS name and POS serial number
             var websocketConfiguration = new WebSocketCloverDeviceConfiguration(endpoint,                                             //endpoint
-                                                                                "com.cloverconnector.windows.simple.sample:1.3.1",                              //remoteApplicationID
+                                                                                "com.cloverconnector.windows.simple.sample:1.4.3",                              //remoteApplicationID
                                                                                 false,                                                                          //enableLogging
                                                                                 1,                                                                              //pingSleepSeconds
                                                                                 "Aisle 2",                                                                      //posName

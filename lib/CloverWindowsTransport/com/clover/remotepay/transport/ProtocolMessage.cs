@@ -1141,7 +1141,7 @@ namespace com.clover.remotepay.transport
     public class RemoteMessage
     {
         public string id { get; set; }
-        public Methods method { get; set; }
+        public Methods? method { get; set; }
         public MessageTypes type { get; set; }
         public string payload { get; set; }
         public string packageName { get; set; }
@@ -1168,6 +1168,20 @@ namespace com.clover.remotepay.transport
             msg.remoteSourceSDK = remoteSourceSDK;
             msg.remoteApplicationID = remoteApplicationID;
             msg.id = nextID();
+            return msg;
+        }
+
+        public static RemoteMessage CreatePongMessage(string packageName, string remoteSourceSDK, string remoteApplicationID)
+        {
+            RemoteMessage msg = new RemoteMessage
+            {
+                method = null,
+                type = MessageTypes.PONG,
+                packageName = packageName,
+                remoteSourceSDK = remoteSourceSDK,
+                remoteApplicationID = remoteApplicationID,
+                id = nextID()
+            };
             return msg;
         }
 

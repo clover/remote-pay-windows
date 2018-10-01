@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -43,6 +44,10 @@ namespace com.clover.remotepay.transport
         private Dictionary<string, BackgroundWorker> msgIdToTask = new Dictionary<string, BackgroundWorker>();
         private int remoteMessageVersion = 1;
 
+        // Track device connection discovery state for reconnection flow
+        private ConnectionState startupConnectionState = ConnectionState.Disconnected;
+        private enum ConnectionState { Disconnected, Discovering, Discovered }
+
         public DefaultCloverDevice(CloverDeviceConfiguration configuration) : base(configuration)
         {
         }
@@ -57,16 +62,24 @@ namespace com.clover.remotepay.transport
 
         public void onDeviceConnected(CloverTransport transport)
         {
+            startupConnectionState = ConnectionState.Discovering;
+
             deviceObservers.ForEach(x => x.onDeviceConnected());
         }
 
         public void onDeviceDisconnected(CloverTransport transport)
         {
+            startupConnectionState = ConnectionState.Disconnected;
+
+            // StopConnectionRetry();
+
             deviceObservers.ForEach(x => x.onDeviceDisconnected());
         }
 
         public void onDeviceReady(CloverTransport device)
         {
+            startupConnectionState = ConnectionState.Discovering;
+
             doDiscoveryRequest();
         }
 
@@ -311,6 +324,25 @@ namespace com.clover.remotepay.transport
                 case Methods.CARD_DATA:
                     //Outbound no-op
                     break;
+                default:
+                    // Messsage Method not recognized or null: usually rMessage.type == MessageTypes.PING instead of normal Command message
+                    if (rMessage.type == MessageTypes.PING)
+                    {
+                        onPing();
+                    }
+                    break;
+            }
+        }
+
+        private void onPing()
+        {
+            // if pong then pong
+            doPong();
+
+            // if in discovery state and receiving ping, probably the DISCOVERY RESPONSE went ary, send another DISCOVERY REQUEST
+            if (startupConnectionState == ConnectionState.Discovering)
+            {
+                doDiscoveryRequest();
             }
         }
 
@@ -372,6 +404,8 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversDiscoveryResponse(DiscoveryResponseMessage drMessage)
         {
+            startupConnectionState = ConnectionState.Discovered;
+
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(delegate (object o, DoWorkEventArgs args)
                 {
@@ -910,6 +944,17 @@ namespace com.clover.remotepay.transport
         public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund)
         {
             sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund));
+        }
+
+        private void doPong()
+        {
+            // Send special Pong message
+            RemoteMessage remoteMessage = RemoteMessage.CreatePongMessage(packageName, remoteSourceSDK, remoteApplicationID);
+            string msg = JsonUtils.serializeSDK(remoteMessage);
+            transport.sendMessage(msg);
+#if DEBUG
+            Console.WriteLine("Sent message: " + msg);
+#endif
         }
 
         public override void doDiscoveryRequest()

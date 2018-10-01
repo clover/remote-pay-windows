@@ -97,7 +97,7 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-	<Reference Include="WebSocket4Net, Version=0.15.0.9, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+    <Reference Include="WebSocket4Net, Version=0.15.0.9, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5' ">..\..\packages\WebSocket4Net.0.15.0\lib\net45\WebSocket4Net.dll</HintPath>
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\WebSocket4Net.0.15.0\lib\net20\WebSocket4Net.dll</HintPath>
     </Reference>
@@ -278,7 +278,6 @@
   <ItemGroup>
     <Content Include="clover-256rgb.ico" />
     <Content Include="clover.ico" />
-    <None Include="Properties\star.ico" />
     <None Include="Resources\star16.png" />
   </ItemGroup>
   <ItemGroup />
