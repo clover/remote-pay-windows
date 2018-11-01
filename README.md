@@ -48,17 +48,17 @@ There are two sets of binaries supplied, targeting different .NET Frameworks, th
 * The .NET 4.0 binaries are the same platform as the previous releases of the Clover Windows SDK, and are provided for backwards compatibility.
 
 
-There are four separate installers for each .NET Framework Target.
+There are several installers for each .NET Framework Target.
 
 ### For development:
 
-  * CloverSDKSetup.exe - This file will install the DLL, as well as the Clover Connector REST Service or Clover Connector WebSocket Service. It will also install the example POS application and source for testing.
+  * CloverSDKSetup.exe - This setup executable will set up the .NET 4.5, .NET 4.0, and sample applications in Program Files for development work.
 
 ### For deployment:
 
-  * CloverUSBDriverSetup.exe - This file installs the USB driver for the Clover device only.
   * CloverRESTServiceSetup.exe - This file installs the REST Clover Connector Service and the USB driver for the Clover device.
   * CloverWebSocketServiceSetup.exe - This file installs the WebSocket Clover Connector Service and the USB driver for the Clover device.
+  * CloverUsbDrivers.zip - This file contains the 14 x64 and x86 USB driver MSI installers for local installation and for product deployment
 
 ## Building the SDK
 
@@ -89,7 +89,7 @@ To build and run the example POS application using .NET and VisualStudio 2015:
  3. Select the **CloverExamplePOS**
  4. Click **Run**
 
-## Setting up a virtal machine
+## Setting up a virtual machine (Mac, etc.)
 
 1. Install [VMWare Fusion](https://www.vmware.com/products/fusion.html). (NOTE: VirtualBox will not see the device properly.)
 2. Run the driver installers.
