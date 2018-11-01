@@ -15,8 +15,10 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
   * Windows 8
   
 **.NET Frameworks supported:**
-  * .NET 4.5 (and later, point release: 4.5.2)
+  * .NET 4.5 (specifically, .NET 4.5.2)
   * .NET 4.0 "backwards compatibility"
+
+**Note**: Support for .NET 4.0 will be removed from the Clover Connector package in a future release.
   
 ## Connecting to a Clover device 
 
@@ -25,6 +27,8 @@ The Windows project includes three options for connecting to a Clover device.
 1. .NET DLL - CloverConnector.DLL can be used directly by a .NET application. This option requires .NET 4.0 or 4.5.
 2. Clover Connector REST API Service - This option requires your POS to implement a REST service in order to receive callbacks.
 3. Clover Connector WebSocket API Service - This option requires your POS to implement a WebSocket client in order to communicate with the service and receive callbacks.
+
+**Note**: The REST and WebSocket API services are deprecated and will be removed from the Clover Connector package in a future release.
 
 To work with the project effectively, you will need:
 - A computer or virtual machine running Windows. The SDK supports Windows 10, Windows 8, and Windows 7.
@@ -36,8 +40,8 @@ To work with the project effectively, you will need:
 Use NuGet references to easily include Remote Pay Windows in your .NET project
 https://www.nuget.org/packages/Clover.RemotePayWindows
 
-```
-Install-Package Clover.RemotePayWindows -Version 3.0.0 
+```cmd
+Install-Package Clover.RemotePayWindows -Version 3.0.0
 ```
 
 ## Installing the SDK and Services
@@ -139,4 +143,3 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
 - [API Documentation](http://clover.github.io/remote-pay-windows/3.0.0/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
-	
