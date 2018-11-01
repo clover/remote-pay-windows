@@ -133,6 +133,12 @@ namespace Clover.RemotePay
         }
 
         /// <inheritdoc />
+        public void VoidPaymentRefund(VoidPaymentRefundRequest request)
+        {
+            connector.VoidPaymentRefund(request);
+        }
+
+        /// <inheritdoc />
         public void RefundPayment(RefundPaymentRequest request)
         {
             connector.RefundPayment(request);
@@ -277,6 +283,18 @@ namespace Clover.RemotePay
             connector.DisplayReceiptOptions(request);
         }
 
+        /// <inheritdoc />
+        public void RegisterForCustomerProvidedData(RegisterForCustomerProvidedDataRequest request)
+        {
+            connector.RegisterForCustomerProvidedData(request);
+        }
+
+        /// <inheritdoc />
+        public void SetCustomerInfo(SetCustomerInfoRequest request)
+        {
+            connector.SetCustomerInfo(request);
+        }
+
         #endregion
 
         #region ICloverConnectorListener
@@ -350,6 +368,10 @@ namespace Clover.RemotePay
         /// Void Payment call has completed with these details (success or failure)
         /// </summary>
         public event VoidPaymentResponseHandler VoidPaymentResponse;
+        /// <summary>
+        /// Void Payment Refund call has completed with these details (success or failure)
+        /// </summary>
+        public event VoidPaymentRefundResponseHandler VoidPaymentRefundResponse;
         /// <summary>
         /// A Clover Device was connected to the SDK and the SDK can see it
         /// </summary>
@@ -434,6 +456,10 @@ namespace Clover.RemotePay
         /// Display Receipt Options call has completed with these details (success or failure)
         /// </summary>
         public event DisplayReceiptOptionsResponseHandler DisplayReceiptOptionsResponse;
+        /// <summary>
+        /// Display Receipt Options call has completed with these details (success or failure)
+        /// </summary>
+        public event CustomerProvidedDataResponseHandler CustomerProvidedDataResponse;
 
         #endregion
 
@@ -615,6 +641,17 @@ namespace Clover.RemotePay
                 response = response
             };
             VoidPaymentResponse?.Invoke(this, eventArgs);
+            Message?.Invoke(this, eventArgs);
+        }
+        public void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
+        {
+            VoidPaymentRefundResponseEventArgs eventArgs = new VoidPaymentRefundResponseEventArgs()
+            {
+                cloverMessage = CloverMessage.VoidPaymentRefundResponse,
+                cloverConnector = this,
+                response = response
+            };
+            VoidPaymentRefundResponse?.Invoke(this, eventArgs);
             Message?.Invoke(this, eventArgs);
         }
         public void OnDeviceConnected()
@@ -867,6 +904,16 @@ namespace Clover.RemotePay
             Message?.Invoke(this, eventArgs);
         }
 
+        public void OnCustomerProvidedData(CustomerProvidedDataEvent response)
+        {
+            CustomerProvidedDataResponseEventArgs eventArgs = new CustomerProvidedDataResponseEventArgs
+            {
+                response = response
+            };
+            CustomerProvidedDataResponse?.Invoke(this, eventArgs);
+            Message?.Invoke(this, eventArgs);
+        }
+
         #endregion
 
         #region Event Delegate definitions
@@ -888,6 +935,7 @@ namespace Clover.RemotePay
         public delegate void RefundPaymentResponseHandler(object sender, RefundPaymentResponseEventArgs e);
         public delegate void TipAddedHandler(object sender, TipAddedEventArgs e);
         public delegate void VoidPaymentResponseHandler(object sender, VoidPaymentResponseEventArgs e);
+        public delegate void VoidPaymentRefundResponseHandler(object sender, VoidPaymentRefundResponseEventArgs e);
         public delegate void DeviceConnectedHandler(object sender, DeviceConnectedEventArgs e);
         public delegate void DeviceReadyHandler(object sender, DeviceReadyEventArgs e);
         public delegate void DeviceDisconnectedHandler(object sender, DeviceDisconnectedEventArgs e);
@@ -909,6 +957,7 @@ namespace Clover.RemotePay
         public delegate void RetrievePaymentResponseHandler(object sender, RetrievePaymentResponseEventArgs e);
         public delegate void PrintJobStatusRequestHandler(object sender, PrintJobStatusRequestEventArgs e);
         public delegate void DisplayReceiptOptionsResponseHandler(object sender, DisplayReceiptOptionsResponseEventArgs e);
+        public delegate void CustomerProvidedDataResponseHandler(object sender, CustomerProvidedDataResponseEventArgs e);
 
         #endregion
 
@@ -942,181 +991,381 @@ namespace Clover.RemotePay
     public class DeviceActivityStartEventArgs : CloverEventArgs
     {
         public CloverDeviceEvent deviceEvent;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{deviceEvent.Code}\n{deviceEvent.EventState}\n{deviceEvent.InputOptions}\n{deviceEvent.Message}\n{deviceEvent.Options}";
+        }
     }
 
     public class DeviceActivityEndEventArgs : CloverEventArgs
     {
         public CloverDeviceEvent deviceEvent;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class DeviceErrorEventArgs : CloverEventArgs
     {
         public CloverDeviceErrorEvent deviceErrorEvent;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{deviceErrorEvent.Message}\n{deviceErrorEvent.Cause} {deviceErrorEvent.Code} {deviceErrorEvent.ErrorType}";
+        }
     }
 
     public class PreAuthResponseEventArgs : CloverEventArgs
     {
         public PreAuthResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class AuthResponseEventArgs : CloverEventArgs
     {
         public AuthResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class TipAdjustAuthResponseEventArgs : CloverEventArgs
     {
         public TipAdjustAuthResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}\n{response.TipAmount}";
+        }
     }
 
     public class CapturePreAuthResponseEventArgs : CloverEventArgs
     {
         public CapturePreAuthResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class VerifySignatureRequestEventArgs : CloverEventArgs
     {
         public VerifySignatureRequest request;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class ConfirmPaymentRequestEventArgs : CloverEventArgs
     {
         public ConfirmPaymentRequest request;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class CloseoutResponseEventArgs : CloverEventArgs
     {
         public CloseoutResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class SaleResponseEventArgs : CloverEventArgs
     {
         public SaleResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class ManualRefundResponseEventArgs : CloverEventArgs
     {
         public ManualRefundResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class RefundPaymentResponseEventArgs : CloverEventArgs
     {
         public RefundPaymentResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class TipAddedEventArgs : CloverEventArgs
     {
         public TipAddedMessage message;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{message.tipAmount}";
+        }
     }
 
     public class VoidPaymentResponseEventArgs : CloverEventArgs
     {
         public VoidPaymentResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
+    }
+
+    public class VoidPaymentRefundResponseEventArgs : CloverEventArgs
+    {
+        public VoidPaymentRefundResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class DeviceConnectedEventArgs : CloverEventArgs
     {
         // No data parameters in ICloverConnectorListener OnDeviceConnected
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class DeviceReadyEventArgs : CloverEventArgs
     {
         public MerchantInfo merchantInfo;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{merchantInfo.merchantID}\n{merchantInfo.merchantMId}\n{merchantInfo.merchantName}\n{merchantInfo.Device.Serial}";
+        }
     }
 
     public class DeviceDisconnectedEventArgs : CloverEventArgs
     {
         // No data parameters in ICloverConnectorListener OnDeviceDisconnected
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class VaultCardResponseEventArgs : CloverEventArgs
     {
         public VaultCardResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class RetrievePendingPaymentsResponseEventArgs : CloverEventArgs
     {
         public RetrievePendingPaymentsResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class ReadCardDataResponseEventArgs : CloverEventArgs
     {
         public ReadCardDataResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
     }
 
     public class PrintManualRefundReceiptEventArgs : CloverEventArgs
     {
         public PrintManualRefundReceiptMessage message;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class PrintManualRefundDeclineReceiptEventArgs : CloverEventArgs
     {
         public PrintManualRefundDeclineReceiptMessage message;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class PrintPaymentReceiptEventArgs : CloverEventArgs
     {
         public PrintPaymentReceiptMessage message;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class PrintPaymentDeclineReceiptEventArgs : CloverEventArgs
     {
         public PrintPaymentDeclineReceiptMessage message;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class PrintPaymentMerchantCopyReceiptEventArgs : CloverEventArgs
     {
         public PrintPaymentMerchantCopyReceiptMessage message;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class PrintRefundPaymentReceiptEventArgs : CloverEventArgs
     {
         public PrintRefundPaymentReceiptMessage message;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class PrintJobStatusResponseEventArgs : CloverEventArgs
     {
         public PrintJobStatusResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class RetrievePrintersResponseEventArgs : CloverEventArgs
     {
         public RetrievePrintersResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class CustomActivityResponseEventArgs : CloverEventArgs
     {
         public CustomActivityResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Action}\n{response.Message}";
+        }
     }
 
     public class RetrieveDeviceStatusResponseEventArgs : CloverEventArgs
     {
         public RetrieveDeviceStatusResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class MessageFromActivityEventArgs : CloverEventArgs
     {
         public MessageFromActivity response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class ResetDeviceResponseEventArgs : CloverEventArgs
     {
         public ResetDeviceResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class RetrievePaymentResponseEventArgs : CloverEventArgs
     {
         public RetrievePaymentResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class PrintJobStatusRequestEventArgs : CloverEventArgs
     {
         public PrintJobStatusRequest request;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
     }
 
     public class DisplayReceiptOptionsResponseEventArgs : CloverEventArgs
     {
         public DisplayReceiptOptionsResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}";
+        }
+    }
+
+    public class CustomerProvidedDataResponseEventArgs : CloverEventArgs
+    {
+        public CustomerProvidedDataEvent response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.config.type}";
+        }
     }
     #endregion
 
@@ -1141,6 +1390,7 @@ namespace Clover.RemotePay
         RefundPaymentResponse,
         TipAdded,
         VoidPaymentResponse,
+        VoidPaymentRefundResponse,
         DeviceConnected,
         DeviceReady,
         DeviceDisconnected,
@@ -1161,7 +1411,8 @@ namespace Clover.RemotePay
         ResetDeviceResponse,
         RetrievePaymentResponse,
         PrintJobStatusRequest,
-        DisplayReceiptOptionsResponse
+        DisplayReceiptOptionsResponse,
+        CustomerProvidedData
     }
     #endregion
 }

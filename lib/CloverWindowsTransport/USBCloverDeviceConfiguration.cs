@@ -23,12 +23,27 @@ namespace com.clover.remotepay.transport
         int pingSleepSeconds = 1;
         int maxCharInMessage = 10000;
         string remoteApplicationID;
+        string posName;
+        string serialNumber;
 
         public USBCloverDeviceConfiguration(string remoteApplicationID, bool enableLogging) : this("", remoteApplicationID, enableLogging, 1)
         {
         }
 
-        public USBCloverDeviceConfiguration(string deviceId, string remoteApplicationID, bool enableLogging, int pingSleepSeconds)
+        public USBCloverDeviceConfiguration(string deviceId, string remoteApplicationID, bool enableLogging, int pingSleepSeconds) : this("", remoteApplicationID, "", "", enableLogging, 1)
+        {
+        }
+
+        /// <summary>
+        /// Configuration for a Clover USB Transport connection to a Clover Device
+        /// </summary>
+        /// <param name="deviceId">USB Device specification - only one connected device currently allowed</param>
+        /// <param name="remoteApplicationID">Application ID for server reporting</param>
+        /// <param name="posName">Point of Sale name for server reporting</param>
+        /// <param name="serialNumber">Station ID / serial number for server reporting</param>
+        /// <param name="enableLogging"></param>
+        /// <param name="pingSleepSeconds"></param>
+        public USBCloverDeviceConfiguration(string deviceId, string remoteApplicationID, string posName, string serialNumber, bool enableLogging = false, int pingSleepSeconds = 1)
         {
             this.deviceId = deviceId;
             if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
@@ -39,6 +54,8 @@ namespace com.clover.remotepay.transport
             this.remoteApplicationID = remoteApplicationID;
             this.enableLogging = enableLogging;
             this.pingSleepSeconds = pingSleepSeconds;
+            this.posName = posName;
+            this.serialNumber = serialNumber;
         }
 
         public string getCloverDeviceTypeName()

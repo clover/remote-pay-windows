@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using com.clover.remotepay.transport;
+using com.clover.sdk.v3;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.printer;
@@ -560,6 +561,26 @@ namespace com.clover.remotepay.sdk
     }
 
     /// <summary>
+    /// Voiding a payment refund (card present flows like canada region)
+    /// </summary>
+    public class VoidPaymentRefundRequest : BaseRequest
+    {
+        public string RefundId { get; set; }
+        public string EmployeeId { get; set; }
+        public string OrderId { get; set; }
+        public bool DisablePrinting { get; set; }
+        public bool DisableReceiptSelection { get; set; }
+    }
+
+    /// <summary>
+    /// Object passed in to OnVoidPaymentRefundResponse
+    /// </summary>
+    public class VoidPaymentRefundResponse : BaseResponse
+    {
+        public string RefundId { get; set; }
+    }
+
+    /// <summary>
     /// This should be used to request a manual refund via the ManualRefund method
     /// </summary>
     public class ManualRefundRequest : BaseTransactionRequest
@@ -782,6 +803,9 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class CustomActivityRequest : BaseRequest
     {
+        /// <summary>
+        /// Action string, usually the Activity name
+        /// </summary>
         public string Action { get; set; }
         public string Payload { get; set; }
         public bool NonBlocking { get; set; } = false;
@@ -793,6 +817,9 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class CustomActivityResponse : BaseResponse
     {
+        /// <summary>
+        /// Action string, usually the Activity name
+        /// </summary>
         public string Action { get; set; }
         public string Payload { get; set; }
     }
@@ -802,6 +829,9 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class ActivityMessage
     {
+        /// <summary>
+        /// Action string, usually the Activity name
+        /// </summary>
         public string Action { get; set; }
         public string Payload { get; set; }
     }
@@ -811,6 +841,9 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class MessageToActivity
     {
+        /// <summary>
+        /// Action string, usually the Activity name
+        /// </summary>
         public string Action { get; set; }
         public string Payload { get; set; }
     }
@@ -820,6 +853,9 @@ namespace com.clover.remotepay.sdk
     /// </summary>
     public class MessageFromActivity
     {
+        /// <summary>
+        /// Action string, usually the Activity name
+        /// </summary>
         public string Action { get; set; }
         public string Payload { get; set; }
     }
@@ -886,6 +922,27 @@ namespace com.clover.remotepay.sdk
     public class DisplayReceiptOptionsResponse : BaseResponse
     {
         public ResultStatus status { get; set; }
+    }
+
+    public class RegisterForCustomerProvidedDataRequest : BaseRequest
+    {
+        public DataProviderConfig[] Configurations { get; set; }
+    }
+
+    public class CustomerProvidedDataEvent : BaseResponse
+    {
+        public string eventId { get; set; }
+        public DataProviderConfig config { get; set; }
+        public string data { get; set; }
+    }
+
+    public class SetCustomerInfoRequest : BaseRequest
+    {
+        public com.clover.sdk.v3.customers.Customer customer { get; set; }
+        public string displayString { get; set; }
+        public string externalId { get; set; }
+        public string externalSystemName { get; set; }
+        public Dictionary<string, string> extras { get; set; } = new Dictionary<string, string>();
     }
 
     public static class CloverConnectorExtensions

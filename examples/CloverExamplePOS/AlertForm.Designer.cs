@@ -117,7 +117,6 @@ namespace CloverExamplePOS
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "AlertForm";
             this.Text = "AlertForm";
-            this.Load += new System.EventHandler(this.AlertForm_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -130,7 +129,6 @@ namespace CloverExamplePOS
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button OkButton;
-        private Timer timer;
 
         public static void Show(Form toCover, string title, string label, int duration = 0)
         {

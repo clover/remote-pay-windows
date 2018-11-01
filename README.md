@@ -4,7 +4,7 @@
 
 ## Version
 
-Current version: 2.0.0
+Current version: 3.0.0
 
 ## Overview
 
@@ -13,11 +13,12 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
 **Platforms supported:**
   * Windows 10
   * Windows 8
-  * Windows 7
   
 **.NET Frameworks supported:**
-  * .NET 4.5 (and later)
+  * .NET 4.5 (specifically, .NET 4.5.2)
   * .NET 4.0 "backwards compatibility"
+
+**Note**: Support for .NET 4.0 will be removed from the Clover Connector package in a future release.
   
 ## Connecting to a Clover device 
 
@@ -26,6 +27,8 @@ The Windows project includes three options for connecting to a Clover device.
 1. .NET DLL - CloverConnector.DLL can be used directly by a .NET application. This option requires .NET 4.0 or 4.5.
 2. Clover Connector REST API Service - This option requires your POS to implement a REST service in order to receive callbacks.
 3. Clover Connector WebSocket API Service - This option requires your POS to implement a WebSocket client in order to communicate with the service and receive callbacks.
+
+**Note**: The REST and WebSocket API services are deprecated and will be removed from the Clover Connector package in a future release.
 
 To work with the project effectively, you will need:
 - A computer or virtual machine running Windows. The SDK supports Windows 10, Windows 8, and Windows 7.
@@ -37,8 +40,8 @@ To work with the project effectively, you will need:
 Use NuGet references to easily include Remote Pay Windows in your .NET project
 https://www.nuget.org/packages/Clover.RemotePayWindows
 
-```
-Install-Package Clover.RemotePayWindows -Version 2.0.0 
+```cmd
+Install-Package Clover.RemotePayWindows -Version 3.0.0
 ```
 
 ## Installing the SDK and Services
@@ -49,17 +52,17 @@ There are two sets of binaries supplied, targeting different .NET Frameworks, th
 * The .NET 4.0 binaries are the same platform as the previous releases of the Clover Windows SDK, and are provided for backwards compatibility.
 
 
-There are four separate installers for each .NET Framework Target.
+There are several installers for each .NET Framework Target.
 
 ### For development:
 
-  * CloverSDKSetup.exe - This file will install the DLL, as well as the Clover Connector REST Service or Clover Connector WebSocket Service. It will also install the example POS application and source for testing.
+  * CloverSDKSetup.exe - This setup executable will set up the .NET 4.5, .NET 4.0, and sample applications in Program Files for development work.
 
 ### For deployment:
 
-  * CloverUSBDriverSetup.exe - This file installs the USB driver for the Clover device only.
   * CloverRESTServiceSetup.exe - This file installs the REST Clover Connector Service and the USB driver for the Clover device.
   * CloverWebSocketServiceSetup.exe - This file installs the WebSocket Clover Connector Service and the USB driver for the Clover device.
+  * CloverUsbDrivers.zip - This file contains the 14 x64 and x86 USB driver MSI installers for local installation and for product deployment
 
 ## Building the SDK
 
@@ -90,7 +93,7 @@ To build and run the example POS application using .NET and VisualStudio 2015:
  3. Select the **CloverExamplePOS**
  4. Click **Run**
 
-## Setting up a virtal machine
+## Setting up a virtual machine (Mac, etc.)
 
 1. Install [VMWare Fusion](https://www.vmware.com/products/fusion.html). (NOTE: VirtualBox will not see the device properly.)
 2. Run the driver installers.
@@ -138,6 +141,5 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 - [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
-- [API Documentation](http://clover.github.io/remote-pay-windows/2.0.0/cloverconnector/html/index.html)
+- [API Documentation](http://clover.github.io/remote-pay-windows/3.0.0/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
-	

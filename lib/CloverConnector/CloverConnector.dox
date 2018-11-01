@@ -1,0 +1,57 @@
+
+/*! \mainpage Overview
+ 
+  \section intro_sec Semi-Integration with Clover
+ Integrate your hardware and software with Clover’s hardware and software, making your point-of-sale EMV compliant quickly and easily. Clover’s secure semi-integration solution allows your existing point-of-sale software to accept EMV-ready, PCI-compliant payments, as part of a customer-facing experience that enhances the POS and handles all payment acceptance tasks.
+
+ ISVs can integrate with Clover Minis, Mobiles, and Stations and engage in a payments-as-a-service model. When you integrate with Clover, your point-of-sale can become EMV compliant quickly and easily. We currently offer integration with devices suited for brick-and-mortar locations, as well as a developer preview of mobile SDK libraries that work for BYOD scenarios.
+
+ ISVs who semi-integrate with third-party hardware will use our high-level SDKs to send messages to and receive messages from a Clover device. Keep your merchants satisfied with the system they’re used to, and let us take the hassle of EMV compliance away from you. After integrating with us, the Clover device becomes a plug-and-play solution for your merchant base.
+
+ If you have an existing POS with a strong merchant base and are looking for the fastest way to make that system EMV compliant, then this is probably the best option for you. Other scenarios where semi-integration is a good choice include:
+
+ \li You have a sophisticated system from which it is difficult to move away
+ \li You have a strong brand with which your merchants identify
+ \li You have a POS system which requires specialized hardware *
+
+ 
+ # Quick Start
+ 
+ The core communication with a Clover Payment Device via the Clover Connector SDK is issuing commands through a CloverConnector created through the API and receiving messages back through an ICloverConnectorListener interface implemented in the calling software.
+ 
+ For example, to accept a payment from a customer, call CloverConnector.Sale(request);, this will start the appropriate payment flow of screens on the Clover Payment Device. When the payment is completed, the ICloverConnectorListener.SaleResponse(...) interface method will be called with the sale's results.
+ 
+ \li [ICloverConnector Documentation](interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector.html)
+ \li [ICloverConnectorListener Documentation](interfacecom_1_1clover_1_1remotepay_1_1sdk_1_1_i_clover_connector_listener.html)
+ 
+ For convenience, and to avoid implementing the full ICloverConnectorListener with all the details, the API contains two convenience wrappers.
+
+ The CloverEventConnector wraps the CloverConnector and CloverConnectorListener in an event model. You can subscribe to the generic Message event and/or to the interesting individual response events to receive event signals rather than interface calls. All CloverConnector calls can be made to the CloverEventConnector object, and all messages can come back through the CloverEventConnector events. This can be especially convenient for small applications or for organizations that prefer the event model.
+ 
+ The DefaultCloverConnectorListener is an abstract base class that implements the ICloverConnectorListener. You can derive from this class and override the interface calls that you are interested in without having to implement the full ICloverConnectorListener interface. This can be convenient for organizations that do not like the event model.
+ 
+ \li [CloverEventConnector Documentation](class_clover_1_1_remote_pay_1_1_clover_event_connector.html)
+ \li [DefaultCloverConnectorListener Document](classcom_1_1clover_1_1remotepay_1_1sdk_1_1_default_clover_connector_listener.html)
+ 
+ __Notes__
+ \li Always start with a Transport (USB, WebService, etc.) Configuration object
+ \li Call the CloverConnectorFactory to create the proper CloverConnector Object
+ \li Use a convenience wrapper or directly implement the ICloverConnectorListener in application code
+ \li Attach/Subscribe the ICloverConnectorListener by calling CloverConnector.AddCloverConnectorListener(...)
+ \li Call CloverConnector.InitializeConnection() to start communicating with the device
+ 
+ # Getting the Bits
+ 
+ There are three sources to get the CloverConnector API binaries.
+ 
+ The C# source code is available on [Clover's GitHub Project](https://github.com/clover/remote-pay-windows) and can be read, altered, and built to your needs.
+ The .NET binary assemblies and USB drivers are available as [Releases in Clover's GitHub Project](https://github.com/clover/remote-pay-windows/releases) 
+ The .NET binary assemblies are available as a [NuGet Reference](https://www.nuget.org/packages/Clover.RemotePayWindows) for convenient dependency management: 
+ 
+ _Install-Package Clover.RemotePayWindows -Version 3.0.0_
+
+ __Links__
+ \li [Clover's GitHub WinSDK Project Page](https://github.com/clover/remote-pay-windows)
+ \li [Clover's NuGet WinSDK Project Page](https://www.nuget.org/packages/Clover.RemotePayWindows)
+ 
+ */

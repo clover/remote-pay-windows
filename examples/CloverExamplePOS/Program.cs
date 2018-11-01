@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Windows.Forms;
 
-namespace CloverExampleCLI
+namespace CloverExamplePOS
 {
-    static class MainClass
+    static class Program
     {
         /// <summary>
         /// The main entry point for the application.
@@ -24,11 +25,11 @@ namespace CloverExampleCLI
         /// 
 
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
-            CloverExampleCLI app = new CloverExampleCLI(args);
-            app.run() ;
-            return;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new CloverExamplePOSForm());
         }
     }
 }

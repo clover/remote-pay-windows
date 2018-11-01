@@ -16,10 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using com.clover.remote.order;
 using com.clover.remote.order.operation;
 using com.clover.remotepay.transport;
+using com.clover.sdk.v3;
 using com.clover.sdk.v3.base_;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.payments;
@@ -681,6 +683,27 @@ namespace com.clover.remotepay.sdk
                 employee = new Reference(request.EmployeeId)
             };
             Device.doVoidPayment(payment, reason);
+        }
+
+        public void VoidPaymentRefund(VoidPaymentRefundRequest request)
+        {
+            if (deviceObserver == null || merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+            if (Device == null || !IsReady)
+            {
+                deviceObserver.onPaymentRefundVoided(ResponseCode.ERROR,
+                    "Device Connection Error",
+                    "In VoidPaymentRefund : VoidPaymentRefundRequest - The Clover device is not connected.");
+                return;
+            }
+
+            deviceObserver.onPaymentRefundVoided(ResponseCode.ERROR,
+                    "Feature disabled in current version",
+                    "In VoidPaymentRefund : VoidPaymentRefundRequest - This feature is not enabled in the Clover Connector.");
+
+            // Device.doVoidPaymentRefund(request.OrderId, request.RefundId, request.DisablePrinting, request.DisableReceiptSelection, request.EmployeeId);
         }
 
         /// <summary>
@@ -1437,7 +1460,6 @@ namespace com.clover.remotepay.sdk
             Device.doRetrievePrintJobStatus(request.printRequestId);
         }
 
-
         /// <summary>
         /// Display receipt options for a Credit, Refund, or Payment
         /// </summary>
@@ -1465,6 +1487,62 @@ namespace com.clover.remotepay.sdk
             }
 
             Device.doShowReceiptScreen(request.orderId, request.paymentId, request.refundId, request.creditId, request.disablePrinting);
+        }
+
+        /// <summary>
+        /// Register to receive customer data with the Clover Loyalty API
+        /// </summary>
+        /// <param name="request"></param>
+        public void RegisterForCustomerProvidedData(RegisterForCustomerProvidedDataRequest request)
+        {
+            if (deviceObserver == null || merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+            if (Device == null || !IsReady)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In RegisterForCustomerProvidedData: The Clover device is not connected."));
+                return;
+            }
+            if (request == null)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.VALIDATION_ERROR, 0, null, "In RegisterForCustomerProvidedData : request parameter cannot be null. "));
+                return;
+            }
+
+            Device.doRegisterForCustomerProvidedData(request.Configurations.AsLoyaltyDataConfig());
+        }
+
+        /// <summary>
+        /// Set the Loyalty API's current customer info
+        /// </summary>
+        /// <param name="request"></param>
+        public void SetCustomerInfo(SetCustomerInfoRequest request)
+        {
+            if (deviceObserver == null || merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+            if (Device == null || !IsReady)
+            {
+                OnDeviceError(new CloverDeviceErrorEvent(CloverDeviceErrorEvent.CloverDeviceErrorType.COMMUNICATION_ERROR, 0, null, "In SetCustomerInfo: The Clover device is not connected."));
+                return;
+            }
+
+            // Send new customer, or null info if request is null or empty
+            CustomerInfo info = null;
+            if (request != null && (request.customer != null || request.displayString != null || request.externalId != null || request.externalSystemName != null || (request.extras != null && request.extras.Count > 0)))
+            {
+                info = new CustomerInfo
+                {
+                    customer = request.customer,
+                    displayString = request.displayString,
+                    externalId = request.externalId,
+                    externalSystemName = request.externalSystemName,
+                    extras = request.extras?.Count > 0 ? request.extras : null
+                };
+            }
+            Device.doSetCustomerInfo(info);
         }
 
         private class InnerDeviceObserver : ICloverDeviceObserver
@@ -1975,6 +2053,24 @@ namespace com.clover.remotepay.sdk
                 });
             }
 
+            //For Error/Fail scenarios that don't have a Payment object to send back
+            public void onPaymentRefundVoided(ResponseCode result, String reason = null, String message = null)
+            {
+                NotifyListeners(listener =>
+                {
+                    VoidPaymentRefundResponse response = new VoidPaymentRefundResponse
+                    {
+                        Success = false,
+                        Result = result,
+                        Reason = reason ?? result.ToString(),
+                        Message = message ?? "No extended information provided.",
+                        RefundId = null
+                    };
+
+                    listener.OnVoidPaymentRefundResponse(response);
+                });
+            }
+
             public void onVaultCardResponse(VaultCardResponseMessage vcrm)
             {
                 cloverConnector.ShowOnDevice(showWelcomeScreen: true);
@@ -2412,7 +2508,7 @@ namespace com.clover.remotepay.sdk
 
                     try
                     {
-                        rdsr.Data = JsonUtils.deserialize<ExternalDeviceStateData>(JsonUtils.serialize(data));
+                        rdsr.Data = JsonUtils.Deserialize<ExternalDeviceStateData>(JsonUtils.Serialize(data));
                     }
                     catch (InvalidOperationException)
                     {
@@ -2438,7 +2534,7 @@ namespace com.clover.remotepay.sdk
                     };
                     try
                     {
-                        rpr.Payment = JsonUtils.deserialize<Payment>(JsonUtils.serialize(payment));
+                        rpr.Payment = JsonUtils.Deserialize<Payment>(JsonUtils.Serialize(payment));
                     }
                     catch (InvalidOperationException)
                     {
@@ -2482,6 +2578,21 @@ namespace com.clover.remotepay.sdk
                         Success = status == ResultStatus.SUCCESS
                     };
                     listener.OnDisplayReceiptOptionsResponse(dror);
+                });
+            }
+
+            public void onCustomerProvidedDataResponse(string eventId, DataProviderConfig config, string data)
+            {
+                NotifyListeners(listener =>
+                {
+                    CustomerProvidedDataEvent response = new CustomerProvidedDataEvent
+                    {
+                        Success = true,
+                        eventId = eventId,
+                        config = config,
+                        data = data
+                    };
+                    listener.OnCustomerProvidedData(response);
                 });
             }
 

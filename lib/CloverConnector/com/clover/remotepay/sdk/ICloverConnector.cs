@@ -130,6 +130,12 @@ namespace com.clover.remotepay.sdk
         void VoidPayment(VoidPaymentRequest request);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        void VoidPaymentRefund(VoidPaymentRefundRequest request);
+
+        /// <summary>
         /// Refunds the full or partial amount of a Payment.
         /// </summary>
         /// <param name="request">The RefundPaymentRequest details.</param>
@@ -298,5 +304,19 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="request">The DisplayReceiptOptionsRequest details</param>
         void DisplayReceiptOptions(DisplayReceiptOptionsRequest request);
+
+        /// <summary>
+        /// Register to receive customer data with the Clover Loyalty API
+        /// </summary>
+        /// <param name="request"></param>
+        void RegisterForCustomerProvidedData(RegisterForCustomerProvidedDataRequest request);
+
+        /// <summary>
+        /// Set the Clover Loyalty API's current customer info
+        /// </summary>
+        /// <param name="request"></param>
+        void SetCustomerInfo(SetCustomerInfoRequest request);
+
+
     }
 }

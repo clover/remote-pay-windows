@@ -41,14 +41,6 @@ namespace CloverExamplePOS
             this.Close();
         }
 
-        private void AlertForm_Load(object sender, EventArgs e)
-        {
-            if (timer != null && timer.Interval > 0)
-            {
-                timer.Start();  
-            }
-        }
-
         public String Title
         {
             get

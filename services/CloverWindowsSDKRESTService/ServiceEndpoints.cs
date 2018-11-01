@@ -53,7 +53,7 @@ public sealed class ServiceEndpoints : RESTResource
         GetServer.ForwardToClientListener.ResendStatus();
         JObject jobj = new JObject();
         jobj.Add("Status", GetServer.ForwardToClientListener.Status);
-        string payload = JsonUtils.serialize(jobj);
+        string payload = JsonUtils.Serialize(jobj);
         this.SendTextResponse(context, payload);
     }
 
@@ -61,7 +61,7 @@ public sealed class ServiceEndpoints : RESTResource
     [RESTRoute(Method = Grapevine.HttpMethod.GET, PathInfo = @"^/Clover/SDKInfo$")]
     public void SDKInfo(HttpListenerContext context)
     {
-        string payload = JsonUtils.serialize(GetServer.CloverConnector.SDKInfo);
+        string payload = JsonUtils.Serialize(GetServer.CloverConnector.SDKInfo);
         this.SendTextResponse(context, payload);
     }
 
@@ -640,7 +640,7 @@ public sealed class ServiceEndpoints : RESTResource
         StreamReader stream = new StreamReader(context.Request.InputStream);
         string x = stream.ReadToEnd();  // added to view content of input stream
 
-        T message = JsonUtils.deserialize<T>(x, new Newtonsoft.Json.JsonConverter[] { new StringEnumConverter() });
+        T message = JsonUtils.Deserialize<T>(x, new Newtonsoft.Json.JsonConverter[] { new StringEnumConverter() });
 
         return message;
     }

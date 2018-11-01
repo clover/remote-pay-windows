@@ -23,6 +23,7 @@ using System.Threading;
 using com.clover.remote.order;
 using com.clover.remote.order.operation;
 using com.clover.remotepay.data;
+using com.clover.sdk.v3;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.printer;
@@ -43,6 +44,10 @@ namespace com.clover.remotepay.transport
         private Dictionary<string, BackgroundWorker> msgIdToTask = new Dictionary<string, BackgroundWorker>();
         private int remoteMessageVersion = 1;
 
+        // Track device connection discovery state for reconnection flow
+        private ConnectionState startupConnectionState = ConnectionState.Disconnected;
+        private enum ConnectionState { Disconnected, Discovering, Discovered }
+
         public DefaultCloverDevice(CloverDeviceConfiguration configuration) : base(configuration)
         {
         }
@@ -57,16 +62,20 @@ namespace com.clover.remotepay.transport
 
         public void onDeviceConnected(CloverTransport transport)
         {
+            startupConnectionState = ConnectionState.Discovering;
             NotifyObservers(observer => observer.onDeviceConnected());
         }
 
         public void onDeviceDisconnected(CloverTransport transport)
         {
+            startupConnectionState = ConnectionState.Disconnected;
+
             NotifyObservers(observer => observer.onDeviceDisconnected());
         }
 
         public void onDeviceReady(CloverTransport device)
         {
+            startupConnectionState = ConnectionState.Discovering;
             doDiscoveryRequest();
         }
 
@@ -99,12 +108,12 @@ namespace com.clover.remotepay.transport
             RemoteMessage rMessage = null;
             try
             {
-                // NB: This handling was changed after the 1.4.2 release to properly suppress uknown messages.
-                //     Old versions of the WinSDK will crash with unknown messages, and old versions are still expected to be in customer's hands.
-                //     When testing releases, make sure any suppressed errors here are paid proper backwards-compatible attention and tested
+                // Note: This handling was changed after the 1.4.2 release to properly suppress uknown messages.
+                //       Old versions of the WinSDK will crash with unknown messages, and old versions are still expected to be in customer's hands.
+                //       When testing releases, make sure any suppressed errors here are paid proper backwards-compatible attention and tested
 
                 // Deserialize the message object to a real object
-                rMessage = JsonUtils.deserializeSDK<RemoteMessage>(message);
+                rMessage = JsonUtils.DeserializeSdk<RemoteMessage>(message);
                 remoteMessageVersion = Math.Max(remoteMessageVersion, rMessage.version);
             }
             catch (Exception exception)
@@ -123,36 +132,36 @@ namespace com.clover.remotepay.transport
                     case Methods.BREAK:
                         break;
                     case Methods.ACK:
-                        AcknowledgementMessage ackMessage = JsonUtils.deserializeSDK<AcknowledgementMessage>(rMessage.payload);
+                        AcknowledgementMessage ackMessage = JsonUtils.DeserializeSdk<AcknowledgementMessage>(rMessage.payload);
                         notifyObserverAck(ackMessage);
                         break;
                     case Methods.CASHBACK_SELECTED:
-                        CashbackSelectedMessage cbsMessage = JsonUtils.deserializeSDK<CashbackSelectedMessage>(rMessage.payload);
+                        CashbackSelectedMessage cbsMessage = JsonUtils.DeserializeSdk<CashbackSelectedMessage>(rMessage.payload);
                         notifyObserversCashbackSelected(cbsMessage);
                         break;
                     case Methods.DISCOVERY_RESPONSE:
-                        DiscoveryResponseMessage drMessage = JsonUtils.deserializeSDK<DiscoveryResponseMessage>(rMessage.payload);
+                        DiscoveryResponseMessage drMessage = JsonUtils.DeserializeSdk<DiscoveryResponseMessage>(rMessage.payload);
                         deviceInfo.name = drMessage.name;
                         deviceInfo.serial = drMessage.serial;
                         deviceInfo.model = drMessage.model;
                         notifyObserversDiscoveryResponse(drMessage);
                         break;
                     case Methods.FINISH_CANCEL:
-                        FinishCancelMessage finishCancelMessage = JsonUtils.deserializeSDK<FinishCancelMessage>(rMessage.payload);
+                        FinishCancelMessage finishCancelMessage = JsonUtils.DeserializeSdk<FinishCancelMessage>(rMessage.payload);
                         notifyObserversFinishCancel(finishCancelMessage.requestInfo);
                         break;
                     case Methods.FINISH_OK:
-                        FinishOkMessage fokmsg = JsonUtils.deserializeSDK<FinishOkMessage>(rMessage.payload);
+                        FinishOkMessage fokmsg = JsonUtils.DeserializeSdk<FinishOkMessage>(rMessage.payload);
                         notifyObserversFinishOk(fokmsg);
                         break;
                     case Methods.KEY_PRESS:
-                        KeyPressMessage kpm = JsonUtils.deserializeSDK<KeyPressMessage>(rMessage.payload);
+                        KeyPressMessage kpm = JsonUtils.DeserializeSdk<KeyPressMessage>(rMessage.payload);
                         notifyObserversKeyPressed(kpm);
                         break;
                     case Methods.ORDER_ACTION_RESPONSE:
                         break;
                     case Methods.PARTIAL_AUTH:
-                        PartialAuthMessage partialAuth = JsonUtils.deserializeSDK<PartialAuthMessage>(rMessage.payload);
+                        PartialAuthMessage partialAuth = JsonUtils.DeserializeSdk<PartialAuthMessage>(rMessage.payload);
                         notifyObserversPartialAuth(partialAuth);
                         break;
                     case Methods.PAYMENT_VOIDED:
@@ -160,75 +169,75 @@ namespace com.clover.remotepay.transport
                         break;
                     case Methods.CONFIRM_PAYMENT_MESSAGE:
                         setPaymentConfirmationIdle(false);
-                        ConfirmPaymentMessage confirmPaymentMessage = JsonUtils.deserializeSDK<ConfirmPaymentMessage>(rMessage.payload);
+                        ConfirmPaymentMessage confirmPaymentMessage = JsonUtils.DeserializeSdk<ConfirmPaymentMessage>(rMessage.payload);
                         notifyObserversConfirmPayment(confirmPaymentMessage);
                         break;
                     case Methods.TIP_ADDED:
-                        TipAddedMessage tipMessage = JsonUtils.deserializeSDK<TipAddedMessage>(rMessage.payload);
+                        TipAddedMessage tipMessage = JsonUtils.DeserializeSdk<TipAddedMessage>(rMessage.payload);
                         notifyObserversTipAdded(tipMessage);
                         break;
                     case Methods.TX_START_RESPONSE:
-                        TxStartResponseMessage txsrm = JsonUtils.deserializeSDK<TxStartResponseMessage>(rMessage.payload);
+                        TxStartResponseMessage txsrm = JsonUtils.DeserializeSdk<TxStartResponseMessage>(rMessage.payload);
                         notifyObserversTxStartResponse(txsrm);
                         break;
                     case Methods.TX_STATE:
-                        TxStateMessage txStateMsg = JsonUtils.deserializeSDK<TxStateMessage>(rMessage.payload);
+                        TxStateMessage txStateMsg = JsonUtils.DeserializeSdk<TxStateMessage>(rMessage.payload);
                         notifyObserversTxState(txStateMsg);
                         break;
                     case Methods.UI_STATE:
-                        UiStateMessage uiStateMsg = JsonUtils.deserializeSDK<UiStateMessage>(rMessage.payload);
+                        UiStateMessage uiStateMsg = JsonUtils.DeserializeSdk<UiStateMessage>(rMessage.payload);
                         notifyObserversUiState(uiStateMsg);
                         break;
                     case Methods.VERIFY_SIGNATURE:
                         paymentRejected = false;
-                        VerifySignatureMessage vsigMsg = JsonUtils.deserializeSDK<VerifySignatureMessage>(rMessage.payload);
+                        VerifySignatureMessage vsigMsg = JsonUtils.DeserializeSdk<VerifySignatureMessage>(rMessage.payload);
                         notifyObserversVerifySignature(vsigMsg);
                         break;
                     case Methods.REFUND_RESPONSE:
-                        RefundResponseMessage refRespMsg = JsonUtils.deserializeSDK<RefundResponseMessage>(rMessage.payload);
+                        RefundResponseMessage refRespMsg = JsonUtils.DeserializeSdk<RefundResponseMessage>(rMessage.payload);
                         notifyObserversRefundPaymentResponse(refRespMsg);
                         break;
                     case Methods.TIP_ADJUST_RESPONSE:
-                        TipAdjustResponseMessage tipAdjustMsg = JsonUtils.deserializeSDK<TipAdjustResponseMessage>(rMessage.payload);
+                        TipAdjustResponseMessage tipAdjustMsg = JsonUtils.DeserializeSdk<TipAdjustResponseMessage>(rMessage.payload);
                         notifyObserversTipAdjusted(tipAdjustMsg);
                         break;
                     case Methods.REFUND_REQUEST:
                         //Outbound no-op
                         break;
                     case Methods.VAULT_CARD_RESPONSE:
-                        VaultCardResponseMessage vcrMsg = JsonUtils.deserializeSDK<VaultCardResponseMessage>(rMessage.payload);
+                        VaultCardResponseMessage vcrMsg = JsonUtils.DeserializeSdk<VaultCardResponseMessage>(rMessage.payload);
                         notifyObserversVaultCardResponse(vcrMsg);
                         break;
                     case Methods.CARD_DATA_RESPONSE:
-                        ReadCardDataResponseMessage rcdrMsg = JsonUtils.deserializeSDK<ReadCardDataResponseMessage>(rMessage.payload);
+                        ReadCardDataResponseMessage rcdrMsg = JsonUtils.DeserializeSdk<ReadCardDataResponseMessage>(rMessage.payload);
                         notifyObserversReadCardDataResponse(rcdrMsg);
                         break;
                     case Methods.CAPTURE_PREAUTH_RESPONSE:
-                        CapturePreAuthResponseMessage carMsg = JsonUtils.deserializeSDK<CapturePreAuthResponseMessage>(rMessage.payload);
+                        CapturePreAuthResponseMessage carMsg = JsonUtils.DeserializeSdk<CapturePreAuthResponseMessage>(rMessage.payload);
                         notifyObserversCapturePreAuthResponse(carMsg);
                         break;
                     case Methods.CLOSEOUT_RESPONSE:
-                        CloseoutResponseMessage crMsg = JsonUtils.deserializeSDK<CloseoutResponseMessage>(rMessage.payload);
+                        CloseoutResponseMessage crMsg = JsonUtils.DeserializeSdk<CloseoutResponseMessage>(rMessage.payload);
                         notifyObserversCloseoutResponse(crMsg);
                         break;
                     case Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE:
-                        RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.deserializeSDK<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
+                        RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.DeserializeSdk<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
                         notifyObserversPendingPaymentsResponse(rpprMsg);
                         break;
                     case Methods.ACTIVITY_RESPONSE:
-                        ActivityResponseMessage arm = JsonUtils.deserializeSDK<ActivityResponseMessage>(rMessage.payload);
+                        ActivityResponseMessage arm = JsonUtils.DeserializeSdk<ActivityResponseMessage>(rMessage.payload);
                         notifyObserversActivityResponse(arm);
                         break;
                     case Methods.ACTIVITY_MESSAGE_FROM_ACTIVITY:
-                        ActivityMessageFromActivity amfa = JsonUtils.deserializeSDK<ActivityMessageFromActivity>(rMessage.payload);
+                        ActivityMessageFromActivity amfa = JsonUtils.DeserializeSdk<ActivityMessageFromActivity>(rMessage.payload);
                         notifyObserversActivityMessage(amfa);
                         break;
                     case Methods.RESET_DEVICE_RESPONSE:
-                        ResetDeviceResponseMessage rdrm = JsonUtils.deserializeSDK<ResetDeviceResponseMessage>(rMessage.payload);
+                        ResetDeviceResponseMessage rdrm = JsonUtils.DeserializeSdk<ResetDeviceResponseMessage>(rMessage.payload);
                         notifyObserversDeviceReset(rdrm);
                         break;
                     case Methods.RETRIEVE_DEVICE_STATUS_RESPONSE:
-                        RetrieveDeviceStatusResponseMessage rdsrm = JsonUtils.deserializeSDK<RetrieveDeviceStatusResponseMessage>(rMessage.payload);
+                        RetrieveDeviceStatusResponseMessage rdsrm = JsonUtils.DeserializeSdk<RetrieveDeviceStatusResponseMessage>(rMessage.payload);
                         notifyObserversRetrieveDeviceStatusResponse(rdsrm);
                         break;
                     case Methods.DISCOVERY_REQUEST:
@@ -247,44 +256,47 @@ namespace com.clover.remotepay.transport
                         //Outbound no-op
                         break;
                     case Methods.PRINT_CREDIT:
-                        CreditPrintMessage cpm = JsonUtils.deserializeSDK<CreditPrintMessage>(rMessage.payload);
+                        CreditPrintMessage cpm = JsonUtils.DeserializeSdk<CreditPrintMessage>(rMessage.payload);
                         notifyObserversPrintCredit(cpm);
                         break;
                     case Methods.PRINT_CREDIT_DECLINE:
-                        DeclineCreditPrintMessage dcpm = JsonUtils.deserializeSDK<DeclineCreditPrintMessage>(rMessage.payload);
+                        DeclineCreditPrintMessage dcpm = JsonUtils.DeserializeSdk<DeclineCreditPrintMessage>(rMessage.payload);
                         notifyObserversPrintCreditDecline(dcpm);
                         break;
                     case Methods.PRINT_PAYMENT:
-                        PaymentPrintMessage ppm = JsonUtils.deserializeSDK<PaymentPrintMessage>(rMessage.payload);
+                        PaymentPrintMessage ppm = JsonUtils.DeserializeSdk<PaymentPrintMessage>(rMessage.payload);
                         notifyObserversPrintPayment(ppm);
                         break;
                     case Methods.PRINT_PAYMENT_DECLINE:
-                        DeclinePaymentPrintMessage dppm = JsonUtils.deserializeSDK<DeclinePaymentPrintMessage>(rMessage.payload);
+                        DeclinePaymentPrintMessage dppm = JsonUtils.DeserializeSdk<DeclinePaymentPrintMessage>(rMessage.payload);
                         notifyObserversPrintPaymentDecline(dppm);
                         break;
                     case Methods.PRINT_PAYMENT_MERCHANT_COPY:
-                        PaymentPrintMerchantCopyMessage ppmcm = JsonUtils.deserializeSDK<PaymentPrintMerchantCopyMessage>(rMessage.payload);
+                        PaymentPrintMerchantCopyMessage ppmcm = JsonUtils.DeserializeSdk<PaymentPrintMerchantCopyMessage>(rMessage.payload);
                         notifyObserversPrintMerchantCopy(ppmcm);
                         break;
                     case Methods.REFUND_PRINT_PAYMENT:
-                        RefundPaymentPrintMessage rppm = JsonUtils.deserializeSDK<RefundPaymentPrintMessage>(rMessage.payload);
+                        RefundPaymentPrintMessage rppm = JsonUtils.DeserializeSdk<RefundPaymentPrintMessage>(rMessage.payload);
                         notifyObserversPrintRefund(rppm);
                         break;
                     case Methods.RETRIEVE_PAYMENT_RESPONSE:
-                        RetrievePaymentResponseMessage rprm = JsonUtils.deserializeSDK<RetrievePaymentResponseMessage>(rMessage.payload);
+                        RetrievePaymentResponseMessage rprm = JsonUtils.DeserializeSdk<RetrievePaymentResponseMessage>(rMessage.payload);
                         notifyObserversRetrievePaymentResponse(rprm);
                         break;
                     case Methods.GET_PRINTERS_RESPONSE:
-                        RetrievePrintersResponseMessage rtrm = JsonUtils.deserializeSDK<RetrievePrintersResponseMessage>(rMessage.payload);
+                        RetrievePrintersResponseMessage rtrm = JsonUtils.DeserializeSdk<RetrievePrintersResponseMessage>(rMessage.payload);
                         notifyObserversRetrievePrinterResponse(rtrm);
                         break;
                     case Methods.PRINT_JOB_STATUS_RESPONSE:
-                        PrintJobStatusResponseMessage pjsrm = JsonUtils.deserializeSDK<PrintJobStatusResponseMessage>(rMessage.payload);
+                        PrintJobStatusResponseMessage pjsrm = JsonUtils.DeserializeSdk<PrintJobStatusResponseMessage>(rMessage.payload);
                         notifyObserversRetrievePrintJobStatus(pjsrm);
                         break;
                     case Methods.SHOW_RECEIPT_OPTIONS_RESPONSE:
-                        ShowReceiptOptionsResponseMessage srorm = JsonUtils.deserializeSDK<ShowReceiptOptionsResponseMessage>(rMessage.payload);
+                        ShowReceiptOptionsResponseMessage srorm = JsonUtils.DeserializeSdk<ShowReceiptOptionsResponseMessage>(rMessage.payload);
                         notifyObserverDisplayReceiptOptionsResponse(srorm);
+                        break;
+                    case Methods.CUSTOMER_PROVIDED_DATA_MESSAGE:
+                        notifyObserversCustomerProvidedData(JsonUtils.DeserializeSdk<CustomerProvidedDataResponseMessage>(rMessage.payload));
                         break;
                     case Methods.PRINT_IMAGE:
                         //Outbound no-op
@@ -323,7 +335,7 @@ namespace com.clover.remotepay.transport
                         //Outbound no-op
                         break;
                     case Methods.VOID_PAYMENT_RESPONSE:
-                        VoidPaymentResponseMessage vprm = JsonUtils.deserializeSDK<VoidPaymentResponseMessage>(rMessage.payload);
+                        VoidPaymentResponseMessage vprm = JsonUtils.DeserializeSdk<VoidPaymentResponseMessage>(rMessage.payload);
                         notifyObserversPaymentVoided(vprm);
                         break;
                     case Methods.CLOSEOUT_REQUEST:
@@ -338,7 +350,26 @@ namespace com.clover.remotepay.transport
                     case Methods.CLOVER_DEVICE_LOG_REQUEST:
                         //Outbound no-op
                         break;
+                    default:
+                        // Messsage Method not recognized or null: usually rMessage.type == MessageTypes.PING instead of normal Command message
+                        if (rMessage.type == MessageTypes.PING)
+                        {
+                            onPing();
+                        }
+                        break;
                 }
+            }
+        }
+
+        private void onPing()
+        {
+            // if pong then pong
+            doPong();
+
+            // if in discovery state and receiving ping, probably the DISCOVERY RESPONSE went astray, send another DISCOVERY REQUEST to get another one
+            if (startupConnectionState == ConnectionState.Discovering)
+            {
+                doDiscoveryRequest();
             }
         }
 
@@ -376,6 +407,8 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversDiscoveryResponse(DiscoveryResponseMessage drMessage)
         {
+            startupConnectionState = ConnectionState.Discovered;
+
             NotifyObservers(observer =>
             {
                 if (drMessage.ready)
@@ -530,7 +563,7 @@ namespace com.clover.remotepay.transport
                 }
                 else
                 {
-                    // Console.WriteLine("Don't know what to do with this Finish OK message: " + JsonUtils.serialize(msg));
+                    // Console.WriteLine("Don't know what to do with this Finish OK message: " + JsonUtils.Serialize(msg));
                 }
             });
         }
@@ -661,6 +694,14 @@ namespace com.clover.remotepay.transport
             });
         }
 
+        public void notifyObserversCustomerProvidedData(CustomerProvidedDataResponseMessage response)
+        {
+            NotifyObservers(observer =>
+            {
+                observer.onCustomerProvidedDataResponse(response.eventId, response.config, response.data);
+            });
+        }
+
         private void NotifyObservers(Action<ICloverDeviceObserver> action)
         {
             List<ICloverDeviceObserver> localObservers = new List<ICloverDeviceObserver>(deviceObservers);
@@ -675,7 +716,7 @@ namespace com.clover.remotepay.transport
                     }
                     catch (Exception exception)
                     {
-                        // eat unhandled user exceptions - any logging other than debug?
+                        // eat unhandled exceptions from user code - any logging other than debug?
                         System.Diagnostics.Debug.WriteLine("DefaultCloverDevice: Error calling custom code: " + exception);
                     }
                 };
@@ -861,18 +902,34 @@ namespace com.clover.remotepay.transport
 
         public override void doVoidPayment(Payment payment, VoidReason reason)
         {
-            lock (ackLock)
+            VoidPaymentMessage vpm = new VoidPaymentMessage
             {
-                VoidPaymentMessage vpm = new VoidPaymentMessage();
-                vpm.payment = payment;
-                vpm.voidReason = reason;
-                sendObjectMessage(vpm);
-            }
+                payment = payment,
+                voidReason = reason
+            };
+            sendObjectMessage(vpm);
+        }
+
+        public override void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId)
+        {
+            // Clover connector should report a nice error and block ever getting here, but stop the process if we get here.
+            throw new NotSupportedException("VoidPaymentRefund is not supported in this version");
         }
 
         public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection)
         {
             sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund, disableCloverPrinting, disableReceiptSelection));
+        }
+
+        private void doPong()
+        {
+            // Send special Pong message
+            RemoteMessage remoteMessage = RemoteMessage.CreatePongMessage(packageName, remoteSourceSDK, remoteApplicationID);
+            string msg = JsonUtils.SerializeSdk(remoteMessage);
+            transport.sendMessage(msg);
+#if DEBUG
+            Console.WriteLine("Sent message: " + msg);
+#endif
         }
 
         public override void doDiscoveryRequest()
@@ -945,10 +1002,48 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(rprm);
         }
 
+        public override void doRetrievePrintJobStatus(string printRequestId)
+        {
+            PrintJobStatusRequestMessage msg = new PrintJobStatusRequestMessage(printRequestId);
+            sendObjectMessage(msg);
+        }
+
+        public override void doPrintImage(string base64String)
+        {
+            ImagePrintMessage ipm = new ImagePrintMessage();
+            ipm.png = base64String;
+            sendObjectMessage(ipm);
+        }
+
+        #region Loyalty API
+
+        /// <summary>
+        /// Loyalty API: Register to receive specific loyalty data types
+        /// </summary>
+        /// <param name="configs"></param>
+        public override void doRegisterForCustomerProvidedData(List<LoyaltyDataConfig> configs) => sendObjectMessage(new RegisterForCustomerProvidedDataMessage() { configurations = configs });
+
+        /// <summary>
+        /// Loyalty API: Set customer info 
+        /// </summary>
+        /// <param name="customerInfo"></param>
+        public override void doSetCustomerInfo(CustomerInfo customerInfo)
+        {
+            CustomerInfoMessage message = new CustomerInfoMessage
+            {
+                customer = customerInfo
+            };
+
+            sendObjectMessage(message);
+        }
+
+        #endregion
+
+        #region Send Messages via Transport
         private string sendObjectMessage(Message message)
         {
             RemoteMessage remoteMessage = RemoteMessage.createMessage(message.method, MessageTypes.COMMAND, message, this.packageName, remoteSourceSDK, remoteApplicationID);
-            string msg = JsonUtils.serializeSDK(remoteMessage);
+            string msg = JsonUtils.SerializeSdk(remoteMessage);
 
             transport.sendMessage(msg);
 #if DEBUG
@@ -1087,7 +1182,7 @@ namespace com.clover.remotepay.transport
             fRemoteMessage.fragmentIndex = fragmentIndex;
             fRemoteMessage.lastFragment = lastFragment;
 
-            string msg = JsonUtils.serializeSDK(fRemoteMessage);
+            string msg = JsonUtils.SerializeSdk(fRemoteMessage);
             transport.sendMessage(msg);
 
 #if DEBUG
@@ -1095,17 +1190,6 @@ namespace com.clover.remotepay.transport
 #endif
         }
 
-        public override void doRetrievePrintJobStatus(string printRequestId)
-        {
-            PrintJobStatusRequestMessage msg = new PrintJobStatusRequestMessage(printRequestId);
-            sendObjectMessage(msg);
-        }
-
-        public override void doPrintImage(string base64String)
-        {
-            ImagePrintMessage ipm = new ImagePrintMessage();
-            ipm.png = base64String;
-            sendObjectMessage(ipm);
-        }
+        #endregion
     }
 }

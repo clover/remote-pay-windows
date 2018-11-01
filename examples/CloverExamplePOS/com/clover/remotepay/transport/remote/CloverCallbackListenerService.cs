@@ -698,7 +698,7 @@ namespace com.clover.remotepay.transport.remote
             T message = default(T);
             try
             {
-                message = JsonUtils.deserialize<T>(x, new Newtonsoft.Json.JsonConverter[] { new StringEnumConverter() });
+                message = JsonUtils.Deserialize<T>(x, new Newtonsoft.Json.JsonConverter[] { new StringEnumConverter() });
                 if (message == null && x.Trim().Length > 0)
                 {
                     Console.WriteLine("Error parsing " + typeof(T) + " from: " + x);
