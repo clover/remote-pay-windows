@@ -132,6 +132,11 @@ namespace com.clover.remotepay.transport.remote
             Send("/VoidPayment", request);
         }
 
+        public void VoidPaymentRefund(VoidPaymentRefundRequest request)
+        {
+            Send("/VoidPaymentRefund", request);
+        }
+
         public void RefundPayment(RefundPaymentRequest request)
         {
             Send("/RefundPayment", request);
@@ -304,7 +309,7 @@ namespace com.clover.remotepay.transport.remote
         public void Send(string target, object payload)
         {
             IRestRequest restRequest = new RestRequest(target, Method.POST);
-            string payloadMessage = JsonUtils.serialize(payload);
+            string payloadMessage = JsonUtils.Serialize(payload);
 #if DEBUG
             Console.WriteLine("Sending: " + target + " JSON: " + payloadMessage);
 #endif
@@ -376,6 +381,16 @@ namespace com.clover.remotepay.transport.remote
         public void DisplayReceiptOptions(DisplayReceiptOptionsRequest request)
         {
             Send("/DisplayReceiptOptions", request);
+        }
+
+        public void RegisterForCustomerProvidedData(RegisterForCustomerProvidedDataRequest request)
+        {
+            Send("/RegisterForCustomerProvidedData", request);
+        }
+
+        public void SetCustomerInfo(SetCustomerInfoRequest request)
+        {
+            Send("/SetCustomerInfo", request);
         }
 
         public class RESTSigVerRequestHandler : VerifySignatureRequest

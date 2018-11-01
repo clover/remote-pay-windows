@@ -149,6 +149,12 @@ namespace com.clover.remotepay.sdk
         void OnRefundPaymentResponse(RefundPaymentResponse response);
 
         /// <summary>
+        /// Called in response to a VoidPaymentRefund() request with results.
+        /// </summary>
+        /// <param name="response"></param>
+        void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response);
+
+        /// <summary>
         /// Called when a customer selects a tip amount on the Clover device's screen.
         /// </summary>
         /// <param name="message">The TipAddedMessage.</param>
@@ -317,6 +323,12 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="response">The DisplayReceiptOptionsResponse details for the response.</param>
         void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response);
+
+        /// <summary>
+        /// Called when Loyalty API sends customer identifying data for a loyalty data type subscribed to in CloverConnector.RegisterForCustomerProvidedData()
+        /// </summary>
+        /// <param name="response">The CustomerProvidedDataEvent containing type and data payload, like PHONE, 555-1212 in type-specific custom encoding</param>
+        void OnCustomerProvidedData(CustomerProvidedDataEvent response);
     }
 
     /// <summary>
@@ -332,6 +344,8 @@ namespace com.clover.remotepay.sdk
     {
         ICloverConnector cloverConnector;
 
+        public abstract void OnConfirmPaymentRequest(ConfirmPaymentRequest request);
+
         protected DefaultCloverConnectorListener(ICloverConnector cloverConnector)
         {
             this.cloverConnector = cloverConnector;
@@ -339,179 +353,150 @@ namespace com.clover.remotepay.sdk
 
         public virtual void OnVaultCardResponse(VaultCardResponse response)
         {
-
         }
 
         public virtual void OnReadCardDataResponse(ReadCardDataResponse response)
         {
-
         }
 
         public virtual void OnCapturePreAuthResponse(CapturePreAuthResponse response)
         {
-
         }
 
         public virtual void OnAuthResponse(AuthResponse response)
         {
-
         }
 
         public virtual void OnPreAuthResponse(PreAuthResponse response)
         {
-
         }
 
         public virtual void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
-
         }
 
         public virtual void OnCloseoutResponse(CloseoutResponse response)
         {
-
         }
 
         public virtual void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
         {
-
         }
 
         public virtual void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
         {
-
         }
 
         public virtual void OnDeviceConnected()
         {
-
         }
 
         public virtual void OnDeviceDisconnected()
         {
-
         }
 
         public virtual void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
         {
-
         }
 
         public virtual void OnDeviceReady(MerchantInfo merchantInfo)
         {
-
         }
 
         public virtual void OnManualRefundResponse(ManualRefundResponse response)
         {
-
         }
 
         public virtual void OnRefundPaymentResponse(RefundPaymentResponse response)
         {
-
         }
 
         public virtual void OnSaleResponse(SaleResponse response)
         {
-
         }
 
         public virtual void OnVerifySignatureRequest(VerifySignatureRequest request)
         {
-
         }
-
-        public abstract void OnConfirmPaymentRequest(ConfirmPaymentRequest request);
 
         public virtual void OnVoidPaymentResponse(VoidPaymentResponse response)
         {
+        }
 
+        public virtual void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
+        {
         }
 
         public virtual void OnTipAdded(TipAddedMessage message)
         {
-
         }
 
         public virtual void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
         {
-
         }
 
         public virtual void OnCustomActivityResponse(CustomActivityResponse response)
         {
-
         }
 
         public virtual void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage message)
         {
-
         }
 
         public virtual void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage message)
         {
-
         }
 
         public virtual void OnPrintPaymentReceipt(PrintPaymentReceiptMessage message)
         {
-
         }
 
         public virtual void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage message)
         {
-
         }
 
         public virtual void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage message)
         {
-
         }
 
         public virtual void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage message)
         {
-
         }
 
         public virtual void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
         {
-
         }
 
         public virtual void OnMessageFromActivity(MessageFromActivity response)
         {
-
         }
 
         public virtual void OnResetDeviceResponse(ResetDeviceResponse response)
         {
-
         }
 
         public virtual void OnRetrievePaymentResponse(RetrievePaymentResponse response)
         {
-
         }
 
         public virtual void OnPrintJobStatusResponse(PrintJobStatusResponse response)
         {
-
         }
 
         public virtual void OnPrintJobStatusRequest(PrintJobStatusRequest request)
         {
-
         }
 
         public virtual void OnRetrievePrintersResponse(RetrievePrintersResponse response)
         {
-
         }
 
         public virtual void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
         {
+        }
 
+        public virtual void OnCustomerProvidedData(CustomerProvidedDataEvent response)
+        {
         }
     }
 }

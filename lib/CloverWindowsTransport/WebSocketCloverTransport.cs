@@ -89,7 +89,7 @@ namespace com.clover.remotepay.transport
             pr.serialNumber = this.serialNumber;
 
             PairingRequestMessage prm = new PairingRequestMessage(pr);
-            sendMessage(JsonUtils.serialize(prm));
+            sendMessage(JsonUtils.Serialize(prm));
         }
 
         protected void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -107,7 +107,7 @@ namespace com.clover.remotepay.transport
 
                     if (method == PairingCodeMessage.METHOD)
                     {
-                        PairingCodeMessage pcm = JsonUtils.deserialize<PairingCodeMessage>(dynObj.payload);
+                        PairingCodeMessage pcm = JsonUtils.Deserialize<PairingCodeMessage>(dynObj.payload);
                         if (config.OnPairingCode != null)
                         {
                             config.OnPairingCode(pcm.pairingCode);
@@ -119,7 +119,7 @@ namespace com.clover.remotepay.transport
                     }
                     else if (method == PairingResponse.METHOD)
                     {
-                        PairingResponse pr = JsonUtils.deserialize<PairingResponse>(dynObj.payload);
+                        PairingResponse pr = JsonUtils.Deserialize<PairingResponse>(dynObj.payload);
                         // TODO: There was a bug in the Device that sent INITIAL instead of PAIRED, fix committed around Aug 1, 2018 in Aug AppsCut and rolled to customers ??? thereafter - fall/winter '18.
                         //       This was actually the only time INITIAL was sent; once the bug is fixed there is no further expected need for INITIAL. When bug clears back compat for customers, we can clean this workaround up.
                         if (pr.pairingState == PairingResponse.PAIRED || pr.pairingState == PairingResponse.INITIAL)

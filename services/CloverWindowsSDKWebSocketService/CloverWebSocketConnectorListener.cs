@@ -152,6 +152,13 @@ namespace CloverWindowsSDKWebSocketService
             Send(Serialize(voidPaymentResponse));
         }
 
+        public void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
+        {
+            OnVoidPaymentRefundResponseMessage message = new OnVoidPaymentRefundResponseMessage();
+            message.payload = response;
+            Send(Serialize(message));
+        }
+
         public void OnTipAdded(com.clover.remotepay.transport.TipAddedMessage message)
         {
             OnTipAddedMessage method = new OnTipAddedMessage();
@@ -286,6 +293,13 @@ namespace CloverWindowsSDKWebSocketService
             WebSocket.Send(Serialize(msg));
         }
 
+        public virtual void OnCustomerProvidedData(CustomerProvidedDataEvent response)
+        {
+            OnCustomerProvidedDataResponseMessage msg = new OnCustomerProvidedDataResponseMessage();
+            msg.payload = response;
+            WebSocket.Send(Serialize(msg));
+        }
+
         internal void SendConnectionStatus()
         {
             if ("Disconnected".Equals(CurrentConnectionStatus))
@@ -304,7 +318,7 @@ namespace CloverWindowsSDKWebSocketService
 
         private string Serialize(object obj) 
         {
-            var myStr = JsonUtils.serialize(obj);
+            var myStr = JsonUtils.Serialize(obj);
             return myStr;
         }
 
@@ -315,7 +329,5 @@ namespace CloverWindowsSDKWebSocketService
                 WebSocket.Send(message);
             }
         }
-
-        
     }
 }

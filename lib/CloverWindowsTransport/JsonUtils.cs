@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace com.clover.remotepay.transport
 {
@@ -24,35 +25,13 @@ namespace com.clover.remotepay.transport
     /// </summary>
     public class JsonUtils
     {
-        public static T deserializeSDK<T>(string input)
-        {
-            return deserialize<T>(input, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter() });
-        }
+        public static T Deserialize<T>(string input, JsonConverter[] converters) => JsonConvert.DeserializeObject<T>(input, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore, Converters = converters });
+        public static T Deserialize<T>(string input) => Deserialize<T>(input, new JsonConverter[] { new StringEnumConverter() });
+        public static T DeserializeSdk<T>(string input) => Deserialize<T>(input, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter(), new DataProviderConfigConverter() });
 
-        public static T deserialize<T>(string input)
-        {
-            return deserialize<T>(input, new JsonConverter[] { new StringEnumConverter() });
-        }
-
-        public static T deserialize<T>(string input, JsonConverter[] converters)
-        {
-            return JsonConvert.DeserializeObject<T>(input, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore, Converters = converters });
-        }
-
-        public static string serialize(object toSer)
-        {
-            return serialize(toSer, new JsonConverter[] { new StringEnumConverter() });
-        }
-
-        public static string serializeSDK(object toSer)
-        {
-            return serialize(toSer, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter() });
-        }
-
-        public static string serialize(object toSer, JsonConverter[] converters)
-        {
-            return JsonConvert.SerializeObject(toSer, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Converters = converters });
-        }
+        public static string Serialize(object value, JsonConverter[] converters) => JsonConvert.SerializeObject(value, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Converters = converters });
+        public static string Serialize(object value) => Serialize(value, new JsonConverter[] { new StringEnumConverter() });
+        public static string SerializeSdk(object value) => Serialize(value, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter(), new DataProviderConfigConverter() });
     }
 
     /// <summary>
@@ -72,8 +51,8 @@ namespace com.clover.remotepay.transport
                 return null;
             }
 
-            string str = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Payment result = JsonUtils.deserialize<com.clover.sdk.v3.payments.Payment>(str, new JsonConverter[] {
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.payments.Payment result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Payment>(json, new JsonConverter[] {
                 new ListConverter<com.clover.sdk.v3.payments.PaymentTaxRate>(),
                 new ListConverter<com.clover.sdk.v3.payments.Refund>(),
                 new ListConverter<com.clover.sdk.v3.payments.LineItemPayment>(),
@@ -84,7 +63,7 @@ namespace com.clover.remotepay.transport
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -105,15 +84,15 @@ namespace com.clover.remotepay.transport
                 return null;
             }
 
-            string str = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Credit result = JsonUtils.deserialize<com.clover.sdk.v3.payments.Credit>(str, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>() });
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.payments.Credit result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Credit>(json, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>() });
             return result;
 
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -134,8 +113,8 @@ namespace com.clover.remotepay.transport
                 return null;
             }
 
-            string str = reader.Value.ToString();
-            com.clover.sdk.v3.order.Order result = JsonUtils.deserialize<com.clover.sdk.v3.order.Order>(str, new JsonConverter[] {
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.order.Order result = JsonUtils.Deserialize<com.clover.sdk.v3.order.Order>(json, new JsonConverter[] {
                 new ListConverter<com.clover.sdk.v3.order.LineItem>(),
                 new ListConverter<com.clover.sdk.v3.order.OrderTaxRate>(),
                 new ListConverter<com.clover.sdk.v3.order.Modification>(),
@@ -153,7 +132,7 @@ namespace com.clover.remotepay.transport
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -174,14 +153,14 @@ namespace com.clover.remotepay.transport
                 return null;
             }
 
-            string str = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Refund result = JsonUtils.deserialize<com.clover.sdk.v3.payments.Refund>(str, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>(), new ListConverter<com.clover.sdk.v3.base_.Reference>() }); // reference for line items
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.payments.Refund result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Refund>(json, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>(), new ListConverter<com.clover.sdk.v3.base_.Reference>() }); // reference for line items
             return result;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -202,14 +181,14 @@ namespace com.clover.remotepay.transport
                 return null;
             }
 
-            string str = reader.Value.ToString();
-            com.clover.sdk.v3.payments.VaultedCard result = JsonUtils.deserialize<com.clover.sdk.v3.payments.VaultedCard>(str, new JsonConverter[] { }); // reference for line items
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.payments.VaultedCard result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.VaultedCard>(json, new JsonConverter[] { }); // reference for line items
             return result;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -230,14 +209,14 @@ namespace com.clover.remotepay.transport
                 return null;
             }
 
-            string str = reader.Value.ToString();
-            com.clover.sdk.v3.printer.Printer result = JsonUtils.deserialize<com.clover.sdk.v3.printer.Printer>(str, new JsonConverter[] { });
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.printer.Printer result = JsonUtils.Deserialize<com.clover.sdk.v3.printer.Printer>(json, new JsonConverter[] { });
             return result;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -258,14 +237,14 @@ namespace com.clover.remotepay.transport
                 return null;
             }
 
-            string str = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Batch result = JsonUtils.deserialize<com.clover.sdk.v3.payments.Batch>(str, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>(), new ListConverter<com.clover.sdk.v3.payments.ServerTotalStats>(), new ListConverter<com.clover.sdk.v3.payments.BatchCardTotal>() });
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.payments.Batch result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Batch>(json, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>(), new ListConverter<com.clover.sdk.v3.payments.ServerTotalStats>(), new ListConverter<com.clover.sdk.v3.payments.BatchCardTotal>() });
             return result;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -292,7 +271,7 @@ namespace com.clover.remotepay.transport
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.serialize(value));
+            writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -304,4 +283,33 @@ namespace com.clover.remotepay.transport
     {
         public T[] elements { get; set; }
     }
+
+    /// <summary>
+    /// Custom Json parser for DataProviderConfig - encoded as a string with json, needs unwrapping
+    /// </summary>
+    public class DataProviderConfigConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(com.clover.sdk.v3.DataProviderConfig));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.Value == null)
+            {
+                return null;
+            }
+
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.DataProviderConfig  result = JsonUtils.Deserialize<com.clover.sdk.v3.DataProviderConfig>(json);
+            return result;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(JsonUtils.Serialize(value));
+        }
+    }
+
 }

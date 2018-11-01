@@ -120,6 +120,11 @@ namespace CloverWindowsSDKREST
             Send("/VoidPaymentResponse", Serialize(response));
         }
 
+        public void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
+        {
+            Send("/VoidPaymentRefundResponse", Serialize(response));
+        }
+
         public void OnTipAdded(com.clover.remotepay.transport.TipAddedMessage message)
         {
             Send("/TipAdded", Serialize(message));
@@ -215,6 +220,11 @@ namespace CloverWindowsSDKREST
             Send("/DisplayReceiptOptionsResponse", Serialize(response));
         }
 
+        public virtual void OnCustomerProvidedData(CustomerProvidedDataEvent response)
+        {
+            Send("/OnCustomerProvidedData", Serialize(response));
+        }
+
         public void ResendStatus()
         {
             switch (Status)
@@ -250,7 +260,7 @@ namespace CloverWindowsSDKREST
                 RestRequest request = new RestRequest(endpoint, Method.POST);
                 if (msg != null)
                 {
-                    string payload = JsonUtils.serialize(msg);
+                    string payload = JsonUtils.Serialize(msg);
                     request.AddParameter("application/json", payload, ParameterType.RequestBody);
                 }
                 else
@@ -258,8 +268,8 @@ namespace CloverWindowsSDKREST
                     request.AddJsonBody("");
                 }
                 request.RequestFormat = DataFormat.Json;
-                
-                var asyncHandle = RestClient.ExecuteAsync(request, response =>
+
+                RestRequestAsyncHandle asyncHandle = RestClient.ExecuteAsync(request, response =>
                 {
                     if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
                     {
@@ -272,7 +282,5 @@ namespace CloverWindowsSDKREST
 
             }
         }
-
-        
     }
 }

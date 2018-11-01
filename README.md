@@ -4,7 +4,7 @@
 
 ## Version
 
-Current version: 2.0.0
+Current version: 3.0.0
 
 ## Overview
 
@@ -13,10 +13,9 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
 **Platforms supported:**
   * Windows 10
   * Windows 8
-  * Windows 7
   
 **.NET Frameworks supported:**
-  * .NET 4.5 (and later)
+  * .NET 4.5 (and later, point release: 4.5.2)
   * .NET 4.0 "backwards compatibility"
   
 ## Connecting to a Clover device 
@@ -38,7 +37,7 @@ Use NuGet references to easily include Remote Pay Windows in your .NET project
 https://www.nuget.org/packages/Clover.RemotePayWindows
 
 ```
-Install-Package Clover.RemotePayWindows -Version 2.0.0 
+Install-Package Clover.RemotePayWindows -Version 3.0.0 
 ```
 
 ## Installing the SDK and Services
@@ -138,6 +137,6 @@ NOTE: If you see the message `error: more than one device and emulator`, you wil
 - [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 - [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/)
 - [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
-- [API Documentation](http://clover.github.io/remote-pay-windows/2.0.0/cloverconnector/html/index.html)
+- [API Documentation](http://clover.github.io/remote-pay-windows/3.0.0/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
 	

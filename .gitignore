@@ -2,12 +2,20 @@
 *.o
 *.zip
 
+#Nuget files
+*.nupkg
+[Oo]utput/
+
 #VisualStudio Structures
 .suo
 *.suo
 *.cache
 *.user
 #DesignTimeResolveAssemblyReferencesInput.cache
+
+#Visual Studio / Resharper
+*.DotSettings
+*.DotSettings.user
 
 #VisualStudio Directories
 .vs/
@@ -36,4 +44,4 @@ signed-usb-drivers/
 /examples/CloverExamplePOS/packages.config
 /services/CloverWindowsSDKRESTService/packages.config
 /services/CloverWindowsSDKWebSocketService/packages.config
-/Clover.sln.DotSettings.user
+

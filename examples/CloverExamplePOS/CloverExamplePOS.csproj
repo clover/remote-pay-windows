@@ -106,6 +106,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloverExamplePosData.cs" />
     <Compile Include="ComboBoxItem.cs" />
     <Compile Include="ConfirmPaymentForm.cs">
       <SubType>Form</SubType>
@@ -130,6 +131,7 @@
     <Compile Include="com\clover\remotepay\transport\remote\RemoteRESTCloverConnector.cs" />
     <Compile Include="com\clover\remotepay\transport\remote\RemoteWebSocketCloverConfiguration.cs" />
     <Compile Include="com\clover\remotepay\transport\remote\RemoteWebSocketCloverConnector.cs" />
+    <Compile Include="CustomActivityObjects.cs" />
     <Compile Include="CustomerCardCaptureForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,7 +173,7 @@
       <DependentUpon>SignaturePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Model.cs" />
-    <Compile Include="CloverExamplePOS.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoreDiscount.cs">
       <SubType>UserControl</SubType>
@@ -190,6 +192,18 @@
     </Compile>
     <Compile Include="RatingsListForm.Designer.cs">
       <DependentUpon>RatingsListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UiPages\LoyaltyApiPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UiPages\LoyaltyApiPage.Designer.cs">
+      <DependentUpon>LoyaltyApiPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIDialogs\RefundAmountDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIDialogs\RefundAmountDialog.Designer.cs">
+      <DependentUpon>RefundAmountDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="VaultedCardListForm.cs">
       <SubType>Form</SubType>
@@ -245,6 +259,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RatingsListForm.resx">
       <DependentUpon>RatingsListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIDialogs\RefundAmountDialog.resx">
+      <DependentUpon>RefundAmountDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UiPages\LoyaltyApiPage.resx">
+      <DependentUpon>LoyaltyApiPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VaultedCardListForm.resx">
       <DependentUpon>VaultedCardListForm.cs</DependentUpon>

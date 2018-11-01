@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Drawing;
 using com.clover.remote.order;
 using com.clover.remote.order.operation;
+using com.clover.sdk.v3;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.printer;
@@ -155,6 +156,7 @@ namespace com.clover.remotepay.transport
         public abstract void doTxStart(PayIntent payIntent, Order order, TxType requestInfo);
         public abstract void doKeyPress(KeyPress keyPress);
         public abstract void doVoidPayment(Payment payment, VoidReason reason);
+        public abstract void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId);
         public abstract void doOrderUpdate(DisplayOrder order, DisplayOperation operation);
         public abstract void doVerifySignature(Payment payment, bool verified);
         public abstract void doTerminalMessage(string text);
@@ -185,6 +187,8 @@ namespace com.clover.remotepay.transport
         public abstract void doRetrievePayment(string externalPaymentId);
         public abstract void doRetrievePrinters(RetrievePrintersRequest request);
         public abstract void doRetrievePrintJobStatus(string printRequestId);
+        public abstract void doRegisterForCustomerProvidedData(List<LoyaltyDataConfig> configs);
+        public abstract void doSetCustomerInfo(CustomerInfo customerInfo);
 
     }
 
@@ -469,6 +473,14 @@ namespace com.clover.remotepay.transport
         /// <param name="printRequestId"></param>
         /// <param name="status"></param>
         void onDisplayReceiptOptionsResponse(ResultStatus status, string reason);
+
+        /// <summary>
+        /// Received Loyalty API customer provided data from device (phone #, VAS, etc.)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="config"></param>
+        /// <param name="data"></param>
+        void onCustomerProvidedDataResponse(string eventId, DataProviderConfig config, string data);
     }
 
     public class DeviceInfo

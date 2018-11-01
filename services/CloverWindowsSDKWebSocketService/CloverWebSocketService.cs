@@ -170,7 +170,7 @@ namespace CloverWindowsSDKWebSocketService
                                 }
                             case WebSocketMethod.OpenCashDrawer:
                                 {
-                                    OpenCashDrawerRequest request = JsonUtils.deserialize<OpenCashDrawerRequest>(payload.ToString());
+                                    OpenCashDrawerRequest request = JsonUtils.Deserialize<OpenCashDrawerRequest>(payload.ToString());
                                     cloverConnector.OpenCashDrawer(request);
                                     break;
                                 }
@@ -226,103 +226,103 @@ namespace CloverWindowsSDKWebSocketService
                                 }
                             case WebSocketMethod.Auth:
                                 {
-                                    AuthRequest authRequest = JsonUtils.deserialize<AuthRequest>(payload.ToString());
+                                    AuthRequest authRequest = JsonUtils.Deserialize<AuthRequest>(payload.ToString());
                                     cloverConnector.Auth(authRequest);
                                     break;
                                 }
                             case WebSocketMethod.PreAuth:
                                 {
-                                    PreAuthRequest preAuthRequest = JsonUtils.deserialize<PreAuthRequest>(payload.ToString());
+                                    PreAuthRequest preAuthRequest = JsonUtils.Deserialize<PreAuthRequest>(payload.ToString());
                                     cloverConnector.PreAuth(preAuthRequest);
                                     break;
                                 }
                             case WebSocketMethod.TipAdjustAuth:
                                 {
-                                    TipAdjustAuthRequest tipAdjustRequest = JsonUtils.deserialize<TipAdjustAuthRequest>(payload.ToString());
+                                    TipAdjustAuthRequest tipAdjustRequest = JsonUtils.Deserialize<TipAdjustAuthRequest>(payload.ToString());
                                     cloverConnector.TipAdjustAuth(tipAdjustRequest);
                                     break;
                                 }
                             case WebSocketMethod.CapturePreAuth:
                                 {
-                                    CapturePreAuthRequest capturePreAuthRequest = JsonUtils.deserialize<CapturePreAuthRequest>(payload.ToString());
+                                    CapturePreAuthRequest capturePreAuthRequest = JsonUtils.Deserialize<CapturePreAuthRequest>(payload.ToString());
                                     cloverConnector.CapturePreAuth(capturePreAuthRequest);
                                     break;
                                 }
                             case WebSocketMethod.Sale:
                                 {
-                                    SaleRequest saleRequest = JsonUtils.deserialize<SaleRequest>(payload.ToString());
+                                    SaleRequest saleRequest = JsonUtils.Deserialize<SaleRequest>(payload.ToString());
                                     cloverConnector.Sale(saleRequest);
                                     break;
                                 }
                             case WebSocketMethod.InvokeInputOption:
                                 {
-                                    InputOption io = JsonUtils.deserialize<InputOption>(payload.ToString());
+                                    InputOption io = JsonUtils.Deserialize<InputOption>(payload.ToString());
                                     cloverConnector.InvokeInputOption(io);
                                     break;
                                 }
                             case WebSocketMethod.VoidPayment:
                                 {
-                                    VoidPaymentRequest request = JsonUtils.deserialize<VoidPaymentRequest>(payload.ToString());
+                                    VoidPaymentRequest request = JsonUtils.Deserialize<VoidPaymentRequest>(payload.ToString());
                                     cloverConnector.VoidPayment(request);
                                     break;
                                 }
                             case WebSocketMethod.ManualRefund:
                                 {
-                                    ManualRefundRequest mrr = JsonUtils.deserialize<ManualRefundRequest>(payload.ToString());
+                                    ManualRefundRequest mrr = JsonUtils.Deserialize<ManualRefundRequest>(payload.ToString());
                                     cloverConnector.ManualRefund(mrr);
                                     break;
                                 }
                             case WebSocketMethod.RefundPayment:
                                 {
-                                    RefundPaymentRequest request = JsonUtils.deserialize<RefundPaymentRequest>(payload.ToString());
+                                    RefundPaymentRequest request = JsonUtils.Deserialize<RefundPaymentRequest>(payload.ToString());
                                     cloverConnector.RefundPayment(request);
                                     break;
                                 }
                             case WebSocketMethod.DisplayPaymentReceiptOptions:
                                 {
-                                    DisplayPaymentReceiptOptionsRequest request = JsonUtils.deserialize<DisplayPaymentReceiptOptionsRequest>(payload.ToString());
+                                    DisplayPaymentReceiptOptionsRequest request = JsonUtils.Deserialize<DisplayPaymentReceiptOptionsRequest>(payload.ToString());
                                     cloverConnector.DisplayPaymentReceiptOptions(request);
                                     break;
                                 }
                             case WebSocketMethod.ShowDisplayOrder:
                                 {
-                                    com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.deserialize<com.clover.remote.order.DisplayOrder>(payload.ToString());
+                                    com.clover.remote.order.DisplayOrder displayOrder = JsonUtils.Deserialize<com.clover.remote.order.DisplayOrder>(payload.ToString());
                                     cloverConnector.ShowDisplayOrder(displayOrder);
                                     break;
                                 }
                             case WebSocketMethod.AcceptSignature:
                                 {
-                                    WSVerifySignatureRequest svr = JsonUtils.deserialize<WSVerifySignatureRequest>(payload.ToString());
+                                    WSVerifySignatureRequest svr = JsonUtils.Deserialize<WSVerifySignatureRequest>(payload.ToString());
                                     cloverConnector.AcceptSignature(svr);
                                     break;
                                 }
                             case WebSocketMethod.RejectSignature:
                                 {
-                                    WSVerifySignatureRequest svr = JsonUtils.deserialize<WSVerifySignatureRequest>(payload.ToString());
+                                    WSVerifySignatureRequest svr = JsonUtils.Deserialize<WSVerifySignatureRequest>(payload.ToString());
                                     cloverConnector.RejectSignature(svr);
                                     break;
                                 }
                             case WebSocketMethod.ConfirmPayment:
                                 {
-                                    AcceptPayment acceptPayment = JsonUtils.deserialize<AcceptPayment>(payload.ToString());
+                                    AcceptPayment acceptPayment = JsonUtils.Deserialize<AcceptPayment>(payload.ToString());
                                     cloverConnector.AcceptPayment(acceptPayment.Payment);
                                     break;
                                 }
                             case WebSocketMethod.RejectPayment:
                                 {
-                                    RejectPayment rp = JsonUtils.deserialize<RejectPayment>(payload.ToString());
+                                    RejectPayment rp = JsonUtils.Deserialize<RejectPayment>(payload.ToString());
                                     cloverConnector.RejectPayment(rp.Payment, rp.Challenge);
                                     break;
                                 }
                             case WebSocketMethod.VaultCard:
                                 {
-                                    VaultCardMessage vcm = JsonUtils.deserialize<VaultCardMessage>(payload.ToString());
+                                    VaultCardMessage vcm = JsonUtils.Deserialize<VaultCardMessage>(payload.ToString());
                                     cloverConnector.VaultCard(vcm.cardEntryMethods);
                                     break;
                                 }
                             case WebSocketMethod.ReadCardData:
                                 {
-                                    ReadCardDataRequest request = JsonUtils.deserialize<ReadCardDataRequest>(payload.ToString());
+                                    ReadCardDataRequest request = JsonUtils.Deserialize<ReadCardDataRequest>(payload.ToString());
                                     cloverConnector.ReadCardData(request);
                                     break;
                                 }
@@ -339,43 +339,43 @@ namespace CloverWindowsSDKWebSocketService
                                 }
                             case WebSocketMethod.StartCustomActivity:
                                 {
-                                    CustomActivityRequest request = JsonUtils.deserialize<CustomActivityRequest>(payload.ToString());
+                                    CustomActivityRequest request = JsonUtils.Deserialize<CustomActivityRequest>(payload.ToString());
                                     cloverConnector.StartCustomActivity(request);
                                     break;
                                 }
                             case WebSocketMethod.RetrieveDeviceStatus:
                                 {
-                                    RetrieveDeviceStatusRequest request = JsonUtils.deserialize<RetrieveDeviceStatusRequest>(payload.ToString());
+                                    RetrieveDeviceStatusRequest request = JsonUtils.Deserialize<RetrieveDeviceStatusRequest>(payload.ToString());
                                     cloverConnector.RetrieveDeviceStatus(request);
                                     break;
                                 }
                             case WebSocketMethod.SendMessageToActivity:
                                 {
-                                    MessageToActivity mta = JsonUtils.deserialize<MessageToActivity>(payload.ToString());
+                                    MessageToActivity mta = JsonUtils.Deserialize<MessageToActivity>(payload.ToString());
                                     cloverConnector.SendMessageToActivity(mta);
                                     break;
                                 }
                             case WebSocketMethod.RetrievePaymentRequest:
                                 {
-                                    RetrievePaymentRequest rpr = JsonUtils.deserialize<RetrievePaymentRequest>(payload.ToString());
+                                    RetrievePaymentRequest rpr = JsonUtils.Deserialize<RetrievePaymentRequest>(payload.ToString());
                                     cloverConnector.RetrievePayment(rpr);
                                     break;
                                 }
                             case WebSocketMethod.RetrievePrintersRequest:
                                 {
-                                    RetrievePrintersRequest rpr = JsonUtils.deserialize<RetrievePrintersRequest>(payload.ToString());
+                                    RetrievePrintersRequest rpr = JsonUtils.Deserialize<RetrievePrintersRequest>(payload.ToString());
                                     cloverConnector.RetrievePrinters(rpr);
                                     break;
                                 }
                             case WebSocketMethod.PrintJobStatusRequest:
                                 {
-                                    PrintJobStatusRequest req = JsonUtils.deserialize<PrintJobStatusRequest>(payload.ToString());
+                                    PrintJobStatusRequest req = JsonUtils.Deserialize<PrintJobStatusRequest>(payload.ToString());
                                     cloverConnector.RetrievePrintJobStatus(req);
                                     break;
                                 }
                             case WebSocketMethod.PrintRequest:
                                 {
-                                    PrintRequest64Message request = JsonUtils.deserialize<PrintRequest64Message>(payload.ToString());
+                                    PrintRequest64Message request = JsonUtils.Deserialize<PrintRequest64Message>(payload.ToString());
                                     PrintRequest printRequest = null;
                                     if(request.base64strings.Count > 0)
                                     {
@@ -525,7 +525,7 @@ namespace CloverWindowsSDKWebSocketService
 
         private T Deserialize<T>(String msg)
         {
-            T obj = JsonUtils.deserialize<T>(msg);
+            T obj = JsonUtils.Deserialize<T>(msg);
             return obj;
         }
     }

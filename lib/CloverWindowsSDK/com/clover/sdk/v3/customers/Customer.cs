@@ -21,45 +21,47 @@
 using System;
 using System.Collections.Generic;
 
-namespace com.clover.sdk.v3.customers {
+namespace com.clover.sdk.v3.customers
+{
 
 
-public class Customer {
+    public class Customer
+    {
 
-  /// <summary>
-  /// Unique identifier
-  /// </summary>
-  public String id { get; set; }
+        /// <summary>
+        /// Unique identifier
+        /// </summary>
+        public String id { get; set; }
 
-  /// <summary>
-  /// The order with which the customer is associated
-  /// </summary>
-  public com.clover.sdk.v3.base_.Reference orderRef { get; set; }
+        /// <summary>
+        /// The order with which the customer is associated
+        /// </summary>
+        public com.clover.sdk.v3.base_.Reference orderRef { get; set; }
 
-  /// <summary>
-  /// First/given name of the customer
-  /// </summary>
-  public String firstName { get; set; }
+        /// <summary>
+        /// First/given name of the customer
+        /// </summary>
+        public String firstName { get; set; }
 
-  /// <summary>
-  /// Last name/surname of the customer
-  /// </summary>
-  public String lastName { get; set; }
+        /// <summary>
+        /// Last name/surname of the customer
+        /// </summary>
+        public String lastName { get; set; }
 
-  public Boolean marketingAllowed { get; set; }
+        public Boolean marketingAllowed { get; set; }
 
-  public Int64 customerSince { get; set; }
+        public Int64 customerSince { get; set; }
 
-  public List<com.clover.sdk.v3.base_.Reference> orders { get; set; }
+        public List<com.clover.sdk.v3.base_.Reference> orders { get; set; }
 
-  public List<com.clover.sdk.v3.customers.Address> addresses { get; set; }
+        public List<com.clover.sdk.v3.customers.Address> addresses { get; set; }
 
-  public List<com.clover.sdk.v3.customers.EmailAddress> emailAddresses { get; set; }
+        public List<com.clover.sdk.v3.customers.EmailAddress> emailAddresses { get; set; }
 
-  public List<com.clover.sdk.v3.customers.PhoneNumber> phoneNumbers { get; set; }
+        public List<com.clover.sdk.v3.customers.PhoneNumber> phoneNumbers { get; set; }
 
-  public List<com.clover.sdk.v3.customers.Card> cards { get; set; }
+        public List<com.clover.sdk.v3.customers.Card> cards { get; set; }
 
-}
+    }
 
 }

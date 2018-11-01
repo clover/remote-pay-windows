@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using com.clover.remote.order;
 using com.clover.remote.order.operation;
 using com.clover.remotepay.data;
+using com.clover.sdk.v3;
 using com.clover.sdk.v3.order;
 using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.printer;
@@ -486,6 +487,22 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    /// <summary>
+    /// Message used to indicate that a card present refund should be voided
+    /// </summary>
+    public class VoidPaymentRefundMessage : Message
+    {
+        public string orderId { get; set; }
+        public string refundId { get; set; }
+        public bool disableCloverPrinting { get; set; }
+        public bool disableReceiptSelection { get; set; }
+        public string employeeId { get; set; }
+
+        public VoidPaymentRefundMessage() : base(Methods.VOID_PAYMENT_REFUND, 2)
+        {
+        }
+    }
+
     public class TerminalMessage : Message
     {
         public readonly string text;
@@ -726,7 +743,7 @@ namespace com.clover.remotepay.transport
         public OrderUpdateMessage(DisplayOrder displayOrder)
             : base(Methods.SHOW_ORDER_SCREEN)
         {
-            order = JsonUtils.serialize(displayOrder);
+            order = JsonUtils.Serialize(displayOrder);
         }
 
         public void setOperation(DisplayOperation operation)
@@ -738,23 +755,23 @@ namespace com.clover.remotepay.transport
 
             if (operation is LineItemsAddedOperation)
             {
-                this.lineItemsAddedOperation = JsonUtils.serialize(operation);
+                this.lineItemsAddedOperation = JsonUtils.Serialize(operation);
             }
             else if (operation is LineItemsDeletedOperation)
             {
-                this.lineItemsDeletedOperation = JsonUtils.serialize(operation);
+                this.lineItemsDeletedOperation = JsonUtils.Serialize(operation);
             }
             else if (operation is DiscountsDeletedOperation)
             {
-                this.discountsDeletedOperation = JsonUtils.serialize(operation);
+                this.discountsDeletedOperation = JsonUtils.Serialize(operation);
             }
             else if (operation is DiscountsAddedOperation)
             {
-                this.discountsAddedOperation = JsonUtils.serialize(operation);
+                this.discountsAddedOperation = JsonUtils.Serialize(operation);
             }
             else if (operation is OrderDeletedOperation)
             {
-                this.orderDeletedOperation = JsonUtils.serialize(operation);
+                this.orderDeletedOperation = JsonUtils.Serialize(operation);
             }
         }
     }
@@ -969,6 +986,21 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class CustomerProvidedDataResponseMessage : Message
+    {
+        public string eventId;
+        public DataProviderConfig config;
+        public string data;
+
+        public CustomerProvidedDataResponseMessage(string eventId, DataProviderConfig config, string data)
+            : base(Methods.CUSTOMER_PROVIDED_DATA_MESSAGE)
+        {
+            this.eventId = eventId;
+            this.config = config;
+            this.data = data;
+        }
+    }
+
     /// <summary>
     /// request to retrieve a payment associated with the provided externalPaymentId
     /// </summary>
@@ -1139,7 +1171,7 @@ namespace com.clover.remotepay.transport
         public PairingRequestMessage(PairingRequest pr)
         {
             method = "PAIRING_REQUEST";
-            payload = JsonUtils.serialize(pr);
+            payload = JsonUtils.Serialize(pr);
         }
 
         public PairingRequestMessage(string method)
@@ -1233,12 +1265,35 @@ namespace com.clover.remotepay.transport
     }
 
     /// <summary>
+    /// Loyalty API register a set of configurations to send to the Clover Connector
+    /// </summary>
+    public class RegisterForCustomerProvidedDataMessage : Message
+    {
+        public List<LoyaltyDataConfig> configurations { get; set; }
+
+        public RegisterForCustomerProvidedDataMessage()
+            : base(Methods.REGISTER_FOR_CUST_DATA)
+        {
+        }
+    }
+
+    public class CustomerInfoMessage : Message
+    {
+        public CustomerInfo customer { get; set; }
+
+        public CustomerInfoMessage()
+            : base(Methods.CUSTOMER_INFO_MESSAGE)
+        {
+        }
+    }
+
+    /// <summary>
     /// The top level protocol message 
     /// </summary
     public class RemoteMessage
     {
         public string id { get; set; }
-        public Methods method { get; set; }
+        public Methods? method { get; set; }
         public MessageTypes type { get; set; }
         public string payload { get; set; }
         public string packageName { get; set; }
@@ -1260,11 +1315,25 @@ namespace com.clover.remotepay.transport
             {
                 payload = new Message(meth);
             }
-            msg.payload = JsonUtils.serialize(payload);
+            msg.payload = JsonUtils.Serialize(payload);
             msg.packageName = packageName;
             msg.remoteSourceSDK = remoteSourceSDK;
             msg.remoteApplicationID = remoteApplicationID;
             msg.id = nextID();
+            return msg;
+        }
+
+        public static RemoteMessage CreatePongMessage(string packageName, string remoteSourceSDK, string remoteApplicationID)
+        {
+            RemoteMessage msg = new RemoteMessage
+            {
+                method = null,
+                type = MessageTypes.PONG,
+                packageName = packageName,
+                remoteSourceSDK = remoteSourceSDK,
+                remoteApplicationID = remoteApplicationID,
+                id = nextID()
+            };
             return msg;
         }
 
