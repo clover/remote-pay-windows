@@ -53,6 +53,7 @@ namespace com.clover.remotepay.transport
         public bool? requiresRemoteConfirmation { get; set; }
         public bool allowPartialAuth { get; set; } = true;
         public TransactionSettings transactionSettings { get; set; }
+        public Dictionary<string, string> passThroughValues { get; set; }
 
         private static readonly string BUNDLE_KEY_ACTION = "a";
     }
@@ -210,17 +211,56 @@ namespace com.clover.remotepay.transport
         // receipt options flow
         RECEIPT_OPTIONS,
 
+        // Remote Terminal Kiosk Fragment Changes
+        WELCOME_SCREEN,
+        THANKYOU_SCREEN,
+        DISPLAY_MESSAGE,
+        DISPLAY_ORDER,
+
         // tender handling flow
         HANDLE_TENDER,
+        // DCC
+        DCC_HOST_REQUEST,
+        SELECT_DCC,
+        // for DCPOS language selection
+        SELECT_LANGUAGE,
+        // for German Confirm Amount
+        CONFIRM_AMOUNT,
+        // for DCPOS final approved screen
+        APPROVED,
+
+        // offline payments
+        OFFLINE_PAYMENT_CONFIRM,
 
         // custom activity, optionally called from custom activity
         CUSTOM_ACTIVITY,
         // starting custom activity, called from RTKA
         STARTING_CUSTOM_ACTIVITY,
 
-        VERIFY_SURCHARGES,
+        // for German Tip
+        SELECT_TIP,
+        CUSTOM_TIP_AMOUNT,
+        // for Argentina
+        ENTER_PAN_LAST_FOUR,
+        ERROR_SCREEN,
+        FISCAL_INVOICE_NUMBER,
+        ENTER_INSTALLMENTS,
+        SELECT_INSTALLMENT_PLAN,
+        ENTER_INSTALLMENT_CODE,
+        PERSONAL_ID_ENTRY,
+        PERSONAL_ID_ENTRY_PAS,
+        SWIPE_CVV_ENTRY,
+        SIGNATURE_CUSTOMER_MODE,
+        MANUAL_ENTRY_FALLBACK,
+        SELECT_MULTI_MID,
+
+        // starting german approval screen for elv limit override
+        APPROVE_ELV_LIMIT_OVERRIDE,
         SELECT_WITHDRAW_FROM_ACCOUNT,
-        VOID_CONFIRM
+        VERIFY_SURCHARGES,
+
+        VOID_CONFIRM, // confirmation screen for card present voiding
+        SHOW_SEPA_MANDAT // for extendet SEPA disclaimer
 
     }
 

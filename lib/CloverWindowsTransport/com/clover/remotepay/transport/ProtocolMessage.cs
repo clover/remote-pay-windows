@@ -328,12 +328,13 @@ namespace com.clover.remotepay.transport
         public bool? fullRefund { get; set; }
         public bool? disableCloverPrinting { get; set; }
         public bool? disableReceiptSelection { get; set; }
+        public Dictionary<string, string> passThroughValues { get; set; }
 
         public RefundRequestMessage() : base(Methods.REFUND_REQUEST, 3)
         {
         }
 
-        public RefundRequestMessage(string oid, string pid, long? amt, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection)
+        public RefundRequestMessage(string oid, string pid, long? amt, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection, Dictionary<string, string> passThroughValues)
             : base(Methods.REFUND_REQUEST, 2)
         {
             this.orderId = oid;
@@ -342,6 +343,7 @@ namespace com.clover.remotepay.transport
             this.fullRefund = fullRefund;
             this.disableCloverPrinting = disableCloverPrinting;
             this.disableReceiptSelection = disableReceiptSelection;
+            this.passThroughValues = passThroughValues;
         }
     }
 
@@ -350,13 +352,15 @@ namespace com.clover.remotepay.transport
         public string orderId { get; set; }
         public string paymentId { get; set; }
         public long? tipAmount { get; set; }
+        public Dictionary<string, string> passThroughValues { get; set; }
 
-        public TipAdjustAuthMessage(string orderId, string paymentId, long? tipAmount)
+        public TipAdjustAuthMessage(string orderId, string paymentId, long? tipAmount, Dictionary<string, string> passThroughValues)
             : base(Methods.TIP_ADJUST)
         {
             this.orderId = orderId;
             this.paymentId = paymentId;
             this.tipAmount = tipAmount;
+            this.passThroughValues = passThroughValues;
         }
     }
 
@@ -481,6 +485,7 @@ namespace com.clover.remotepay.transport
     {
         public VoidReason voidReason { get; set; }
         public Payment payment { get; set; }
+        public Dictionary<string, string> passThroughValues { get; set; }
 
         public VoidPaymentMessage() : base(Methods.VOID_PAYMENT, 2)
         {

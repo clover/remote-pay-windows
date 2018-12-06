@@ -61,9 +61,6 @@ namespace CloverExamplePOS
         Color ConnectionStatusColor_Connecting = Color.FromArgb(0xFF, 0xFF, 0xD6); // yellow
         Color ConnectionStatusColor_Disconnected = Color.FromArgb(0xFF, 0xD6, 0xD6); // red
 
-        // hold a default value for the card entry method
-        public int CardEntryMethod { get; private set; }
-
         public void SubscribeToStoreChanges(Store Store)
         {
             data.Store.OrderListChange += new Store.OrderListChangeHandler(OrderListChanged);
@@ -445,93 +442,43 @@ namespace CloverExamplePOS
             request.ExternalId = ExternalIDUtil.GenerateRandomString(32);
             request.Amount = data.Store.CurrentOrder.Total;
 
-            // Card Entry methods
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
+            request.CardEntryMethods = TransactionSettingsEdit.CardEntryMethod;
+            request.CardNotPresent = TransactionSettingsEdit.CardNotPresent;
 
-            request.CardEntryMethods = CardEntry;
-            request.CardNotPresent = CardNotPresentCheckbox.Checked;
             // SaleRequest supported TipModes: TIP_PROVIDED, NO_TIP, ON_SCREEN_BEFORE_PAYMENT
             // NOTE: ON_PAPER would turn the Sale into an AUTH, so it is not valid here
-            if (tipAmount.TextLength > 0)
+            request.TipMode = TransactionSettingsEdit.TipMode;
+            if (TransactionSettingsEdit.TipMode == com.clover.remotepay.sdk.TipMode.TIP_PROVIDED)
             {
-                if (tipModeProvided.Checked)
-                {
-                    request.TipAmount = tipAmount.GetAmount();
-                    request.TipMode = com.clover.remotepay.sdk.TipMode.TIP_PROVIDED;
-                }
-                else
-                {
-                    // SaleResponse validation error?
-                }
-            }
-            else
-            {
-                if (!tipModeDefault.Checked)
-                // Default is really null here 
-                {
-                    if (!tipModeProvided.Checked)
-                    {
-                        request.TipMode = getTipMode();
-                    }
-                    else
-                    {
-                        // SaleResponse validation error?
-                    }
-                }
+                    request.TipAmount = TransactionSettingsEdit.TipAmount;
             }
 
-            if (signatureThreshold.TextLength > 0)
+            if (TransactionSettingsEdit.HasSignatureThreshold)
             {
-                request.SignatureThreshold = signatureThreshold.GetAmount();
+                request.SignatureThreshold = TransactionSettingsEdit.SignatureThreshold;
             }
 
-            if (!signatureDefault.Checked)
+            if (TransactionSettingsEdit.HasSignatureEntryLocation)
             {
-                request.SignatureEntryLocation = getSignatureEntryLocation();
+                request.SignatureEntryLocation = TransactionSettingsEdit.SignatureEntryLocation;
             }
 
             request.TaxAmount = data.Store.CurrentOrder.TaxAmount;
 
-            if (DisableCashBack.Checked)
+            request.DisableCashback = TransactionSettingsEdit.DisableCashback;
+            request.DisableRestartTransactionOnFail = TransactionSettingsEdit.DisableRestartTransactionOnFail;
+            request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
+            request.DisableReceiptSelection = TransactionSettingsEdit.DisableReceiptSelection;
+            request.DisableDuplicateChecking = TransactionSettingsEdit.DisableDuplicateChecking;
+            request.AutoAcceptSignature = TransactionSettingsEdit.AutomaticSignatureConfirmation;
+            request.AutoAcceptPaymentConfirmations = TransactionSettingsEdit.AutomaticPaymentConfirmation;
+            request.AllowOfflinePayment = TransactionSettingsEdit.AllowOfflinePayment;
+            request.ApproveOfflinePaymentWithoutPrompt = TransactionSettingsEdit.ApproveOfflinePaymentWithoutPrompt;
+            request.ForceOfflinePayment = TransactionSettingsEdit.ForceOfflinePayment;
+
+            foreach (KeyValuePair<string, string> items in TransactionSettingsEdit.RegionalExtras)
             {
-                request.DisableCashback = true;
-            }
-            if (DisableRestartTransactionOnFailure.Checked)
-            {
-                request.DisableRestartTransactionOnFail = true;
-            }
-            request.DisablePrinting = disablePrintingCB.Checked;
-            if (disableReceiptOptionsCB.Checked)
-            {
-                request.DisableReceiptSelection = true;
-            }
-            if (disableDuplicateCheckingCB.Checked)
-            {
-                request.DisableDuplicateChecking = true;
-            }
-            if (automaticSignatureConfirmationCB.Checked)
-            {
-                request.AutoAcceptSignature = true;
-            }
-            if (automaticPaymentConfirmationCB.Checked)
-            {
-                request.AutoAcceptPaymentConfirmations = true;
-            }
-            if (!offlineDefault.Checked)
-            {
-                request.AllowOfflinePayment = offlineYes.Checked;
-            }
-            if (!approveOfflineDefault.Checked)
-            {
-                request.ApproveOfflinePaymentWithoutPrompt = approveOfflineYes.Checked;
-            }
-            if (!forceOfflineDefault.Checked)
-            {
-                request.ForceOfflinePayment = forceOfflineYes.Checked;
+                request.RegionalExtras[items.Key] = items.Value;
             }
 
             if (card != null)
@@ -549,58 +496,6 @@ namespace CloverExamplePOS
                 request.TippableAmount = data.Store.CurrentOrder.TippableAmount;
             }
             data.CloverConnector.Sale(request);
-        }
-
-        private com.clover.remotepay.sdk.TipMode? getTipMode()
-        {
-            if (tipModeNone.Checked)
-            {
-                return com.clover.remotepay.sdk.TipMode.NO_TIP;
-            }
-            else
-            {
-                if (tipModeOnScreen.Checked)
-                {
-                    return com.clover.remotepay.sdk.TipMode.ON_SCREEN_BEFORE_PAYMENT;
-                }
-                else
-                {
-                    if (tipModeProvided.Checked)
-                    {
-                        return com.clover.remotepay.sdk.TipMode.TIP_PROVIDED;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-        }
-
-        private DataEntryLocation? getSignatureEntryLocation()
-        {
-            if (signatureNone.Checked)
-            {
-                return DataEntryLocation.NONE;
-            }
-            else
-            {
-                if (signatureOnPaper.Checked)
-                {
-                    return DataEntryLocation.ON_PAPER;
-                }
-                else
-                {
-                    if (signatureOnScreen.Checked)
-                    {
-                        return DataEntryLocation.ON_SCREEN;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
         }
 
         public void OnSaleResponse(SaleResponse response)
@@ -683,33 +578,14 @@ namespace CloverExamplePOS
             request.TaxAmount = data.Store.CurrentOrder.TaxAmount;
             request.ExternalId = ExternalIDUtil.GenerateRandomString(32);
 
-            // Card Entry methods
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
+            request.CardEntryMethods = TransactionSettingsEdit.CardEntryMethod;
+            request.CardNotPresent = TransactionSettingsEdit.CardNotPresent;
+            request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
 
-            request.CardEntryMethods = CardEntry;
-            request.CardNotPresent = CardNotPresentCheckbox.Checked;
-            request.DisablePrinting = disablePrintingCB.Checked;
-
-            if (DisableCashBack.Checked)
-            {
-                request.DisableCashback = true;
-            }
-            if (!offlineDefault.Checked)
-            {
-                request.AllowOfflinePayment = offlineYes.Checked;
-            }
-            if (!approveOfflineDefault.Checked)
-            {
-                request.ApproveOfflinePaymentWithoutPrompt = approveOfflineYes.Checked;
-            }
-            if (!forceOfflineDefault.Checked)
-            {
-                request.ForceOfflinePayment = forceOfflineYes.Checked;
-            }
+            request.DisableCashback = TransactionSettingsEdit.DisableCashback;
+            request.AllowOfflinePayment = TransactionSettingsEdit.AllowOfflinePayment;
+            request.ApproveOfflinePaymentWithoutPrompt = TransactionSettingsEdit.ApproveOfflinePaymentWithoutPrompt;
+            request.ForceOfflinePayment = TransactionSettingsEdit.ForceOfflinePayment;
             if (card != null)
             {
                 request.VaultedCard = new com.clover.sdk.v3.payments.VaultedCard();
@@ -720,36 +596,21 @@ namespace CloverExamplePOS
                 request.VaultedCard.token = card.Token;
             }
 
-            if (signatureThreshold.TextLength > 0)
+            if (TransactionSettingsEdit.HasSignatureThreshold)
             {
-                request.SignatureThreshold = signatureThreshold.GetAmount();
+                request.SignatureThreshold = TransactionSettingsEdit.SignatureThreshold;
             }
 
-            if (!signatureDefault.Checked)
+            if (TransactionSettingsEdit.HasSignatureEntryLocation)
             {
-                request.SignatureEntryLocation = getSignatureEntryLocation();
+                request.SignatureEntryLocation = TransactionSettingsEdit.SignatureEntryLocation;
             }
 
-            if (DisableRestartTransactionOnFailure.Checked)
-            {
-                request.DisableRestartTransactionOnFail = true;
-            }
-            if (disableReceiptOptionsCB.Checked)
-            {
-                request.DisableReceiptSelection = true;
-            }
-            if (disableDuplicateCheckingCB.Checked)
-            {
-                request.DisableDuplicateChecking = true;
-            }
-            if (automaticSignatureConfirmationCB.Checked)
-            {
-                request.AutoAcceptSignature = true;
-            }
-            if (automaticPaymentConfirmationCB.Checked)
-            {
-                request.AutoAcceptPaymentConfirmations = true;
-            }
+            request.DisableRestartTransactionOnFail = TransactionSettingsEdit.DisableRestartTransactionOnFail;
+            request.DisableReceiptSelection = TransactionSettingsEdit.DisableReceiptSelection;
+            request.DisableDuplicateChecking = TransactionSettingsEdit.DisableDuplicateChecking;
+            request.AutoAcceptSignature = TransactionSettingsEdit.AutomaticSignatureConfirmation;
+            request.AutoAcceptPaymentConfirmations = TransactionSettingsEdit.AutomaticPaymentConfirmation;
             if (data.Store.CurrentOrder.TippableAmount != data.Store.CurrentOrder.Total)
             {
                 request.TippableAmount = data.Store.CurrentOrder.TippableAmount;
@@ -822,29 +683,13 @@ namespace CloverExamplePOS
             request.Amount = data.Store.CurrentOrder.Total;
             request.ExternalId = ExternalIDUtil.GenerateRandomString(32);
 
-            // Card Entry methods
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
+            request.CardEntryMethods = TransactionSettingsEdit.CardEntryMethod;
+            request.CardNotPresent = TransactionSettingsEdit.CardNotPresent;
 
-            request.CardEntryMethods = CardEntry;
-            request.CardNotPresent = CardNotPresentCheckbox.Checked;
-
-            if (DisableRestartTransactionOnFailure.Checked)
-            {
-                request.DisableRestartTransactionOnFail = true;
-            }
-            request.DisablePrinting = disablePrintingCB.Checked;
-            if (disableReceiptOptionsCB.Checked)
-            {
-                request.DisableReceiptSelection = true;
-            }
-            if (disableDuplicateCheckingCB.Checked)
-            {
-                request.DisableDuplicateChecking = true;
-            }
+            request.DisableRestartTransactionOnFail = TransactionSettingsEdit.DisableRestartTransactionOnFail;
+            request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
+            request.DisableReceiptSelection = TransactionSettingsEdit.DisableReceiptSelection;
+            request.DisableDuplicateChecking = TransactionSettingsEdit.DisableDuplicateChecking;
             data.CloverConnector.PreAuth(request);
         }
 
@@ -1137,13 +982,9 @@ namespace CloverExamplePOS
                 CapturePreAuthRequest captureAuthRequest = new CapturePreAuthRequest();
                 captureAuthRequest.PaymentID = payment.PaymentID;
                 captureAuthRequest.Amount = data.Store.CurrentOrder.Total;
-                if (tipAmount.TextLength > 0)
+                if (TransactionSettingsEdit.TipMode == com.clover.remotepay.sdk.TipMode.TIP_PROVIDED)
                 {
-                    if (tipModeProvided.Checked)
-                    {
-                        long? tip = tipAmount.GetAmount();
-                        captureAuthRequest.TipAmount = tip.HasValue ? tip.Value : 0;
-                    }
+                    captureAuthRequest.TipAmount = TransactionSettingsEdit.TipAmount ?? 0;
                 }
                 else
                 {
@@ -1383,15 +1224,9 @@ namespace CloverExamplePOS
             request.ExternalId = ExternalIDUtil.GenerateRandomString(32);
             request.Amount = int.Parse(RefundAmount.Text);
 
-            // Card Entry methods
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
-
-            request.CardEntryMethods = CardEntry;
-            request.DisablePrinting = disablePrintingCB.Checked;
+            request.CardEntryMethods = TransactionSettingsEdit.CardEntryMethod;
+            request.CardNotPresent = TransactionSettingsEdit.CardNotPresent;
+            request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
 
             data.CloverConnector.ManualRefund(request);
         }
@@ -2349,12 +2184,8 @@ namespace CloverExamplePOS
 
             //UI cleanup
             this.Text = OriginalFormTitle + " - " + config.getName();
-            CardEntryMethod = 34567;
 
-            ManualEntryCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_MANUAL) == CloverConnector.CARD_ENTRY_METHOD_MANUAL;
-            MagStripeCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE) == CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE;
-            ChipCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT) == CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT;
-            ContactlessCheckbox.Checked = (CardEntryMethod & CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS) == CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
+            TransactionSettingsEdit.CardEntryMethod = 34567;
         }
 
         private void PrintTextBtn_Click(object sender, EventArgs e)
@@ -2475,13 +2306,8 @@ namespace CloverExamplePOS
 
         private void CardDataButton_Click(object sender, EventArgs e)
         {
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
             ReadCardDataRequest CardDataRequest = new ReadCardDataRequest();
-            CardDataRequest.CardEntryMethods = CardEntry;
+            CardDataRequest.CardEntryMethods = TransactionSettingsEdit.CardEntryMethod;
             CardDataRequest.IsForceSwipePinEntry = false;
             data.CloverConnector.ReadCardData(CardDataRequest);
         }
@@ -2540,35 +2366,11 @@ namespace CloverExamplePOS
             inputForm.Show(this);
         }
 
-        private void EntryCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
-
-            CardEntryMethod = CardEntry;
-            if (ManualEntryCheckbox.Checked)
-                CardNotPresentCheckbox.Enabled = true;
-            else
-            {
-                CardNotPresentCheckbox.Enabled = false;
-                CardNotPresentCheckbox.Checked = false;
-            }
-        }
-
         private void VaultCardBtn_Click(object sender, EventArgs e)
         {
-            // Card Entry methods, if you want to override what is set as the default in the connector
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
-
-            data.CloverConnector.VaultCard(CardEntry);
+            data.CloverConnector.VaultCard(TransactionSettingsEdit.CardEntryMethod);
         }
+
         public void OnVaultCardResponse(VaultCardResponse vcResponse)
         {
             String screenResponseMsg = "";
@@ -2728,33 +2530,14 @@ namespace CloverExamplePOS
             request.ExternalId = ExternalIDUtil.GenerateRandomString(32);
             request.Amount = 5000; // for the example app, always do $50
 
-            // Card Entry methods
-            int CardEntry = 0;
-            CardEntry |= ManualEntryCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MANUAL : 0;
-            CardEntry |= MagStripeCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE : 0;
-            CardEntry |= ChipCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT : 0;
-            CardEntry |= ContactlessCheckbox.Checked ? CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS : 0;
+            request.CardEntryMethods = TransactionSettingsEdit.CardEntryMethod;
+            request.CardNotPresent = TransactionSettingsEdit.CardNotPresent;
 
-            request.CardEntryMethods = CardEntry;
-            request.CardNotPresent = CardNotPresentCheckbox.Checked;
-
-            if (DisableRestartTransactionOnFailure.Checked)
-            {
-                request.DisableRestartTransactionOnFail = true;
-            }
-            request.DisablePrinting = disablePrintingCB.Checked;
-            if (disableReceiptOptionsCB.Checked)
-            {
-                request.DisableReceiptSelection = true;
-            }
-            if (disableDuplicateCheckingCB.Checked)
-            {
-                request.DisableDuplicateChecking = true;
-            }
-            if (automaticPaymentConfirmationCB.Checked)
-            {
-                request.AutoAcceptPaymentConfirmations = true;
-            }
+            request.DisableRestartTransactionOnFail = TransactionSettingsEdit.DisableRestartTransactionOnFail;
+            request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
+            request.DisableReceiptSelection = TransactionSettingsEdit.DisableReceiptSelection;
+            request.DisableDuplicateChecking = TransactionSettingsEdit.DisableDuplicateChecking;
+            request.AutoAcceptPaymentConfirmations = TransactionSettingsEdit.AutomaticPaymentConfirmation;
             data.CloverConnector.PreAuth(request);
         }
 

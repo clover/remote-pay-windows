@@ -130,21 +130,25 @@ namespace CloverExamplePOS
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button OkButton;
 
-        public static void Show(Form toCover, string title, string label, int duration = 0)
+        public static void Show(Form parent, string title, string label, int duration = 0)
         {
-            AlertForm alertForm;
-            if (duration > 0)
+            // Thread safety
+            if (parent != null && !parent.IsDisposed)
             {
-                alertForm = new AlertForm(toCover, duration);
+                AlertForm alertForm;
+                if (duration > 0)
+                {
+                    alertForm = new AlertForm(parent, duration);
+                }
+                else
+                {
+                    alertForm = new AlertForm(parent);
+                }
+                alertForm.Title = title;
+                alertForm.Label = label;
+                alertForm.AutoScroll = true;
+                alertForm.Show(parent);
             }
-            else
-            {
-                alertForm = new AlertForm(toCover);
-            }
-            alertForm.Title = title;
-            alertForm.Label = label;
-            alertForm.AutoScroll = true;
-            alertForm.Show(toCover);
         }
     }
 }
