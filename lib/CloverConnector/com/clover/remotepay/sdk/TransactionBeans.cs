@@ -117,6 +117,9 @@ namespace com.clover.remotepay.sdk
         public bool? DisableDuplicateChecking { get; set; }
         public bool? DisableReceiptSelection { get; set; }
         public bool? AutoAcceptPaymentConfirmations { get; set; }
+
+        public Dictionary<string, string> Extras { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> RegionalExtras { get; } = new Dictionary<string, string>();
     }
 
     /// <summary>
@@ -538,6 +541,8 @@ namespace com.clover.remotepay.sdk
         public string EmployeeId { get; set; }
         public string OrderId { get; set; }
 
+        public Dictionary<string, string> Extras { get; } = new Dictionary<string, string>();
+
         // Valid VoidReason values - use USER_CANCEL by default
         public const string USER_CANCEL = "USER_CANCEL";
         public const string NOT_APPROVED = "NOT_APPROVED";
@@ -570,6 +575,8 @@ namespace com.clover.remotepay.sdk
         public string OrderId { get; set; }
         public bool DisablePrinting { get; set; }
         public bool DisableReceiptSelection { get; set; }
+
+        public Dictionary<string, string> Extras { get; } = new Dictionary<string, string>();
     }
 
     /// <summary>
@@ -674,6 +681,8 @@ namespace com.clover.remotepay.sdk
         public long Amount { get; set; } // optional
         public bool? DisablePrinting { get; set; }
         public bool? DisableReceiptSelection { get; set; }
+
+        public Dictionary<string, string> Extras { get; } = new Dictionary<string, string>();
     }
 
     /// <summary>

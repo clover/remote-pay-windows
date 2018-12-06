@@ -34,12 +34,12 @@ namespace CloverExamplePOS
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CloverExamplePOSForm));
-            CloverExamplePOS.ComboboxItem comboboxItem1 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem2 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem3 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem4 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem5 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem6 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem31 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem32 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem33 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem34 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem35 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem36 = new CloverExamplePOS.ComboboxItem();
             this.DeviceMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.TestDeviceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloverMiniUSBMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -188,54 +188,7 @@ namespace CloverExamplePOS
             this.customActivityAction = new System.Windows.Forms.ComboBox();
             this.customActivityPayload = new System.Windows.Forms.TextBox();
             this.TransactionOverridesTabPage = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel18 = new CloverExamplePOS.CustomTableLayoutPanel();
-            this.labelTipAmount = new System.Windows.Forms.Label();
-            this.tipAmount = new CloverExamplePOS.CurrencyTextBox();
-            this.labelSignatureThreshold = new System.Windows.Forms.Label();
-            this.signatureThreshold = new CloverExamplePOS.CurrencyTextBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label52 = new System.Windows.Forms.Label();
-            this.ManualEntryCheckbox = new System.Windows.Forms.CheckBox();
-            this.MagStripeCheckbox = new System.Windows.Forms.CheckBox();
-            this.ChipCheckbox = new System.Windows.Forms.CheckBox();
-            this.ContactlessCheckbox = new System.Windows.Forms.CheckBox();
-            this.flowLayoutPanelCNP = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelCNP = new System.Windows.Forms.Label();
-            this.CardNotPresentCheckbox = new System.Windows.Forms.CheckBox();
-            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label13 = new System.Windows.Forms.Label();
-            this.offlineDefault = new System.Windows.Forms.RadioButton();
-            this.offlineYes = new System.Windows.Forms.RadioButton();
-            this.offlineNo = new System.Windows.Forms.RadioButton();
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label14 = new System.Windows.Forms.Label();
-            this.approveOfflineDefault = new System.Windows.Forms.RadioButton();
-            this.approveOfflineYes = new System.Windows.Forms.RadioButton();
-            this.approveOfflineNo = new System.Windows.Forms.RadioButton();
-            this.flowLayoutPanelTipMode = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelTipMode = new System.Windows.Forms.Label();
-            this.tipModeDefault = new System.Windows.Forms.RadioButton();
-            this.tipModeProvided = new System.Windows.Forms.RadioButton();
-            this.tipModeOnScreen = new System.Windows.Forms.RadioButton();
-            this.tipModeNone = new System.Windows.Forms.RadioButton();
-            this.flowLayoutPanel94 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label84 = new System.Windows.Forms.Label();
-            this.signatureDefault = new System.Windows.Forms.RadioButton();
-            this.signatureOnScreen = new System.Windows.Forms.RadioButton();
-            this.signatureOnPaper = new System.Windows.Forms.RadioButton();
-            this.signatureNone = new System.Windows.Forms.RadioButton();
-            this.flowLayoutPanelForceOffline = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelForceOffline = new System.Windows.Forms.Label();
-            this.forceOfflineDefault = new System.Windows.Forms.RadioButton();
-            this.forceOfflineYes = new System.Windows.Forms.RadioButton();
-            this.forceOfflineNo = new System.Windows.Forms.RadioButton();
-            this.DisableCashBack = new System.Windows.Forms.CheckBox();
-            this.DisableRestartTransactionOnFailure = new System.Windows.Forms.CheckBox();
-            this.disablePrintingCB = new System.Windows.Forms.CheckBox();
-            this.disableReceiptOptionsCB = new System.Windows.Forms.CheckBox();
-            this.disableDuplicateCheckingCB = new System.Windows.Forms.CheckBox();
-            this.automaticSignatureConfirmationCB = new System.Windows.Forms.CheckBox();
-            this.automaticPaymentConfirmationCB = new System.Windows.Forms.CheckBox();
+            this.TransactionSettingsEdit = new CloverExamplePOS.UiPages.TransactionSettingsPage();
             this.LoyaltyApiTabPage = new System.Windows.Forms.TabPage();
             this.loyaltyApiPage = new CloverExamplePOS.LoyaltyApiPage();
             this.UIStateButtonPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -295,14 +248,6 @@ namespace CloverExamplePOS
             this.tabPage8.SuspendLayout();
             this.tabPage9.SuspendLayout();
             this.TransactionOverridesTabPage.SuspendLayout();
-            this.tableLayoutPanel18.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanelCNP.SuspendLayout();
-            this.flowLayoutPanel6.SuspendLayout();
-            this.flowLayoutPanel4.SuspendLayout();
-            this.flowLayoutPanelTipMode.SuspendLayout();
-            this.flowLayoutPanel94.SuspendLayout();
-            this.flowLayoutPanelForceOffline.SuspendLayout();
             this.LoyaltyApiTabPage.SuspendLayout();
             this.StatusPanel.SuspendLayout();
             this.SuspendLayout();
@@ -349,7 +294,7 @@ namespace CloverExamplePOS
             this.TabControl.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(2481, 1168);
+            this.TabControl.Size = new System.Drawing.Size(1720, 1168);
             this.TabControl.TabIndex = 13;
             this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
             // 
@@ -361,7 +306,7 @@ namespace CloverExamplePOS
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage1.Size = new System.Drawing.Size(2473, 1139);
+            this.tabPage1.Size = new System.Drawing.Size(1712, 1139);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Register";
             // 
@@ -382,7 +327,7 @@ namespace CloverExamplePOS
             // 
             this.splitContainer3.Panel2.BackColor = System.Drawing.Color.White;
             this.splitContainer3.Panel2.Controls.Add(this.RegisterTabs);
-            this.splitContainer3.Size = new System.Drawing.Size(2465, 1131);
+            this.splitContainer3.Size = new System.Drawing.Size(1704, 1131);
             this.splitContainer3.SplitterDistance = 614;
             this.splitContainer3.SplitterWidth = 5;
             this.splitContainer3.TabIndex = 19;
@@ -674,7 +619,7 @@ namespace CloverExamplePOS
             this.RegisterTabs.Margin = new System.Windows.Forms.Padding(0);
             this.RegisterTabs.Name = "RegisterTabs";
             this.RegisterTabs.SelectedIndex = 0;
-            this.RegisterTabs.Size = new System.Drawing.Size(1846, 1131);
+            this.RegisterTabs.Size = new System.Drawing.Size(1085, 1131);
             this.RegisterTabs.TabIndex = 0;
             // 
             // tabPage5
@@ -684,7 +629,7 @@ namespace CloverExamplePOS
             this.tabPage5.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage5.Size = new System.Drawing.Size(1838, 1102);
+            this.tabPage5.Size = new System.Drawing.Size(1077, 1102);
             this.tabPage5.TabIndex = 0;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -702,7 +647,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel12.RowCount = 2;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 92F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(1830, 1094);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(1069, 1094);
             this.tableLayoutPanel12.TabIndex = 0;
             // 
             // StoreItems
@@ -713,7 +658,7 @@ namespace CloverExamplePOS
             this.StoreItems.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.StoreItems.Name = "StoreItems";
             this.StoreItems.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-            this.StoreItems.Size = new System.Drawing.Size(1822, 1002);
+            this.StoreItems.Size = new System.Drawing.Size(1061, 1002);
             this.StoreItems.TabIndex = 7;
             // 
             // StoreDiscounts
@@ -724,7 +669,7 @@ namespace CloverExamplePOS
             this.StoreDiscounts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.StoreDiscounts.Name = "StoreDiscounts";
             this.StoreDiscounts.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-            this.StoreDiscounts.Size = new System.Drawing.Size(1822, 92);
+            this.StoreDiscounts.Size = new System.Drawing.Size(1061, 92);
             this.StoreDiscounts.TabIndex = 18;
             // 
             // tabPage6
@@ -879,7 +824,7 @@ namespace CloverExamplePOS
             this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Size = new System.Drawing.Size(2473, 1139);
+            this.tabPage2.Size = new System.Drawing.Size(1712, 1139);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Orders";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -897,7 +842,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(2465, 1131);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1704, 1131);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // splitContainer1
@@ -915,7 +860,7 @@ namespace CloverExamplePOS
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(2457, 1043);
+            this.splitContainer1.Size = new System.Drawing.Size(1696, 1043);
             this.splitContainer1.SplitterDistance = 679;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
@@ -933,7 +878,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel17.RowCount = 2;
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(2457, 679);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(1696, 679);
             this.tableLayoutPanel17.TabIndex = 21;
             // 
             // OrdersListView
@@ -954,7 +899,7 @@ namespace CloverExamplePOS
             this.OrdersListView.Margin = new System.Windows.Forms.Padding(4);
             this.OrdersListView.MultiSelect = false;
             this.OrdersListView.Name = "OrdersListView";
-            this.OrdersListView.Size = new System.Drawing.Size(2449, 605);
+            this.OrdersListView.Size = new System.Drawing.Size(1688, 605);
             this.OrdersListView.TabIndex = 20;
             this.OrdersListView.UseCompatibleStateImageBehavior = false;
             this.OrdersListView.View = System.Windows.Forms.View.Details;
@@ -997,7 +942,7 @@ namespace CloverExamplePOS
             this.OpenOrder_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenOrder_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenOrder_Button.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.OpenOrder_Button.Location = new System.Drawing.Point(2352, 617);
+            this.OpenOrder_Button.Location = new System.Drawing.Point(1591, 617);
             this.OpenOrder_Button.Margin = new System.Windows.Forms.Padding(4);
             this.OpenOrder_Button.Name = "OpenOrder_Button";
             this.OpenOrder_Button.Size = new System.Drawing.Size(101, 58);
@@ -1021,7 +966,7 @@ namespace CloverExamplePOS
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.OrderPaymentsView);
-            this.splitContainer2.Size = new System.Drawing.Size(2457, 359);
+            this.splitContainer2.Size = new System.Drawing.Size(1696, 359);
             this.splitContainer2.SplitterDistance = 415;
             this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 0;
@@ -1078,7 +1023,7 @@ namespace CloverExamplePOS
             this.OrderPaymentsView.Margin = new System.Windows.Forms.Padding(4);
             this.OrderPaymentsView.MultiSelect = false;
             this.OrderPaymentsView.Name = "OrderPaymentsView";
-            this.OrderPaymentsView.Size = new System.Drawing.Size(2037, 359);
+            this.OrderPaymentsView.Size = new System.Drawing.Size(1276, 359);
             this.OrderPaymentsView.TabIndex = 23;
             this.OrderPaymentsView.UseCompatibleStateImageBehavior = false;
             this.OrderPaymentsView.View = System.Windows.Forms.View.Details;
@@ -1136,7 +1081,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 72F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(2457, 72);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(1696, 72);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // flowLayoutPanel3
@@ -1146,7 +1091,7 @@ namespace CloverExamplePOS
             this.flowLayoutPanel3.Location = new System.Drawing.Point(4, 4);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(1220, 64);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(840, 64);
             this.flowLayoutPanel3.TabIndex = 0;
             // 
             // CloseoutButton
@@ -1177,12 +1122,12 @@ namespace CloverExamplePOS
             this.tableLayoutPanel7.Controls.Add(this.VoidButton, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.ShowReceiptButton, 3, 0);
             this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(1232, 4);
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(852, 4);
             this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(1221, 64);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(840, 64);
             this.tableLayoutPanel7.TabIndex = 1;
             // 
             // TipAdjustButton
@@ -1192,7 +1137,7 @@ namespace CloverExamplePOS
             this.TipAdjustButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TipAdjustButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TipAdjustButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.TipAdjustButton.Location = new System.Drawing.Point(1003, 4);
+            this.TipAdjustButton.Location = new System.Drawing.Point(622, 4);
             this.TipAdjustButton.Margin = new System.Windows.Forms.Padding(4);
             this.TipAdjustButton.Name = "TipAdjustButton";
             this.TipAdjustButton.Size = new System.Drawing.Size(105, 56);
@@ -1208,7 +1153,7 @@ namespace CloverExamplePOS
             this.RefundPaymentButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RefundPaymentButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RefundPaymentButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.RefundPaymentButton.Location = new System.Drawing.Point(890, 4);
+            this.RefundPaymentButton.Location = new System.Drawing.Point(509, 4);
             this.RefundPaymentButton.Margin = new System.Windows.Forms.Padding(4);
             this.RefundPaymentButton.Name = "RefundPaymentButton";
             this.RefundPaymentButton.Size = new System.Drawing.Size(105, 56);
@@ -1224,7 +1169,7 @@ namespace CloverExamplePOS
             this.VoidButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.VoidButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VoidButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.VoidButton.Location = new System.Drawing.Point(777, 4);
+            this.VoidButton.Location = new System.Drawing.Point(396, 4);
             this.VoidButton.Margin = new System.Windows.Forms.Padding(4);
             this.VoidButton.Name = "VoidButton";
             this.VoidButton.Size = new System.Drawing.Size(105, 56);
@@ -1239,7 +1184,7 @@ namespace CloverExamplePOS
             this.ShowReceiptButton.BackColor = System.Drawing.Color.White;
             this.ShowReceiptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowReceiptButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ShowReceiptButton.Location = new System.Drawing.Point(1116, 4);
+            this.ShowReceiptButton.Location = new System.Drawing.Point(735, 4);
             this.ShowReceiptButton.Margin = new System.Windows.Forms.Padding(4);
             this.ShowReceiptButton.Name = "ShowReceiptButton";
             this.ShowReceiptButton.Size = new System.Drawing.Size(101, 56);
@@ -1255,7 +1200,7 @@ namespace CloverExamplePOS
             this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage3.Size = new System.Drawing.Size(2473, 1139);
+            this.tabPage3.Size = new System.Drawing.Size(1712, 1139);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Refund";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1274,7 +1219,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(2465, 1131);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1704, 1131);
             this.tableLayoutPanel5.TabIndex = 11;
             // 
             // TransactionsListView
@@ -1289,7 +1234,7 @@ namespace CloverExamplePOS
             this.TransactionsListView.Location = new System.Drawing.Point(4, 84);
             this.TransactionsListView.Margin = new System.Windows.Forms.Padding(4);
             this.TransactionsListView.Name = "TransactionsListView";
-            this.TransactionsListView.Size = new System.Drawing.Size(2457, 963);
+            this.TransactionsListView.Size = new System.Drawing.Size(1696, 963);
             this.TransactionsListView.TabIndex = 10;
             this.TransactionsListView.UseCompatibleStateImageBehavior = false;
             this.TransactionsListView.View = System.Windows.Forms.View.Details;
@@ -1324,7 +1269,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(2457, 72);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1696, 72);
             this.tableLayoutPanel6.TabIndex = 11;
             // 
             // ManualRefundButton
@@ -1371,7 +1316,7 @@ namespace CloverExamplePOS
             this.Cards.Location = new System.Drawing.Point(4, 25);
             this.Cards.Margin = new System.Windows.Forms.Padding(4);
             this.Cards.Name = "Cards";
-            this.Cards.Size = new System.Drawing.Size(2473, 1139);
+            this.Cards.Size = new System.Drawing.Size(1712, 1139);
             this.Cards.TabIndex = 4;
             this.Cards.Text = "Cards";
             this.Cards.UseVisualStyleBackColor = true;
@@ -1394,7 +1339,7 @@ namespace CloverExamplePOS
             this.cardsListView.Location = new System.Drawing.Point(12, 5);
             this.cardsListView.Margin = new System.Windows.Forms.Padding(4);
             this.cardsListView.Name = "cardsListView";
-            this.cardsListView.Size = new System.Drawing.Size(2452, 1062);
+            this.cardsListView.Size = new System.Drawing.Size(1691, 1062);
             this.cardsListView.TabIndex = 37;
             this.cardsListView.UseCompatibleStateImageBehavior = false;
             this.cardsListView.View = System.Windows.Forms.View.Details;
@@ -1431,7 +1376,7 @@ namespace CloverExamplePOS
             this.VaultCardBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.VaultCardBtn.BackColor = System.Drawing.Color.White;
             this.VaultCardBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.VaultCardBtn.Location = new System.Drawing.Point(2364, 1075);
+            this.VaultCardBtn.Location = new System.Drawing.Point(1603, 1075);
             this.VaultCardBtn.Margin = new System.Windows.Forms.Padding(4);
             this.VaultCardBtn.Name = "VaultCardBtn";
             this.VaultCardBtn.Size = new System.Drawing.Size(100, 60);
@@ -1448,7 +1393,7 @@ namespace CloverExamplePOS
             this.tabPage7.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage7.Size = new System.Drawing.Size(2473, 1139);
+            this.tabPage7.Size = new System.Drawing.Size(1712, 1139);
             this.tabPage7.TabIndex = 5;
             this.tabPage7.Text = "Pre-Auths";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1487,7 +1432,7 @@ namespace CloverExamplePOS
             this.PreAuthButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.PreAuthButton.BackColor = System.Drawing.Color.White;
             this.PreAuthButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PreAuthButton.Location = new System.Drawing.Point(2364, 1071);
+            this.PreAuthButton.Location = new System.Drawing.Point(1603, 1071);
             this.PreAuthButton.Margin = new System.Windows.Forms.Padding(4);
             this.PreAuthButton.Name = "PreAuthButton";
             this.PreAuthButton.Size = new System.Drawing.Size(100, 60);
@@ -1503,7 +1448,7 @@ namespace CloverExamplePOS
             this.tabPage4.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage4.Size = new System.Drawing.Size(2473, 1139);
+            this.tabPage4.Size = new System.Drawing.Size(1712, 1139);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Miscellaneous";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1567,7 +1512,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(2417, 1054);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(1656, 1054);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // label9
@@ -2061,25 +2006,25 @@ namespace CloverExamplePOS
             // customActivityAction
             // 
             this.customActivityAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboboxItem1.Text = "BasicExample";
-            comboboxItem1.Value = "com.clover.cfp.examples.BasicExample";
-            comboboxItem2.Text = "BasicConversationalExample";
-            comboboxItem2.Value = "com.clover.cfp.examples.BasicConversationalExample";
-            comboboxItem3.Text = "WebViewExample";
-            comboboxItem3.Value = "com.clover.cfp.examples.WebViewExample";
-            comboboxItem4.Text = "CarouselExample";
-            comboboxItem4.Value = "com.clover.cfp.examples.CarouselExample";
-            comboboxItem5.Text = "RatingsExample";
-            comboboxItem5.Value = "com.clover.cfp.examples.RatingsExample";
-            comboboxItem6.Text = "NFCExample";
-            comboboxItem6.Value = "com.clover.cfp.examples.NFCExample";
+            comboboxItem31.Text = "BasicExample";
+            comboboxItem31.Value = "com.clover.cfp.examples.BasicExample";
+            comboboxItem32.Text = "BasicConversationalExample";
+            comboboxItem32.Value = "com.clover.cfp.examples.BasicConversationalExample";
+            comboboxItem33.Text = "WebViewExample";
+            comboboxItem33.Value = "com.clover.cfp.examples.WebViewExample";
+            comboboxItem34.Text = "CarouselExample";
+            comboboxItem34.Value = "com.clover.cfp.examples.CarouselExample";
+            comboboxItem35.Text = "RatingsExample";
+            comboboxItem35.Value = "com.clover.cfp.examples.RatingsExample";
+            comboboxItem36.Text = "NFCExample";
+            comboboxItem36.Value = "com.clover.cfp.examples.NFCExample";
             this.customActivityAction.Items.AddRange(new object[] {
-            comboboxItem1,
-            comboboxItem2,
-            comboboxItem3,
-            comboboxItem4,
-            comboboxItem5,
-            comboboxItem6});
+            comboboxItem31,
+            comboboxItem32,
+            comboboxItem33,
+            comboboxItem34,
+            comboboxItem35,
+            comboboxItem36});
             this.customActivityAction.Location = new System.Drawing.Point(12, 172);
             this.customActivityAction.Margin = new System.Windows.Forms.Padding(4);
             this.customActivityAction.Name = "customActivityAction";
@@ -2097,638 +2042,27 @@ namespace CloverExamplePOS
             // 
             // TransactionOverridesTabPage
             // 
-            this.TransactionOverridesTabPage.Controls.Add(this.tableLayoutPanel18);
+            this.TransactionOverridesTabPage.AutoScroll = true;
+            this.TransactionOverridesTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.TransactionOverridesTabPage.Controls.Add(this.TransactionSettingsEdit);
             this.TransactionOverridesTabPage.Location = new System.Drawing.Point(4, 25);
             this.TransactionOverridesTabPage.Margin = new System.Windows.Forms.Padding(6);
             this.TransactionOverridesTabPage.Name = "TransactionOverridesTabPage";
             this.TransactionOverridesTabPage.Padding = new System.Windows.Forms.Padding(6);
-            this.TransactionOverridesTabPage.Size = new System.Drawing.Size(2473, 1139);
+            this.TransactionOverridesTabPage.Size = new System.Drawing.Size(1712, 1139);
             this.TransactionOverridesTabPage.TabIndex = 3;
             this.TransactionOverridesTabPage.Text = "Transaction Overrides";
-            this.TransactionOverridesTabPage.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel18
-            // 
-            this.tableLayoutPanel18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel18.ColumnCount = 6;
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel18.Controls.Add(this.labelTipAmount, 0, 6);
-            this.tableLayoutPanel18.Controls.Add(this.tipAmount, 1, 6);
-            this.tableLayoutPanel18.Controls.Add(this.labelSignatureThreshold, 0, 7);
-            this.tableLayoutPanel18.Controls.Add(this.signatureThreshold, 1, 7);
-            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel1, 0, 8);
-            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanelCNP, 0, 9);
-            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel6, 0, 10);
-            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel4, 0, 11);
-            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanelTipMode, 0, 12);
-            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel94, 0, 13);
-            this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanelForceOffline, 0, 14);
-            this.tableLayoutPanel18.Controls.Add(this.DisableCashBack, 0, 15);
-            this.tableLayoutPanel18.Controls.Add(this.DisableRestartTransactionOnFailure, 0, 16);
-            this.tableLayoutPanel18.Controls.Add(this.disablePrintingCB, 0, 17);
-            this.tableLayoutPanel18.Controls.Add(this.disableReceiptOptionsCB, 0, 18);
-            this.tableLayoutPanel18.Controls.Add(this.disableDuplicateCheckingCB, 0, 19);
-            this.tableLayoutPanel18.Controls.Add(this.automaticSignatureConfirmationCB, 0, 20);
-            this.tableLayoutPanel18.Controls.Add(this.automaticPaymentConfirmationCB, 0, 21);
-            this.tableLayoutPanel18.Location = new System.Drawing.Point(6, 6);
-            this.tableLayoutPanel18.Margin = new System.Windows.Forms.Padding(6);
-            this.tableLayoutPanel18.Name = "tableLayoutPanel18";
-            this.tableLayoutPanel18.RowCount = 15;
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(1112, 892);
-            this.tableLayoutPanel18.TabIndex = 0;
-            // 
-            // labelTipAmount
-            // 
-            this.labelTipAmount.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelTipAmount.AutoSize = true;
-            this.labelTipAmount.Location = new System.Drawing.Point(4, 6);
-            this.labelTipAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelTipAmount.Name = "labelTipAmount";
-            this.labelTipAmount.Size = new System.Drawing.Size(88, 17);
-            this.labelTipAmount.TabIndex = 23;
-            this.labelTipAmount.Text = "Tip Amount: ";
-            // 
-            // tipAmount
-            // 
-            this.tipAmount.Location = new System.Drawing.Point(305, 4);
-            this.tipAmount.Margin = new System.Windows.Forms.Padding(4);
-            this.tipAmount.Name = "tipAmount";
-            this.tipAmount.Size = new System.Drawing.Size(132, 22);
-            this.tipAmount.TabIndex = 38;
-            // 
-            // labelSignatureThreshold
-            // 
-            this.labelSignatureThreshold.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelSignatureThreshold.AutoSize = true;
-            this.labelSignatureThreshold.Location = new System.Drawing.Point(4, 36);
-            this.labelSignatureThreshold.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelSignatureThreshold.Name = "labelSignatureThreshold";
-            this.labelSignatureThreshold.Size = new System.Drawing.Size(145, 17);
-            this.labelSignatureThreshold.TabIndex = 23;
-            this.labelSignatureThreshold.Text = "Signature Threshold: ";
-            // 
-            // signatureThreshold
-            // 
-            this.signatureThreshold.Location = new System.Drawing.Point(305, 34);
-            this.signatureThreshold.Margin = new System.Windows.Forms.Padding(4);
-            this.signatureThreshold.Name = "signatureThreshold";
-            this.signatureThreshold.Size = new System.Drawing.Size(132, 22);
-            this.signatureThreshold.TabIndex = 39;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel1, 5);
-            this.flowLayoutPanel1.Controls.Add(this.label52);
-            this.flowLayoutPanel1.Controls.Add(this.ManualEntryCheckbox);
-            this.flowLayoutPanel1.Controls.Add(this.MagStripeCheckbox);
-            this.flowLayoutPanel1.Controls.Add(this.ChipCheckbox);
-            this.flowLayoutPanel1.Controls.Add(this.ContactlessCheckbox);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 64);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(667, 32);
-            this.flowLayoutPanel1.TabIndex = 34;
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(4, 4);
-            this.label52.Margin = new System.Windows.Forms.Padding(4, 4, 4, 0);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(229, 17);
-            this.label52.TabIndex = 37;
-            this.label52.Text = "Card Entry Methods (Sale && Auth): ";
-            // 
-            // ManualEntryCheckbox
-            // 
-            this.ManualEntryCheckbox.AutoSize = true;
-            this.ManualEntryCheckbox.Location = new System.Drawing.Point(241, 4);
-            this.ManualEntryCheckbox.Margin = new System.Windows.Forms.Padding(4);
-            this.ManualEntryCheckbox.Name = "ManualEntryCheckbox";
-            this.ManualEntryCheckbox.Size = new System.Drawing.Size(76, 21);
-            this.ManualEntryCheckbox.TabIndex = 33;
-            this.ManualEntryCheckbox.Text = "Manual";
-            this.ManualEntryCheckbox.UseVisualStyleBackColor = true;
-            this.ManualEntryCheckbox.CheckedChanged += new System.EventHandler(this.EntryCheckbox_CheckedChanged);
-            // 
-            // MagStripeCheckbox
-            // 
-            this.MagStripeCheckbox.AutoSize = true;
-            this.MagStripeCheckbox.Checked = true;
-            this.MagStripeCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.MagStripeCheckbox.Location = new System.Drawing.Point(325, 4);
-            this.MagStripeCheckbox.Margin = new System.Windows.Forms.Padding(4);
-            this.MagStripeCheckbox.Name = "MagStripeCheckbox";
-            this.MagStripeCheckbox.Size = new System.Drawing.Size(98, 21);
-            this.MagStripeCheckbox.TabIndex = 34;
-            this.MagStripeCheckbox.Text = "Mag Stripe";
-            this.MagStripeCheckbox.UseVisualStyleBackColor = true;
-            this.MagStripeCheckbox.CheckedChanged += new System.EventHandler(this.EntryCheckbox_CheckedChanged);
-            // 
-            // ChipCheckbox
-            // 
-            this.ChipCheckbox.AutoSize = true;
-            this.ChipCheckbox.Checked = true;
-            this.ChipCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChipCheckbox.Location = new System.Drawing.Point(431, 4);
-            this.ChipCheckbox.Margin = new System.Windows.Forms.Padding(4);
-            this.ChipCheckbox.Name = "ChipCheckbox";
-            this.ChipCheckbox.Size = new System.Drawing.Size(58, 21);
-            this.ChipCheckbox.TabIndex = 35;
-            this.ChipCheckbox.Text = "Chip";
-            this.ChipCheckbox.UseVisualStyleBackColor = true;
-            this.ChipCheckbox.CheckedChanged += new System.EventHandler(this.EntryCheckbox_CheckedChanged);
-            // 
-            // ContactlessCheckbox
-            // 
-            this.ContactlessCheckbox.AutoSize = true;
-            this.ContactlessCheckbox.Checked = true;
-            this.ContactlessCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ContactlessCheckbox.Location = new System.Drawing.Point(497, 4);
-            this.ContactlessCheckbox.Margin = new System.Windows.Forms.Padding(4);
-            this.ContactlessCheckbox.Name = "ContactlessCheckbox";
-            this.ContactlessCheckbox.Size = new System.Drawing.Size(103, 21);
-            this.ContactlessCheckbox.TabIndex = 36;
-            this.ContactlessCheckbox.Tag = "";
-            this.ContactlessCheckbox.Text = "Contactless";
-            this.ContactlessCheckbox.UseVisualStyleBackColor = true;
-            this.ContactlessCheckbox.CheckedChanged += new System.EventHandler(this.EntryCheckbox_CheckedChanged);
-            // 
-            // flowLayoutPanelCNP
-            // 
-            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanelCNP, 5);
-            this.flowLayoutPanelCNP.Controls.Add(this.labelCNP);
-            this.flowLayoutPanelCNP.Controls.Add(this.CardNotPresentCheckbox);
-            this.flowLayoutPanelCNP.Location = new System.Drawing.Point(4, 104);
-            this.flowLayoutPanelCNP.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelCNP.Name = "flowLayoutPanelCNP";
-            this.flowLayoutPanelCNP.Size = new System.Drawing.Size(667, 32);
-            this.flowLayoutPanelCNP.TabIndex = 0;
-            // 
-            // labelCNP
-            // 
-            this.labelCNP.AutoSize = true;
-            this.labelCNP.Location = new System.Drawing.Point(4, 4);
-            this.labelCNP.Margin = new System.Windows.Forms.Padding(4, 4, 4, 0);
-            this.labelCNP.MinimumSize = new System.Drawing.Size(227, 16);
-            this.labelCNP.Name = "labelCNP";
-            this.labelCNP.Size = new System.Drawing.Size(227, 17);
-            this.labelCNP.TabIndex = 0;
-            this.labelCNP.Text = " ";
-            // 
-            // CardNotPresentCheckbox
-            // 
-            this.CardNotPresentCheckbox.AutoSize = true;
-            this.CardNotPresentCheckbox.Enabled = false;
-            this.CardNotPresentCheckbox.Location = new System.Drawing.Point(239, 4);
-            this.CardNotPresentCheckbox.Margin = new System.Windows.Forms.Padding(4);
-            this.CardNotPresentCheckbox.Name = "CardNotPresentCheckbox";
-            this.CardNotPresentCheckbox.Size = new System.Drawing.Size(361, 21);
-            this.CardNotPresentCheckbox.TabIndex = 37;
-            this.CardNotPresentCheckbox.Text = "Card Not Present (only applies to Manual entry type)";
-            this.CardNotPresentCheckbox.UseVisualStyleBackColor = true;
-            this.CardNotPresentCheckbox.CheckedChanged += new System.EventHandler(this.EntryCheckbox_CheckedChanged);
-            // 
-            // flowLayoutPanel6
-            // 
-            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel6, 4);
-            this.flowLayoutPanel6.Controls.Add(this.label13);
-            this.flowLayoutPanel6.Controls.Add(this.offlineDefault);
-            this.flowLayoutPanel6.Controls.Add(this.offlineYes);
-            this.flowLayoutPanel6.Controls.Add(this.offlineNo);
-            this.flowLayoutPanel6.Location = new System.Drawing.Point(4, 144);
-            this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(1104, 30);
-            this.flowLayoutPanel6.TabIndex = 40;
-            // 
-            // label13
-            // 
-            this.label13.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(4, 6);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(144, 17);
-            this.label13.TabIndex = 0;
-            this.label13.Text = "Allow Offline Payment";
-            // 
-            // offlineDefault
-            // 
-            this.offlineDefault.AutoSize = true;
-            this.offlineDefault.Checked = true;
-            this.offlineDefault.Location = new System.Drawing.Point(156, 4);
-            this.offlineDefault.Margin = new System.Windows.Forms.Padding(4);
-            this.offlineDefault.Name = "offlineDefault";
-            this.offlineDefault.Size = new System.Drawing.Size(74, 21);
-            this.offlineDefault.TabIndex = 1;
-            this.offlineDefault.TabStop = true;
-            this.offlineDefault.Text = "Default";
-            this.offlineDefault.UseVisualStyleBackColor = true;
-            this.offlineDefault.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // offlineYes
-            // 
-            this.offlineYes.AutoSize = true;
-            this.offlineYes.Location = new System.Drawing.Point(238, 4);
-            this.offlineYes.Margin = new System.Windows.Forms.Padding(4);
-            this.offlineYes.Name = "offlineYes";
-            this.offlineYes.Size = new System.Drawing.Size(53, 21);
-            this.offlineYes.TabIndex = 2;
-            this.offlineYes.Text = "Yes";
-            this.offlineYes.UseVisualStyleBackColor = true;
-            this.offlineYes.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // offlineNo
-            // 
-            this.offlineNo.AutoSize = true;
-            this.offlineNo.Location = new System.Drawing.Point(299, 4);
-            this.offlineNo.Margin = new System.Windows.Forms.Padding(4);
-            this.offlineNo.Name = "offlineNo";
-            this.offlineNo.Size = new System.Drawing.Size(47, 21);
-            this.offlineNo.TabIndex = 3;
-            this.offlineNo.Text = "No";
-            this.offlineNo.UseVisualStyleBackColor = true;
-            this.offlineNo.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // flowLayoutPanel4
-            // 
-            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel4, 4);
-            this.flowLayoutPanel4.Controls.Add(this.label14);
-            this.flowLayoutPanel4.Controls.Add(this.approveOfflineDefault);
-            this.flowLayoutPanel4.Controls.Add(this.approveOfflineYes);
-            this.flowLayoutPanel4.Controls.Add(this.approveOfflineNo);
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(4, 182);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(1104, 30);
-            this.flowLayoutPanel4.TabIndex = 41;
-            // 
-            // label14
-            // 
-            this.label14.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(4, 6);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(236, 17);
-            this.label14.TabIndex = 0;
-            this.label14.Text = "Accept Offline Payment W/O Prompt";
-            // 
-            // approveOfflineDefault
-            // 
-            this.approveOfflineDefault.AutoSize = true;
-            this.approveOfflineDefault.Checked = true;
-            this.approveOfflineDefault.Location = new System.Drawing.Point(248, 4);
-            this.approveOfflineDefault.Margin = new System.Windows.Forms.Padding(4);
-            this.approveOfflineDefault.Name = "approveOfflineDefault";
-            this.approveOfflineDefault.Size = new System.Drawing.Size(74, 21);
-            this.approveOfflineDefault.TabIndex = 1;
-            this.approveOfflineDefault.TabStop = true;
-            this.approveOfflineDefault.Text = "Default";
-            this.approveOfflineDefault.UseVisualStyleBackColor = true;
-            this.approveOfflineDefault.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // approveOfflineYes
-            // 
-            this.approveOfflineYes.AutoSize = true;
-            this.approveOfflineYes.Location = new System.Drawing.Point(330, 4);
-            this.approveOfflineYes.Margin = new System.Windows.Forms.Padding(4);
-            this.approveOfflineYes.Name = "approveOfflineYes";
-            this.approveOfflineYes.Size = new System.Drawing.Size(53, 21);
-            this.approveOfflineYes.TabIndex = 2;
-            this.approveOfflineYes.Text = "Yes";
-            this.approveOfflineYes.UseVisualStyleBackColor = true;
-            this.approveOfflineYes.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // approveOfflineNo
-            // 
-            this.approveOfflineNo.AutoSize = true;
-            this.approveOfflineNo.Location = new System.Drawing.Point(391, 4);
-            this.approveOfflineNo.Margin = new System.Windows.Forms.Padding(4);
-            this.approveOfflineNo.Name = "approveOfflineNo";
-            this.approveOfflineNo.Size = new System.Drawing.Size(47, 21);
-            this.approveOfflineNo.TabIndex = 3;
-            this.approveOfflineNo.Text = "No";
-            this.approveOfflineNo.UseVisualStyleBackColor = true;
-            this.approveOfflineNo.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // flowLayoutPanelTipMode
-            // 
-            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanelTipMode, 5);
-            this.flowLayoutPanelTipMode.Controls.Add(this.labelTipMode);
-            this.flowLayoutPanelTipMode.Controls.Add(this.tipModeDefault);
-            this.flowLayoutPanelTipMode.Controls.Add(this.tipModeProvided);
-            this.flowLayoutPanelTipMode.Controls.Add(this.tipModeOnScreen);
-            this.flowLayoutPanelTipMode.Controls.Add(this.tipModeNone);
-            this.flowLayoutPanelTipMode.Location = new System.Drawing.Point(4, 220);
-            this.flowLayoutPanelTipMode.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelTipMode.Name = "flowLayoutPanelTipMode";
-            this.flowLayoutPanelTipMode.Size = new System.Drawing.Size(1104, 30);
-            this.flowLayoutPanelTipMode.TabIndex = 0;
-            // 
-            // labelTipMode
-            // 
-            this.labelTipMode.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelTipMode.Location = new System.Drawing.Point(4, 6);
-            this.labelTipMode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelTipMode.Name = "labelTipMode";
-            this.labelTipMode.Size = new System.Drawing.Size(133, 16);
-            this.labelTipMode.TabIndex = 0;
-            this.labelTipMode.Text = "Tip Mode";
-            // 
-            // tipModeDefault
-            // 
-            this.tipModeDefault.AutoSize = true;
-            this.tipModeDefault.Checked = true;
-            this.tipModeDefault.Location = new System.Drawing.Point(145, 4);
-            this.tipModeDefault.Margin = new System.Windows.Forms.Padding(4);
-            this.tipModeDefault.Name = "tipModeDefault";
-            this.tipModeDefault.Size = new System.Drawing.Size(74, 21);
-            this.tipModeDefault.TabIndex = 2;
-            this.tipModeDefault.TabStop = true;
-            this.tipModeDefault.Text = "Default";
-            this.tipModeDefault.UseVisualStyleBackColor = true;
-            this.tipModeDefault.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // tipModeProvided
-            // 
-            this.tipModeProvided.AutoSize = true;
-            this.tipModeProvided.Location = new System.Drawing.Point(227, 4);
-            this.tipModeProvided.Margin = new System.Windows.Forms.Padding(4);
-            this.tipModeProvided.Name = "tipModeProvided";
-            this.tipModeProvided.Size = new System.Drawing.Size(85, 21);
-            this.tipModeProvided.TabIndex = 2;
-            this.tipModeProvided.Text = "Provided";
-            this.tipModeProvided.UseVisualStyleBackColor = true;
-            this.tipModeProvided.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // tipModeOnScreen
-            // 
-            this.tipModeOnScreen.AutoSize = true;
-            this.tipModeOnScreen.Location = new System.Drawing.Point(320, 4);
-            this.tipModeOnScreen.Margin = new System.Windows.Forms.Padding(4);
-            this.tipModeOnScreen.Name = "tipModeOnScreen";
-            this.tipModeOnScreen.Size = new System.Drawing.Size(97, 21);
-            this.tipModeOnScreen.TabIndex = 3;
-            this.tipModeOnScreen.Text = "On Screen";
-            this.tipModeOnScreen.UseVisualStyleBackColor = true;
-            this.tipModeOnScreen.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // tipModeNone
-            // 
-            this.tipModeNone.AutoSize = true;
-            this.tipModeNone.Location = new System.Drawing.Point(425, 4);
-            this.tipModeNone.Margin = new System.Windows.Forms.Padding(4);
-            this.tipModeNone.Name = "tipModeNone";
-            this.tipModeNone.Size = new System.Drawing.Size(63, 21);
-            this.tipModeNone.TabIndex = 3;
-            this.tipModeNone.Text = "None";
-            this.tipModeNone.UseVisualStyleBackColor = true;
-            this.tipModeNone.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // flowLayoutPanel94
-            // 
-            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel94, 5);
-            this.flowLayoutPanel94.Controls.Add(this.label84);
-            this.flowLayoutPanel94.Controls.Add(this.signatureDefault);
-            this.flowLayoutPanel94.Controls.Add(this.signatureOnScreen);
-            this.flowLayoutPanel94.Controls.Add(this.signatureOnPaper);
-            this.flowLayoutPanel94.Controls.Add(this.signatureNone);
-            this.flowLayoutPanel94.Location = new System.Drawing.Point(4, 258);
-            this.flowLayoutPanel94.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanel94.Name = "flowLayoutPanel94";
-            this.flowLayoutPanel94.Size = new System.Drawing.Size(1104, 30);
-            this.flowLayoutPanel94.TabIndex = 0;
-            // 
-            // label84
-            // 
-            this.label84.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label84.AutoSize = true;
-            this.label84.Location = new System.Drawing.Point(4, 6);
-            this.label84.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(127, 17);
-            this.label84.TabIndex = 0;
-            this.label84.Text = "Signature Location";
-            // 
-            // signatureDefault
-            // 
-            this.signatureDefault.AutoSize = true;
-            this.signatureDefault.Checked = true;
-            this.signatureDefault.Location = new System.Drawing.Point(139, 4);
-            this.signatureDefault.Margin = new System.Windows.Forms.Padding(4);
-            this.signatureDefault.Name = "signatureDefault";
-            this.signatureDefault.Size = new System.Drawing.Size(74, 21);
-            this.signatureDefault.TabIndex = 2;
-            this.signatureDefault.TabStop = true;
-            this.signatureDefault.Text = "Default";
-            this.signatureDefault.UseVisualStyleBackColor = true;
-            this.signatureDefault.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // signatureOnScreen
-            // 
-            this.signatureOnScreen.AutoSize = true;
-            this.signatureOnScreen.Location = new System.Drawing.Point(221, 4);
-            this.signatureOnScreen.Margin = new System.Windows.Forms.Padding(4);
-            this.signatureOnScreen.Name = "signatureOnScreen";
-            this.signatureOnScreen.Size = new System.Drawing.Size(97, 21);
-            this.signatureOnScreen.TabIndex = 2;
-            this.signatureOnScreen.TabStop = true;
-            this.signatureOnScreen.Text = "On Screen";
-            this.signatureOnScreen.UseVisualStyleBackColor = true;
-            this.signatureOnScreen.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // signatureOnPaper
-            // 
-            this.signatureOnPaper.AutoSize = true;
-            this.signatureOnPaper.Location = new System.Drawing.Point(326, 4);
-            this.signatureOnPaper.Margin = new System.Windows.Forms.Padding(4);
-            this.signatureOnPaper.Name = "signatureOnPaper";
-            this.signatureOnPaper.Size = new System.Drawing.Size(90, 21);
-            this.signatureOnPaper.TabIndex = 3;
-            this.signatureOnPaper.Text = "On Paper";
-            this.signatureOnPaper.UseVisualStyleBackColor = true;
-            this.signatureOnPaper.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // signatureNone
-            // 
-            this.signatureNone.AutoSize = true;
-            this.signatureNone.Location = new System.Drawing.Point(424, 4);
-            this.signatureNone.Margin = new System.Windows.Forms.Padding(4);
-            this.signatureNone.Name = "signatureNone";
-            this.signatureNone.Size = new System.Drawing.Size(63, 21);
-            this.signatureNone.TabIndex = 3;
-            this.signatureNone.Text = "None";
-            this.signatureNone.UseVisualStyleBackColor = true;
-            this.signatureNone.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // flowLayoutPanelForceOffline
-            // 
-            this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanelForceOffline, 4);
-            this.flowLayoutPanelForceOffline.Controls.Add(this.labelForceOffline);
-            this.flowLayoutPanelForceOffline.Controls.Add(this.forceOfflineDefault);
-            this.flowLayoutPanelForceOffline.Controls.Add(this.forceOfflineYes);
-            this.flowLayoutPanelForceOffline.Controls.Add(this.forceOfflineNo);
-            this.flowLayoutPanelForceOffline.Location = new System.Drawing.Point(4, 296);
-            this.flowLayoutPanelForceOffline.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelForceOffline.Name = "flowLayoutPanelForceOffline";
-            this.flowLayoutPanelForceOffline.Size = new System.Drawing.Size(1104, 30);
-            this.flowLayoutPanelForceOffline.TabIndex = 40;
-            // 
-            // labelForceOffline
-            // 
-            this.labelForceOffline.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelForceOffline.AutoSize = true;
-            this.labelForceOffline.Location = new System.Drawing.Point(4, 6);
-            this.labelForceOffline.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelForceOffline.Name = "labelForceOffline";
-            this.labelForceOffline.Size = new System.Drawing.Size(148, 17);
-            this.labelForceOffline.TabIndex = 0;
-            this.labelForceOffline.Text = "Force Offline Payment";
-            // 
-            // forceOfflineDefault
-            // 
-            this.forceOfflineDefault.AutoSize = true;
-            this.forceOfflineDefault.Checked = true;
-            this.forceOfflineDefault.Location = new System.Drawing.Point(160, 4);
-            this.forceOfflineDefault.Margin = new System.Windows.Forms.Padding(4);
-            this.forceOfflineDefault.Name = "forceOfflineDefault";
-            this.forceOfflineDefault.Size = new System.Drawing.Size(74, 21);
-            this.forceOfflineDefault.TabIndex = 1;
-            this.forceOfflineDefault.TabStop = true;
-            this.forceOfflineDefault.Text = "Default";
-            this.forceOfflineDefault.UseVisualStyleBackColor = true;
-            this.forceOfflineDefault.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // forceOfflineYes
-            // 
-            this.forceOfflineYes.AutoSize = true;
-            this.forceOfflineYes.Location = new System.Drawing.Point(242, 4);
-            this.forceOfflineYes.Margin = new System.Windows.Forms.Padding(4);
-            this.forceOfflineYes.Name = "forceOfflineYes";
-            this.forceOfflineYes.Size = new System.Drawing.Size(53, 21);
-            this.forceOfflineYes.TabIndex = 2;
-            this.forceOfflineYes.Text = "Yes";
-            this.forceOfflineYes.UseVisualStyleBackColor = true;
-            this.forceOfflineYes.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // forceOfflineNo
-            // 
-            this.forceOfflineNo.AutoSize = true;
-            this.forceOfflineNo.Location = new System.Drawing.Point(303, 4);
-            this.forceOfflineNo.Margin = new System.Windows.Forms.Padding(4);
-            this.forceOfflineNo.Name = "forceOfflineNo";
-            this.forceOfflineNo.Size = new System.Drawing.Size(47, 21);
-            this.forceOfflineNo.TabIndex = 3;
-            this.forceOfflineNo.Text = "No";
-            this.forceOfflineNo.UseVisualStyleBackColor = true;
-            this.forceOfflineNo.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // DisableCashBack
-            // 
-            this.DisableCashBack.AutoSize = true;
-            this.DisableCashBack.Location = new System.Drawing.Point(4, 334);
-            this.DisableCashBack.Margin = new System.Windows.Forms.Padding(4);
-            this.DisableCashBack.Name = "DisableCashBack";
-            this.DisableCashBack.Size = new System.Drawing.Size(144, 21);
-            this.DisableCashBack.TabIndex = 43;
-            this.DisableCashBack.Text = "Disable CashBack";
-            this.DisableCashBack.UseVisualStyleBackColor = true;
-            // 
-            // DisableRestartTransactionOnFailure
-            // 
-            this.DisableRestartTransactionOnFailure.AutoSize = true;
-            this.DisableRestartTransactionOnFailure.Location = new System.Drawing.Point(4, 363);
-            this.DisableRestartTransactionOnFailure.Margin = new System.Windows.Forms.Padding(4);
-            this.DisableRestartTransactionOnFailure.Name = "DisableRestartTransactionOnFailure";
-            this.DisableRestartTransactionOnFailure.Size = new System.Drawing.Size(289, 21);
-            this.DisableRestartTransactionOnFailure.TabIndex = 44;
-            this.DisableRestartTransactionOnFailure.Text = "Disable Restart of Transaction on Failure";
-            this.DisableRestartTransactionOnFailure.UseVisualStyleBackColor = true;
-            // 
-            // disablePrintingCB
-            // 
-            this.disablePrintingCB.AutoSize = true;
-            this.disablePrintingCB.Location = new System.Drawing.Point(4, 392);
-            this.disablePrintingCB.Margin = new System.Windows.Forms.Padding(4);
-            this.disablePrintingCB.Name = "disablePrintingCB";
-            this.disablePrintingCB.Size = new System.Drawing.Size(129, 21);
-            this.disablePrintingCB.TabIndex = 42;
-            this.disablePrintingCB.Text = "Disable Printing";
-            this.disablePrintingCB.UseVisualStyleBackColor = true;
-            // 
-            // disableReceiptOptionsCB
-            // 
-            this.disableReceiptOptionsCB.AutoSize = true;
-            this.disableReceiptOptionsCB.Location = new System.Drawing.Point(4, 421);
-            this.disableReceiptOptionsCB.Margin = new System.Windows.Forms.Padding(4);
-            this.disableReceiptOptionsCB.Name = "disableReceiptOptionsCB";
-            this.disableReceiptOptionsCB.Size = new System.Drawing.Size(182, 21);
-            this.disableReceiptOptionsCB.TabIndex = 45;
-            this.disableReceiptOptionsCB.Text = "Disable Receipt Options";
-            this.disableReceiptOptionsCB.UseVisualStyleBackColor = true;
-            this.disableReceiptOptionsCB.CheckedChanged += new System.EventHandler(this.disableReceiptOptionsCB_CheckedChanged);
-            // 
-            // disableDuplicateCheckingCB
-            // 
-            this.disableDuplicateCheckingCB.AutoSize = true;
-            this.disableDuplicateCheckingCB.Location = new System.Drawing.Point(4, 450);
-            this.disableDuplicateCheckingCB.Margin = new System.Windows.Forms.Padding(4);
-            this.disableDuplicateCheckingCB.Name = "disableDuplicateCheckingCB";
-            this.disableDuplicateCheckingCB.Size = new System.Drawing.Size(202, 21);
-            this.disableDuplicateCheckingCB.TabIndex = 46;
-            this.disableDuplicateCheckingCB.Text = "Disable Duplicate Checking";
-            this.disableDuplicateCheckingCB.UseVisualStyleBackColor = true;
-            // 
-            // automaticSignatureConfirmationCB
-            // 
-            this.automaticSignatureConfirmationCB.AutoSize = true;
-            this.automaticSignatureConfirmationCB.Location = new System.Drawing.Point(4, 479);
-            this.automaticSignatureConfirmationCB.Margin = new System.Windows.Forms.Padding(4);
-            this.automaticSignatureConfirmationCB.Name = "automaticSignatureConfirmationCB";
-            this.automaticSignatureConfirmationCB.Size = new System.Drawing.Size(225, 21);
-            this.automaticSignatureConfirmationCB.TabIndex = 47;
-            this.automaticSignatureConfirmationCB.Text = "Automatically Accept Signature";
-            this.automaticSignatureConfirmationCB.UseVisualStyleBackColor = true;
-            // 
-            // automaticPaymentConfirmationCB
-            // 
-            this.automaticPaymentConfirmationCB.AutoSize = true;
-            this.automaticPaymentConfirmationCB.Location = new System.Drawing.Point(4, 508);
-            this.automaticPaymentConfirmationCB.Margin = new System.Windows.Forms.Padding(4);
-            this.automaticPaymentConfirmationCB.Name = "automaticPaymentConfirmationCB";
-            this.automaticPaymentConfirmationCB.Size = new System.Drawing.Size(293, 21);
-            this.automaticPaymentConfirmationCB.TabIndex = 48;
-            this.automaticPaymentConfirmationCB.Text = "Automatically Accept Payment Challenges";
-            this.automaticPaymentConfirmationCB.UseVisualStyleBackColor = true;
+            // TransactionSettingsEdit
+            // 
+            this.TransactionSettingsEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TransactionSettingsEdit.CardEntryMethod = 34567;
+            this.TransactionSettingsEdit.Location = new System.Drawing.Point(0, 0);
+            this.TransactionSettingsEdit.MinimumSize = new System.Drawing.Size(1216, 574);
+            this.TransactionSettingsEdit.Name = "TransactionSettingsEdit";
+            this.TransactionSettingsEdit.Size = new System.Drawing.Size(1704, 574);
+            this.TransactionSettingsEdit.TabIndex = 51;
             // 
             // LoyaltyApiTabPage
             // 
@@ -2757,7 +2091,7 @@ namespace CloverExamplePOS
             this.UIStateButtonPanel.Margin = new System.Windows.Forms.Padding(4);
             this.UIStateButtonPanel.MinimumSize = new System.Drawing.Size(13, 10);
             this.UIStateButtonPanel.Name = "UIStateButtonPanel";
-            this.UIStateButtonPanel.Size = new System.Drawing.Size(2407, 34);
+            this.UIStateButtonPanel.Size = new System.Drawing.Size(1646, 34);
             this.UIStateButtonPanel.TabIndex = 21;
             this.UIStateButtonPanel.WrapContents = false;
             // 
@@ -2821,7 +2155,7 @@ namespace CloverExamplePOS
             this.ConnectStatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ConnectStatusLabel.BackColor = System.Drawing.Color.Transparent;
-            this.ConnectStatusLabel.Location = new System.Drawing.Point(2334, 0);
+            this.ConnectStatusLabel.Location = new System.Drawing.Point(1573, 0);
             this.ConnectStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ConnectStatusLabel.Name = "ConnectStatusLabel";
             this.ConnectStatusLabel.Size = new System.Drawing.Size(146, 62);
@@ -2838,7 +2172,7 @@ namespace CloverExamplePOS
             this.DeviceCurrentStatus.Location = new System.Drawing.Point(72, 0);
             this.DeviceCurrentStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.DeviceCurrentStatus.Name = "DeviceCurrentStatus";
-            this.DeviceCurrentStatus.Size = new System.Drawing.Size(2407, 25);
+            this.DeviceCurrentStatus.Size = new System.Drawing.Size(1646, 25);
             this.DeviceCurrentStatus.TabIndex = 24;
             this.DeviceCurrentStatus.Text = "...";
             // 
@@ -2867,14 +2201,14 @@ namespace CloverExamplePOS
             this.StatusPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.StatusPanel.Location = new System.Drawing.Point(0, 1168);
             this.StatusPanel.Name = "StatusPanel";
-            this.StatusPanel.Size = new System.Drawing.Size(2481, 61);
+            this.StatusPanel.Size = new System.Drawing.Size(1720, 61);
             this.StatusPanel.TabIndex = 26;
             // 
             // CloverExamplePOSForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2481, 1229);
+            this.ClientSize = new System.Drawing.Size(1720, 1229);
             this.Controls.Add(this.TabControl);
             this.Controls.Add(this.StatusPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2939,22 +2273,6 @@ namespace CloverExamplePOS
             this.tabPage9.ResumeLayout(false);
             this.tabPage9.PerformLayout();
             this.TransactionOverridesTabPage.ResumeLayout(false);
-            this.tableLayoutPanel18.ResumeLayout(false);
-            this.tableLayoutPanel18.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.flowLayoutPanelCNP.ResumeLayout(false);
-            this.flowLayoutPanelCNP.PerformLayout();
-            this.flowLayoutPanel6.ResumeLayout(false);
-            this.flowLayoutPanel6.PerformLayout();
-            this.flowLayoutPanel4.ResumeLayout(false);
-            this.flowLayoutPanel4.PerformLayout();
-            this.flowLayoutPanelTipMode.ResumeLayout(false);
-            this.flowLayoutPanelTipMode.PerformLayout();
-            this.flowLayoutPanel94.ResumeLayout(false);
-            this.flowLayoutPanel94.PerformLayout();
-            this.flowLayoutPanelForceOffline.ResumeLayout(false);
-            this.flowLayoutPanelForceOffline.PerformLayout();
             this.LoyaltyApiTabPage.ResumeLayout(false);
             this.StatusPanel.ResumeLayout(false);
             this.StatusPanel.PerformLayout();
@@ -3030,7 +2348,6 @@ namespace CloverExamplePOS
         private TextBox RefundAmount;
         private Label label5;
         private CustomTableLayoutPanel tableLayoutPanel8;
-        private CustomTableLayoutPanel tableLayoutPanel18;
         private Label label9;
         private Label labelTS;
         private TextBox DisplayMessageTextbox;
@@ -3054,8 +2371,6 @@ namespace CloverExamplePOS
         private Button RemoveItemButton;
         private TextBox ItemQuantityTextbox;
         private Label label7;
-        private Label labelTipAmount;
-        private Label labelSignatureThreshold;
         private Button IncrementQuantityButton;
         private Button DecrementQuantityButton;
         private FlowLayoutPanel UIStateButtonPanel;
@@ -3068,7 +2383,6 @@ namespace CloverExamplePOS
         private Button CardDataButton;
         private Label label11;
         private Label label12;
-        private Label label52;
         private DropDownButton PrintImageButton;
         private TableLayoutPanel tableLayoutPanel16;
         private TableLayoutPanel tableLayoutPanel96;
@@ -3080,16 +2394,6 @@ namespace CloverExamplePOS
         private DropDownButton AuthButton;
         private Button TipAdjustButton;
         private FlowLayoutPanel flowLayoutPanel5;
-        private FlowLayoutPanel flowLayoutPanel1;
-        private FlowLayoutPanel flowLayoutPanelCNP;
-        private Label labelCNP;
-        private CheckBox DisableCashBack;
-        private CheckBox DisableRestartTransactionOnFailure;
-        private CheckBox ManualEntryCheckbox;
-        private CheckBox MagStripeCheckbox;
-        private CheckBox ChipCheckbox;
-        private CheckBox ContactlessCheckbox;
-        private CheckBox CardNotPresentCheckbox;
         private TabPage Cards;
         private ListView cardsListView;
         private ColumnHeader CardName;
@@ -3108,48 +2412,14 @@ namespace CloverExamplePOS
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
         private Button PreAuthButton;
-        private FlowLayoutPanel flowLayoutPanelForceOffline;
-        private FlowLayoutPanel flowLayoutPanel6;
-        private Label label13;
-        private FlowLayoutPanel flowLayoutPanel4;
-        private FlowLayoutPanel flowLayoutPanel94;
-        private FlowLayoutPanel flowLayoutPanelTipMode;
         private FlowLayoutPanel flowLayoutPanelSigLoc;
-        private Label labelTipMode;
         private Label labelSigLoc;
-        private Label label14;
-        private Label label84;
-        private Label labelForceOffline;
-        private RadioButton offlineDefault;
-        private RadioButton offlineYes;
-        private RadioButton offlineNo;
-        private RadioButton signatureDefault;
-        private RadioButton signatureOnScreen;
-        private RadioButton signatureOnPaper;
-        private RadioButton signatureNone;
-        private CurrencyTextBox tipAmount;
-        private CurrencyTextBox signatureThreshold;
-        private RadioButton tipModeDefault;
-        private RadioButton tipModeOnScreen;
-        private RadioButton tipModeProvided;
-        private RadioButton tipModeNone;
-        private RadioButton approveOfflineDefault;
-        private RadioButton approveOfflineYes;
-        private RadioButton approveOfflineNo;
-        private RadioButton forceOfflineDefault;
-        private RadioButton forceOfflineYes;
-        private RadioButton forceOfflineNo;
         private ColumnHeader externalID;
         private TabPage tabPage8;
         private ListView pendingPaymentListView;
         private ColumnHeader paymentIdHeader;
         private ColumnHeader paymentAmountHeader;
         private Button refreshPendingPayments;
-        private CheckBox disablePrintingCB;
-        private CheckBox disableReceiptOptionsCB;
-        private CheckBox disableDuplicateCheckingCB;
-        private CheckBox automaticSignatureConfirmationCB;
-        private CheckBox automaticPaymentConfirmationCB;
         private CheckBox nonBlockingCB;
         private ComboBox customActivityAction;
         private TextBox customActivityPayload;
@@ -3175,5 +2445,6 @@ namespace CloverExamplePOS
         private Label DeviceCurrentStatus;
         private Label label4;
         private Panel StatusPanel;
+        private UiPages.TransactionSettingsPage TransactionSettingsEdit;
     }
 }

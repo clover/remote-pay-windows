@@ -116,7 +116,7 @@ namespace com.clover.remotepay.transport
                 rMessage = JsonUtils.DeserializeSdk<RemoteMessage>(message);
                 remoteMessageVersion = Math.Max(remoteMessageVersion, rMessage.version);
             }
-            catch (Exception exception)
+            catch (Newtonsoft.Json.JsonSerializationException)
             {
                 // if a remote message can't be parsed, ignore this unknown message; log as appropriate
                 // - and verify backwards compatiblility story since old WinSDK releases will crash
@@ -124,240 +124,209 @@ namespace com.clover.remotepay.transport
                 // TODO: Log message and exception in new logging
             }
 
-            // Handle and route known messages appropriately
-            if (rMessage != null)
+            try
             {
-                switch (rMessage.method)
+                // Handle and route known messages appropriately
+                if (rMessage != null)
                 {
-                    case Methods.BREAK:
-                        break;
-                    case Methods.ACK:
-                        AcknowledgementMessage ackMessage = JsonUtils.DeserializeSdk<AcknowledgementMessage>(rMessage.payload);
-                        notifyObserverAck(ackMessage);
-                        break;
-                    case Methods.CASHBACK_SELECTED:
-                        CashbackSelectedMessage cbsMessage = JsonUtils.DeserializeSdk<CashbackSelectedMessage>(rMessage.payload);
-                        notifyObserversCashbackSelected(cbsMessage);
-                        break;
-                    case Methods.DISCOVERY_RESPONSE:
-                        DiscoveryResponseMessage drMessage = JsonUtils.DeserializeSdk<DiscoveryResponseMessage>(rMessage.payload);
-                        deviceInfo.name = drMessage.name;
-                        deviceInfo.serial = drMessage.serial;
-                        deviceInfo.model = drMessage.model;
-                        notifyObserversDiscoveryResponse(drMessage);
-                        break;
-                    case Methods.FINISH_CANCEL:
-                        FinishCancelMessage finishCancelMessage = JsonUtils.DeserializeSdk<FinishCancelMessage>(rMessage.payload);
-                        notifyObserversFinishCancel(finishCancelMessage.requestInfo);
-                        break;
-                    case Methods.FINISH_OK:
-                        FinishOkMessage fokmsg = JsonUtils.DeserializeSdk<FinishOkMessage>(rMessage.payload);
-                        notifyObserversFinishOk(fokmsg);
-                        break;
-                    case Methods.KEY_PRESS:
-                        KeyPressMessage kpm = JsonUtils.DeserializeSdk<KeyPressMessage>(rMessage.payload);
-                        notifyObserversKeyPressed(kpm);
-                        break;
-                    case Methods.ORDER_ACTION_RESPONSE:
-                        break;
-                    case Methods.PARTIAL_AUTH:
-                        PartialAuthMessage partialAuth = JsonUtils.DeserializeSdk<PartialAuthMessage>(rMessage.payload);
-                        notifyObserversPartialAuth(partialAuth);
-                        break;
-                    case Methods.PAYMENT_VOIDED:
-                        // this seems to only gets called if a Signature is "Canceled" on the device
-                        break;
-                    case Methods.CONFIRM_PAYMENT_MESSAGE:
-                        setPaymentConfirmationIdle(false);
-                        ConfirmPaymentMessage confirmPaymentMessage = JsonUtils.DeserializeSdk<ConfirmPaymentMessage>(rMessage.payload);
-                        notifyObserversConfirmPayment(confirmPaymentMessage);
-                        break;
-                    case Methods.TIP_ADDED:
-                        TipAddedMessage tipMessage = JsonUtils.DeserializeSdk<TipAddedMessage>(rMessage.payload);
-                        notifyObserversTipAdded(tipMessage);
-                        break;
-                    case Methods.TX_START_RESPONSE:
-                        TxStartResponseMessage txsrm = JsonUtils.DeserializeSdk<TxStartResponseMessage>(rMessage.payload);
-                        notifyObserversTxStartResponse(txsrm);
-                        break;
-                    case Methods.TX_STATE:
-                        TxStateMessage txStateMsg = JsonUtils.DeserializeSdk<TxStateMessage>(rMessage.payload);
-                        notifyObserversTxState(txStateMsg);
-                        break;
-                    case Methods.UI_STATE:
-                        UiStateMessage uiStateMsg = JsonUtils.DeserializeSdk<UiStateMessage>(rMessage.payload);
-                        notifyObserversUiState(uiStateMsg);
-                        break;
-                    case Methods.VERIFY_SIGNATURE:
-                        paymentRejected = false;
-                        VerifySignatureMessage vsigMsg = JsonUtils.DeserializeSdk<VerifySignatureMessage>(rMessage.payload);
-                        notifyObserversVerifySignature(vsigMsg);
-                        break;
-                    case Methods.REFUND_RESPONSE:
-                        RefundResponseMessage refRespMsg = JsonUtils.DeserializeSdk<RefundResponseMessage>(rMessage.payload);
-                        notifyObserversRefundPaymentResponse(refRespMsg);
-                        break;
-                    case Methods.TIP_ADJUST_RESPONSE:
-                        TipAdjustResponseMessage tipAdjustMsg = JsonUtils.DeserializeSdk<TipAdjustResponseMessage>(rMessage.payload);
-                        notifyObserversTipAdjusted(tipAdjustMsg);
-                        break;
-                    case Methods.REFUND_REQUEST:
-                        //Outbound no-op
-                        break;
-                    case Methods.VAULT_CARD_RESPONSE:
-                        VaultCardResponseMessage vcrMsg = JsonUtils.DeserializeSdk<VaultCardResponseMessage>(rMessage.payload);
-                        notifyObserversVaultCardResponse(vcrMsg);
-                        break;
-                    case Methods.CARD_DATA_RESPONSE:
-                        ReadCardDataResponseMessage rcdrMsg = JsonUtils.DeserializeSdk<ReadCardDataResponseMessage>(rMessage.payload);
-                        notifyObserversReadCardDataResponse(rcdrMsg);
-                        break;
-                    case Methods.CAPTURE_PREAUTH_RESPONSE:
-                        CapturePreAuthResponseMessage carMsg = JsonUtils.DeserializeSdk<CapturePreAuthResponseMessage>(rMessage.payload);
-                        notifyObserversCapturePreAuthResponse(carMsg);
-                        break;
-                    case Methods.CLOSEOUT_RESPONSE:
-                        CloseoutResponseMessage crMsg = JsonUtils.DeserializeSdk<CloseoutResponseMessage>(rMessage.payload);
-                        notifyObserversCloseoutResponse(crMsg);
-                        break;
-                    case Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE:
-                        RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.DeserializeSdk<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
-                        notifyObserversPendingPaymentsResponse(rpprMsg);
-                        break;
-                    case Methods.ACTIVITY_RESPONSE:
-                        ActivityResponseMessage arm = JsonUtils.DeserializeSdk<ActivityResponseMessage>(rMessage.payload);
-                        notifyObserversActivityResponse(arm);
-                        break;
-                    case Methods.ACTIVITY_MESSAGE_FROM_ACTIVITY:
-                        ActivityMessageFromActivity amfa = JsonUtils.DeserializeSdk<ActivityMessageFromActivity>(rMessage.payload);
-                        notifyObserversActivityMessage(amfa);
-                        break;
-                    case Methods.RESET_DEVICE_RESPONSE:
-                        ResetDeviceResponseMessage rdrm = JsonUtils.DeserializeSdk<ResetDeviceResponseMessage>(rMessage.payload);
-                        notifyObserversDeviceReset(rdrm);
-                        break;
-                    case Methods.RETRIEVE_DEVICE_STATUS_RESPONSE:
-                        RetrieveDeviceStatusResponseMessage rdsrm = JsonUtils.DeserializeSdk<RetrieveDeviceStatusResponseMessage>(rMessage.payload);
-                        notifyObserversRetrieveDeviceStatusResponse(rdsrm);
-                        break;
-                    case Methods.DISCOVERY_REQUEST:
-                        //Outbound no-op
-                        break;
-                    case Methods.ORDER_ACTION_ADD_DISCOUNT:
-                        //Outbound no-op
-                        break;
-                    case Methods.ORDER_ACTION_ADD_LINE_ITEM:
-                        //Outbound no-op
-                        break;
-                    case Methods.ORDER_ACTION_REMOVE_LINE_ITEM:
-                        //Outbound no-op
-                        break;
-                    case Methods.ORDER_ACTION_REMOVE_DISCOUNT:
-                        //Outbound no-op
-                        break;
-                    case Methods.PRINT_CREDIT:
-                        CreditPrintMessage cpm = JsonUtils.DeserializeSdk<CreditPrintMessage>(rMessage.payload);
-                        notifyObserversPrintCredit(cpm);
-                        break;
-                    case Methods.PRINT_CREDIT_DECLINE:
-                        DeclineCreditPrintMessage dcpm = JsonUtils.DeserializeSdk<DeclineCreditPrintMessage>(rMessage.payload);
-                        notifyObserversPrintCreditDecline(dcpm);
-                        break;
-                    case Methods.PRINT_PAYMENT:
-                        PaymentPrintMessage ppm = JsonUtils.DeserializeSdk<PaymentPrintMessage>(rMessage.payload);
-                        notifyObserversPrintPayment(ppm);
-                        break;
-                    case Methods.PRINT_PAYMENT_DECLINE:
-                        DeclinePaymentPrintMessage dppm = JsonUtils.DeserializeSdk<DeclinePaymentPrintMessage>(rMessage.payload);
-                        notifyObserversPrintPaymentDecline(dppm);
-                        break;
-                    case Methods.PRINT_PAYMENT_MERCHANT_COPY:
-                        PaymentPrintMerchantCopyMessage ppmcm = JsonUtils.DeserializeSdk<PaymentPrintMerchantCopyMessage>(rMessage.payload);
-                        notifyObserversPrintMerchantCopy(ppmcm);
-                        break;
-                    case Methods.REFUND_PRINT_PAYMENT:
-                        RefundPaymentPrintMessage rppm = JsonUtils.DeserializeSdk<RefundPaymentPrintMessage>(rMessage.payload);
-                        notifyObserversPrintRefund(rppm);
-                        break;
-                    case Methods.RETRIEVE_PAYMENT_RESPONSE:
-                        RetrievePaymentResponseMessage rprm = JsonUtils.DeserializeSdk<RetrievePaymentResponseMessage>(rMessage.payload);
-                        notifyObserversRetrievePaymentResponse(rprm);
-                        break;
-                    case Methods.GET_PRINTERS_RESPONSE:
-                        RetrievePrintersResponseMessage rtrm = JsonUtils.DeserializeSdk<RetrievePrintersResponseMessage>(rMessage.payload);
-                        notifyObserversRetrievePrinterResponse(rtrm);
-                        break;
-                    case Methods.PRINT_JOB_STATUS_RESPONSE:
-                        PrintJobStatusResponseMessage pjsrm = JsonUtils.DeserializeSdk<PrintJobStatusResponseMessage>(rMessage.payload);
-                        notifyObserversRetrievePrintJobStatus(pjsrm);
-                        break;
-                    case Methods.SHOW_RECEIPT_OPTIONS_RESPONSE:
-                        ShowReceiptOptionsResponseMessage srorm = JsonUtils.DeserializeSdk<ShowReceiptOptionsResponseMessage>(rMessage.payload);
-                        notifyObserverDisplayReceiptOptionsResponse(srorm);
-                        break;
-                    case Methods.CUSTOMER_PROVIDED_DATA_MESSAGE:
-                        notifyObserversCustomerProvidedData(JsonUtils.DeserializeSdk<CustomerProvidedDataResponseMessage>(rMessage.payload));
-                        break;
-                    case Methods.PRINT_IMAGE:
-                        //Outbound no-op
-                        break;
-                    case Methods.PRINT_TEXT:
-                        //Outbound no-op
-                        break;
-                    case Methods.SHOW_ORDER_SCREEN:
-                        //Outbound no-op
-                        break;
-                    case Methods.SHOW_PAYMENT_RECEIPT_OPTIONS:
-                        //Outbound no-op
-                        break;
-                    case Methods.SHOW_REFUND_RECEIPT_OPTIONS:
-                        //Outbound no-op
-                        break;
-                    case Methods.SHOW_CREDIT_RECEIPT_OPTIONS:
-                        //Outbound no-op
-                        break;
-                    case Methods.SHOW_THANK_YOU_SCREEN:
-                        //Outbound no-op
-                        break;
-                    case Methods.SHOW_WELCOME_SCREEN:
-                        //Outbound no-op
-                        break;
-                    case Methods.SIGNATURE_VERIFIED:
-                        //Outbound no-op
-                        break;
-                    case Methods.TERMINAL_MESSAGE:
-                        //Outbound no-op
-                        break;
-                    case Methods.TX_START:
-                        //Outbound no-op
-                        break;
-                    case Methods.VOID_PAYMENT:
-                        //Outbound no-op
-                        break;
-                    case Methods.VOID_PAYMENT_RESPONSE:
-                        VoidPaymentResponseMessage vprm = JsonUtils.DeserializeSdk<VoidPaymentResponseMessage>(rMessage.payload);
-                        notifyObserversPaymentVoided(vprm);
-                        break;
-                    case Methods.CLOSEOUT_REQUEST:
-                        //Outbound no-op
-                        break;
-                    case Methods.VAULT_CARD:
-                        //Outbound no-op
-                        break;
-                    case Methods.CARD_DATA:
-                        //Outbound no-op
-                        break;
-                    case Methods.CLOVER_DEVICE_LOG_REQUEST:
-                        //Outbound no-op
-                        break;
-                    default:
-                        // Messsage Method not recognized or null: usually rMessage.type == MessageTypes.PING instead of normal Command message
-                        if (rMessage.type == MessageTypes.PING)
-                        {
-                            onPing();
-                        }
-                        break;
+                    switch (rMessage.method)
+                    {
+                        case Methods.BREAK:
+                            break;
+                        case Methods.ACK:
+                            AcknowledgementMessage ackMessage = JsonUtils.DeserializeSdk<AcknowledgementMessage>(rMessage.payload);
+                            notifyObserverAck(ackMessage);
+                            break;
+                        case Methods.CASHBACK_SELECTED:
+                            CashbackSelectedMessage cbsMessage = JsonUtils.DeserializeSdk<CashbackSelectedMessage>(rMessage.payload);
+                            notifyObserversCashbackSelected(cbsMessage);
+                            break;
+                        case Methods.DISCOVERY_RESPONSE:
+                            DiscoveryResponseMessage drMessage = JsonUtils.DeserializeSdk<DiscoveryResponseMessage>(rMessage.payload);
+                            deviceInfo.name = drMessage.name;
+                            deviceInfo.serial = drMessage.serial;
+                            deviceInfo.model = drMessage.model;
+                            notifyObserversDiscoveryResponse(drMessage);
+                            break;
+                        case Methods.FINISH_CANCEL:
+                            FinishCancelMessage finishCancelMessage = JsonUtils.DeserializeSdk<FinishCancelMessage>(rMessage.payload);
+                            notifyObserversFinishCancel(finishCancelMessage.requestInfo);
+                            break;
+                        case Methods.FINISH_OK:
+                            FinishOkMessage fokmsg = JsonUtils.DeserializeSdk<FinishOkMessage>(rMessage.payload);
+                            notifyObserversFinishOk(fokmsg);
+                            break;
+                        case Methods.KEY_PRESS:
+                            KeyPressMessage kpm = JsonUtils.DeserializeSdk<KeyPressMessage>(rMessage.payload);
+                            notifyObserversKeyPressed(kpm);
+                            break;
+                        case Methods.PARTIAL_AUTH:
+                            PartialAuthMessage partialAuth = JsonUtils.DeserializeSdk<PartialAuthMessage>(rMessage.payload);
+                            notifyObserversPartialAuth(partialAuth);
+                            break;
+                        case Methods.CONFIRM_PAYMENT_MESSAGE:
+                            setPaymentConfirmationIdle(false);
+                            ConfirmPaymentMessage confirmPaymentMessage = JsonUtils.DeserializeSdk<ConfirmPaymentMessage>(rMessage.payload);
+                            notifyObserversConfirmPayment(confirmPaymentMessage);
+                            break;
+                        case Methods.TIP_ADDED:
+                            TipAddedMessage tipMessage = JsonUtils.DeserializeSdk<TipAddedMessage>(rMessage.payload);
+                            notifyObserversTipAdded(tipMessage);
+                            break;
+                        case Methods.TX_START_RESPONSE:
+                            TxStartResponseMessage txsrm = JsonUtils.DeserializeSdk<TxStartResponseMessage>(rMessage.payload);
+                            notifyObserversTxStartResponse(txsrm);
+                            break;
+                        case Methods.TX_STATE:
+                            TxStateMessage txStateMsg = JsonUtils.DeserializeSdk<TxStateMessage>(rMessage.payload);
+                            notifyObserversTxState(txStateMsg);
+                            break;
+                        case Methods.UI_STATE:
+                            UiStateMessage uiStateMsg = JsonUtils.DeserializeSdk<UiStateMessage>(rMessage.payload);
+                            notifyObserversUiState(uiStateMsg);
+                            break;
+                        case Methods.VERIFY_SIGNATURE:
+                            paymentRejected = false;
+                            VerifySignatureMessage vsigMsg = JsonUtils.DeserializeSdk<VerifySignatureMessage>(rMessage.payload);
+                            notifyObserversVerifySignature(vsigMsg);
+                            break;
+                        case Methods.REFUND_RESPONSE:
+                            RefundResponseMessage refRespMsg = JsonUtils.DeserializeSdk<RefundResponseMessage>(rMessage.payload);
+                            notifyObserversRefundPaymentResponse(refRespMsg);
+                            break;
+                        case Methods.TIP_ADJUST_RESPONSE:
+                            TipAdjustResponseMessage tipAdjustMsg = JsonUtils.DeserializeSdk<TipAdjustResponseMessage>(rMessage.payload);
+                            notifyObserversTipAdjusted(tipAdjustMsg);
+                            break;
+                        case Methods.VAULT_CARD_RESPONSE:
+                            VaultCardResponseMessage vcrMsg = JsonUtils.DeserializeSdk<VaultCardResponseMessage>(rMessage.payload);
+                            notifyObserversVaultCardResponse(vcrMsg);
+                            break;
+                        case Methods.CARD_DATA_RESPONSE:
+                            ReadCardDataResponseMessage rcdrMsg = JsonUtils.DeserializeSdk<ReadCardDataResponseMessage>(rMessage.payload);
+                            notifyObserversReadCardDataResponse(rcdrMsg);
+                            break;
+                        case Methods.CAPTURE_PREAUTH_RESPONSE:
+                            CapturePreAuthResponseMessage carMsg = JsonUtils.DeserializeSdk<CapturePreAuthResponseMessage>(rMessage.payload);
+                            notifyObserversCapturePreAuthResponse(carMsg);
+                            break;
+                        case Methods.CLOSEOUT_RESPONSE:
+                            CloseoutResponseMessage crMsg = JsonUtils.DeserializeSdk<CloseoutResponseMessage>(rMessage.payload);
+                            notifyObserversCloseoutResponse(crMsg);
+                            break;
+                        case Methods.RETRIEVE_PENDING_PAYMENTS_RESPONSE:
+                            RetrievePendingPaymentsResponseMessage rpprMsg = JsonUtils.DeserializeSdk<RetrievePendingPaymentsResponseMessage>(rMessage.payload);
+                            notifyObserversPendingPaymentsResponse(rpprMsg);
+                            break;
+                        case Methods.ACTIVITY_RESPONSE:
+                            ActivityResponseMessage arm = JsonUtils.DeserializeSdk<ActivityResponseMessage>(rMessage.payload);
+                            notifyObserversActivityResponse(arm);
+                            break;
+                        case Methods.ACTIVITY_MESSAGE_FROM_ACTIVITY:
+                            ActivityMessageFromActivity amfa = JsonUtils.DeserializeSdk<ActivityMessageFromActivity>(rMessage.payload);
+                            notifyObserversActivityMessage(amfa);
+                            break;
+                        case Methods.RESET_DEVICE_RESPONSE:
+                            ResetDeviceResponseMessage rdrm = JsonUtils.DeserializeSdk<ResetDeviceResponseMessage>(rMessage.payload);
+                            notifyObserversDeviceReset(rdrm);
+                            break;
+                        case Methods.RETRIEVE_DEVICE_STATUS_RESPONSE:
+                            RetrieveDeviceStatusResponseMessage rdsrm = JsonUtils.DeserializeSdk<RetrieveDeviceStatusResponseMessage>(rMessage.payload);
+                            notifyObserversRetrieveDeviceStatusResponse(rdsrm);
+                            break;
+                        case Methods.PRINT_CREDIT:
+                            CreditPrintMessage cpm = JsonUtils.DeserializeSdk<CreditPrintMessage>(rMessage.payload);
+                            notifyObserversPrintCredit(cpm);
+                            break;
+                        case Methods.PRINT_CREDIT_DECLINE:
+                            DeclineCreditPrintMessage dcpm = JsonUtils.DeserializeSdk<DeclineCreditPrintMessage>(rMessage.payload);
+                            notifyObserversPrintCreditDecline(dcpm);
+                            break;
+                        case Methods.PRINT_PAYMENT:
+                            PaymentPrintMessage ppm = JsonUtils.DeserializeSdk<PaymentPrintMessage>(rMessage.payload);
+                            notifyObserversPrintPayment(ppm);
+                            break;
+                        case Methods.PRINT_PAYMENT_DECLINE:
+                            DeclinePaymentPrintMessage dppm = JsonUtils.DeserializeSdk<DeclinePaymentPrintMessage>(rMessage.payload);
+                            notifyObserversPrintPaymentDecline(dppm);
+                            break;
+                        case Methods.PRINT_PAYMENT_MERCHANT_COPY:
+                            PaymentPrintMerchantCopyMessage ppmcm = JsonUtils.DeserializeSdk<PaymentPrintMerchantCopyMessage>(rMessage.payload);
+                            notifyObserversPrintMerchantCopy(ppmcm);
+                            break;
+                        case Methods.REFUND_PRINT_PAYMENT:
+                            RefundPaymentPrintMessage rppm = JsonUtils.DeserializeSdk<RefundPaymentPrintMessage>(rMessage.payload);
+                            notifyObserversPrintRefund(rppm);
+                            break;
+                        case Methods.RETRIEVE_PAYMENT_RESPONSE:
+                            RetrievePaymentResponseMessage rprm = JsonUtils.DeserializeSdk<RetrievePaymentResponseMessage>(rMessage.payload);
+                            notifyObserversRetrievePaymentResponse(rprm);
+                            break;
+                        case Methods.GET_PRINTERS_RESPONSE:
+                            RetrievePrintersResponseMessage rtrm = JsonUtils.DeserializeSdk<RetrievePrintersResponseMessage>(rMessage.payload);
+                            notifyObserversRetrievePrinterResponse(rtrm);
+                            break;
+                        case Methods.PRINT_JOB_STATUS_RESPONSE:
+                            PrintJobStatusResponseMessage pjsrm = JsonUtils.DeserializeSdk<PrintJobStatusResponseMessage>(rMessage.payload);
+                            notifyObserversRetrievePrintJobStatus(pjsrm);
+                            break;
+                        case Methods.SHOW_RECEIPT_OPTIONS_RESPONSE:
+                            ShowReceiptOptionsResponseMessage srorm = JsonUtils.DeserializeSdk<ShowReceiptOptionsResponseMessage>(rMessage.payload);
+                            notifyObserverDisplayReceiptOptionsResponse(srorm);
+                            break;
+                        case Methods.CUSTOMER_PROVIDED_DATA_MESSAGE:
+                            notifyObserversCustomerProvidedData(JsonUtils.DeserializeSdk<CustomerProvidedDataResponseMessage>(rMessage.payload));
+                            break;
+                        case Methods.VOID_PAYMENT_RESPONSE:
+                            VoidPaymentResponseMessage vprm = JsonUtils.DeserializeSdk<VoidPaymentResponseMessage>(rMessage.payload);
+                            notifyObserversPaymentVoided(vprm);
+                            break;
+
+                        case Methods.REFUND_REQUEST:
+                        case Methods.PAYMENT_VOIDED:
+                        case Methods.ORDER_ACTION_RESPONSE:
+                        case Methods.DISCOVERY_REQUEST:
+                        case Methods.ORDER_ACTION_ADD_DISCOUNT:
+                        case Methods.ORDER_ACTION_ADD_LINE_ITEM:
+                        case Methods.ORDER_ACTION_REMOVE_LINE_ITEM:
+                        case Methods.ORDER_ACTION_REMOVE_DISCOUNT:
+                        case Methods.PRINT_IMAGE:
+                        case Methods.PRINT_TEXT:
+                        case Methods.SHOW_ORDER_SCREEN:
+                        case Methods.SHOW_PAYMENT_RECEIPT_OPTIONS:
+                        case Methods.SHOW_REFUND_RECEIPT_OPTIONS:
+                        case Methods.SHOW_CREDIT_RECEIPT_OPTIONS:
+                        case Methods.SHOW_THANK_YOU_SCREEN:
+                        case Methods.SHOW_WELCOME_SCREEN:
+                        case Methods.SIGNATURE_VERIFIED:
+                        case Methods.TERMINAL_MESSAGE:
+                        case Methods.TX_START:
+                        case Methods.VOID_PAYMENT:
+                        case Methods.CLOSEOUT_REQUEST:
+                        case Methods.VAULT_CARD:
+                        case Methods.CARD_DATA:
+                        case Methods.CLOVER_DEVICE_LOG_REQUEST:
+                            //Outbound no-op
+                            break;
+
+                        default:
+                            // Messsage Method not recognized or null: usually rMessage.type == MessageTypes.PING instead of normal Command message
+                            if (rMessage.type == MessageTypes.PING)
+                            {
+                                onPing();
+                            }
+                            break;
+                    }
                 }
+            }
+            catch (Newtonsoft.Json.JsonSerializationException exception)
+            {
+                // if a remote message's details can't be parsed, ignore this misformed/unrecognized message; log as appropriate
+                // - and verify backwards compatiblility story since old WinSDK releases will crash
+
+                // TODO: Log message and exception in new logging
+
+                // TODO: Send a warning to the point of sale that a message arrived but failed to parse. Perhaps leverage DeviceError or create a DeviceWarning
             }
         }
 
@@ -814,9 +783,9 @@ namespace com.clover.remotepay.transport
             sendObjectMessage(new TxStartRequestMessage(payIntent, order, requestInfo));
         }
 
-        public override void doTipAdjustAuth(string orderId, string paymentId, long? amount)
+        public override void doTipAdjustAuth(string orderId, string paymentId, long? amount, Dictionary<string, string> extras)
         {
-            sendObjectMessage(new TipAdjustAuthMessage(orderId, paymentId, amount));
+            sendObjectMessage(new TipAdjustAuthMessage(orderId, paymentId, amount, extras));
         }
 
         public override void doCapturePreAuth(string paymentID, long amount, long tipAmount)
@@ -900,25 +869,26 @@ namespace com.clover.remotepay.transport
             }
         }
 
-        public override void doVoidPayment(Payment payment, VoidReason reason)
+        public override void doVoidPayment(Payment payment, VoidReason reason, Dictionary<string, string> extras)
         {
             VoidPaymentMessage vpm = new VoidPaymentMessage
             {
                 payment = payment,
-                voidReason = reason
+                voidReason = reason,
+                passThroughValues = extras
             };
             sendObjectMessage(vpm);
         }
 
-        public override void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId)
+        public override void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId, Dictionary<string, string> extras)
         {
             // Clover connector should report a nice error and block ever getting here, but stop the process if we get here.
             throw new NotSupportedException("VoidPaymentRefund is not supported in this version");
         }
 
-        public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection)
+        public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection, Dictionary<string, string> extras)
         {
-            sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund, disableCloverPrinting, disableReceiptSelection));
+            sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund, disableCloverPrinting, disableReceiptSelection, extras));
         }
 
         private void doPong()

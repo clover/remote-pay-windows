@@ -204,6 +204,11 @@ namespace com.clover.remotepay.sdk
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.requiresRemoteConfirmation = true;
 
+            if (request.Extras != null && request.Extras.Count > 0)
+            {
+                payIntent.passThroughValues = request.Extras;
+            }
+
             TransactionSettings ts = getTransactionRequestOverrides(request);
             ts.tippableAmount = request.TippableAmount;
             if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
@@ -282,6 +287,10 @@ namespace com.clover.remotepay.sdk
             if (request.AutoAcceptPaymentConfirmations.HasValue && request.AutoAcceptPaymentConfirmations.Value)
             {
                 settings.autoAcceptPaymentConfirmations = true;
+            }
+            if (request.RegionalExtras != null && request.RegionalExtras.Count > 0)
+            {
+                settings.regionalExtras = new Dictionary<string, string>(request.RegionalExtras);
             }
 
             return settings;
@@ -423,6 +432,12 @@ namespace com.clover.remotepay.sdk
             {
                 payIntent.isCardNotPresent = true;
             }
+
+            if (request.Extras != null && request.Extras.Count > 0)
+            {
+                payIntent.passThroughValues = request.Extras;
+            }
+
             TransactionSettings ts = getTransactionRequestOverrides(request);
             if (request.DisableCashback.HasValue && request.DisableCashback.Value)
             {
@@ -517,10 +532,17 @@ namespace com.clover.remotepay.sdk
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
+
             if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
             {
                 payIntent.isCardNotPresent = true;
             }
+
+            if (request.Extras != null && request.Extras.Count > 0)
+            {
+                payIntent.passThroughValues = new Dictionary<string, string>(request.Extras);
+            }
+
             payIntent.requiresRemoteConfirmation = true;
             Device.doTxStart(payIntent, null, TxType.PREAUTH);
         }
@@ -622,7 +644,7 @@ namespace com.clover.remotepay.sdk
                 return;
             }
 
-            Device.doTipAdjustAuth(request.OrderID, request.PaymentID, request.TipAmount);
+            Device.doTipAdjustAuth(request.OrderID, request.PaymentID, request.TipAmount, null);
         }
 
         /// <summary>
@@ -682,7 +704,7 @@ namespace com.clover.remotepay.sdk
                 order = new Reference(request.OrderId),
                 employee = new Reference(request.EmployeeId)
             };
-            Device.doVoidPayment(payment, reason);
+            Device.doVoidPayment(payment, reason, request.Extras);
         }
 
         public void VoidPaymentRefund(VoidPaymentRefundRequest request)
@@ -703,7 +725,7 @@ namespace com.clover.remotepay.sdk
                     "Feature disabled in current version",
                     "In VoidPaymentRefund : VoidPaymentRefundRequest - This feature is not enabled in the Clover Connector.");
 
-            // Device.doVoidPaymentRefund(request.OrderId, request.RefundId, request.DisablePrinting, request.DisableReceiptSelection, request.EmployeeId);
+            // Device.doVoidPaymentRefund(request.OrderId, request.RefundId, request.DisablePrinting, request.DisableReceiptSelection, request.EmployeeId, request.Extras);
         }
 
         /// <summary>
@@ -766,7 +788,7 @@ namespace com.clover.remotepay.sdk
                 return;
             }
 
-            Device.doRefundPayment(request.OrderId, request.PaymentId, !request.FullRefund || request.Amount > 0 ? request.Amount : (long?)null, request.FullRefund, request.DisablePrinting, request.DisableReceiptSelection);
+            Device.doRefundPayment(request.OrderId, request.PaymentId, !request.FullRefund || request.Amount > 0 ? request.Amount : (long?)null, request.FullRefund, request.DisablePrinting, request.DisableReceiptSelection, request.Extras);
         }
 
         /// <summary>
@@ -837,6 +859,12 @@ namespace com.clover.remotepay.sdk
             payIntent.externalPaymentId = request.ExternalId;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.requiresRemoteConfirmation = true;
+
+            if (request.Extras != null && request.Extras.Count > 0)
+            {
+                payIntent.passThroughValues = request.Extras;
+            }
+
             TransactionSettings ts = getBaseTransactionRequestOverrides(request);
             ts.tipMode = clover.sdk.v3.payments.TipMode.NO_TIP;
             ts.cardEntryMethods = request.CardEntryMethods ?? CardEntryMethod;
@@ -1548,7 +1576,6 @@ namespace com.clover.remotepay.sdk
         private class InnerDeviceObserver : ICloverDeviceObserver
         {
             public RefundPaymentResponse lastPRR;
-            private CloverDeviceEvent lastStartEvent;
 
             class SVR : VerifySignatureRequest
             {
@@ -1721,27 +1748,34 @@ namespace com.clover.remotepay.sdk
 
             public void onUiState(UiState uiState, String uiText, UiDirection uiDirection, params InputOption[] inputOptions)
             {
-                CloverDeviceEvent deviceEvent = new CloverDeviceEvent();
-                deviceEvent.InputOptions = inputOptions;
-                deviceEvent.EventState = (CloverDeviceEvent.DeviceEventState)Enum.Parse(typeof(CloverDeviceEvent.DeviceEventState), uiState.ToString());
-                deviceEvent.Message = uiText;
+                CloverDeviceEvent.DeviceEventState state;
+                try
+                {
+                    state = (CloverDeviceEvent.DeviceEventState)Enum.Parse(typeof(CloverDeviceEvent.DeviceEventState), uiState.ToString());
+                }
+                catch (Exception e)
+                {
+                    // if we can't map UiState to DeviceEventState, drop the message on the floor
+                    return;
+                }
+
+                CloverDeviceEvent deviceEvent = new CloverDeviceEvent
+                {
+                    InputOptions = inputOptions,
+                    EventState = state,
+                    Message = uiText
+                };
                 if (uiDirection == UiDirection.ENTER)
                 {
-                    lastStartEvent = deviceEvent;
                     NotifyListeners(listener => listener.OnDeviceActivityStart(deviceEvent));
                 }
                 else if (uiDirection == UiDirection.EXIT)
                 {
-                    // because we can get events out of order, need to make sure we don't wipe out the wrong Options
-                    if (lastStartEvent != null && lastStartEvent.EventState.Equals(deviceEvent.EventState))
-                    {
-                        NotifyListeners(listener => listener.OnDeviceActivityEnd(deviceEvent));
+                    NotifyListeners(listener => listener.OnDeviceActivityEnd(deviceEvent));
 
-                        lastStartEvent = null;
-                        if (uiState.ToString().Equals(CloverDeviceEvent.DeviceEventState.RECEIPT_OPTIONS.ToString()))
-                        {
-                            cloverConnector.ShowOnDevice(showWelcomeScreen: true);
-                        }
+                    if (uiState.ToString().Equals(CloverDeviceEvent.DeviceEventState.RECEIPT_OPTIONS.ToString()))
+                    {
+                        cloverConnector.ShowOnDevice(showWelcomeScreen: true);
                     }
                 }
             }

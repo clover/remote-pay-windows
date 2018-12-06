@@ -205,6 +205,12 @@
     <Compile Include="UIDialogs\RefundAmountDialog.Designer.cs">
       <DependentUpon>RefundAmountDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="UiPages\TransactionSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UiPages\TransactionSettingsPage.Designer.cs">
+      <DependentUpon>TransactionSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="VaultedCardListForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -266,6 +272,9 @@
     <EmbeddedResource Include="UiPages\LoyaltyApiPage.resx">
       <DependentUpon>LoyaltyApiPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UiPages\TransactionSettingsPage.resx">
+      <DependentUpon>TransactionSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VaultedCardListForm.resx">
       <DependentUpon>VaultedCardListForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -305,6 +314,7 @@
   <ItemGroup>
     <Content Include="clover-256rgb.ico" />
     <Content Include="clover.ico" />
+    <None Include="Properties\star.ico" />
     <None Include="Resources\star16.png" />
   </ItemGroup>
   <ItemGroup />

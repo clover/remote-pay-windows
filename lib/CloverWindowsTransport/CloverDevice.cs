@@ -155,14 +155,14 @@ namespace com.clover.remotepay.transport
         public abstract void doDiscoveryRequest();
         public abstract void doTxStart(PayIntent payIntent, Order order, TxType requestInfo);
         public abstract void doKeyPress(KeyPress keyPress);
-        public abstract void doVoidPayment(Payment payment, VoidReason reason);
-        public abstract void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId);
+        public abstract void doVoidPayment(Payment payment, VoidReason reason, Dictionary<string, string> extras);
+        public abstract void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId, Dictionary<string, string> extras);
         public abstract void doOrderUpdate(DisplayOrder order, DisplayOperation operation);
         public abstract void doVerifySignature(Payment payment, bool verified);
         public abstract void doTerminalMessage(string text);
         public abstract void doSendDebugLog(string message);
-        public abstract void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection);
-        public abstract void doTipAdjustAuth(string orderId, string paymentId, long? amount);
+        public abstract void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection, Dictionary<string, string> extras);
+        public abstract void doTipAdjustAuth(string orderId, string paymentId, long? amount, Dictionary<string, string> extras);
         public abstract void doPrintText(List<string> textLines, string printRequestId, string printDeviceId);
         public abstract void doShowWelcomeScreen();
         public abstract void doShowPaymentReceiptScreen(string orderId, string paymentId, bool disablePrinting);

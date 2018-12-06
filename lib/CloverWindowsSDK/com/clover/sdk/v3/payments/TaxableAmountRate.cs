@@ -21,21 +21,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace com.clover.sdk.v3.payments {
-
-
-public class TaxableAmountRate {
-
-  public String id { get; set; }
-
-  public String name { get; set; }
-
-  public Int64 taxableAmount { get; set; }
-
-  public Int64 rate { get; set; }
-
-  public Boolean isVat { get; set; }
-
-}
-
+namespace com.clover.sdk.v3.payments
+{
+    public class TaxableAmountRate
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public long taxableAmount { get; set; }
+        public long rate { get; set; }
+        public long? taxAmount { get; set; }
+        public bool isVat { get; set; }
+    }
 }

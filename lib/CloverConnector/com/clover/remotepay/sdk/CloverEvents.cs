@@ -21,7 +21,6 @@ namespace com.clover.remotepay.sdk
     {
         public enum DeviceEventState
         {
-            // payment flow
             START,
             FAILED,
             FATAL,
@@ -52,8 +51,6 @@ namespace com.clover.remotepay.sdk
             CONFIRM_PARTIAL_AUTH,
             PACKET_EXCEPTION,
             CONFIRM_DUPLICATE_CHECK,
-
-            // verify CVM flow
             VERIFY_SIGNATURE_ON_PAPER,
             VERIFY_SIGNATURE_ON_PAPER_CONFIRM_VOID,
             VERIFY_SIGNATURE_ON_SCREEN,
@@ -63,22 +60,28 @@ namespace com.clover.remotepay.sdk
             RETURN_TO_MERCHANT,
             SIGNATURE_REJECT,
             ADD_SIGNATURE_CANCEL_CONFIRM,
-
-            // add tip flow
-            ADD_TIP,
-
-            // receipt options flow
-            RECEIPT_OPTIONS,
-
-            // tender handling flow
-            HANDLE_TENDER,
-            CUSTOM_ACTIVITY,
             STARTING_CUSTOM_ACTIVITY,
-
+            CUSTOM_ACTIVITY,
+            ADD_TIP,
+            RECEIPT_OPTIONS,
+            HANDLE_TENDER,
             SELECT_WITHDRAW_FROM_ACCOUNT,
             VERIFY_SURCHARGES,
-            VOID_CONFIRM
+            VOID_CONFIRM,
 
+            // for Argentina
+            ENTER_PAN_LAST_FOUR,
+            ERROR_SCREEN,
+            FISCAL_INVOICE_NUMBER,
+            ENTER_INSTALLMENTS,
+            SELECT_INSTALLMENT_PLAN,
+            ENTER_INSTALLMENT_CODE,
+            PERSONAL_ID_ENTRY,
+            PERSONAL_ID_ENTRY_PAS,
+            SWIPE_CVV_ENTRY,
+            SIGNATURE_CUSTOMER_MODE,
+            MANUAL_ENTRY_FALLBACK,
+            SELECT_MULTI_MID
         }
 
         public CloverDeviceEvent()
