@@ -90,7 +90,7 @@ To build and run the example POS application using .NET and VisualStudio 2015:
  3. Select the **CloverExamplePOS**
  4. Click **Run**
 
-## Setting up a virtal machine
+## Setting up a virtual machine
 
 1. Install [VMWare Fusion](https://www.vmware.com/products/fusion.html). (NOTE: VirtualBox will not see the device properly.)
 2. Run the driver installers.
