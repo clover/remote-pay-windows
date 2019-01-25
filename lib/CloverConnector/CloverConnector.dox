@@ -48,7 +48,7 @@
  The .NET binary assemblies and USB drivers are available as [Releases in Clover's GitHub Project](https://github.com/clover/remote-pay-windows/releases) 
  The .NET binary assemblies are available as a [NuGet Reference](https://www.nuget.org/packages/Clover.RemotePayWindows) for convenient dependency management: 
  
- _Install-Package Clover.RemotePayWindows -Version 3.0.0_
+ _Install-Package Clover.RemotePayWindows -Version 3.0.2_
 
  __Links__
  \li [Clover's GitHub WinSDK Project Page](https://github.com/clover/remote-pay-windows)

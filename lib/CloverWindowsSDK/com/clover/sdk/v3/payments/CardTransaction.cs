@@ -21,63 +21,67 @@
 using System;
 using System.Collections.Generic;
 
-namespace com.clover.sdk.v3.payments {
+namespace com.clover.sdk.v3.payments
+{
 
 
-public class CardTransaction {
+    public class CardTransaction
+    {
 
-  /// <summary>
-  /// The payment with which the card transaction is associated
-  /// </summary>
-  public com.clover.sdk.v3.base_.Reference paymentRef { get; set; }
+        /// <summary>
+        /// The payment with which the card transaction is associated
+        /// </summary>
+        public com.clover.sdk.v3.base_.Reference paymentRef { get; set; }
 
-  /// <summary>
-  /// The credit with which the card transaction is associated
-  /// </summary>
-  public com.clover.sdk.v3.base_.Reference creditRef { get; set; }
+        /// <summary>
+        /// The credit with which the card transaction is associated
+        /// </summary>
+        public com.clover.sdk.v3.base_.Reference creditRef { get; set; }
 
-  public com.clover.sdk.v3.payments.CardType cardType { get; set; }
+        public com.clover.sdk.v3.payments.CardType cardType { get; set; }
 
-  public com.clover.sdk.v3.payments.CardEntryType entryType { get; set; }
+        public com.clover.sdk.v3.payments.CardEntryType entryType { get; set; }
 
-  /// <summary>
-  /// The first four digits of the card number
-  /// </summary>
-  public String first6 { get; set; }
+        /// <summary>
+        /// The first four digits of the card number
+        /// </summary>
+        public string first6 { get; set; }
 
-  /// <summary>
-  /// The last four digits of the card number
-  /// </summary>
-  public String last4 { get; set; }
+        /// <summary>
+        /// The last four digits of the card number
+        /// </summary>
+        public string last4 { get; set; }
 
-  public com.clover.sdk.v3.payments.CardTransactionType type { get; set; }
+        public com.clover.sdk.v3.payments.CardTransactionType type { get; set; }
 
-  /// <summary>
-  /// Authorization code (if successful)
-  /// </summary>
-  public String authCode { get; set; }
+        /// <summary>
+        /// Authorization code (if successful)
+        /// </summary>
+        public string authCode { get; set; }
 
-  public String referenceId { get; set; }
+        public string referenceId { get; set; }
 
-  public String transactionNo { get; set; }
+        public string transactionNo { get; set; }
 
-  public com.clover.sdk.v3.payments.CardTransactionState state { get; set; }
+        public com.clover.sdk.v3.payments.CardTransactionState state { get; set; }
 
-  /// <summary>
-  /// Extra info to be stored as part of gateway/card transaction
-  /// </summary>
-  public Dictionary<String,String> extra { get; set; }
+        /// <summary>
+        /// Extra info to be stored as part of gateway/card transaction
+        /// </summary>
+        public Dictionary<string, string> extra { get; set; }
 
-  public Int64 begBalance { get; set; }
+        public long begBalance { get; set; }
 
-  public Int64 endBalance { get; set; }
+        public long endBalance { get; set; }
 
-  public com.clover.sdk.v3.payments.AVSResult avsResult { get; set; }
+        public com.clover.sdk.v3.payments.AVSResult avsResult { get; set; }
 
-  public String cardholderName { get; set; }
+        public string cardholderName { get; set; }
 
-  public String token { get; set; }
+        public string token { get; set; }
 
-}
+        public VaultedCard vaultedCard { get; set; }
+
+    }
 
 }

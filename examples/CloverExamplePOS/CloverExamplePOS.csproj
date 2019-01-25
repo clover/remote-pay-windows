@@ -82,10 +82,6 @@
     <Reference Include="ObjectListView">
       <HintPath>..\..\packages\lib\ObjectListView.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp">
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\RestSharp.105.2.3\lib\net4\RestSharp.dll</HintPath>
-    </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.8.0.13, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\SuperSocket.ClientEngine.Core.0.8.0.13\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\SuperSocket.ClientEngine.Core.0.8.0.13\lib\net20\SuperSocket.ClientEngine.dll</HintPath>
@@ -126,11 +122,6 @@
     <Compile Include="CloverExamplePOSForm.Designer.cs">
       <DependentUpon>CloverExamplePOSForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="com\clover\remotepay\transport\remote\Callback.cs" />
-    <Compile Include="com\clover\remotepay\transport\remote\CloverCallbackListenerService.cs" />
-    <Compile Include="com\clover\remotepay\transport\remote\RemoteRESTCloverConnector.cs" />
-    <Compile Include="com\clover\remotepay\transport\remote\RemoteWebSocketCloverConfiguration.cs" />
-    <Compile Include="com\clover\remotepay\transport\remote\RemoteWebSocketCloverConnector.cs" />
     <Compile Include="CustomActivityObjects.cs" />
     <Compile Include="CustomerCardCaptureForm.cs">
       <SubType>Form</SubType>
@@ -159,7 +150,6 @@
     <Compile Include="InputForm.Designer.cs">
       <DependentUpon>InputForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="com\clover\remotepay\transport\remote\RemoteRESTCloverConfiguration.cs" />
     <Compile Include="SignatureForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -294,10 +284,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\services\shared\CloverWindowsSDKServiceClient.csproj">
-      <Project>{287d3f43-0d68-4a86-976e-05e6f99e029e}</Project>
-      <Name>CloverWindowsSDKServiceClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\lib\CloverWindowsSDK\CloverWindowsSDK.csproj">
       <Project>{b1dd9531-be27-429d-9f22-494142378e21}</Project>
       <Name>CloverWindowsSDK</Name>
