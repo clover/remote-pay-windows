@@ -18,13 +18,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
+using com.clover.sdk.v3.base_;
 
 namespace com.clover.sdk.v3.payments
 {
-
-
     public class Payment
     {
 
@@ -36,17 +34,17 @@ namespace com.clover.sdk.v3.payments
         /// <summary>
         /// The order with which the payment is associated
         /// </summary>
-        public com.clover.sdk.v3.base_.Reference order { get; set; }
+        public Reference order { get; set; }
 
         /// <summary>
         /// Device which processed the transaction for this payment
         /// </summary>
-        public com.clover.sdk.v3.base_.Reference device { get; set; }
+        public Reference device { get; set; }
 
         /// <summary>
         /// The tender type associated with this payment, e.g. credit card, cash, etc.
         /// </summary>
-        public com.clover.sdk.v3.base_.Tender tender { get; set; }
+        public Tender tender { get; set; }
 
         /// <summary>
         /// Total amount paid
@@ -121,6 +119,42 @@ namespace com.clover.sdk.v3.payments
         /// </summary>
         public com.clover.sdk.v3.order.VoidReason voidReason { get; set; }
 
+        /// <summary>
+        /// Dynamic Currency Conversion information
+        /// </summary>
+        public payments.DCCInfo dccInfo { get; set; }
+        /// <summary>
+        /// Per transaction settings for the payment
+        /// </summary>
+        public TransactionSettings transactionSettings { get; set; }
+        /// <summary>
+        /// German region-specific information
+        /// </summary>
+        public GermanInfo germanInfo { get; set; }
+        /// <summary>
+        /// Tracking information for the app that created this payment.
+        /// </summary>
+        public AppTracking appTracking { get; set; }
+        /// <summary>
+        /// Information specific to cash advance transactions.
+        /// </summary>
+        public CashAdvanceExtra cashAdvanceExtra { get; set; }
+        /// <summary>
+        /// Transaction information
+        /// </summary>
+        public TransactionInfo transactionInfo { get; set; }
+        /// <summary>
+        /// Information displayed to customer for storing electronic signatures
+        /// </summary>
+        public SignatureDisclaimer signatureDisclaimer { get; set; }
+        /// <summary>
+        /// The external reference id if associated with the payment
+        /// </summary>
+        public string externalReferenceId { get; set; }
+        /// <summary>
+        /// Merchant associated with the payment
+        /// </summary>
+        public Reference merchant { get; set; }
     }
 
 }

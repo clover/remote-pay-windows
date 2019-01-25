@@ -21,7 +21,6 @@ using System.Threading;
 using System.Windows.Forms;
 using com.clover.remotepay.sdk;
 using com.clover.remotepay.transport;
-using com.clover.remotepay.transport.remote;
 using System.IO;
 using System.Text;
 using com.clover.remote.order;
@@ -2166,19 +2165,7 @@ namespace CloverExamplePOS
                 data.CloverConnector.Dispose();
             }
 
-            if (config is RemoteRESTCloverConfiguration)
-            {
-                data.CloverConnector = new RemoteRESTCloverConnector(config);
-            }
-            else if (config is RemoteWebSocketCloverConfiguration)
-            {
-                data.CloverConnector = new RemoteWebSocketCloverConnector(config);
-            }
-            else
-            {
-                data.CloverConnector = CloverConnectorFactory.createICloverConnector(config);
-            }
-
+            data.CloverConnector = CloverConnectorFactory.createICloverConnector(config);
             data.CloverConnector.AddCloverConnectorListener(this);
             data.CloverConnector.InitializeConnection();
 

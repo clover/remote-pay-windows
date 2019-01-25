@@ -4,7 +4,7 @@
  * DO NOT EDIT DIRECTLY
  */
 
-using System;
+
 using System.Collections.Generic;
 
 namespace com.clover.sdk.v3.payments
