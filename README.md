@@ -21,7 +21,7 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
 
 Connecting to a Clover device
 -----------------------------
-The .NET Assembly(dll) - CloverConnector.DLL can be used directly by a .NET application. This option requires .NET 4.0 or 4.5. 
+The Clover SDK is provided as a set of .NET assembly releases and as C# sources. It can be used directly or adapted for hosting in translation layers as needed on Windows operating systems.
 
 Clover devices (both production and DevKit devices) are connected to Microsoft Windows either by a USB connection or over the network. Clover USB drivers (found in the [releases page](https://github.com/clover/remote-pay-windows/releases)) are required for a USB connection.
 
