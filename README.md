@@ -8,7 +8,7 @@ Current version: 3.0.2
 
 Overview
 --------
-This SDK enables your Windows point-of-sale (POS) system to communicate with a [Clover® payment device](https://www.clover.com/pos-hardware/). Learn more about [Clover integrations](https://www.clover.com/integrations).
+This SDK enables your Windows point-of-sale (POS) system to communicate with a [Clover payment device](https://www.clover.com/pos-systems). Learn more about [Clover integrations](https://www.clover.com/integrations).
 
 **Platforms supported:**
 -   Windows 10
