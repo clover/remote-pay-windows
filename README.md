@@ -69,7 +69,7 @@ The SDK has the following structure.
 
 Working with the Example POS
 ----------------------------
-To build and run the example POS application using .NET and VisualStudio 2015:
+To build and run the example POS application using .NET and VisualStudio 2017:
 1.  Open **Clover.sln**.
 2.  Build all projects.
 3.  Select the **CloverExamplePOS**.
