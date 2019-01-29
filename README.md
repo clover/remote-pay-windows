@@ -21,10 +21,10 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
 
 Connecting to a Clover device
 -----------------------------
-The Windows project includes three options for connecting to a Clover device.
-1.  .NET DLL - CloverConnector.DLL can be used directly by a .NET application. This option requires .NET 4.0 or 4.5.
-2.  Clover Connector REST API Service - This option requires your POS to implement a REST service in order to receive callbacks.
-3.  Clover Connector WebSocket API Service - This option requires your POS to implement a WebSocket client in order to communicate with the service and receive callbacks.
+The .NET Assembly(dll) - CloverConnector.DLL can be used directly by a .NET application. This option requires .NET 4.0 or 4.5. 
+
+Clover devices (both production and DevKit devices) are connected to Microsoft Windows either by a USB connection or over the network. Clover USB drivers (found in the [releases page](https://github.com/clover/remote-pay-windows/releases)) are required for a USB connection.
+
 
 To work with the project effectively, you will need:
 -   A computer or virtual machine running Windows. The SDK supports Windows 10, Windows 8, and Windows 7.
@@ -70,14 +70,15 @@ The SDK has the following structure.
 Working with the Example POS
 ----------------------------
 To build and run the example POS application using .NET and VisualStudio 2015:
-1.  Open **Clover.sln**
-2.  Build all projects
-3.  Select the **CloverExamplePOS**
-4.  Click **Run**
+1.  Open **Clover.sln**.
+2.  Build all projects.
+3.  Select the **CloverExamplePOS**.
+4.  Click **Run**.
 
 Additional resources
 --------------------
 -   [Release Notes](https://github.com/clover/remote-pay-windows/releases)
+-   [This Project's Wiki Articles](https://github.com/clover/remote-pay-windows/wiki)
 -   [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/)
 -   [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
 -   [API Documentation](http://clover.github.io/remote-pay-windows/3.0.2/cloverconnector/html/index.html)
