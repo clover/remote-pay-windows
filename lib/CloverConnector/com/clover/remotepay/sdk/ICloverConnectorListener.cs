@@ -325,6 +325,12 @@ namespace com.clover.remotepay.sdk
         void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response);
 
         /// <summary>
+        /// Called to notify the Point of Sale that a call was invalid in the current context or an internal state change failed.
+        /// </summary>
+        /// <param name="message"></param>
+        void OnInvalidStateTransitionResponse(InvalidStateTransitionNotification message);
+
+        /// <summary>
         /// Called when Loyalty API sends customer identifying data for a loyalty data type subscribed to in CloverConnector.RegisterForCustomerProvidedData()
         /// </summary>
         /// <param name="response">The CustomerProvidedDataEvent containing type and data payload, like PHONE, 555-1212 in type-specific custom encoding</param>
@@ -496,6 +502,10 @@ namespace com.clover.remotepay.sdk
         }
 
         public virtual void OnCustomerProvidedData(CustomerProvidedDataEvent response)
+        {
+        }
+
+        public virtual void OnInvalidStateTransitionResponse(InvalidStateTransitionNotification notification)
         {
         }
     }

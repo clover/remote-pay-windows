@@ -63,6 +63,8 @@ namespace com.clover.remotepay.transport
         BlockingQueue<string> messageQueue = new BlockingQueue<string>();
 
         public override string ShortTitle() => "USB";
+        public override string Title => "USB PD";
+        public override string Summary => "USB";
 
         /// <summary>
         /// Create a USB Clover Transport with a specific list of merchant and customer USB devices
@@ -99,13 +101,9 @@ namespace com.clover.remotepay.transport
         /// <param name="deviceId"></param>
         /// <param name="enableLogging"></param>
         /// <param name="pingSleepSeconds"></param>
-        public USBCloverTransport(string deviceId, bool enableLogging, int pingSleepSeconds)
+        public USBCloverTransport(string deviceId, int pingSleepSeconds)
         {
             loadDevicesFromConfig();
-            if (enableLogging)
-            {
-                EnableLogging();
-            }
             if (pingSleepSeconds > 0)
             {
                 EnablePinging(pingSleepSeconds);
@@ -135,7 +133,7 @@ namespace com.clover.remotepay.transport
                 if (_timer != null)
                 {
                     _timer.Close();
-                    // Console.WriteLine("Timer thread closed");
+                    // Debug.WriteLine("Timer thread closed");
                 }
                 else
                 {
@@ -144,7 +142,7 @@ namespace com.clover.remotepay.transport
                 _timer.AutoReset = false;
                 _timer.Interval = getPingSleepSeconds() * 1000;
                 _timer.Elapsed += OnTimerEvent;
-                // Console.WriteLine("Timer Thread created");
+                // Debug.WriteLine("Timer Thread created");
                 _timer.Start();
             }
         }
@@ -327,7 +325,7 @@ namespace com.clover.remotepay.transport
                         // If the device is open and ready
                         if (TempMyUsbDevice != null && TempMyUsbDevice.IsOpen)
                         {
-                            initialized = MiniInitializer.initializeDeviceConnectionAccessoryMode(TempMyUsbDevice);
+                            initialized = MiniInitializer.InitializeDeviceConnectionAccessoryMode(TempMyUsbDevice);
                         }
                         else
                         {
@@ -337,7 +335,7 @@ namespace com.clover.remotepay.transport
                     catch (Exception ex)
                     {
                         TransportLog(ex.Message);
-                        // Console.WriteLine("DeviceInitiallyConnected : " + ex.Message);
+                        // Debug.WriteLine("DeviceInitiallyConnected : " + ex.Message);
                     }
                     TransportLog("Exiting DeviceInitiallyConnected initialized=" + initialized);
                 }
@@ -373,7 +371,7 @@ namespace com.clover.remotepay.transport
             {
                 // Ignore the exception if we are trying to reconnect
                 _timer?.Close();
-                // Console.WriteLine("OnTimerEvent Exception : " + ex.Message);
+                // Debug.WriteLine("OnTimerEvent Exception : " + ex.Message);
             }
         }
 
@@ -613,7 +611,7 @@ namespace com.clover.remotepay.transport
 
         private void initializeBGWDoWorkHandlers()
         {
-            // Console.WriteLine("sendMessagesDoWorkHandler created");
+            // Debug.WriteLine("sendMessagesDoWorkHandler created");
             sendMessagesDoWorkHandler = delegate
             {
                 TransportLog("Starting send message loop in BGW.DoWork().");
@@ -642,7 +640,7 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog("Error occurred in sendMessageSync(): " + e.Message);
                         TransportLog(e.StackTrace);
-                        // Console.WriteLine("initializeBGWDoWorkHandler Exception : " + e.Message);
+                        // Debug.WriteLine("initializeBGWDoWorkHandler Exception : " + e.Message);
                     }
                     lock (messageQueue)
                     {
@@ -654,10 +652,10 @@ namespace com.clover.remotepay.transport
                 } while (!shutdown);
 
                 TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating sendMessagesThread");
-                // Console.WriteLine("Terminating sendMessagesThread");
+                // Debug.WriteLine("Terminating sendMessagesThread");
             };
 
-            // Console.WriteLine("receiveMessagesDoWorkHandler created");
+            // Debug.WriteLine("receiveMessagesDoWorkHandler created");
             receiveMessagesDoWorkHandler = delegate
             {
                 TransportLog(Thread.CurrentThread.ManagedThreadId + " : Starting receiveMessagesThread");
@@ -668,10 +666,10 @@ namespace com.clover.remotepay.transport
                 catch (Exception e)
                 {
                     TransportLog("receiveMessagesThread Exception: " + e.Message);
-                    // Console.WriteLine("receiveMessagesThread Exception: " + e.Message);
+                    // Debug.WriteLine("receiveMessagesThread Exception: " + e.Message);
                 }
                 TransportLog(Thread.CurrentThread.ManagedThreadId + " : Terminating receiveMessagesThread");
-                // Console.WriteLine("Terminating receiveMessagesThread");
+                // Debug.WriteLine("Terminating receiveMessagesThread");
             };
 
             receiveMessagesThread.DoWork += receiveMessagesDoWorkHandler;
@@ -696,7 +694,7 @@ namespace com.clover.remotepay.transport
                 }
                 catch (Exception e)
                 {
-                    // Console.WriteLine("Writing magic : " + e.Message);
+                    // Debug.WriteLine("Writing magic : " + e.Message);
                 }
 
                 int stringByteLength = stringBytes.Length;
@@ -725,7 +723,7 @@ namespace com.clover.remotepay.transport
                     }
                     catch (Exception e)
                     {
-                        // Console.WriteLine("Max length : " + e.Message);
+                        // Debug.WriteLine("Max length : " + e.Message);
                     }
 
                     // current position is set to the maximum that can be written.
@@ -786,7 +784,7 @@ namespace com.clover.remotepay.transport
                 }
                 catch (Exception e)
                 {
-                    // Console.WriteLine("outDataSize : " + e.Message);
+                    // Debug.WriteLine("outDataSize : " + e.Message);
                 }
 
                 outDataBuffer.Seek(0, SeekOrigin.Begin);
@@ -839,7 +837,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         private void getMessages()
         {
-            // Console.WriteLine("getMessage() thread start ");
+            // Debug.WriteLine("getMessage() thread start ");
             TransportLog("Thread Start: getMessages()");
             do
             {
@@ -891,7 +889,7 @@ namespace com.clover.remotepay.transport
                     {
                         TransportLog("Error parsing message: " + message);
                         TransportLog(e.Message);
-                        // Console.WriteLine("Error parsing message: " + e.Message);
+                        // Debug.WriteLine("Error parsing message: " + e.Message);
                     }
                 }
             } while (shutdown != true);
@@ -901,6 +899,11 @@ namespace com.clover.remotepay.transport
         private string receiveString()
         {
             BinaryReader inputPacketBuffer = readPacket();
+
+            if (inputPacketBuffer == null)
+            {
+                return null;
+            }
 
             uint startInt = (uint)IPAddress.NetworkToHostOrder(inputPacketBuffer.ReadInt32());
             if (startInt != REMOTE_STRING_MAGIC_START_TOKEN)
@@ -964,7 +967,7 @@ namespace com.clover.remotepay.transport
             }
             catch (Exception e)
             {
-                // Console.WriteLine("ecRead Exception: " + e.Message);
+                // Debug.WriteLine("ecRead Exception: " + e.Message);
             }
 
             if (!shutdown)
@@ -984,7 +987,7 @@ namespace com.clover.remotepay.transport
                 }
                 catch (Exception e)
                 {
-                    // Console.WriteLine("inPacketBuffer : " + e.Message);
+                    // Debug.WriteLine("inPacketBuffer : " + e.Message);
                 }
 
                 if (inDataSize <= 0)
@@ -1186,7 +1189,7 @@ namespace com.clover.remotepay.transport
                             found = true;
                             if (inserted)
                             {
-                                //Console.WriteLine("Merchant device inserted.");
+                                //Debug.WriteLine("Merchant device inserted.");
                                 DeviceInitiallyConnected();
                             }
                             else

@@ -14,9 +14,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using com.clover.sdk.v3.inventory;
+using com.clover.sdk.v3.merchant;
+using com.clover.sdk.v3.payments;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Type = System.Type;
 
 namespace com.clover.remotepay.transport
 {
@@ -25,13 +31,35 @@ namespace com.clover.remotepay.transport
     /// </summary>
     public class JsonUtils
     {
-        public static T Deserialize<T>(string input, JsonConverter[] converters) => JsonConvert.DeserializeObject<T>(input, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore, Converters = converters });
+        public static T Deserialize<T>(string input, JsonConverter[] converters) => JsonConvert.DeserializeObject<T>(input, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, CheckAdditionalContent = false, MissingMemberHandling = MissingMemberHandling.Ignore, Converters = converters });
         public static T Deserialize<T>(string input) => Deserialize<T>(input, new JsonConverter[] { new StringEnumConverter() });
-        public static T DeserializeSdk<T>(string input) => Deserialize<T>(input, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter(), new DataProviderConfigConverter() });
+        public static T DeserializeSdk<T>(string input) => Deserialize<T>(input, StandardJsonConverters);
 
         public static string Serialize(object value, JsonConverter[] converters) => JsonConvert.SerializeObject(value, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Converters = converters });
         public static string Serialize(object value) => Serialize(value, new JsonConverter[] { new StringEnumConverter() });
-        public static string SerializeSdk(object value) => Serialize(value, new JsonConverter[] { new OrderConverter(), new PaymentConverter(), new RefundConverter(), new CreditConverter(), new BatchConverter(), new VaultedCardConverter(), new PrinterConverter(), new StringEnumConverter(), new DataProviderConfigConverter() });
+        public static string SerializeSdk(object value) => Serialize(value, StandardJsonConverters);
+
+        public static JsonConverter[] StandardJsonConverters =>
+            new JsonConverter[]
+            {
+                new OrderConverter(),
+                new PaymentConverter(),
+                new RefundConverter(),
+                new CreditConverter(),
+                new BatchConverter(),
+                new VaultedCardConverter(),
+                new PrinterConverter(),
+                new StringEnumConverter(),
+                new DataProviderConfigConverter(),
+
+                new ListConverter<TaxRate>(),
+                new ListConverter<PaymentTaxRate>(),
+                new ListConverter<TipSuggestion>(),
+                new ListConverter<PaymentTaxRate>(),
+                new ListConverter<Refund>(),
+                new ListConverter<LineItemPayment>(),
+                new ListConverter<AdditionalChargeAmount>()
+            };
     }
 
     /// <summary>
@@ -41,7 +69,7 @@ namespace com.clover.remotepay.transport
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(com.clover.sdk.v3.payments.Payment));
+            return objectType == typeof(Payment);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -52,19 +80,28 @@ namespace com.clover.remotepay.transport
             }
 
             string json = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Payment result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Payment>(json, new JsonConverter[] {
-                new ListConverter<com.clover.sdk.v3.payments.PaymentTaxRate>(),
-                new ListConverter<com.clover.sdk.v3.payments.Refund>(),
-                new ListConverter<com.clover.sdk.v3.payments.LineItemPayment>(),
-                new ListConverter<com.clover.sdk.v3.payments.AdditionalChargeAmount>()
-            });
+            Payment result = JsonUtils.Deserialize<Payment>(json, LocalJsonConverters);
             return result;
         }
 
+        public override bool CanWrite => false;
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.Serialize(value));
+            // writer.WriteValue(JsonUtils.Serialize(value, LocalJsonConverters));
         }
+
+        public static JsonConverter[] LocalJsonConverters =>
+            new JsonConverter[]
+            {
+                new ListConverter<TaxRate>(),
+                new ListConverter<PaymentTaxRate>(),
+                new ListConverter<TaxableAmountRate>(),
+                new ListConverter<TipSuggestion>(),
+                new ListConverter<PaymentTaxRate>(),
+                new ListConverter<Refund>(),
+                new ListConverter<LineItemPayment>(),
+                new ListConverter<AdditionalChargeAmount>()
+            };
     }
 
     /// <summary>
@@ -74,7 +111,7 @@ namespace com.clover.remotepay.transport
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(com.clover.sdk.v3.payments.Credit));
+            return (objectType == typeof(Credit));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -85,7 +122,7 @@ namespace com.clover.remotepay.transport
             }
 
             string json = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Credit result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Credit>(json, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>() });
+            Credit result = JsonUtils.Deserialize<Credit>(json, new JsonConverter[] { new ListConverter<TaxableAmountRate>() });
             return result;
 
         }
@@ -121,11 +158,13 @@ namespace com.clover.remotepay.transport
                 new ListConverter<com.clover.sdk.v3.order.Discount>(),
                 new ListConverter<com.clover.sdk.v3.inventory.TaxRate>(),
                 new ListConverter<com.clover.sdk.v3.customers.Customer>(),
-                new ListConverter<com.clover.sdk.v3.payments.Payment>(),
-                new ListConverter<com.clover.sdk.v3.payments.LineItemPayment>(),
-                new ListConverter<com.clover.sdk.v3.payments.Refund>(),
-                new ListConverter<com.clover.sdk.v3.payments.Credit>(),
-                new ListConverter<com.clover.sdk.v3.payments.PaymentTaxRate>()
+                new ListConverter<TaxableAmountRate>(),
+                new ListConverter<Payment>(),
+                new ListConverter<LineItemPayment>(),
+                new ListConverter<Refund>(),
+                new ListConverter<Credit>(),
+                new ListConverter<TipSuggestion>(),
+                new ListConverter<PaymentTaxRate>()
             });
             return result;
         }
@@ -143,7 +182,7 @@ namespace com.clover.remotepay.transport
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(com.clover.sdk.v3.payments.Refund));
+            return (objectType == typeof(Refund));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -154,13 +193,14 @@ namespace com.clover.remotepay.transport
             }
 
             string json = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Refund result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Refund>(json, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>(), new ListConverter<com.clover.sdk.v3.base_.Reference>() }); // reference for line items
+            Refund result = JsonUtils.Deserialize<Refund>(json, new JsonConverter[] { new ListConverter<TaxableAmountRate>(), new ListConverter<com.clover.sdk.v3.base_.Reference>() }); // reference for line items
             return result;
         }
 
+        public override bool CanWrite => false;
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.Serialize(value));
+            // writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -171,7 +211,7 @@ namespace com.clover.remotepay.transport
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(com.clover.sdk.v3.payments.VaultedCard));
+            return (objectType == typeof(VaultedCard));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -182,13 +222,14 @@ namespace com.clover.remotepay.transport
             }
 
             string json = reader.Value.ToString();
-            com.clover.sdk.v3.payments.VaultedCard result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.VaultedCard>(json, new JsonConverter[] { }); // reference for line items
+            VaultedCard result = JsonUtils.Deserialize<VaultedCard>(json, new JsonConverter[] { }); // reference for line items
             return result;
         }
 
+        public override bool CanWrite => false;
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.Serialize(value));
+            // writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -214,9 +255,10 @@ namespace com.clover.remotepay.transport
             return result;
         }
 
+        public override bool CanWrite => false;
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.Serialize(value));
+            // writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -227,7 +269,7 @@ namespace com.clover.remotepay.transport
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(com.clover.sdk.v3.payments.Batch));
+            return (objectType == typeof(Batch));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -238,13 +280,14 @@ namespace com.clover.remotepay.transport
             }
 
             string json = reader.Value.ToString();
-            com.clover.sdk.v3.payments.Batch result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Batch>(json, new JsonConverter[] { new ListConverter<com.clover.sdk.v3.payments.TaxableAmountRate>(), new ListConverter<com.clover.sdk.v3.payments.ServerTotalStats>(), new ListConverter<com.clover.sdk.v3.payments.BatchCardTotal>() });
+            Batch result = JsonUtils.Deserialize<Batch>(json, new JsonConverter[] { new ListConverter<TaxableAmountRate>(), new ListConverter<ServerTotalStats>(), new ListConverter<BatchCardTotal>() });
             return result;
         }
 
+        public override bool CanWrite => false;
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.Serialize(value));
+            // writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 
@@ -256,7 +299,7 @@ namespace com.clover.remotepay.transport
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(List<T>));
+            return objectType == typeof(List<T>);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -271,7 +314,9 @@ namespace com.clover.remotepay.transport
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.Serialize(value));
+            ElementsWrapper<T> wrapper = new ElementsWrapper<T>();
+            wrapper.elements = ((List<T>)value).ToArray();
+            serializer.Serialize(writer, wrapper);
         }
     }
 
@@ -306,9 +351,10 @@ namespace com.clover.remotepay.transport
             return result;
         }
 
+        public override bool CanWrite => false;
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(JsonUtils.Serialize(value));
+            // writer.WriteValue(JsonUtils.Serialize(value));
         }
     }
 

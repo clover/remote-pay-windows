@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -34,6 +35,8 @@ namespace com.clover.remotepay.transport
     {
         public int maxMessageSizeInChars = 1000;
         public long MAX_PAYLOAD_SIZE = 10000000;
+        // Ping flood guard milliseconds - don't respond to pings that come too quickly, but respond "occasionally". Normal pings come around 1s, so set slighly smaller guard time so they aren't dropped.
+        public int PING_FLOOD_GUARD_TIME_MS = 800; 
 
         /// <summary>
         /// Used to halt auto-accept of signature when payment confirmation is requested.
@@ -43,6 +46,8 @@ namespace com.clover.remotepay.transport
         private object ackLock = new object();
         private Dictionary<string, BackgroundWorker> msgIdToTask = new Dictionary<string, BackgroundWorker>();
         private int remoteMessageVersion = 1;
+
+        private DateTime pingTime = DateTime.MinValue;
 
         // Track device connection discovery state for reconnection flow
         private ConnectionState startupConnectionState = ConnectionState.Disconnected;
@@ -102,9 +107,7 @@ namespace com.clover.remotepay.transport
         /// <param name="message">The message.</param>
         public void onMessage(string message)
         {
-#if DEBUG
-            Console.WriteLine("Received raw message: " + message);
-#endif
+            Debug.WriteLine("Received raw message: " + message);
             RemoteMessage rMessage = null;
             try
             {
@@ -281,6 +284,12 @@ namespace com.clover.remotepay.transport
                             VoidPaymentResponseMessage vprm = JsonUtils.DeserializeSdk<VoidPaymentResponseMessage>(rMessage.payload);
                             notifyObserversPaymentVoided(vprm);
                             break;
+                        case Methods.INVALID_STATE_TRANSITION:
+                            {
+                                InvalidStateTransitionMessage data = JsonUtils.DeserializeSdk<InvalidStateTransitionMessage>(rMessage.payload);
+                                notifyObserversInvalidStateTransition(data);
+                            }
+                            break;
 
                         case Methods.REFUND_REQUEST:
                         case Methods.PAYMENT_VOIDED:
@@ -332,13 +341,23 @@ namespace com.clover.remotepay.transport
 
         private void onPing()
         {
-            // if pong then pong
-            doPong();
+            DateTime now = DateTime.Now;
 
-            // if in discovery state and receiving ping, probably the DISCOVERY RESPONSE went astray, send another DISCOVERY REQUEST to get another one
-            if (startupConnectionState == ConnectionState.Discovering)
+            // Some devices send ping floods in certain error paths; only respond to pings every so often. Valid pings generally happen between 1 and 5 seconds, never sub-second.
+            if ((now - pingTime).TotalMilliseconds >= PING_FLOOD_GUARD_TIME_MS)
             {
-                doDiscoveryRequest();
+                // reply to ping with pong
+                doPong();
+
+                // if in discovery state and receiving ping, probably the DISCOVERY RESPONSE went astray, send another DISCOVERY REQUEST to get another one
+                if (startupConnectionState == ConnectionState.Discovering)
+                {
+                    Debug.WriteLine($"Ping without complete connection, attempt QOS Discovery Request");
+                    doDiscoveryRequest();
+                }
+
+                // Keep the last handled ping time for ping flood guard
+                pingTime = now;
             }
         }
 
@@ -460,7 +479,7 @@ namespace com.clover.remotepay.transport
         {
             NotifyObservers(observer =>
             {
-                observer.onTxStartResponse(txsrm.result, txsrm.externalId);
+                observer.onTxStartResponse(txsrm.result, txsrm.externalId, txsrm.reason, txsrm.message, txsrm.requestInfo);
             });
         }
 
@@ -532,7 +551,7 @@ namespace com.clover.remotepay.transport
                 }
                 else
                 {
-                    // Console.WriteLine("Don't know what to do with this Finish OK message: " + JsonUtils.Serialize(msg));
+                    // Debug.WriteLine("Don't know what to do with this Finish OK message: " + JsonUtils.Serialize(msg));
                 }
             });
         }
@@ -635,7 +654,7 @@ namespace com.clover.remotepay.transport
         {
             NotifyObservers(observer =>
             {
-                observer.onRetrievePaymentResponse(ResultStatus.SUCCESS, rpr.reason, rpr.externalPaymentId, rpr.queryStatus, rpr.payment);
+                observer.onRetrievePaymentResponse(rpr.queryStatus != QueryStatus.NOT_FOUND ? ResultStatus.SUCCESS : ResultStatus.FAIL, rpr.reason, rpr.externalPaymentId, rpr.queryStatus, rpr.payment);
             });
         }
 
@@ -671,6 +690,14 @@ namespace com.clover.remotepay.transport
             });
         }
 
+        public void notifyObserversInvalidStateTransition(InvalidStateTransitionMessage message)
+        {
+            NotifyObservers(observer =>
+            {
+                observer.onInvalidStateTransition(message.reason, message.requestedTransition, message.state, message.substate, message.data);
+            });
+        }
+
         private void NotifyObservers(Action<ICloverDeviceObserver> action)
         {
             List<ICloverDeviceObserver> localObservers = new List<ICloverDeviceObserver>(deviceObservers);
@@ -686,7 +713,7 @@ namespace com.clover.remotepay.transport
                     catch (Exception exception)
                     {
                         // eat unhandled exceptions from user code - any logging other than debug?
-                        System.Diagnostics.Debug.WriteLine("DefaultCloverDevice: Error calling custom code: " + exception);
+                        Debug.WriteLine("DefaultCloverDevice: Error calling custom code: " + exception);
                     }
                 };
                 bw.RunWorkerAsync();
@@ -897,9 +924,8 @@ namespace com.clover.remotepay.transport
             RemoteMessage remoteMessage = RemoteMessage.CreatePongMessage(packageName, remoteSourceSDK, remoteApplicationID);
             string msg = JsonUtils.SerializeSdk(remoteMessage);
             transport.sendMessage(msg);
-#if DEBUG
-            Console.WriteLine("Sent message: " + msg);
-#endif
+
+            System.Diagnostics.Debug.WriteLine("Sent Pong: " + msg);
         }
 
         public override void doDiscoveryRequest()
@@ -1016,9 +1042,8 @@ namespace com.clover.remotepay.transport
             string msg = JsonUtils.SerializeSdk(remoteMessage);
 
             transport.sendMessage(msg);
-#if DEBUG
-            Console.WriteLine("Sent message: " + msg);
-#endif
+            Debug.WriteLine("Sent message: " + msg);
+
             return remoteMessage.id;
         }
 
@@ -1062,7 +1087,7 @@ namespace com.clover.remotepay.transport
 
                     if ((remoteMsg.attachment != null && remoteMsg.attachment.Length > MAX_PAYLOAD_SIZE))
                     {
-                        // Console.WriteLine("Error sending message - payload size is greater than the maximum allowed");
+                        // Debug.WriteLine("Error sending message - payload size is greater than the maximum allowed");
                         return null;
                     }
 
@@ -1155,9 +1180,7 @@ namespace com.clover.remotepay.transport
             string msg = JsonUtils.SerializeSdk(fRemoteMessage);
             transport.sendMessage(msg);
 
-#if DEBUG
-            Console.WriteLine("Sent message: " + msg);
-#endif
+            Debug.WriteLine("Sent message: " + msg);
         }
 
         #endregion

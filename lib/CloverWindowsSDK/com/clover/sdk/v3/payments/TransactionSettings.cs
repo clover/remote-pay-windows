@@ -6,19 +6,16 @@
 
 
 using System.Collections.Generic;
+using com.clover.sdk.v3.merchant;
 
 namespace com.clover.sdk.v3.payments
 {
     public class TransactionSettings
     {
-
-        /**
-        * Initialize the values for this.
-        * @private
-        */
         public TransactionSettings()
         {
         }
+
         public int? cardEntryMethods { get; set; }
         public bool? disableCashBack { get; set; }
         public bool? cloverShouldHandleReceipts { get; set; }
@@ -35,6 +32,7 @@ namespace com.clover.sdk.v3.payments
         public bool? autoAcceptPaymentConfirmations { get; set; }
         public bool? autoAcceptSignature { get; set; }
         public bool? forceOfflinePayment { get; set; }
+        public List<TipSuggestion> tipSuggestions { get; set; }
         public Dictionary<string, string> regionalExtras { get; set; }
     }
 }

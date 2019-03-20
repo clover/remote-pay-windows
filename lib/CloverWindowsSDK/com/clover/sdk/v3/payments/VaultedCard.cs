@@ -19,23 +19,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 
-namespace com.clover.sdk.v3.payments {
+namespace com.clover.sdk.v3.payments
+{
+    public class VaultedCard
+    {
+        public String first6 { get; set; }
 
+        public String last4 { get; set; }
 
-public class VaultedCard {
+        public String cardholderName { get; set; }
 
-  public String first6 { get; set; }
+        public String expirationDate { get; set; }
 
-  public String last4 { get; set; }
-
-  public String cardholderName { get; set; }
-
-  public String expirationDate { get; set; }
-
-  public String token { get; set; }
-
-}
-
+        public String token { get; set; }
+    }
 }

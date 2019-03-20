@@ -273,6 +273,7 @@ namespace CloverExamplePOS
             OpenCashDrawerButton.Click.Add(OpenCashDrawerButton_Click);
 
             CopyExternalIdMenuItem.Click += OrderPaymentsView_CopyExternalIdMenuItem_Click;
+            ViewPaymentMenuItem.Click += ViewPaymentMenuItem_Click;
 
             foreach (POSItem item in data.Store.AvailableItems)
             {
@@ -417,10 +418,9 @@ namespace CloverExamplePOS
         }
         private void PayButtonCard_Click(object sender, EventArgs e)
         {
-            object obj = ((MenuItem)sender).Tag;
-            if (obj is POSCard)
+            if (((MenuItem)sender).Tag is POSCard card)
             {
-                Pay((POSCard)obj);
+                Pay(card);
             }
         }
         private void PayButton_Click(object sender, EventArgs e)
@@ -462,6 +462,8 @@ namespace CloverExamplePOS
                 request.SignatureEntryLocation = TransactionSettingsEdit.SignatureEntryLocation;
             }
 
+            request.TipSuggestions = TransactionSettingsEdit.TipSuggestions;
+
             request.TaxAmount = data.Store.CurrentOrder.TaxAmount;
 
             request.DisableCashback = TransactionSettingsEdit.DisableCashback;
@@ -502,6 +504,22 @@ namespace CloverExamplePOS
             if (response.Success)
             {
                 POSPayment payment = new POSPayment(response.Payment.id, response.Payment.externalPaymentId, response.Payment.order.id, response.Payment.employee.id, response.Payment.amount, response.Payment.tipAmount ?? 0, response.Payment.cashbackAmount);
+                payment.PaymentSource = response.Payment;
+
+                // Look for partial payment scenario, enabled on some merchants, where POS asks for $10, succeed with $5 (on one card, gift card, etc.), and expects to do another sale for the remaining balance
+                // A real point of sale either uses this to support multiple payments per order, or can void this payment to reject a partial payment.
+                // Merchant settings control whether partial payments are allowed, many merchants cannot succeed with partial payments.
+                if (response.Payment.amount < data.Store.CurrentOrder.Total)
+                {
+                    string message = $"Sale succeeded as a Partial Payment of the order total.\n\n\tTotal:\t{(data.Store.CurrentOrder.Total) / 100.0:C2}\n\tPayment:\t{(response.Payment.amount) / 100.0:C2}\nRemainder:\t{(data.Store.CurrentOrder.Total - response.Payment.amount) / 100.0:C2}\n\nFull Point of Sale should either request remainder of total amount, or void the payment to reject and reverse it.";
+                    MessageBox.Show(message, "Partial Payment Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Partial Payments are beyond the scope of this POS Sample application
+                    // Real Point of Sale Architecture TODO
+                    // 1. Void payment if partial payments are not supported in this POS Software
+                    // 2. Update order total to subtract this partial payment, request further payments to complete order
+                }
+
                 if (response.IsAuth) //Tip Adjustable
                 {
                     data.Store.CurrentOrder.Status = POSOrder.OrderStatus.AUTHORIZED;
@@ -605,7 +623,10 @@ namespace CloverExamplePOS
                 request.SignatureEntryLocation = TransactionSettingsEdit.SignatureEntryLocation;
             }
 
+            // Note: There are no tips on-device in an Auth, they are on paper. The on-device tip related TransactionSettings are irrelevant.
+
             request.DisableRestartTransactionOnFail = TransactionSettingsEdit.DisableRestartTransactionOnFail;
+            request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
             request.DisableReceiptSelection = TransactionSettingsEdit.DisableReceiptSelection;
             request.DisableDuplicateChecking = TransactionSettingsEdit.DisableDuplicateChecking;
             request.AutoAcceptSignature = TransactionSettingsEdit.AutomaticSignatureConfirmation;
@@ -1126,6 +1147,7 @@ namespace CloverExamplePOS
         {
             data.CloverConnector.Closeout(new CloseoutRequest());
         }
+
         public void OnCloseoutResponse(CloseoutResponse response)
         {
             if (response != null && response.Success)
@@ -1213,7 +1235,7 @@ namespace CloverExamplePOS
 
         public void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
         {
-
+            // Nothing to do - example doesn't call VoidPaymentRefund, so never gets this response
         }
 
         //////////////// Manual Refund methods /////////////
@@ -1226,9 +1248,11 @@ namespace CloverExamplePOS
             request.CardEntryMethods = TransactionSettingsEdit.CardEntryMethod;
             request.CardNotPresent = TransactionSettingsEdit.CardNotPresent;
             request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
+            request.DisableReceiptSelection = TransactionSettingsEdit.DisableReceiptSelection;
 
             data.CloverConnector.ManualRefund(request);
         }
+
         public void OnManualRefundResponse(ManualRefundResponse response)
         {
             if (response.Success)
@@ -1305,14 +1329,21 @@ namespace CloverExamplePOS
                 {
                     request.PaymentId = payment.PaymentID;
                     request.OrderId = payment.OrderID;
+
                     request.Amount = dialog.Amount;
                     request.FullRefund = dialog.FullRefund;
+
+                    request.DisablePrinting = TransactionSettingsEdit.DisablePrinting;
+                    request.DisableReceiptSelection = TransactionSettingsEdit.DisableReceiptSelection;
+
                     TempObjectMap.Clear();
                     TempObjectMap.Add(payment.PaymentID, order);
+
                     data.CloverConnector.RefundPayment(request);
                 }
             }
         }
+
         public void OnRefundPaymentResponse(RefundPaymentResponse response)
         {
             if (response.Success)
@@ -1386,6 +1417,7 @@ namespace CloverExamplePOS
                 ConnectStatusLabel.BackColor = ConnectionStatusColor_Connected;
                 Connected = true;
                 currentDeviceMerchantInfo = merchantInfo;
+                AboutSdkInfoDisplay.CloverConnector = data.CloverConnector as CloverConnector;
                 if (DisplayOrder != null && DisplayOrder.lineItems != null && DisplayOrder.lineItems.elements.Count > 0)
                 {
                     UpdateDisplayOrderTotals();
@@ -1553,6 +1585,15 @@ namespace CloverExamplePOS
         {
             // Pass the Clover Loyalty API message along to the LoyaltyAPI UI control
             loyaltyApiPage?.OnCustomerProvidedData(response);
+        }
+
+        ////////////////// Invalid State Transition Notification //////////////////////
+        public void OnInvalidStateTransitionResponse(InvalidStateTransitionNotification notification)
+        {
+            uiThread.Send(delegate (object state)
+            {
+                AlertForm.Show(this, "Invalid State Transition", $"{notification.Reason}\nFailing transition from {notification.State}::{notification.Substate} to {notification.RequestedTransition}.");
+            }, null);
         }
 
         ////////////////// UI Events and UI Management //////////////////////
@@ -2029,6 +2070,23 @@ namespace CloverExamplePOS
             }
         }
 
+        private void ViewPaymentMenuItem_Click(object sender, EventArgs e)
+        {
+            if (OrderPaymentsView.SelectedItems.Count > 0)
+            {
+                if (OrderPaymentsView.SelectedItems[0].Tag is POSPayment pos)
+                {
+                    if (pos.PaymentSource is Payment payment)
+                    {
+                        PropertiesDialog dialog = new PropertiesDialog();
+                        dialog.Text = "Clover Connector API Payment Object";
+                        dialog.Content = Utils.SummaryReport(payment);
+                        dialog.ShowDialog();
+                    }
+                }
+            }
+        }
+
         // only allow numbers to be entered
         private void RefundAmount_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -2250,7 +2308,13 @@ namespace CloverExamplePOS
                 if (OrderPaymentsView.SelectedItems[0].Tag is POSPayment)
                 {
                     POSPayment payment = ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag);
-                    data.CloverConnector.DisplayPaymentReceiptOptions(new DisplayPaymentReceiptOptionsRequest() { OrderID = payment.OrderID, PaymentID = payment.PaymentID });
+                    DisplayPaymentReceiptOptionsRequest request = new DisplayPaymentReceiptOptionsRequest()
+                    {
+                        OrderID = payment.OrderID,
+                        PaymentID = payment.PaymentID,
+                        DisablePrinting = TransactionSettingsEdit.DisablePrinting ?? false
+                };
+                    data.CloverConnector.DisplayPaymentReceiptOptions(request);
                 }
             }
         }
@@ -2284,10 +2348,12 @@ namespace CloverExamplePOS
         private void DisplayReceiptOptionsButton_Click(object sender, EventArgs e)
         {
             DisplayReceiptOptionsRequest request = new DisplayReceiptOptionsRequest();
-            if (DisplayReceiptOptionsLabel.Text != "")
+            if (DisplayReceiptOptionsText.Text != "")
             {
-                request.paymentId = DisplayReceiptOptionsLabel.Text;
+                request.paymentId = DisplayReceiptOptionsText.Text;
             }
+            request.disablePrinting = TransactionSettingsEdit.DisablePrinting ?? false;
+
             data.CloverConnector.DisplayReceiptOptions(request);
         }
 

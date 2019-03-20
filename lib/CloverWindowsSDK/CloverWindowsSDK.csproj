@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes.cs" />
+    <Compile Include="CloverException.cs" />
     <Compile Include="com\clover\remote\order\Display.cs" />
     <Compile Include="com\clover\remote\order\operation\Operations.cs" />
     <Compile Include="com\clover\sdk\v3\base_\Address.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="com\clover\sdk\v3\loyalty\LoyaltyDataConfig.cs" />
     <Compile Include="com\clover\sdk\v3\loyalty\LoyaltyDataTypes.cs" />
     <Compile Include="com\clover\sdk\v3\loyalty\LoyaltyExtensions.cs" />
+    <Compile Include="com\clover\sdk\v3\merchant\TipSuggestion.cs" />
     <Compile Include="com\clover\sdk\v3\order\CustomerIdMethod.cs" />
     <Compile Include="com\clover\sdk\v3\order\Discount.cs" />
     <Compile Include="com\clover\sdk\v3\order\FireOrder.cs" />
@@ -220,8 +222,8 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\Json70r1\lib\Net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Json70r1\lib\Net20\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\Newtonsoft.Json.120r1\Net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Newtonsoft.Json.120r1\Net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

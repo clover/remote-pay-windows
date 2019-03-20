@@ -23,7 +23,6 @@ namespace CloverExamplePOS
 
     public partial class StartupForm : OverlayForm
     {
-        private static readonly string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
         CloverDeviceConfiguration selectedConfig;
 
         const String APPLICATION_ID = "com.clover.CloverExamplePOS:3.0.2";

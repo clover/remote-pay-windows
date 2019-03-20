@@ -36,6 +36,7 @@ namespace com.clover.remotepay.transport
         protected readonly string remoteApplicationID;
         protected DeviceInfo deviceInfo;
         public bool SupportsAcks { get; set; }
+        protected int logLevel = 1000;
 
         /// <summary>
         /// Create a Clover Device from a configuration
@@ -54,9 +55,16 @@ namespace com.clover.remotepay.transport
         {
             string logSource = "_TransportEventLog";
 
-            if (!EventLog.SourceExists(logSource))
+            try
             {
-                EventLog.CreateEventSource(logSource, logSource);
+                if (!EventLog.SourceExists(logSource))
+                {
+                    EventLog.CreateEventSource(logSource, logSource);
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new CloverException($"Aborting Clover Connector SDK because the Windows Event Log Source \"{logSource}\" does not exist or cannot be accessed.\nSee the https://github.com/clover/remote-pay-windows/wiki article for more information.\n\nref# CLOVER-W230\nDetail Message: {exception.Message}", "CLOVER-W230", exception);
             }
 
             // Add the event log trace listener to the collection.
@@ -64,6 +72,7 @@ namespace com.clover.remotepay.transport
             Trace.Listeners.Add(myTraceListener);
 
             transport = configuration.getCloverTransport();
+            transport?.SetLogLevel(logLevel);
 
             shortTransportType = !string.IsNullOrWhiteSpace(transport.ShortTitle()) ? transport.ShortTitle() : shortTransportType;
             packageName = configuration.getMessagePackageName();
@@ -150,6 +159,12 @@ namespace com.clover.remotepay.transport
             {
                 deviceObservers.Remove(observer);
             }
+        }
+
+        public void SetLogLevel(int level)
+        {
+            logLevel = level;
+            transport?.SetLogLevel(level);
         }
 
         public abstract void doDiscoveryRequest();
@@ -294,7 +309,7 @@ namespace com.clover.remotepay.transport
         /// <param name="paymentId">The payment identifier.</param>
         /// <param name="code">The code.</param>
         /// <param name="msg">The MSG.</param>
-        /// TODO Edit XML Comment Template for onRefundPaymentResponse
+        /// <param name="reason">reason code</param>
         void onRefundPaymentResponse(Refund refund, string orderId, string paymentId, TxState code, string msg, ResponseReasonCode reason);
 
         /// <summary>
@@ -310,7 +325,10 @@ namespace com.clover.remotepay.transport
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="externalId">The external identifier.</param>
-        void onTxStartResponse(TxStartResponseResult result, string externalId);
+        /// <param name="reason">Reason string</param>
+        /// <param name="message">Extended message</param>
+        /// <param name="requestInfo">References from remote-pay</param>
+        void onTxStartResponse(TxStartResponseResult result, string externalId, string reason, string message, string requestInfo);
 
         /// <summary>
         /// Called when a vault card response is received.
@@ -481,6 +499,17 @@ namespace com.clover.remotepay.transport
         /// <param name="config"></param>
         /// <param name="data"></param>
         void onCustomerProvidedDataResponse(string eventId, DataProviderConfig config, string data);
+
+        /// <summary>
+        /// Received notification that an invalid state change was attempted, and current state
+        /// </summary>
+        /// <param name="reason">Human readable description of error</param>
+        /// <param name="requestedTransition">Requested state that failed</param>
+        /// <param name="state">Current state</param>
+        /// <param name="substate">Current substate</param>
+        /// <param name="result">Result, like FAIL</param>
+        /// <param name="data">Device status details</param>
+        void onInvalidStateTransition(string reason, string requestedTransition, string state, string substate, ExternalDeviceStateData data);
     }
 
     public class DeviceInfo

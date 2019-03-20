@@ -34,12 +34,12 @@ namespace CloverExamplePOS
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CloverExamplePOSForm));
-            CloverExamplePOS.ComboboxItem comboboxItem31 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem32 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem33 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem34 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem35 = new CloverExamplePOS.ComboboxItem();
-            CloverExamplePOS.ComboboxItem comboboxItem36 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem1 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem2 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem3 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem4 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem5 = new CloverExamplePOS.ComboboxItem();
+            CloverExamplePOS.ComboboxItem comboboxItem6 = new CloverExamplePOS.ComboboxItem();
             this.DeviceMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.TestDeviceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloverMiniUSBMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -111,6 +111,7 @@ namespace CloverExamplePOS
             this.externalID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.OrderPaymentsViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CopyExternalIdMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewPaymentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.CloseoutButton = new System.Windows.Forms.Button();
@@ -191,6 +192,8 @@ namespace CloverExamplePOS
             this.TransactionSettingsEdit = new CloverExamplePOS.UiPages.TransactionSettingsPage();
             this.LoyaltyApiTabPage = new System.Windows.Forms.TabPage();
             this.loyaltyApiPage = new CloverExamplePOS.LoyaltyApiPage();
+            this.SdkInfoTabPage = new System.Windows.Forms.TabPage();
+            this.AboutSdkInfoDisplay = new CloverExamplePOS.UiPages.AboutSdkInfo();
             this.UIStateButtonPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanelForceOffline = new System.Windows.Forms.TableLayoutPanel();
             this.ratingsListView = new System.Windows.Forms.ListView();
@@ -249,6 +252,7 @@ namespace CloverExamplePOS
             this.tabPage9.SuspendLayout();
             this.TransactionOverridesTabPage.SuspendLayout();
             this.LoyaltyApiTabPage.SuspendLayout();
+            this.SdkInfoTabPage.SuspendLayout();
             this.StatusPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -289,12 +293,13 @@ namespace CloverExamplePOS
             this.TabControl.Controls.Add(this.tabPage9);
             this.TabControl.Controls.Add(this.TransactionOverridesTabPage);
             this.TabControl.Controls.Add(this.LoyaltyApiTabPage);
+            this.TabControl.Controls.Add(this.SdkInfoTabPage);
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Location = new System.Drawing.Point(0, 0);
             this.TabControl.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(1720, 1168);
+            this.TabControl.Size = new System.Drawing.Size(1720, 994);
             this.TabControl.TabIndex = 13;
             this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
             // 
@@ -306,7 +311,7 @@ namespace CloverExamplePOS
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage1.Size = new System.Drawing.Size(1712, 1139);
+            this.tabPage1.Size = new System.Drawing.Size(1712, 965);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Register";
             // 
@@ -327,7 +332,7 @@ namespace CloverExamplePOS
             // 
             this.splitContainer3.Panel2.BackColor = System.Drawing.Color.White;
             this.splitContainer3.Panel2.Controls.Add(this.RegisterTabs);
-            this.splitContainer3.Size = new System.Drawing.Size(1704, 1131);
+            this.splitContainer3.Size = new System.Drawing.Size(1704, 957);
             this.splitContainer3.SplitterDistance = 614;
             this.splitContainer3.SplitterWidth = 5;
             this.splitContainer3.TabIndex = 19;
@@ -349,7 +354,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 135F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(614, 1131);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(614, 957);
             this.tableLayoutPanel9.TabIndex = 0;
             // 
             // flowLayoutPanel2
@@ -405,7 +410,7 @@ namespace CloverExamplePOS
             this.OrderItems.Margin = new System.Windows.Forms.Padding(4);
             this.OrderItems.MultiSelect = false;
             this.OrderItems.Name = "OrderItems";
-            this.OrderItems.Size = new System.Drawing.Size(606, 896);
+            this.OrderItems.Size = new System.Drawing.Size(606, 722);
             this.OrderItems.TabIndex = 16;
             this.OrderItems.UseCompatibleStateImageBehavior = false;
             this.OrderItems.View = System.Windows.Forms.View.Details;
@@ -440,7 +445,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel10.Controls.Add(this.label10, 0, 0);
             this.tableLayoutPanel10.Controls.Add(this.label2, 0, 2);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(4, 945);
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(4, 771);
             this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 4;
@@ -554,7 +559,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel11.Controls.Add(this.SaleButton, 1, 0);
             this.tableLayoutPanel11.Controls.Add(this.newOrderBtn, 0, 0);
             this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 1080);
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 906);
             this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 1;
@@ -619,7 +624,7 @@ namespace CloverExamplePOS
             this.RegisterTabs.Margin = new System.Windows.Forms.Padding(0);
             this.RegisterTabs.Name = "RegisterTabs";
             this.RegisterTabs.SelectedIndex = 0;
-            this.RegisterTabs.Size = new System.Drawing.Size(1085, 1131);
+            this.RegisterTabs.Size = new System.Drawing.Size(1085, 957);
             this.RegisterTabs.TabIndex = 0;
             // 
             // tabPage5
@@ -629,7 +634,7 @@ namespace CloverExamplePOS
             this.tabPage5.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage5.Size = new System.Drawing.Size(1077, 1102);
+            this.tabPage5.Size = new System.Drawing.Size(1077, 928);
             this.tabPage5.TabIndex = 0;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -647,7 +652,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel12.RowCount = 2;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 92F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(1069, 1094);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(1069, 920);
             this.tableLayoutPanel12.TabIndex = 0;
             // 
             // StoreItems
@@ -658,14 +663,14 @@ namespace CloverExamplePOS
             this.StoreItems.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.StoreItems.Name = "StoreItems";
             this.StoreItems.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-            this.StoreItems.Size = new System.Drawing.Size(1061, 1002);
+            this.StoreItems.Size = new System.Drawing.Size(1061, 828);
             this.StoreItems.TabIndex = 7;
             // 
             // StoreDiscounts
             // 
             this.StoreDiscounts.BackColor = System.Drawing.Color.White;
             this.StoreDiscounts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.StoreDiscounts.Location = new System.Drawing.Point(4, 1002);
+            this.StoreDiscounts.Location = new System.Drawing.Point(4, 828);
             this.StoreDiscounts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.StoreDiscounts.Name = "StoreDiscounts";
             this.StoreDiscounts.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
@@ -679,7 +684,7 @@ namespace CloverExamplePOS
             this.tabPage6.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage6.Size = new System.Drawing.Size(1838, 1102);
+            this.tabPage6.Size = new System.Drawing.Size(1077, 928);
             this.tabPage6.TabIndex = 1;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -695,7 +700,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel13.Name = "tableLayoutPanel13";
             this.tableLayoutPanel13.RowCount = 1;
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(1830, 1094);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(1069, 920);
             this.tableLayoutPanel13.TabIndex = 0;
             // 
             // SelectedItemPanel
@@ -711,7 +716,7 @@ namespace CloverExamplePOS
             this.SelectedItemPanel.Controls.Add(this.label7);
             this.SelectedItemPanel.Controls.Add(this.IncrementQuantityButton);
             this.SelectedItemPanel.Controls.Add(this.DecrementQuantityButton);
-            this.SelectedItemPanel.Location = new System.Drawing.Point(778, 376);
+            this.SelectedItemPanel.Location = new System.Drawing.Point(397, 289);
             this.SelectedItemPanel.Margin = new System.Windows.Forms.Padding(4);
             this.SelectedItemPanel.Name = "SelectedItemPanel";
             this.SelectedItemPanel.Size = new System.Drawing.Size(274, 342);
@@ -824,7 +829,7 @@ namespace CloverExamplePOS
             this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Size = new System.Drawing.Size(1712, 1139);
+            this.tabPage2.Size = new System.Drawing.Size(1712, 965);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Orders";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -842,7 +847,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(1704, 1131);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1704, 957);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // splitContainer1
@@ -860,8 +865,8 @@ namespace CloverExamplePOS
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1696, 1043);
-            this.splitContainer1.SplitterDistance = 679;
+            this.splitContainer1.Size = new System.Drawing.Size(1696, 869);
+            this.splitContainer1.SplitterDistance = 565;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -878,7 +883,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel17.RowCount = 2;
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(1696, 679);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(1696, 565);
             this.tableLayoutPanel17.TabIndex = 21;
             // 
             // OrdersListView
@@ -899,7 +904,7 @@ namespace CloverExamplePOS
             this.OrdersListView.Margin = new System.Windows.Forms.Padding(4);
             this.OrdersListView.MultiSelect = false;
             this.OrdersListView.Name = "OrdersListView";
-            this.OrdersListView.Size = new System.Drawing.Size(1688, 605);
+            this.OrdersListView.Size = new System.Drawing.Size(1688, 491);
             this.OrdersListView.TabIndex = 20;
             this.OrdersListView.UseCompatibleStateImageBehavior = false;
             this.OrdersListView.View = System.Windows.Forms.View.Details;
@@ -942,7 +947,7 @@ namespace CloverExamplePOS
             this.OpenOrder_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenOrder_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenOrder_Button.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.OpenOrder_Button.Location = new System.Drawing.Point(1591, 617);
+            this.OpenOrder_Button.Location = new System.Drawing.Point(1591, 503);
             this.OpenOrder_Button.Margin = new System.Windows.Forms.Padding(4);
             this.OpenOrder_Button.Name = "OpenOrder_Button";
             this.OpenOrder_Button.Size = new System.Drawing.Size(101, 58);
@@ -966,7 +971,7 @@ namespace CloverExamplePOS
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.OrderPaymentsView);
-            this.splitContainer2.Size = new System.Drawing.Size(1696, 359);
+            this.splitContainer2.Size = new System.Drawing.Size(1696, 299);
             this.splitContainer2.SplitterDistance = 415;
             this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 0;
@@ -986,7 +991,7 @@ namespace CloverExamplePOS
             this.OrderDetailsListView.Margin = new System.Windows.Forms.Padding(4);
             this.OrderDetailsListView.MultiSelect = false;
             this.OrderDetailsListView.Name = "OrderDetailsListView";
-            this.OrderDetailsListView.Size = new System.Drawing.Size(415, 359);
+            this.OrderDetailsListView.Size = new System.Drawing.Size(415, 299);
             this.OrderDetailsListView.TabIndex = 21;
             this.OrderDetailsListView.UseCompatibleStateImageBehavior = false;
             this.OrderDetailsListView.View = System.Windows.Forms.View.Details;
@@ -1023,7 +1028,7 @@ namespace CloverExamplePOS
             this.OrderPaymentsView.Margin = new System.Windows.Forms.Padding(4);
             this.OrderPaymentsView.MultiSelect = false;
             this.OrderPaymentsView.Name = "OrderPaymentsView";
-            this.OrderPaymentsView.Size = new System.Drawing.Size(1276, 359);
+            this.OrderPaymentsView.Size = new System.Drawing.Size(1276, 299);
             this.OrderPaymentsView.TabIndex = 23;
             this.OrderPaymentsView.UseCompatibleStateImageBehavior = false;
             this.OrderPaymentsView.View = System.Windows.Forms.View.Details;
@@ -1057,15 +1062,22 @@ namespace CloverExamplePOS
             // 
             this.OrderPaymentsViewContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.OrderPaymentsViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.CopyExternalIdMenuItem});
+            this.CopyExternalIdMenuItem,
+            this.ViewPaymentMenuItem});
             this.OrderPaymentsViewContextMenu.Name = "orderContextMenu";
-            this.OrderPaymentsViewContextMenu.Size = new System.Drawing.Size(189, 28);
+            this.OrderPaymentsViewContextMenu.Size = new System.Drawing.Size(189, 52);
             // 
             // CopyExternalIdMenuItem
             // 
             this.CopyExternalIdMenuItem.Name = "CopyExternalIdMenuItem";
             this.CopyExternalIdMenuItem.Size = new System.Drawing.Size(188, 24);
             this.CopyExternalIdMenuItem.Text = "Copy External ID";
+            // 
+            // ViewPaymentMenuItem
+            // 
+            this.ViewPaymentMenuItem.Name = "ViewPaymentMenuItem";
+            this.ViewPaymentMenuItem.Size = new System.Drawing.Size(188, 24);
+            this.ViewPaymentMenuItem.Text = "View Payment...";
             // 
             // tableLayoutPanel4
             // 
@@ -1075,7 +1087,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel4.Controls.Add(this.flowLayoutPanel3, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel7, 1, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(4, 1055);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(4, 881);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
@@ -1200,7 +1212,7 @@ namespace CloverExamplePOS
             this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage3.Size = new System.Drawing.Size(1712, 1139);
+            this.tabPage3.Size = new System.Drawing.Size(1712, 965);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Refund";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1219,7 +1231,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(1704, 1131);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1704, 957);
             this.tableLayoutPanel5.TabIndex = 11;
             // 
             // TransactionsListView
@@ -1234,7 +1246,7 @@ namespace CloverExamplePOS
             this.TransactionsListView.Location = new System.Drawing.Point(4, 84);
             this.TransactionsListView.Margin = new System.Windows.Forms.Padding(4);
             this.TransactionsListView.Name = "TransactionsListView";
-            this.TransactionsListView.Size = new System.Drawing.Size(1696, 963);
+            this.TransactionsListView.Size = new System.Drawing.Size(1696, 789);
             this.TransactionsListView.TabIndex = 10;
             this.TransactionsListView.UseCompatibleStateImageBehavior = false;
             this.TransactionsListView.View = System.Windows.Forms.View.Details;
@@ -1316,7 +1328,7 @@ namespace CloverExamplePOS
             this.Cards.Location = new System.Drawing.Point(4, 25);
             this.Cards.Margin = new System.Windows.Forms.Padding(4);
             this.Cards.Name = "Cards";
-            this.Cards.Size = new System.Drawing.Size(1712, 1139);
+            this.Cards.Size = new System.Drawing.Size(1712, 965);
             this.Cards.TabIndex = 4;
             this.Cards.Text = "Cards";
             this.Cards.UseVisualStyleBackColor = true;
@@ -1339,7 +1351,7 @@ namespace CloverExamplePOS
             this.cardsListView.Location = new System.Drawing.Point(12, 5);
             this.cardsListView.Margin = new System.Windows.Forms.Padding(4);
             this.cardsListView.Name = "cardsListView";
-            this.cardsListView.Size = new System.Drawing.Size(1691, 1062);
+            this.cardsListView.Size = new System.Drawing.Size(1691, 888);
             this.cardsListView.TabIndex = 37;
             this.cardsListView.UseCompatibleStateImageBehavior = false;
             this.cardsListView.View = System.Windows.Forms.View.Details;
@@ -1376,7 +1388,7 @@ namespace CloverExamplePOS
             this.VaultCardBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.VaultCardBtn.BackColor = System.Drawing.Color.White;
             this.VaultCardBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.VaultCardBtn.Location = new System.Drawing.Point(1603, 1075);
+            this.VaultCardBtn.Location = new System.Drawing.Point(1603, 901);
             this.VaultCardBtn.Margin = new System.Windows.Forms.Padding(4);
             this.VaultCardBtn.Name = "VaultCardBtn";
             this.VaultCardBtn.Size = new System.Drawing.Size(100, 60);
@@ -1393,7 +1405,7 @@ namespace CloverExamplePOS
             this.tabPage7.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage7.Size = new System.Drawing.Size(1712, 1139);
+            this.tabPage7.Size = new System.Drawing.Size(1712, 965);
             this.tabPage7.TabIndex = 5;
             this.tabPage7.Text = "Pre-Auths";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1412,7 +1424,7 @@ namespace CloverExamplePOS
             this.PreAuthListView.Margin = new System.Windows.Forms.Padding(4);
             this.PreAuthListView.MultiSelect = false;
             this.PreAuthListView.Name = "PreAuthListView";
-            this.PreAuthListView.Size = new System.Drawing.Size(2457, 1056);
+            this.PreAuthListView.Size = new System.Drawing.Size(2457, 882);
             this.PreAuthListView.TabIndex = 38;
             this.PreAuthListView.UseCompatibleStateImageBehavior = false;
             this.PreAuthListView.View = System.Windows.Forms.View.Details;
@@ -1432,7 +1444,7 @@ namespace CloverExamplePOS
             this.PreAuthButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.PreAuthButton.BackColor = System.Drawing.Color.White;
             this.PreAuthButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PreAuthButton.Location = new System.Drawing.Point(1603, 1071);
+            this.PreAuthButton.Location = new System.Drawing.Point(1603, 897);
             this.PreAuthButton.Margin = new System.Windows.Forms.Padding(4);
             this.PreAuthButton.Name = "PreAuthButton";
             this.PreAuthButton.Size = new System.Drawing.Size(100, 60);
@@ -1448,7 +1460,7 @@ namespace CloverExamplePOS
             this.tabPage4.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage4.Size = new System.Drawing.Size(1712, 1139);
+            this.tabPage4.Size = new System.Drawing.Size(1712, 965);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Miscellaneous";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1512,7 +1524,7 @@ namespace CloverExamplePOS
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(1656, 1054);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(1656, 880);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // label9
@@ -1884,7 +1896,7 @@ namespace CloverExamplePOS
             this.tabPage8.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage8.Size = new System.Drawing.Size(2473, 1139);
+            this.tabPage8.Size = new System.Drawing.Size(1712, 965);
             this.tabPage8.TabIndex = 6;
             this.tabPage8.Text = "Pending Payments";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -1904,7 +1916,7 @@ namespace CloverExamplePOS
             this.pendingPaymentListView.Margin = new System.Windows.Forms.Padding(4);
             this.pendingPaymentListView.MultiSelect = false;
             this.pendingPaymentListView.Name = "pendingPaymentListView";
-            this.pendingPaymentListView.Size = new System.Drawing.Size(2456, 1056);
+            this.pendingPaymentListView.Size = new System.Drawing.Size(2456, 882);
             this.pendingPaymentListView.TabIndex = 40;
             this.pendingPaymentListView.UseCompatibleStateImageBehavior = false;
             this.pendingPaymentListView.View = System.Windows.Forms.View.Details;
@@ -1925,7 +1937,7 @@ namespace CloverExamplePOS
             this.refreshPendingPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.refreshPendingPayments.BackColor = System.Drawing.Color.White;
             this.refreshPendingPayments.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.refreshPendingPayments.Location = new System.Drawing.Point(2364, 1071);
+            this.refreshPendingPayments.Location = new System.Drawing.Point(2364, 897);
             this.refreshPendingPayments.Margin = new System.Windows.Forms.Padding(4);
             this.refreshPendingPayments.Name = "refreshPendingPayments";
             this.refreshPendingPayments.Size = new System.Drawing.Size(100, 60);
@@ -1946,7 +1958,7 @@ namespace CloverExamplePOS
             this.tabPage9.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage9.Size = new System.Drawing.Size(2473, 1139);
+            this.tabPage9.Size = new System.Drawing.Size(1712, 965);
             this.tabPage9.TabIndex = 7;
             this.tabPage9.Text = "Custom Activities";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -2006,25 +2018,25 @@ namespace CloverExamplePOS
             // customActivityAction
             // 
             this.customActivityAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboboxItem31.Text = "BasicExample";
-            comboboxItem31.Value = "com.clover.cfp.examples.BasicExample";
-            comboboxItem32.Text = "BasicConversationalExample";
-            comboboxItem32.Value = "com.clover.cfp.examples.BasicConversationalExample";
-            comboboxItem33.Text = "WebViewExample";
-            comboboxItem33.Value = "com.clover.cfp.examples.WebViewExample";
-            comboboxItem34.Text = "CarouselExample";
-            comboboxItem34.Value = "com.clover.cfp.examples.CarouselExample";
-            comboboxItem35.Text = "RatingsExample";
-            comboboxItem35.Value = "com.clover.cfp.examples.RatingsExample";
-            comboboxItem36.Text = "NFCExample";
-            comboboxItem36.Value = "com.clover.cfp.examples.NFCExample";
+            comboboxItem1.Text = "BasicExample";
+            comboboxItem1.Value = "com.clover.cfp.examples.BasicExample";
+            comboboxItem2.Text = "BasicConversationalExample";
+            comboboxItem2.Value = "com.clover.cfp.examples.BasicConversationalExample";
+            comboboxItem3.Text = "WebViewExample";
+            comboboxItem3.Value = "com.clover.cfp.examples.WebViewExample";
+            comboboxItem4.Text = "CarouselExample";
+            comboboxItem4.Value = "com.clover.cfp.examples.CarouselExample";
+            comboboxItem5.Text = "RatingsExample";
+            comboboxItem5.Value = "com.clover.cfp.examples.RatingsExample";
+            comboboxItem6.Text = "NFCExample";
+            comboboxItem6.Value = "com.clover.cfp.examples.NFCExample";
             this.customActivityAction.Items.AddRange(new object[] {
-            comboboxItem31,
-            comboboxItem32,
-            comboboxItem33,
-            comboboxItem34,
-            comboboxItem35,
-            comboboxItem36});
+            comboboxItem1,
+            comboboxItem2,
+            comboboxItem3,
+            comboboxItem4,
+            comboboxItem5,
+            comboboxItem6});
             this.customActivityAction.Location = new System.Drawing.Point(12, 172);
             this.customActivityAction.Margin = new System.Windows.Forms.Padding(4);
             this.customActivityAction.Name = "customActivityAction";
@@ -2049,7 +2061,7 @@ namespace CloverExamplePOS
             this.TransactionOverridesTabPage.Margin = new System.Windows.Forms.Padding(6);
             this.TransactionOverridesTabPage.Name = "TransactionOverridesTabPage";
             this.TransactionOverridesTabPage.Padding = new System.Windows.Forms.Padding(6);
-            this.TransactionOverridesTabPage.Size = new System.Drawing.Size(1712, 1139);
+            this.TransactionOverridesTabPage.Size = new System.Drawing.Size(1712, 965);
             this.TransactionOverridesTabPage.TabIndex = 3;
             this.TransactionOverridesTabPage.Text = "Transaction Overrides";
             // 
@@ -2070,7 +2082,7 @@ namespace CloverExamplePOS
             this.LoyaltyApiTabPage.Controls.Add(this.loyaltyApiPage);
             this.LoyaltyApiTabPage.Location = new System.Drawing.Point(4, 25);
             this.LoyaltyApiTabPage.Name = "LoyaltyApiTabPage";
-            this.LoyaltyApiTabPage.Size = new System.Drawing.Size(2473, 1139);
+            this.LoyaltyApiTabPage.Size = new System.Drawing.Size(1712, 965);
             this.LoyaltyApiTabPage.TabIndex = 8;
             this.LoyaltyApiTabPage.Text = "Loyalty API";
             // 
@@ -2080,8 +2092,27 @@ namespace CloverExamplePOS
             this.loyaltyApiPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loyaltyApiPage.Location = new System.Drawing.Point(0, 0);
             this.loyaltyApiPage.Name = "loyaltyApiPage";
-            this.loyaltyApiPage.Size = new System.Drawing.Size(2473, 1139);
+            this.loyaltyApiPage.Size = new System.Drawing.Size(1712, 965);
             this.loyaltyApiPage.TabIndex = 0;
+            // 
+            // SdkInfoTabPage
+            // 
+            this.SdkInfoTabPage.Controls.Add(this.AboutSdkInfoDisplay);
+            this.SdkInfoTabPage.Location = new System.Drawing.Point(4, 25);
+            this.SdkInfoTabPage.Name = "SdkInfoTabPage";
+            this.SdkInfoTabPage.Size = new System.Drawing.Size(1712, 965);
+            this.SdkInfoTabPage.TabIndex = 9;
+            this.SdkInfoTabPage.Text = "SDK Info";
+            this.SdkInfoTabPage.UseVisualStyleBackColor = true;
+            // 
+            // AboutSdkInfoDisplay
+            // 
+            this.AboutSdkInfoDisplay.CloverConnector = null;
+            this.AboutSdkInfoDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AboutSdkInfoDisplay.Location = new System.Drawing.Point(0, 0);
+            this.AboutSdkInfoDisplay.Name = "AboutSdkInfoDisplay";
+            this.AboutSdkInfoDisplay.Size = new System.Drawing.Size(1712, 965);
+            this.AboutSdkInfoDisplay.TabIndex = 0;
             // 
             // UIStateButtonPanel
             // 
@@ -2199,7 +2230,7 @@ namespace CloverExamplePOS
             this.StatusPanel.Controls.Add(this.DeviceCurrentStatus);
             this.StatusPanel.Controls.Add(this.label4);
             this.StatusPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.StatusPanel.Location = new System.Drawing.Point(0, 1168);
+            this.StatusPanel.Location = new System.Drawing.Point(0, 994);
             this.StatusPanel.Name = "StatusPanel";
             this.StatusPanel.Size = new System.Drawing.Size(1720, 61);
             this.StatusPanel.TabIndex = 26;
@@ -2208,7 +2239,7 @@ namespace CloverExamplePOS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1720, 1229);
+            this.ClientSize = new System.Drawing.Size(1720, 1055);
             this.Controls.Add(this.TabControl);
             this.Controls.Add(this.StatusPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2274,6 +2305,7 @@ namespace CloverExamplePOS
             this.tabPage9.PerformLayout();
             this.TransactionOverridesTabPage.ResumeLayout(false);
             this.LoyaltyApiTabPage.ResumeLayout(false);
+            this.SdkInfoTabPage.ResumeLayout(false);
             this.StatusPanel.ResumeLayout(false);
             this.StatusPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -2446,5 +2478,8 @@ namespace CloverExamplePOS
         private Label label4;
         private Panel StatusPanel;
         private UiPages.TransactionSettingsPage TransactionSettingsEdit;
+        private ToolStripMenuItem ViewPaymentMenuItem;
+        private TabPage SdkInfoTabPage;
+        private UiPages.AboutSdkInfo AboutSdkInfoDisplay;
     }
 }

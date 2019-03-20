@@ -65,7 +65,7 @@ namespace com.clover.remotepay.transport
 
         public CloverTransport getCloverTransport()
         {
-            return new USBCloverTransport(this.deviceId, enableLogging, pingSleepSeconds);
+            return new USBCloverTransport(this.deviceId, pingSleepSeconds);
         }
 
         public bool getEnableLogging()

@@ -295,6 +295,12 @@ namespace Clover.RemotePay
             connector.SetCustomerInfo(request);
         }
 
+        /// <inheritdoc />
+        public void SetLogLevel(int level)
+        {
+            connector.SetLogLevel(level);
+        }
+
         #endregion
 
         #region ICloverConnectorListener
@@ -460,7 +466,10 @@ namespace Clover.RemotePay
         /// Display Receipt Options call has completed with these details (success or failure)
         /// </summary>
         public event CustomerProvidedDataResponseHandler CustomerProvidedDataResponse;
-
+        /// <summary>
+        /// InvalidStateTransition event has occurred on the device
+        /// </summary>
+        public event InvalidStateTransitionResponseHandler InvalidStateTransitionResponse;
         #endregion
 
         #region Internal ICloverConnectorListener interface impelementation. Receives the calls from the Clover SDK from the device and converts them to .Net event messages
@@ -632,6 +641,7 @@ namespace Clover.RemotePay
             TipAdded?.Invoke(this, eventArgs);
             Message?.Invoke(this, eventArgs);
         }
+
         public void OnVoidPaymentResponse(VoidPaymentResponse response)
         {
             VoidPaymentResponseEventArgs eventArgs = new VoidPaymentResponseEventArgs()
@@ -643,6 +653,7 @@ namespace Clover.RemotePay
             VoidPaymentResponse?.Invoke(this, eventArgs);
             Message?.Invoke(this, eventArgs);
         }
+
         public void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
         {
             VoidPaymentRefundResponseEventArgs eventArgs = new VoidPaymentRefundResponseEventArgs()
@@ -654,6 +665,7 @@ namespace Clover.RemotePay
             VoidPaymentRefundResponse?.Invoke(this, eventArgs);
             Message?.Invoke(this, eventArgs);
         }
+
         public void OnDeviceConnected()
         {
             DeviceConnectedEventArgs eventArgs = new DeviceConnectedEventArgs()
@@ -908,12 +920,25 @@ namespace Clover.RemotePay
         {
             CustomerProvidedDataResponseEventArgs eventArgs = new CustomerProvidedDataResponseEventArgs
             {
+                cloverMessage = CloverMessage.CustomerProvidedData,
+                cloverConnector = this,
                 response = response
             };
             CustomerProvidedDataResponse?.Invoke(this, eventArgs);
             Message?.Invoke(this, eventArgs);
         }
 
+        public void OnInvalidStateTransitionResponse(InvalidStateTransitionNotification notification)
+        {
+            InvalidStateTransitionResponseEventArgs eventArgs = new InvalidStateTransitionResponseEventArgs
+            {
+                cloverMessage = CloverMessage.InvalidStateTransition,
+                cloverConnector = this,
+                notification = notification
+            };
+            InvalidStateTransitionResponse?.Invoke(this, eventArgs);
+            Message?.Invoke(this, eventArgs);
+        }
         #endregion
 
         #region Event Delegate definitions
@@ -958,6 +983,7 @@ namespace Clover.RemotePay
         public delegate void PrintJobStatusRequestHandler(object sender, PrintJobStatusRequestEventArgs e);
         public delegate void DisplayReceiptOptionsResponseHandler(object sender, DisplayReceiptOptionsResponseEventArgs e);
         public delegate void CustomerProvidedDataResponseHandler(object sender, CustomerProvidedDataResponseEventArgs e);
+        public delegate void InvalidStateTransitionResponseHandler(object sender, InvalidStateTransitionResponseEventArgs e);
 
         #endregion
 
@@ -1074,7 +1100,12 @@ namespace Clover.RemotePay
 
         public override string ToString()
         {
-            return $"{cloverMessage}";
+            string challenges = "";
+            foreach (Challenge challenge in request.Challenges)
+            {
+                challenges += challenge.type.ToString() + " ";
+            }
+            return $"{cloverMessage}: {challenges.Trim()}";
         }
     }
 
@@ -1367,6 +1398,15 @@ namespace Clover.RemotePay
             return $"{cloverMessage}\n{response.config.type}";
         }
     }
+
+    public class InvalidStateTransitionResponseEventArgs : CloverEventArgs
+    {
+        public InvalidStateTransitionNotification notification;
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{notification.Reason}\nFrom {notification.State}::{notification.Substate} to {notification.RequestedTransition}";
+        }
+    }
     #endregion
 
     #region ICloverConnectorListener Event Hander Enum
@@ -1412,7 +1452,8 @@ namespace Clover.RemotePay
         RetrievePaymentResponse,
         PrintJobStatusRequest,
         DisplayReceiptOptionsResponse,
-        CustomerProvidedData
+        CustomerProvidedData,
+        InvalidStateTransition
     }
     #endregion
 }

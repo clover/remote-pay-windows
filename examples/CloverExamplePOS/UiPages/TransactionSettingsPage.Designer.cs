@@ -30,11 +30,9 @@
         {
             this.RegionalExtraParametersLabel = new System.Windows.Forms.Label();
             this.RegionalExtraParametersEditGrid = new System.Windows.Forms.DataGridView();
-            this.tipAmount = new CloverExamplePOS.CurrencyTextBox();
             this.labelTipAmount = new System.Windows.Forms.Label();
             this.ContactlessCheckbox = new System.Windows.Forms.CheckBox();
             this.CardNotPresentCheckbox = new System.Windows.Forms.CheckBox();
-            this.signatureThreshold = new CloverExamplePOS.CurrencyTextBox();
             this.labelSignatureThreshold = new System.Windows.Forms.Label();
             this.ChipCheckbox = new System.Windows.Forms.CheckBox();
             this.MagStripeCheckbox = new System.Windows.Forms.CheckBox();
@@ -74,12 +72,36 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.RegionalExtrasMenuButton = new System.Windows.Forms.Button();
+            this.TipSuggestion1Enabled = new System.Windows.Forms.CheckBox();
+            this.TipSuggestion2Enabled = new System.Windows.Forms.CheckBox();
+            this.TipSuggestion3Enabled = new System.Windows.Forms.CheckBox();
+            this.TipSuggestion4Enabled = new System.Windows.Forms.CheckBox();
+            this.TipSuggestion1Text = new System.Windows.Forms.TextBox();
+            this.TipSuggestion2Text = new System.Windows.Forms.TextBox();
+            this.TipSuggestion3Text = new System.Windows.Forms.TextBox();
+            this.TipSuggestion4Text = new System.Windows.Forms.TextBox();
+            this.TipSuggestion1Percent = new System.Windows.Forms.NumericUpDown();
+            this.TipSuggestion2Percent = new System.Windows.Forms.NumericUpDown();
+            this.TipSuggestion3Percent = new System.Windows.Forms.NumericUpDown();
+            this.TipSuggestion4Percent = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.EnableTipSuggestionsSelection = new System.Windows.Forms.CheckBox();
+            this.tipAmount = new CloverExamplePOS.CurrencyTextBox();
+            this.signatureThreshold = new CloverExamplePOS.CurrencyTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.RegionalExtraParametersEditGrid)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion1Percent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion2Percent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion3Percent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion4Percent)).BeginInit();
             this.SuspendLayout();
             // 
             // RegionalExtraParametersLabel
@@ -102,14 +124,6 @@
             this.RegionalExtraParametersEditGrid.RowTemplate.Height = 24;
             this.RegionalExtraParametersEditGrid.Size = new System.Drawing.Size(467, 159);
             this.RegionalExtraParametersEditGrid.TabIndex = 40;
-            // 
-            // tipAmount
-            // 
-            this.tipAmount.Location = new System.Drawing.Point(163, 6);
-            this.tipAmount.Margin = new System.Windows.Forms.Padding(4);
-            this.tipAmount.Name = "tipAmount";
-            this.tipAmount.Size = new System.Drawing.Size(191, 22);
-            this.tipAmount.TabIndex = 1;
             // 
             // labelTipAmount
             // 
@@ -145,14 +159,6 @@
             this.CardNotPresentCheckbox.TabIndex = 9;
             this.CardNotPresentCheckbox.Text = "Card Not Present (only applies to Manual entry type)";
             this.CardNotPresentCheckbox.UseVisualStyleBackColor = true;
-            // 
-            // signatureThreshold
-            // 
-            this.signatureThreshold.Location = new System.Drawing.Point(163, 36);
-            this.signatureThreshold.Margin = new System.Windows.Forms.Padding(4);
-            this.signatureThreshold.Name = "signatureThreshold";
-            this.signatureThreshold.Size = new System.Drawing.Size(191, 22);
-            this.signatureThreshold.TabIndex = 3;
             // 
             // labelSignatureThreshold
             // 
@@ -587,9 +593,249 @@
             this.panel5.Size = new System.Drawing.Size(227, 25);
             this.panel5.TabIndex = 45;
             // 
+            // RegionalExtrasMenuButton
+            // 
+            this.RegionalExtrasMenuButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RegionalExtrasMenuButton.Font = new System.Drawing.Font("Marlett", 12F);
+            this.RegionalExtrasMenuButton.Location = new System.Drawing.Point(1162, 7);
+            this.RegionalExtrasMenuButton.Name = "RegionalExtrasMenuButton";
+            this.RegionalExtrasMenuButton.Size = new System.Drawing.Size(34, 27);
+            this.RegionalExtrasMenuButton.TabIndex = 46;
+            this.RegionalExtrasMenuButton.Text = "6";
+            this.RegionalExtrasMenuButton.UseVisualStyleBackColor = true;
+            this.RegionalExtrasMenuButton.Click += new System.EventHandler(this.RegionalExtrasMenuButton_Click);
+            // 
+            // TipSuggestion1Enabled
+            // 
+            this.TipSuggestion1Enabled.AutoSize = true;
+            this.TipSuggestion1Enabled.Checked = true;
+            this.TipSuggestion1Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.TipSuggestion1Enabled.Location = new System.Drawing.Point(763, 257);
+            this.TipSuggestion1Enabled.Name = "TipSuggestion1Enabled";
+            this.TipSuggestion1Enabled.Size = new System.Drawing.Size(18, 17);
+            this.TipSuggestion1Enabled.TabIndex = 48;
+            this.TipSuggestion1Enabled.UseVisualStyleBackColor = true;
+            // 
+            // TipSuggestion2Enabled
+            // 
+            this.TipSuggestion2Enabled.AutoSize = true;
+            this.TipSuggestion2Enabled.Checked = true;
+            this.TipSuggestion2Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.TipSuggestion2Enabled.Location = new System.Drawing.Point(763, 284);
+            this.TipSuggestion2Enabled.Name = "TipSuggestion2Enabled";
+            this.TipSuggestion2Enabled.Size = new System.Drawing.Size(18, 17);
+            this.TipSuggestion2Enabled.TabIndex = 48;
+            this.TipSuggestion2Enabled.UseVisualStyleBackColor = true;
+            // 
+            // TipSuggestion3Enabled
+            // 
+            this.TipSuggestion3Enabled.AutoSize = true;
+            this.TipSuggestion3Enabled.Checked = true;
+            this.TipSuggestion3Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.TipSuggestion3Enabled.Location = new System.Drawing.Point(763, 311);
+            this.TipSuggestion3Enabled.Name = "TipSuggestion3Enabled";
+            this.TipSuggestion3Enabled.Size = new System.Drawing.Size(18, 17);
+            this.TipSuggestion3Enabled.TabIndex = 48;
+            this.TipSuggestion3Enabled.UseVisualStyleBackColor = true;
+            // 
+            // TipSuggestion4Enabled
+            // 
+            this.TipSuggestion4Enabled.AutoSize = true;
+            this.TipSuggestion4Enabled.Checked = true;
+            this.TipSuggestion4Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.TipSuggestion4Enabled.Location = new System.Drawing.Point(763, 338);
+            this.TipSuggestion4Enabled.Name = "TipSuggestion4Enabled";
+            this.TipSuggestion4Enabled.Size = new System.Drawing.Size(18, 17);
+            this.TipSuggestion4Enabled.TabIndex = 48;
+            this.TipSuggestion4Enabled.UseVisualStyleBackColor = true;
+            // 
+            // TipSuggestion1Text
+            // 
+            this.TipSuggestion1Text.Location = new System.Drawing.Point(892, 257);
+            this.TipSuggestion1Text.Name = "TipSuggestion1Text";
+            this.TipSuggestion1Text.Size = new System.Drawing.Size(303, 22);
+            this.TipSuggestion1Text.TabIndex = 49;
+            this.TipSuggestion1Text.Text = "Thanks";
+            // 
+            // TipSuggestion2Text
+            // 
+            this.TipSuggestion2Text.Location = new System.Drawing.Point(892, 282);
+            this.TipSuggestion2Text.Name = "TipSuggestion2Text";
+            this.TipSuggestion2Text.Size = new System.Drawing.Size(303, 22);
+            this.TipSuggestion2Text.TabIndex = 49;
+            this.TipSuggestion2Text.Text = "Nice";
+            // 
+            // TipSuggestion3Text
+            // 
+            this.TipSuggestion3Text.Location = new System.Drawing.Point(892, 309);
+            this.TipSuggestion3Text.Name = "TipSuggestion3Text";
+            this.TipSuggestion3Text.Size = new System.Drawing.Size(303, 22);
+            this.TipSuggestion3Text.TabIndex = 49;
+            this.TipSuggestion3Text.Text = "Good Job";
+            // 
+            // TipSuggestion4Text
+            // 
+            this.TipSuggestion4Text.Location = new System.Drawing.Point(892, 336);
+            this.TipSuggestion4Text.Name = "TipSuggestion4Text";
+            this.TipSuggestion4Text.Size = new System.Drawing.Size(303, 22);
+            this.TipSuggestion4Text.TabIndex = 49;
+            this.TipSuggestion4Text.Text = "Outstanding!";
+            // 
+            // TipSuggestion1Percent
+            // 
+            this.TipSuggestion1Percent.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.TipSuggestion1Percent.Location = new System.Drawing.Point(787, 256);
+            this.TipSuggestion1Percent.Name = "TipSuggestion1Percent";
+            this.TipSuggestion1Percent.Size = new System.Drawing.Size(75, 22);
+            this.TipSuggestion1Percent.TabIndex = 50;
+            this.TipSuggestion1Percent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TipSuggestion1Percent.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // TipSuggestion2Percent
+            // 
+            this.TipSuggestion2Percent.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.TipSuggestion2Percent.Location = new System.Drawing.Point(787, 281);
+            this.TipSuggestion2Percent.Name = "TipSuggestion2Percent";
+            this.TipSuggestion2Percent.Size = new System.Drawing.Size(75, 22);
+            this.TipSuggestion2Percent.TabIndex = 50;
+            this.TipSuggestion2Percent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TipSuggestion2Percent.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // TipSuggestion3Percent
+            // 
+            this.TipSuggestion3Percent.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.TipSuggestion3Percent.Location = new System.Drawing.Point(787, 308);
+            this.TipSuggestion3Percent.Name = "TipSuggestion3Percent";
+            this.TipSuggestion3Percent.Size = new System.Drawing.Size(75, 22);
+            this.TipSuggestion3Percent.TabIndex = 50;
+            this.TipSuggestion3Percent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TipSuggestion3Percent.Value = new decimal(new int[] {
+            15,
+            0,
+            0,
+            0});
+            // 
+            // TipSuggestion4Percent
+            // 
+            this.TipSuggestion4Percent.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.TipSuggestion4Percent.Location = new System.Drawing.Point(787, 335);
+            this.TipSuggestion4Percent.Name = "TipSuggestion4Percent";
+            this.TipSuggestion4Percent.Size = new System.Drawing.Size(75, 22);
+            this.TipSuggestion4Percent.TabIndex = 50;
+            this.TipSuggestion4Percent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TipSuggestion4Percent.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(866, 259);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(20, 17);
+            this.label1.TabIndex = 51;
+            this.label1.Text = "%";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(866, 284);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(20, 17);
+            this.label2.TabIndex = 52;
+            this.label2.Text = "%";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(866, 310);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(20, 17);
+            this.label3.TabIndex = 53;
+            this.label3.Text = "%";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(866, 337);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(20, 17);
+            this.label4.TabIndex = 54;
+            this.label4.Text = "%";
+            // 
+            // EnableTipSuggestionsSelection
+            // 
+            this.EnableTipSuggestionsSelection.AutoSize = true;
+            this.EnableTipSuggestionsSelection.Location = new System.Drawing.Point(728, 226);
+            this.EnableTipSuggestionsSelection.Name = "EnableTipSuggestionsSelection";
+            this.EnableTipSuggestionsSelection.Size = new System.Drawing.Size(183, 21);
+            this.EnableTipSuggestionsSelection.TabIndex = 55;
+            this.EnableTipSuggestionsSelection.Text = "Custom Tip Suggestions";
+            this.EnableTipSuggestionsSelection.UseVisualStyleBackColor = true;
+            // 
+            // tipAmount
+            // 
+            this.tipAmount.Location = new System.Drawing.Point(163, 6);
+            this.tipAmount.Margin = new System.Windows.Forms.Padding(4);
+            this.tipAmount.Name = "tipAmount";
+            this.tipAmount.Size = new System.Drawing.Size(191, 22);
+            this.tipAmount.TabIndex = 1;
+            // 
+            // signatureThreshold
+            // 
+            this.signatureThreshold.Location = new System.Drawing.Point(163, 36);
+            this.signatureThreshold.Margin = new System.Windows.Forms.Padding(4);
+            this.signatureThreshold.Name = "signatureThreshold";
+            this.signatureThreshold.Size = new System.Drawing.Size(191, 22);
+            this.signatureThreshold.TabIndex = 3;
+            // 
             // TransactionSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this.EnableTipSuggestionsSelection);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.TipSuggestion4Percent);
+            this.Controls.Add(this.TipSuggestion3Percent);
+            this.Controls.Add(this.TipSuggestion2Percent);
+            this.Controls.Add(this.TipSuggestion1Percent);
+            this.Controls.Add(this.TipSuggestion4Text);
+            this.Controls.Add(this.TipSuggestion3Text);
+            this.Controls.Add(this.TipSuggestion2Text);
+            this.Controls.Add(this.TipSuggestion1Text);
+            this.Controls.Add(this.TipSuggestion4Enabled);
+            this.Controls.Add(this.TipSuggestion3Enabled);
+            this.Controls.Add(this.TipSuggestion2Enabled);
+            this.Controls.Add(this.TipSuggestion1Enabled);
+            this.Controls.Add(this.RegionalExtrasMenuButton);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
@@ -633,6 +879,10 @@
             this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion1Percent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion2Percent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion3Percent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TipSuggestion4Percent)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -686,5 +936,23 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button RegionalExtrasMenuButton;
+        private System.Windows.Forms.CheckBox TipSuggestion1Enabled;
+        private System.Windows.Forms.CheckBox TipSuggestion2Enabled;
+        private System.Windows.Forms.CheckBox TipSuggestion3Enabled;
+        private System.Windows.Forms.CheckBox TipSuggestion4Enabled;
+        private System.Windows.Forms.TextBox TipSuggestion1Text;
+        private System.Windows.Forms.TextBox TipSuggestion2Text;
+        private System.Windows.Forms.TextBox TipSuggestion3Text;
+        private System.Windows.Forms.TextBox TipSuggestion4Text;
+        private System.Windows.Forms.NumericUpDown TipSuggestion1Percent;
+        private System.Windows.Forms.NumericUpDown TipSuggestion2Percent;
+        private System.Windows.Forms.NumericUpDown TipSuggestion3Percent;
+        private System.Windows.Forms.NumericUpDown TipSuggestion4Percent;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox EnableTipSuggestionsSelection;
     }
 }
