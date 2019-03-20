@@ -25,7 +25,7 @@ namespace CloverExamplePOS
         public static string CATEGORY_CUSTOM_ACTIVITY = "com.clover.cfp.ACTIVITY";
 
         // Loyalty Sample names and constants
-        public const string LOYALTY_SAMPLE_ACTIVITY = "com.clover.remote_clover_loyalty.CloverLoyaltyCustomActivity"; // This is the activity's action name, not the activity name
+        public const string LOYALTY_SAMPLE_ACTIVITY = "com.clover.remote.clover.loyalty.CloverLoyaltyCustomActivity"; // This is the activity's action name, not the activity name
         #endregion
 
         #region Example Customer Data

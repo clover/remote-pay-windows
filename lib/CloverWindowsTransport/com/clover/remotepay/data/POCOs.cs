@@ -99,7 +99,8 @@ namespace com.clover.remotepay.data
         VOID_PAYMENT_REFUND_RESPONSE,
         REGISTER_FOR_CUST_DATA,
         CUSTOMER_INFO_MESSAGE,
-        CUSTOMER_PROVIDED_DATA_MESSAGE
+        CUSTOMER_PROVIDED_DATA_MESSAGE,
+        INVALID_STATE_TRANSITION
     }
 
     public enum MessageTypes

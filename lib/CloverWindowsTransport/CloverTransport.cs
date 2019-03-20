@@ -23,24 +23,12 @@ namespace com.clover.remotepay.transport
     {
         List<CloverTransportObserver> observers = new List<CloverTransportObserver>();
         bool ready = false;
-        bool enableLogging = false;
         int pingSleepSeconds = 0;
+        protected int logLevel = 1000;
 
-        /// <summary>
-        /// Turn transport logging on (default off)
-        /// </summary>
-        protected void EnableLogging()
+        public void SetLogLevel(int level)
         {
-            enableLogging = true;
-        }
-
-        /// <summary>
-        /// Is transport logging on?
-        /// </summary>
-        /// <returns></returns>
-        protected bool LoggingEnabled()
-        {
-            return enableLogging;
+            logLevel = level;
         }
 
         /// <summary>
@@ -67,14 +55,11 @@ namespace com.clover.remotepay.transport
         /// <param name="msg"></param>
         protected void TransportLog(string msg)
         {
-            if (enableLogging)
+            if (msg.Length > 5000)
             {
-                if (msg.Length > 5000)
-                {
-                    msg = msg.Substring(0, 5000) + "...";
-                }
-                Trace.WriteLine(msg);
+                msg = msg.Substring(0, 5000) + "...";
             }
+            Trace.WriteLine(msg);
         }
 
         /// <summary>
@@ -180,6 +165,9 @@ namespace com.clover.remotepay.transport
         }
 
         public abstract string ShortTitle();
+
+        public virtual string Title => "";
+        public virtual string Summary => "";
     }
 
     public interface CloverTransportObserver

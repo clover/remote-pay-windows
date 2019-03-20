@@ -1,10 +1,10 @@
-![Clover logo](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
+﻿![Clover logo](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
 Clover SDK for Windows POS integration
 ======================================
 
 Version
 -------
-Current version: 3.0.2
+Current version: 4.0.0
 
 Overview
 --------
@@ -36,13 +36,13 @@ NuGet Package
 Use NuGet references to easily include Remote Pay Windows in your .NET project
 <https://www.nuget.org/packages/Clover.RemotePayWindows>
 ```
-Install-Package Clover.RemotePayWindows -Version 3.0.2
+Install-Package Clover.RemotePayWindows -Version 4.0.0
 ```
 
 Installing the SDK and Services
 -------------------------------
 There are two sets of binaries supplied, targeting different .NET Frameworks, the .NET 4.5 and .NET 4.0 backwards compatible.
--   The .NET 4.5 binaries are able to use TLS 1.2 network security when talking to Clover Devices using [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/).
+-   The .NET 4.5 binaries are able to use TLS 1.2 network security when talking to Clover Devices using [Secure Network Pay Display](https://docs.clover.com/clover-platform/docs/pay-display-apps#section--secure-network-pay-display-).
 -   The .NET 4.0 binaries are the same platform as the previous releases of the Clover Windows SDK, and are provided for backwards compatibility.
 
 ### For development:
@@ -79,7 +79,7 @@ Additional resources
 --------------------
 -   [Release Notes](https://github.com/clover/remote-pay-windows/releases)
 -   [Windows SDK Wiki](https://github.com/clover/remote-pay-windows/wiki)
--   [Secure Network Pay Display](https://docs.clover.com/build/secure-network-pay-display/)
--   [Tutorial for the Windows SDK](https://docs.clover.com/build/getting-started-with-cloverconnector/?sdk=windows)
--   [API Documentation](http://clover.github.io/remote-pay-windows/3.0.2/cloverconnector/html/index.html)
+-   [Secure Network Pay Display](https://docs.clover.com/clover-platform/docs/pay-display-apps#section--secure-network-pay-display-)
+-   [Tutorial for the Windows SDK](https://docs.clover.com/clover-platform/docs/windows)
+-   [API Documentation](http://clover.github.io/remote-pay-windows/4.0.0/cloverconnector/html/index.html)
 -   [Clover Developer Community](https://community.clover.com/index.html)

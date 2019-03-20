@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using com.clover.remotepay.transport;
 using com.clover.sdk.v3;
-using com.clover.sdk.v3.payments;
+using com.clover.sdk.v3.merchant;
 using com.clover.sdk.v3.order;
+using com.clover.sdk.v3.payments;
 using com.clover.sdk.v3.printer;
-using System.Collections.Generic;
-using System;
-using System.Drawing;
 
 namespace com.clover.remotepay.sdk
 {
@@ -130,6 +131,7 @@ namespace com.clover.remotepay.sdk
         public long? SignatureThreshold { get; set; }
         public DataEntryLocation? SignatureEntryLocation { get; set; }
         public bool? AutoAcceptSignature { get; set; }
+        public List<TipSuggestion> TipSuggestions { get; set; } = new List<TipSuggestion>();
     }
 
     /// <summary>
@@ -943,6 +945,14 @@ namespace com.clover.remotepay.sdk
         public string eventId { get; set; }
         public DataProviderConfig config { get; set; }
         public string data { get; set; }
+    }
+
+    public class InvalidStateTransitionNotification : BaseResponse
+    {
+        public string RequestedTransition { get; set; }
+        public string State { get; set; }
+        public string Substate { get; set; }
+        public ExternalDeviceStateData Data { get; set; }
     }
 
     public class SetCustomerInfoRequest : BaseRequest

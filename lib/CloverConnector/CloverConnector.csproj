@@ -90,6 +90,7 @@
     <Compile Include="com\clover\remotepay\sdk\CloverEvents.cs" />
     <Compile Include="com\clover\remotepay\sdk\ICloverConnectorListener.cs" />
     <Compile Include="com\clover\remotepay\sdk\ICloverConnector.cs" />
+    <Compile Include="com\clover\remotepay\sdk\LogLevel.cs" />
     <Compile Include="com\clover\remotepay\sdk\MerchantInfo.cs" />
     <Compile Include="com\clover\remotepay\sdk\service\client\ServiceMethods.cs" />
     <Compile Include="com\clover\remotepay\sdk\TransactionBeans.cs" />

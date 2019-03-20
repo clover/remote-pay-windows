@@ -368,6 +368,8 @@ namespace CloverExamplePOS
 
         public long TipAmount { get; set; }
         public long CashBackAmount { get; set; }
+
+        public object PaymentSource { get; set; }
     }
 
     public class POSLineItem

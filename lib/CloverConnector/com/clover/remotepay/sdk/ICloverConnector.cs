@@ -317,6 +317,10 @@ namespace com.clover.remotepay.sdk
         /// <param name="request"></param>
         void SetCustomerInfo(SetCustomerInfoRequest request);
 
-
+        /// <summary>
+        /// Set the current Log Level to filter log messages. Use constants from the LogLevel class for convenience.
+        /// </summary>
+        /// <param name="level"></param>
+        void SetLogLevel(int level);
     }
 }

@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Security;
@@ -26,7 +27,7 @@ using WebSocket4Net;
 
 namespace com.clover.remotepay.transport
 {
-    class WebSocketCloverTransport : CloverTransport
+    public class WebSocketCloverTransport : CloverTransport
     {
         private static readonly uint REMOTE_STRING_MAGIC_START_TOKEN = 0xcc771122;
         private static readonly int REMOTE_STRING_HEADER_BYTE_COUNT = 4 + 4; // 2 ints
@@ -55,6 +56,8 @@ namespace com.clover.remotepay.transport
         PairingDeviceConfiguration config { get; set; }
 
         public override string ShortTitle() => "WS";
+        public override string Title => "SNPD WebSocket";
+        public override string Summary => endpoint;
 
         /// <summary>
         /// Create WebSocketCloverTransport with the endpoing, custom pairing config, POS name, serial #, stored auth token if available
@@ -94,9 +97,7 @@ namespace com.clover.remotepay.transport
 
         protected void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-#if DEBUG
-            Console.WriteLine("Received message: " + e.Message);
-#endif
+            Debug.WriteLine("Received message: " + e.Message);
             if (isPairing)
             {
                 var definition = new { id = "", method = "", payload = "", type = "", version = 0 };
@@ -155,7 +156,7 @@ namespace com.clover.remotepay.transport
         private void websocket_Closed(object sender, EventArgs e)
         {
             onDeviceDisconnected();
-            // Console.WriteLine("socket closed");
+            // Debug.WriteLine("socket closed");
 
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += reconnect;
@@ -253,7 +254,7 @@ namespace com.clover.remotepay.transport
         private void websocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             // TOD: Trace error
-            // Console.WriteLine("error: " + e.Exception);
+            Debug.WriteLine("error: " + e.Exception);
         }
 
         /// <summary>
@@ -300,9 +301,9 @@ namespace com.clover.remotepay.transport
         /// </summary>
         ~WebSocketCloverTransport()
         {
-            // Console.WriteLine("Entering ~WebSocketCloverTransport");
+            // Debug.WriteLine("Entering ~WebSocketCloverTransport");
             disconnect();
-            // Console.WriteLine("Exiting ~WebSocketCloverTransport");
+            // Debug.WriteLine("Exiting ~WebSocketCloverTransport");
         }
 
         /// <summary>
@@ -310,7 +311,7 @@ namespace com.clover.remotepay.transport
         /// </summary>
         public void disconnect()
         {
-            // Console.WriteLine("Entering disconnect");
+            // Debug.WriteLine("Entering disconnect");
 
             if (websocket != null)
             {
@@ -318,7 +319,7 @@ namespace com.clover.remotepay.transport
             }
 
             onDeviceDisconnected();
-            // Console.WriteLine("Exiting disconnect");
+            // Debug.WriteLine("Exiting disconnect");
         }
     }
 }

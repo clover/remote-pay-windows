@@ -75,9 +75,9 @@
       <HintPath>..\..\packages\Grapevine\lib\Grapevine.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Json70r1\lib\Net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\Newtonsoft.Json.120r1\Net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Newtonsoft.Json.120r1\Net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ObjectListView">
       <HintPath>..\..\packages\lib\ObjectListView.dll</HintPath>
@@ -183,6 +183,18 @@
     <Compile Include="RatingsListForm.Designer.cs">
       <DependentUpon>RatingsListForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UIDialogs\PropertiesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIDialogs\PropertiesDialog.Designer.cs">
+      <DependentUpon>PropertiesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UiPages\AboutSdkInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UiPages\AboutSdkInfo.Designer.cs">
+      <DependentUpon>AboutSdkInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="UiPages\LoyaltyApiPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -201,6 +213,7 @@
     <Compile Include="UiPages\TransactionSettingsPage.Designer.cs">
       <DependentUpon>TransactionSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
     <Compile Include="VaultedCardListForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,8 +269,14 @@
     <EmbeddedResource Include="RatingsListForm.resx">
       <DependentUpon>RatingsListForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UIDialogs\PropertiesDialog.resx">
+      <DependentUpon>PropertiesDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UIDialogs\RefundAmountDialog.resx">
       <DependentUpon>RefundAmountDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UiPages\AboutSdkInfo.resx">
+      <DependentUpon>AboutSdkInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UiPages\LoyaltyApiPage.resx">
       <DependentUpon>LoyaltyApiPage.cs</DependentUpon>

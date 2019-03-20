@@ -80,7 +80,7 @@ namespace CloverStarterExample
             }
             catch
             {
-                Console.Error.WriteLine("Error handling sale response");
+                Console.Error.WriteLine("Error handling sale notification");
             }
 
             refundDone = true;

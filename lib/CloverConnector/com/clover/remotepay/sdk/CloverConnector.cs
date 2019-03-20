@@ -32,7 +32,7 @@ using TxType = com.clover.remotepay.transport.TxType;
 namespace com.clover.remotepay.sdk
 {
     /// <summary>
-    /// 
+    /// The main CloverConnector API for connecting to Clover Payment Devices, created via a CloverConnectorFactory transport setup call
     /// </summary>
     public class CloverConnector : ICloverConnector
     {
@@ -42,18 +42,38 @@ namespace com.clover.remotepay.sdk
         public const int CARD_ENTRY_METHOD_NFC_CONTACTLESS = 4 | (4 << 8) | ENABLE_KIOSK_ENTRY_METHODS; //1028 + the flag to indicate the flags are passed in
         public const int CARD_ENTRY_METHOD_MANUAL = 8 | (8 << 8) | ENABLE_KIOSK_ENTRY_METHODS; // 2056 + the flag to indicate the flags are passed in
 
+        // The default value of CardEntryMethod if unspecified
+        private int CardEntryMethod => CARD_ENTRY_METHOD_MAG_STRIPE | CARD_ENTRY_METHOD_ICC_CONTACT | CARD_ENTRY_METHOD_NFC_CONTACTLESS;
 
         protected CloverDevice Device;
         protected CloverDeviceConfiguration Config;
 
-        public SDKInfo SDKInfo { get; protected set; } = new SDKInfo();
         List<ICloverConnectorListener> listeners = new List<ICloverConnectorListener>();
-
         private MerchantInfo merchantInfo { get; set; }
         private InnerDeviceObserver deviceObserver { get; set; }
 
-        // to hold the default value of CardEntryMethod
-        private int CardEntryMethod { get; set; }
+        private int logLevel = LogLevel.MINIMAL;
+
+
+        /// <summary>
+        /// A copy of the current CloverConnector MerchantInfo from the DeviceReady message
+        /// </summary>
+        public MerchantInfo MerchantInfo => merchantInfo?.Clone();
+
+        /// <summary>
+        /// The Configured Transport's Title, indicating USB, WebSocket, etc. in a display friendly format
+        /// </summary>
+        public string ConnectionTitle => Config?.getCloverTransport()?.Title ?? "";
+
+        /// <summary>
+        /// The Configured Transport's Summary, intended to be the web connection string or similar info as appropriate
+        /// </summary>
+        public string ConnectionSummary => Config?.getCloverTransport()?.Summary ?? "";
+
+        /// <summary>
+        /// SDK identification for reporting
+        /// </summary>
+        public SDKInfo SDKInfo { get; protected set; } = new SDKInfo();
 
         /// <summary>
         /// set to true, so that when request responses are processed, the Clover Mini
@@ -88,8 +108,6 @@ namespace com.clover.remotepay.sdk
 
         public CloverConnector()
         {
-            // default constructor for COM-Interop
-            CardEntryMethod = CARD_ENTRY_METHOD_MAG_STRIPE | CARD_ENTRY_METHOD_ICC_CONTACT | CARD_ENTRY_METHOD_NFC_CONTACTLESS;
         }
 
         /// <summary>
@@ -97,7 +115,7 @@ namespace com.clover.remotepay.sdk
         /// </summary>
         /// <param name="config">A CloverDeviceConfiguration object; TestDeviceConfiguration can be used for testing
         /// </param>
-        public CloverConnector(CloverDeviceConfiguration config) : this()
+        public CloverConnector(CloverDeviceConfiguration config)
         {
             Config = config;
             System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
@@ -258,6 +276,10 @@ namespace com.clover.remotepay.sdk
             if (request.SignatureEntryLocation.HasValue)
             {
                 settings.signatureEntryLocation = request.SignatureEntryLocation.Value;
+            }
+            if (request.TipSuggestions != null && request.TipSuggestions.Count > 0)
+            {
+                settings.tipSuggestions = request.TipSuggestions;
             }
 
             return settings;
@@ -787,6 +809,14 @@ namespace com.clover.remotepay.sdk
                 deviceObserver.onFinishCancel(prr.Result, TxType.REFUND, prr.Reason, prr.Message);
                 return;
             }
+
+            // set up a cached error object for FINISH_CANCEL, will be ignored and cleared on FINISH_OK
+            RefundPaymentResponse rpr = new RefundPaymentResponse();
+            rpr.Success = false;
+            rpr.Result = ResponseCode.FAIL;
+            rpr.Reason = "Unknown Error";
+            rpr.Message = "Device returned an unspecified error";
+            deviceObserver.lastPRR = rpr;
 
             Device.doRefundPayment(request.OrderId, request.PaymentId, !request.FullRefund || request.Amount > 0 ? request.Amount : (long?)null, request.FullRefund, request.DisablePrinting, request.DisableReceiptSelection, request.Extras);
         }
@@ -1573,6 +1603,12 @@ namespace com.clover.remotepay.sdk
             Device.doSetCustomerInfo(info);
         }
 
+        public void SetLogLevel(int level)
+        {
+            logLevel = level;
+            Device.SetLogLevel(level);
+        }
+
         private class InnerDeviceObserver : ICloverDeviceObserver
         {
             public RefundPaymentResponse lastPRR;
@@ -1753,7 +1789,7 @@ namespace com.clover.remotepay.sdk
                 {
                     state = (CloverDeviceEvent.DeviceEventState)Enum.Parse(typeof(CloverDeviceEvent.DeviceEventState), uiState.ToString());
                 }
-                catch (Exception e)
+                catch
                 {
                     // if we can't map UiState to DeviceEventState, drop the message on the floor
                     return;
@@ -2266,7 +2302,7 @@ namespace com.clover.remotepay.sdk
                 });
             }
 
-            public void onTxStartResponse(TxStartResponseResult result, string externalId)
+            public void onTxStartResponse(TxStartResponseResult result, string externalId, string reason, string message, string requestInfo)
             {
                 // TxStart Successes posted separately via FINISH_OK and FINISH_CANCEL messages; silently exit
                 if (result == TxStartResponseResult.SUCCESS)
@@ -2287,13 +2323,14 @@ namespace com.clover.remotepay.sdk
                             if (duplicate)
                             {
                                 response.Result = ResponseCode.CANCEL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
                                 response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
                             }
                             else
                             {
                                 response.Result = ResponseCode.FAIL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
+                                response.Message = message ?? "";
                             }
                             listener.OnPreAuthResponse(response);
                         });
@@ -2307,13 +2344,14 @@ namespace com.clover.remotepay.sdk
                             if (duplicate)
                             {
                                 response.Result = ResponseCode.CANCEL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
                                 response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
                             }
                             else
                             {
                                 response.Result = ResponseCode.FAIL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
+                                response.Message = message ?? "";
                             }
                             listener.OnAuthResponse(response);
                         });
@@ -2327,13 +2365,14 @@ namespace com.clover.remotepay.sdk
                             if (duplicate)
                             {
                                 response.Result = ResponseCode.CANCEL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
                                 response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
                             }
                             else
                             {
                                 response.Result = ResponseCode.FAIL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
+                                response.Message = message ?? "";
                             }
                             listener.OnSaleResponse(response);
                         });
@@ -2347,13 +2386,14 @@ namespace com.clover.remotepay.sdk
                             if (duplicate)
                             {
                                 response.Result = ResponseCode.CANCEL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
                                 response.Message = "The provided transaction id of " + externalId + " has already been processed and cannot be resubmitted.";
                             }
                             else
                             {
                                 response.Result = ResponseCode.FAIL;
-                                response.Reason = result.ToString();
+                                response.Reason = reason ?? response.Result.ToString();
+                                response.Message = message ?? "";
                             }
                             listener.OnManualRefundResponse(response);
                         });
@@ -2627,6 +2667,30 @@ namespace com.clover.remotepay.sdk
                         data = data
                     };
                     listener.OnCustomerProvidedData(response);
+                });
+            }
+
+            public void onInvalidStateTransition(string reason, string requestedTransition, string state, string substate, transport.ExternalDeviceStateData data)
+            {
+                NotifyListeners(listener =>
+                {
+                    InvalidStateTransitionNotification message = new InvalidStateTransitionNotification
+                    {
+                        Reason = reason,
+                        RequestedTransition = requestedTransition,
+                        State = state,
+                        Substate = substate,
+                        Success = true
+                    };
+                    if (data != null)
+                    {
+                        message.Data = new ExternalDeviceStateData()
+                        {
+                            CustomActivityId = data.customActivityId,
+                            ExternalPaymentId = data.externalPaymentId
+                        };
+                    }
+                    listener.OnInvalidStateTransitionResponse(message);
                 });
             }
 

@@ -28,7 +28,7 @@ using com.clover.remotepay.transport;
  *      The registered listener MUST handle the onConfirmPaymentRequest() callback.
  *    6) After all device prompts have completed, the onSaleResponse() callback is made by the device which
  *    provides the status of the sale request
- *    7) Based upon the provided payment information in the sale response, produce a RefundRequest and call the
+ *    7) Based upon the provided payment information in the sale notification, produce a RefundRequest and call the
  *    refundPayment() API method to request a refund.  Depending on merchant settings, card used in the transaction, device
  *    configuration, etc, the device may prompt for
  *      a) Receipt choice

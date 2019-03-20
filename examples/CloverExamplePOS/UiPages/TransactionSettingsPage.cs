@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using com.clover.sdk.v3.merchant;
 using com.clover.sdk.v3.payments;
+using RegionalExtrasDef = com.clover.sdk.v3.payments.RegionalExtras;
 using TipMode = com.clover.remotepay.sdk.TipMode;
 using CloverConnector = com.clover.remotepay.sdk.CloverConnector;
 
@@ -101,19 +103,19 @@ namespace CloverExamplePOS.UiPages
             {
                 int value = 0;
 
-                if(ManualEntryCheckbox.Checked)
+                if (ManualEntryCheckbox.Checked)
                 {
                     value |= CloverConnector.CARD_ENTRY_METHOD_MANUAL;
                 }
-                if(MagStripeCheckbox.Checked)
+                if (MagStripeCheckbox.Checked)
                 {
                     value |= CloverConnector.CARD_ENTRY_METHOD_MAG_STRIPE;
                 }
-                if(ChipCheckbox.Checked)
+                if (ChipCheckbox.Checked)
                 {
                     value |= CloverConnector.CARD_ENTRY_METHOD_ICC_CONTACT;
                 }
-                if(ContactlessCheckbox.Checked)
+                if (ContactlessCheckbox.Checked)
                 {
                     value |= CloverConnector.CARD_ENTRY_METHOD_NFC_CONTACTLESS;
                 }
@@ -134,5 +136,68 @@ namespace CloverExamplePOS.UiPages
         /// </summary>
         public bool CardNotPresent => ManualEntryCheckbox.Checked && CardNotPresentCheckbox.Checked;
 
+        public bool HasTipSuggestions => EnableTipSuggestionsSelection.Checked = true;
+        public List<TipSuggestion> TipSuggestions
+        {
+            get
+            {
+                List<TipSuggestion> suggestions = null;
+                if (HasTipSuggestions)
+                {
+                    suggestions = new List<TipSuggestion>();
+
+                    // Add selected suggestions to the list of tip suggestions.
+                    if (TipSuggestion1Enabled.Checked)
+                    {
+                        suggestions.Add(new TipSuggestion() {percentage = (int)TipSuggestion1Percent.Value, name = TipSuggestion1Text.Text});
+                    }
+                    if (TipSuggestion2Enabled.Checked)
+                    {
+                        suggestions.Add(new TipSuggestion() {percentage = (int)TipSuggestion2Percent.Value, name = TipSuggestion2Text.Text});
+                    }
+                    if (TipSuggestion3Enabled.Checked)
+                    {
+                        suggestions.Add(new TipSuggestion() {percentage = (int)TipSuggestion3Percent.Value, name = TipSuggestion3Text.Text});
+                    }
+                    if (TipSuggestion4Enabled.Checked)
+                    {
+                        suggestions.Add(new TipSuggestion() {percentage = (int)TipSuggestion4Percent.Value, name = TipSuggestion4Text.Text});
+                    }
+                }
+                return suggestions;
+            }
+        }
+
+        private void RegionalExtrasMenuButton_Click(object sender, EventArgs e)
+        {
+            ContextMenu menu = new ContextMenu();
+            menu.MenuItems.Add(NewRegionalExtrasItem(nameof(RegionalExtrasDef.FISCAL_INVOICE_NUMBER_KEY), RegionalExtrasDef.FISCAL_INVOICE_NUMBER_KEY, ""));
+            menu.MenuItems.Add(NewRegionalExtrasItem(nameof(RegionalExtrasDef.INSTALLMENT_NUMBER_KEY), RegionalExtrasDef.FISCAL_INVOICE_NUMBER_KEY, RegionalExtrasDef.INSTALLMENT_NUMBER_DEFAULT_VALUE));
+            menu.MenuItems.Add(NewRegionalExtrasItem(nameof(RegionalExtrasDef.INSTALLMENT_PLAN_KEY), RegionalExtrasDef.INSTALLMENT_PLAN_KEY, ""));
+            menu.MenuItems.Add(NewRegionalExtrasItem(nameof(RegionalExtrasDef.FISCAL_INVOICE_NUMBER_KEY), RegionalExtrasDef.FISCAL_INVOICE_NUMBER_KEY, ""));
+            menu.MenuItems.Add("-");
+            menu.MenuItems.Add(NewRegionalExtrasItem("Skip " + nameof(RegionalExtrasDef.FISCAL_INVOICE_NUMBER_KEY), RegionalExtrasDef.FISCAL_INVOICE_NUMBER_KEY, RegionalExtrasDef.SKIP_FISCAL_INVOICE_NUMBER_SCREEN_VALUE));
+            menu.Show(this, new Point(RegionalExtrasMenuButton.Left, RegionalExtrasMenuButton.Bottom));
+        }
+
+        private MenuItem NewRegionalExtrasItem(string title, string key, string value)
+        {
+            MenuItem item = new MenuItem(title);
+            item.Click += RegionalExtrasItem_Click;
+            item.Tag = new KeyValuePair<string, string>(key, value);
+            return item;
+        }
+
+        private void RegionalExtrasItem_Click(object sender, EventArgs e)
+        {
+            if (sender is MenuItem item)
+            {
+                if (item.Tag is KeyValuePair<string, string> value)
+                {
+                    RegionalExtrasTable.Rows.Add(value.Key, value.Value);
+                    RegionalExtraParametersEditGrid.DataSource = RegionalExtrasTable;
+                }
+            }
+        }
     }
 }

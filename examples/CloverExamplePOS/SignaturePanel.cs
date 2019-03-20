@@ -95,6 +95,13 @@ namespace CloverExamplePOS
                     }
                 }
             }
+            else
+            {
+                // If there's no electronic signature object, this means signature is on the receipt
+                Rectangle rect = new Rectangle(ClientRectangle.Location, ClientRectangle.Size);
+                rect.Inflate(-5, -5);
+                e.Graphics.DrawString("Verify signature on paper", Font, SystemBrushes.WindowText, rect, new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Near });
+            }
         }
     }
 }

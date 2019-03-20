@@ -244,6 +244,10 @@ namespace com.clover.remotepay.transport
         public Order order { get; set; }
         public TxStartResponseResult result { get; set; }
         public string externalId { get; set; }
+        public bool success { get; set; }
+        public string message { get; set; }
+        public string reason { get; set; }
+        public string requestInfo { get; set; }
 
         public TxStartResponseMessage() : base(Methods.TX_START_RESPONSE)
         {
@@ -1292,8 +1296,29 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class InvalidStateTransitionMessage : Message
+    {
+        public string reason { get; set; }
+        public string requestedTransition { get; set; }
+        public string state { get; set; }
+        public string substate { get; set; }
+        public string result { get; set; }
+        public ExternalDeviceStateData data { get; set; }
+
+        public InvalidStateTransitionMessage(string reason, string requestedTransition, string state, string substate, string result, ExternalDeviceStateData data)
+            : base(Methods.INVALID_STATE_TRANSITION)
+        {
+            this.reason = reason;
+            this.requestedTransition = requestedTransition;
+            this.state = state;
+            this.substate = substate;
+            this.result = result;
+            this.data = data;
+        }
+    }
+
     /// <summary>
-    /// The top level protocol message 
+    /// The top level protocol message
     /// </summary
     public class RemoteMessage
     {
@@ -1320,7 +1345,7 @@ namespace com.clover.remotepay.transport
             {
                 payload = new Message(meth);
             }
-            msg.payload = JsonUtils.Serialize(payload);
+            msg.payload = JsonUtils.SerializeSdk(payload);
             msg.packageName = packageName;
             msg.remoteSourceSDK = remoteSourceSDK;
             msg.remoteApplicationID = remoteApplicationID;

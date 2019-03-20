@@ -104,6 +104,7 @@
             this.Name = "RefundAmountDialog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Refund Payment";
             this.ResumeLayout(false);
             this.PerformLayout();

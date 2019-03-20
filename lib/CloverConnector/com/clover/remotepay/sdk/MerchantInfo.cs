@@ -101,6 +101,32 @@ namespace com.clover.remotepay.sdk
             };
         }
 
+        public MerchantInfo Clone()
+        {
+            MerchantInfo info = new MerchantInfo();
+
+            info.Device = Device?.Clone();
+
+            info.merchantID = merchantID;
+            info.merchantName = merchantName;
+            info.merchantMId = merchantMId;
+
+            info.supportsPreAuths = supportsPreAuths;
+            info.supportsVaultCards = supportsVaultCards;
+            info.supportsManualRefunds = supportsManualRefunds;
+            info.supportsTipAdjust = supportsTipAdjust;
+
+            info.supportsRemoteConfirmation = supportsRemoteConfirmation;
+            info.supportsNakedCredit = supportsNakedCredit;
+            info.supportsMultiPayToken = supportsMultiPayToken;
+            info.supportsAcknowledgement = supportsAcknowledgement;
+            info.supportsVoidPaymentResponse = supportsVoidPaymentResponse;
+            info.supportsPreAuth = supportsPreAuth;
+            info.supportsAuth = supportsAuth;
+            info.supportsVaultCard = supportsVaultCard;
+
+            return info;
+        }
     }
 
     /// <summary>
@@ -111,22 +137,32 @@ namespace com.clover.remotepay.sdk
         /// <summary>
         /// The merchant assigned name of the device
         /// </summary>
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// The serial number of the device
         /// </summary>
-        public String Serial { get; set; }
+        public string Serial { get; set; }
 
         /// <summary>
         /// The model identifier of the device
         /// </summary>
-        public String Model { get; set; }
+        public string Model { get; set; }
 
         /// <summary>
         /// Remote pay version supports message acks
         /// </summary>
         public bool SupportsAcks { get; set; }
+
+        public DeviceInfo Clone()
+        {
+            DeviceInfo info = new DeviceInfo();
+            info.Name = Name;
+            info.Serial = Serial;
+            info.Model = Model;
+            info.SupportsAcks = SupportsAcks;
+            return info;
+        }
     }
     /// <summary>
     /// Descriptive information about this SDK
