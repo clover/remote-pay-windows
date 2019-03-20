@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['fee',['fee',['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_order_type.html#a5cc31266e2cb7a7030a4afb75e92c66b',1,'com::clover::sdk::v3::order::OrderType']]],
+  ['filtercategories',['filterCategories',['../classcom_1_1clover_1_1sdk_1_1v3_1_1order_1_1_order_type.html#a331b93bc9bc80f2977df7f28a67dd1e2',1,'com::clover::sdk::v3::order::OrderType']]],
+  ['first4',['first4',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_gateway_txs.html#a2850aa45e6ba82366f6f7ddcb37387d2',1,'com::clover::sdk::v3::payments::GatewayTxs']]],
+  ['first6',['first6',['../classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_card.html#a6adbf4ed8d0c44c7c4951244a5e760a4',1,'com.clover.sdk.v3.customers.Card.first6()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_card_transaction.html#a5f4d24bfe33a4978b075a5998604ecd1',1,'com.clover.sdk.v3.payments.CardTransaction.first6()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_vaulted_card.html#a6cc61e7df7142a9fca26ce43cef4bf98',1,'com.clover.sdk.v3.payments.VaultedCard.first6()']]],
+  ['firstgatewaytxid',['firstGatewayTxId',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_batch.html#aca9e66b9936d2a0206c0cbf72885ab11',1,'com::clover::sdk::v3::payments::Batch']]],
+  ['firstname',['firstName',['../classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_card.html#ac46b6ca9992643cbc76bbf1250a3a418',1,'com.clover.sdk.v3.customers.Card.firstName()'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1customers_1_1_customer.html#aa7db9c2d514de4fa061f9a2a0e254f4e',1,'com.clover.sdk.v3.customers.Customer.firstName()']]],
+  ['forceofflinepayment',['forceOfflinePayment',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_transaction_settings.html#a925d2abe864c61aff01673a6d3316264',1,'com.clover.sdk.v3.payments.TransactionSettings.forceOfflinePayment()'],['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_sale_request.html#a3b9ec1f158eda7a094c83a34a6c2e02a',1,'com.clover.remotepay.sdk.SaleRequest.ForceOfflinePayment()'],['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_auth_request.html#ae60bb0644551b7c845472bfcef226de4',1,'com.clover.remotepay.sdk.AuthRequest.ForceOfflinePayment()']]],
+  ['forcepinentryonswipe',['forcePinEntryOnSwipe',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_transaction_settings.html#aa0d925d9075f5b2aa9e906138924d99f',1,'com::clover::sdk::v3::payments::TransactionSettings']]],
+  ['friday',['friday',['../classcom_1_1clover_1_1sdk_1_1v3_1_1hours_1_1_hours_set.html#a7e1be0b4ec6e879bf6e8d43620ee8743',1,'com::clover::sdk::v3::hours::HoursSet']]],
+  ['fullrefund',['FullRefund',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_refund_payment_request.html#aa01e28327a3f52c1bf0cd7fc33efdd42',1,'com::clover::remotepay::sdk::RefundPaymentRequest']]]
+];
