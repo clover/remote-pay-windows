@@ -25,6 +25,7 @@ namespace com.clover.remotepay.transport
         string remoteApplicationID;
         string posName;
         string serialNumber;
+        CloverTransport transport;
 
         public USBCloverDeviceConfiguration(string remoteApplicationID, bool enableLogging) : this("", remoteApplicationID, enableLogging, 1)
         {
@@ -65,7 +66,11 @@ namespace com.clover.remotepay.transport
 
         public CloverTransport getCloverTransport()
         {
-            return new USBCloverTransport(this.deviceId, pingSleepSeconds);
+            if (transport == null)
+            {
+                transport = new USBCloverTransport(this.deviceId, pingSleepSeconds);
+            }
+            return transport;
         }
 
         public bool getEnableLogging()

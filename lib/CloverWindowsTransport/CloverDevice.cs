@@ -54,22 +54,32 @@ namespace com.clover.remotepay.transport
         public virtual void Initialize(CloverDeviceConfiguration configuration)
         {
             string logSource = "_TransportEventLog";
-
             try
             {
+                // If this EventLog code crashes, you don't have the Windows Event Log Source setup, and this code isn't running with sufficient credentials to create it.
+                // See https://github.com/clover/remote-pay-windows/wiki/ "Setting up the Windows Event Log" article for details.
+                //
+                // Quickfixs: run this app _once_ as admin so this code can perform setup, or just run this in an admin PowerShell> New-EventLog -LogName "Application" -Source "_TransportEventLog"
+                //            Other fixes available in the project's wiki article.
+                //
+                // When this app is deployed into production, the installer or deploy script should ensure the EventLog is created.
+
                 if (!EventLog.SourceExists(logSource))
                 {
                     EventLog.CreateEventSource(logSource, logSource);
                 }
+
+                // Add the event log trace listener to the collection.
+                EventLogTraceListener eventlog = new EventLogTraceListener(logSource);
+                Trace.Listeners.Add(eventlog);
             }
             catch (Exception exception)
             {
+                // If this has crashed, see the comment just above at the top of the EventLog try for details and quick fixes.
                 throw new CloverException($"Aborting Clover Connector SDK because the Windows Event Log Source \"{logSource}\" does not exist or cannot be accessed.\nSee the https://github.com/clover/remote-pay-windows/wiki article for more information.\n\nref# CLOVER-W230\nDetail Message: {exception.Message}", "CLOVER-W230", exception);
             }
 
-            // Add the event log trace listener to the collection.
-            EventLogTraceListener myTraceListener = new EventLogTraceListener(logSource);
-            Trace.Listeners.Add(myTraceListener);
+            Log(MessageLevel.Detailed, $"CloverDevice.{nameof(Initialize)} {configuration.getName()}, raid: {configuration.getRemoteApplicationID()}");
 
             transport = configuration.getCloverTransport();
             transport?.SetLogLevel(logLevel);
@@ -81,9 +91,9 @@ namespace com.clover.remotepay.transport
         }
 
 
-        /// 
+        /// <summary>
+        /// Get descriptive SDK Info string
         /// </summary>
-        /// <returns></returns>
         private string getSDKInfoString()
         {
             string REG_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\CloverSDK";
@@ -134,19 +144,20 @@ namespace com.clover.remotepay.transport
         /// <param name="observer"></param>
         public void Subscribe(CloverTransportObserver observer)
         {
-            this.transport.Subscribe(observer);
+            Log(MessageLevel.Detailed, $"CloverDevice.{nameof(Subscribe)} {nameof(CloverTransportObserver)}");
+
+            transport.Subscribe(observer);
         }
 
         public void Dispose()
         {
-            if (this.transport != null)
-            {
-                transport.Dispose();
-            }
+            transport?.Dispose();
         }
 
         public void Subscribe(ICloverDeviceObserver observer)
         {
+            Log(MessageLevel.Detailed, $"CloverDevice.{nameof(Subscribe)} {nameof(ICloverDeviceObserver)}");
+
             if (observer != null && !deviceObservers.Contains(observer))
             {
                 deviceObservers.Add(observer);
@@ -155,6 +166,8 @@ namespace com.clover.remotepay.transport
 
         public void Unsubscribe(ICloverDeviceObserver observer)
         {
+            Log(MessageLevel.Detailed, $"CloverDevice.{nameof(Unsubscribe)}");
+
             if (observer != null && deviceObservers.Contains(observer))
             {
                 deviceObservers.Remove(observer);
@@ -163,8 +176,35 @@ namespace com.clover.remotepay.transport
 
         public void SetLogLevel(int level)
         {
+            Log(MessageLevel.Always, $"CloverDevice.{nameof(SetLogLevel)} {level}");
+
             logLevel = level;
             transport?.SetLogLevel(level);
+        }
+
+        /// <summary>
+        /// Write a level-filtered message to the trace log
+        /// </summary>
+        public void Log(int level, string message)
+        {
+            // Log messages if current filter allows
+            // Under no circumstances let logging exception break payment flows
+            try
+            {
+                if (level <= logLevel)
+                {
+                    // Trim long messages if loglevel is on lower half of 0...9999 scale
+                    if (message.Length > 5000 && logLevel < 5000)
+                    {
+                        message = message.Substring(0, 5000) + "\u2026";
+                    }
+                    Trace.WriteLine(message, $"loglevel {level}");
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine("Log exception:\n" + exception);
+            }
         }
 
         public abstract void doDiscoveryRequest();
@@ -205,6 +245,19 @@ namespace com.clover.remotepay.transport
         public abstract void doRegisterForCustomerProvidedData(List<LoyaltyDataConfig> configs);
         public abstract void doSetCustomerInfo(CustomerInfo customerInfo);
 
+        /// <summary>
+        /// Log Message levels for convenience
+        /// </summary>
+        protected class MessageLevel
+        {
+            // Note: these values relate to CloverConnector.LogLevel that controls CloverDevice.logLevel, but are intended to be slightly smaller to avoid filter equality confusion.
+            public const int Always = 0;
+            public const int Minimal = 900;
+            public const int Moderate = 2_900;
+            public const int Detailed = 5_900;
+            public const int Debug = 9_000;
+            public const int SuperDebug = 11_000;
+        }
     }
 
     public interface ICloverDeviceObserver

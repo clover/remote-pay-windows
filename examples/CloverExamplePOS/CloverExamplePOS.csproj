@@ -138,6 +138,7 @@
     <Compile Include="PreAuthListForm.Designer.cs">
       <DependentUpon>PreAuthListForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResponseEventArgs.cs" />
     <Compile Include="StartupForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -188,6 +189,12 @@
     </Compile>
     <Compile Include="UIDialogs\PropertiesDialog.Designer.cs">
       <DependentUpon>PropertiesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIDialogs\ManualCaptureDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIDialogs\ManualCaptureDialog.Designer.cs">
+      <DependentUpon>ManualCaptureDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="UiPages\AboutSdkInfo.cs">
       <SubType>UserControl</SubType>
@@ -271,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UIDialogs\PropertiesDialog.resx">
       <DependentUpon>PropertiesDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIDialogs\ManualCaptureDialog.resx">
+      <DependentUpon>ManualCaptureDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UIDialogs\RefundAmountDialog.resx">
       <DependentUpon>RefundAmountDialog.cs</DependentUpon>

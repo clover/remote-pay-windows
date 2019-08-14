@@ -53,7 +53,8 @@ namespace com.clover.remotepay.transport
 
         private string endpoint { get; set; }
 
-        PairingDeviceConfiguration config { get; set; }
+        PairingDeviceConfiguration pairingDeviceConfiguration { get; set; }
+        CloverDeviceConfiguration cloverDeviceConfiguration { get; set; }
 
         public override string ShortTitle() => "WS";
         public override string Title => "SNPD WebSocket";
@@ -64,10 +65,11 @@ namespace com.clover.remotepay.transport
         /// </summary>
         /// <param name="hostname">The hostname or IP of the Clover device to which you are connecting</param>
         /// <param name="port">The port of the Clover device to which you are connecting</param>
-        public WebSocketCloverTransport(string endpoint, PairingDeviceConfiguration pairingConfig, string posName, string serialNumber, string pairingAuthToken)
+        public WebSocketCloverTransport(string endpoint, PairingDeviceConfiguration pairingConfig, CloverDeviceConfiguration cloverConfig, string posName, string serialNumber, string pairingAuthToken)
         {
             this.endpoint = endpoint;
-            this.config = pairingConfig;
+            this.pairingDeviceConfiguration = pairingConfig;
+            this.cloverDeviceConfiguration = cloverConfig;
             this.posName = posName;
             this.serialNumber = serialNumber;
             this.pairingAuthToken = pairingAuthToken;
@@ -91,7 +93,7 @@ namespace com.clover.remotepay.transport
             pr.authenticationToken = this.pairingAuthToken;
             pr.serialNumber = this.serialNumber;
 
-            PairingRequestMessage prm = new PairingRequestMessage(pr);
+            PairingRequestMessage prm = new PairingRequestMessage(pr, cloverDeviceConfiguration.getRemoteApplicationID(), cloverDeviceConfiguration.getRemoteSdk(this));
             sendMessage(JsonUtils.Serialize(prm));
         }
 
@@ -109,9 +111,9 @@ namespace com.clover.remotepay.transport
                     if (method == PairingCodeMessage.METHOD)
                     {
                         PairingCodeMessage pcm = JsonUtils.Deserialize<PairingCodeMessage>(dynObj.payload);
-                        if (config.OnPairingCode != null)
+                        if (pairingDeviceConfiguration.OnPairingCode != null)
                         {
-                            config.OnPairingCode(pcm.pairingCode);
+                            pairingDeviceConfiguration.OnPairingCode(pcm.pairingCode);
                         }
                         else
                         {
@@ -127,7 +129,7 @@ namespace com.clover.remotepay.transport
                         {
                             isPairing = false;
                             pairingAuthToken = pr.authenticationToken;
-                            config.OnPairingSuccess?.Invoke(pr.authenticationToken);
+                            pairingDeviceConfiguration.OnPairingSuccess?.Invoke(pr.authenticationToken);
                             onDeviceReady();
                         }
                         else if (pr.pairingState == PairingResponse.FAILED)
@@ -137,12 +139,12 @@ namespace com.clover.remotepay.transport
                         }
                         else if (pr.pairingState == PairingResponse.AUTHENTICATING)
                         {
-                            config.OnPairingState?.Invoke(PairingResponse.AUTHENTICATING, "Enter security pin on device to begin pairing");
+                            pairingDeviceConfiguration.OnPairingState?.Invoke(PairingResponse.AUTHENTICATING, "Enter security pin on device to begin pairing");
                         }
                         else
                         {
                             // Pass anything else from the device up to the user
-                            config.OnPairingState?.Invoke(pr.pairingState, "");
+                            pairingDeviceConfiguration.OnPairingState?.Invoke(pr.pairingState, "");
                         }
                     }
                 }
