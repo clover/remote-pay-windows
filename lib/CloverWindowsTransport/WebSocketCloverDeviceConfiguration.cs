@@ -30,6 +30,7 @@ namespace com.clover.remotepay.transport
         public string posName;
         public string serialNumber;
         public string pairingAuthToken;
+        public CloverTransport transport;
 
         /// <summary>
         /// Constructor with basic parameters.
@@ -87,7 +88,11 @@ namespace com.clover.remotepay.transport
 
         public CloverTransport getCloverTransport()
         {
-            return new WebSocketCloverTransport(endpoint, this, posName, serialNumber, pairingAuthToken);
+            if (transport == null)
+            {
+                transport = new WebSocketCloverTransport(endpoint, this, this, posName, serialNumber, pairingAuthToken);
+            }
+            return transport;            
         }
 
         public string getMessagePackageName()

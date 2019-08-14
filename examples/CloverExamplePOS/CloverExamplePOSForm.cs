@@ -13,22 +13,23 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using com.clover.remotepay.sdk;
-using com.clover.remotepay.transport;
-using System.IO;
-using System.Text;
-using com.clover.remote.order;
-using com.clover.sdk.v3.payments;
-using Newtonsoft.Json;
-using com.clover.sdk.v3.printer;
 using CloverExamplePOS.CustomActivity;
 using CloverExamplePOS.UIDialogs;
+using com.clover.remote.order;
+using com.clover.remotepay.sdk;
+using com.clover.remotepay.transport;
+using com.clover.sdk.v3.payments;
+using com.clover.sdk.v3.printer;
+using Newtonsoft.Json;
 using Transport = com.clover.remotepay.transport;
 
 namespace CloverExamplePOS
@@ -36,6 +37,7 @@ namespace CloverExamplePOS
     public partial class CloverExamplePOSForm : Form, ICloverConnectorListener
     {
         CloverExamplePosData data = new CloverExamplePosData();
+        public ICloverConnector Connector { get => data.CloverConnector; }
 
         SynchronizationContext uiThread;
         DisplayOrder DisplayOrder;
@@ -388,13 +390,15 @@ namespace CloverExamplePOS
         {
             if (action == Store.PreAuthAction.ADDED)
             {
-                ListViewItem lvi = new ListViewItem();
+                string[] columns = new string[]
+                {
+                    "PRE-AUTH",
+                    (payment.Amount / 100.0).ToString("C2"),
+                    payment.PaymentID,
+                    payment.ExternalID,
+                };
+                ListViewItem lvi = new ListViewItem(columns);
                 lvi.Tag = payment;
-                lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
-
-                lvi.SubItems[0].Text = "PRE-AUTH";
-                lvi.SubItems[1].Text = (payment.Amount / 100.0).ToString("C2");
-
                 PreAuthListView.Items.Add(lvi);
             }
             else if (action == Store.PreAuthAction.REMOVED)
@@ -410,6 +414,23 @@ namespace CloverExamplePOS
             }
             SaleButton.ContextMenu.MenuItems[1].Enabled = data.Store.PreAuths.Count > 0;
             autoResizeColumns(PreAuthListView);
+        }
+
+        private void PreAuthListViewContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = (PreAuthListView.SelectedItems.Count == 0);
+        }
+
+        private void PreAuthListViewContextMenu_CopyPaymentID_Click(object sender, EventArgs e)
+        {
+            POSPayment payment = PreAuthListView.SelectedItems[0].Tag as POSPayment;
+            Clipboard.SetText(payment?.PaymentID ?? "");
+        }
+
+        private void PreAuthListViewContextMenu_CopyExternalID_Click(object sender, EventArgs e)
+        {
+            POSPayment payment = PreAuthListView.SelectedItems[0].Tag as POSPayment;
+            Clipboard.SetText(payment?.ExternalID ?? "");
         }
 
         private void PayButtonContext_Click(object sender, EventArgs e)
@@ -449,7 +470,7 @@ namespace CloverExamplePOS
             request.TipMode = TransactionSettingsEdit.TipMode;
             if (TransactionSettingsEdit.TipMode == com.clover.remotepay.sdk.TipMode.TIP_PROVIDED)
             {
-                    request.TipAmount = TransactionSettingsEdit.TipAmount;
+                request.TipAmount = TransactionSettingsEdit.TipAmount;
             }
 
             if (TransactionSettingsEdit.HasSignatureThreshold)
@@ -1277,7 +1298,6 @@ namespace CloverExamplePOS
 
                     RefundAmount.Text = "";
                     ManualRefundButton.Enabled = false;
-                    //ManualRefundReceiptButton.Enabled = false;
 
                     TransactionsListView.Items.Add(lvi);
                     autoResizeColumns(TransactionsListView);
@@ -1304,13 +1324,11 @@ namespace CloverExamplePOS
 
         private void TransactionsListView_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ListViewItem item = TransactionsListView.SelectedItems.Cast<ListViewItem>().SingleOrDefault();
+            POSManualRefund refund = item?.Tag as POSManualRefund;
+            bool refunded = refund != null;
+            RefundReceiptOptButton.Enabled = refunded;
         }
-
-        private void ManualRefundReceiptButton_Click(object sender, EventArgs e)
-        {
-            AlertForm.Show(this, "More to come...", "This function is not yet implemented.");
-        }
-
 
         //////////////// Payment Refund methods /////////////
         private void RefundPaymentButton_Click(object sender, EventArgs e)
@@ -1574,9 +1592,15 @@ namespace CloverExamplePOS
         }
 
         ////////////////// CloverReceiptListener Methods //////////////////////
-        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse receipt)
+        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
         {
-            // Success/fail, the receipt options were displayed on the device
+            if (!response.Success)
+            {
+                uiThread.Send(state =>
+                {
+                    AlertForm.Show(this, "Invalid Receipt Option", $"{response.status}\n{response.Reason}");
+                }, null);
+            }
         }
 
 
@@ -2003,34 +2027,20 @@ namespace CloverExamplePOS
 
         private void ResetOrderPaymentButtons()
         {
-            if (OrderPaymentsView.SelectedIndices.Count == 1 && OrderPaymentsView.SelectedItems[0].Tag is POSRefund)
+            ListViewItem item = OrderPaymentsView.SelectedItems.Cast<ListViewItem>().SingleOrDefault();
+            if (item != null)
             {
-                // ShowReceiptButton.Enabled = true;
-            }
-            else
-            {
-                if (OrderPaymentsView.SelectedIndices.Count == 1 && (OrderPaymentsView.SelectedItems[0].Tag is POSPayment) && (((POSPayment)OrderPaymentsView.SelectedItems[0].Tag).PaymentStatus == POSPayment.Status.PAID || ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag).PaymentStatus == POSPayment.Status.AUTHORIZED))
-                {
-                    VoidButton.Enabled = true;
-                    RefundPaymentButton.Enabled = true;
-                    ShowReceiptButton.Enabled = true;
+                POSPayment payment = item.Tag as POSPayment;
+                POSRefund refund = item.Tag as POSRefund;
 
-                }
-                else
-                {
-                    VoidButton.Enabled = false;
-                    RefundPaymentButton.Enabled = false;
-                    ShowReceiptButton.Enabled = false;
-                }
-            }
+                bool paid = payment?.PaymentStatus == POSPayment.Status.PAID;
+                bool authorized = payment?.PaymentStatus == POSPayment.Status.AUTHORIZED;
+                bool refunded = refund != null;
 
-            if (OrderPaymentsView.SelectedIndices.Count == 1 && (OrderPaymentsView.SelectedItems[0].Tag is POSPayment) && ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag).PaymentStatus == POSPayment.Status.AUTHORIZED)
-            {
-                TipAdjustButton.Enabled = true;
-            }
-            else
-            {
-                TipAdjustButton.Enabled = false;
+                VoidButton.Enabled = paid || authorized;
+                RefundPaymentButton.Enabled = paid || authorized;
+                ShowReceiptButton.Enabled = paid || authorized || refunded;
+                TipAdjustButton.Enabled = authorized;
             }
         }
 
@@ -2303,19 +2313,42 @@ namespace CloverExamplePOS
 
         private void ShowReceiptButton_Click(object sender, EventArgs e)
         {
-            if (OrderPaymentsView.SelectedItems.Count == 1)
+            ListViewItem item = OrderPaymentsView.SelectedItems.Cast<ListViewItem>().SingleOrDefault();
+            if (item != null)
             {
-                if (OrderPaymentsView.SelectedItems[0].Tag is POSPayment)
+                POSPayment payment = item.Tag as POSPayment;
+                POSRefund refund = item.Tag as POSRefund;
+
+                bool paid = payment?.PaymentStatus == POSPayment.Status.PAID;
+                bool authorized = payment?.PaymentStatus == POSPayment.Status.AUTHORIZED;
+                bool refunded = refund != null;
+
+                if (paid || authorized || refunded)
                 {
-                    POSPayment payment = ((POSPayment)OrderPaymentsView.SelectedItems[0].Tag);
-                    DisplayPaymentReceiptOptionsRequest request = new DisplayPaymentReceiptOptionsRequest()
+                    DisplayReceiptOptionsRequest request = new DisplayReceiptOptionsRequest
                     {
-                        OrderID = payment.OrderID,
-                        PaymentID = payment.PaymentID,
-                        DisablePrinting = TransactionSettingsEdit.DisablePrinting ?? false
-                };
-                    data.CloverConnector.DisplayPaymentReceiptOptions(request);
+                        orderId = payment?.OrderID ?? refund?.OrderID,
+                        paymentId = payment?.PaymentID ?? refund?.PaymentID,
+                        refundId = refund?.RefundID,
+                    };
+                    data.CloverConnector.DisplayReceiptOptions(request);
                 }
+            }
+        }
+
+        private void RefundReceiptOptButton_Click(object sender, EventArgs e)
+        {
+            ListViewItem item = TransactionsListView.SelectedItems.Cast<ListViewItem>().SingleOrDefault();
+            if (item != null)
+            {
+                POSManualRefund refund = item.Tag as POSManualRefund;
+
+                DisplayReceiptOptionsRequest request = new DisplayReceiptOptionsRequest
+                {
+                    creditId = refund?.CreditID,
+                    orderId = refund?.OrderID,
+                };
+                data.CloverConnector.DisplayReceiptOptions(request);
             }
         }
 
@@ -2594,6 +2627,20 @@ namespace CloverExamplePOS
             data.CloverConnector.PreAuth(request);
         }
 
+        private void ManualCaptureButton_Click(object sender, EventArgs e)
+        {
+            ManualCaptureDialog dialog = new ManualCaptureDialog(this);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                CapturePreAuthRequest request = new CapturePreAuthRequest();
+                request.PaymentID = dialog.PaymentID;
+                request.Amount = dialog.Amount;
+                request.TipAmount = dialog.TipAmount;
+
+                data.CloverConnector.CapturePreAuth(request);
+            }
+        }
+
         private void refreshPendingPayments_Click(object sender, EventArgs e)
         {
             data.CloverConnector.RetrievePendingPayments();
@@ -2687,8 +2734,11 @@ namespace CloverExamplePOS
         {
         }
 
+        public event EventHandler<ResponseEventArgs<RetrievePaymentResponse>> PaymentRetrieved;
         public void OnRetrievePaymentResponse(RetrievePaymentResponse response)
         {
+            PaymentRetrieved?.Invoke(this, ResponseEventArgs.From(response));
+
             if (response.Success)
             {
                 uiThread.Send(delegate (object state)
@@ -2721,7 +2771,7 @@ namespace CloverExamplePOS
         }
         public static string currencyFormat(long? value)
         {
-            double amount = (double)value / 100;
+            double amount = (double)value.GetValueOrDefault(0) / 100;
             return string.Format("{0:C}", amount);
         }
 
@@ -2942,5 +2992,4 @@ namespace CloverExamplePOS
             return null;
         }
     }
-
 }

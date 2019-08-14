@@ -67,12 +67,15 @@ namespace com.clover.remotepay.transport
 
         public void onDeviceConnected(CloverTransport transport)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(onDeviceConnected)} {transport?.Title ?? ""}::{transport?.Summary ?? ""}");
+
             startupConnectionState = ConnectionState.Discovering;
             NotifyObservers(observer => observer.onDeviceConnected());
         }
 
         public void onDeviceDisconnected(CloverTransport transport)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(onDeviceDisconnected)} {transport?.Title ?? ""}::{transport?.Summary ?? ""}");
             startupConnectionState = ConnectionState.Disconnected;
 
             NotifyObservers(observer => observer.onDeviceDisconnected());
@@ -80,17 +83,24 @@ namespace com.clover.remotepay.transport
 
         public void onDeviceReady(CloverTransport device)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(onDeviceReady)} {device?.Title ?? ""}::{device?.Summary ?? ""}");
+
             startupConnectionState = ConnectionState.Discovering;
             doDiscoveryRequest();
         }
 
         public void onDeviceError(int code, Exception cause, string message)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(onDeviceError)} {code}, {cause?.Message ?? ""}, {message ?? ""}");
+            Log(MessageLevel.Debug, $"Exception:\n{cause?.ToString() ?? ""}");
+
             NotifyObservers(observer => observer.onDeviceError(code, cause, message));
         }
 
         private void setPaymentConfirmationIdle(bool value)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(setPaymentConfirmationIdle)} {value}");
+
             if (value)
             {
                 paymentConfirmationIdle.Set();
@@ -107,6 +117,9 @@ namespace com.clover.remotepay.transport
         /// <param name="message">The message.</param>
         public void onMessage(string message)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(onMessage)}");
+            Log(MessageLevel.SuperDebug, message);
+
             Debug.WriteLine("Received raw message: " + message);
             RemoteMessage rMessage = null;
             try
@@ -129,6 +142,8 @@ namespace com.clover.remotepay.transport
 
             try
             {
+                Log(MessageLevel.Moderate, $"Received message type {rMessage.method}");
+
                 // Handle and route known messages appropriately
                 if (rMessage != null)
                 {
@@ -341,6 +356,7 @@ namespace com.clover.remotepay.transport
 
         private void onPing()
         {
+            Log(MessageLevel.Debug + 700, $"DefaultCloverDevice.{nameof(onPing)}");
             DateTime now = DateTime.Now;
 
             // Some devices send ping floods in certain error paths; only respond to pings every so often. Valid pings generally happen between 1 and 5 seconds, never sub-second.
@@ -352,6 +368,7 @@ namespace com.clover.remotepay.transport
                 // if in discovery state and receiving ping, probably the DISCOVERY RESPONSE went astray, send another DISCOVERY REQUEST to get another one
                 if (startupConnectionState == ConnectionState.Discovering)
                 {
+                    Log(MessageLevel.Debug, $"Ping without complete connection, attempt QOS Discovery Request");
                     Debug.WriteLine($"Ping without complete connection, attempt QOS Discovery Request");
                     doDiscoveryRequest();
                 }
@@ -363,6 +380,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversRefundPaymentResponse(RefundResponseMessage rrm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversRefundPaymentResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onRefundPaymentResponse(rrm.refund, rrm.orderId, rrm.paymentId, rrm.code, rrm.reason.ToString() + " " + rrm.message, rrm.reason);
@@ -371,6 +389,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversTipAdjusted(TipAdjustResponseMessage tarm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversTipAdjusted)}");
             NotifyObservers(observer =>
             {
                 observer.onAuthTipAdjusted(tarm.paymentId, tarm.amount, tarm.success);
@@ -379,6 +398,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversVaultCardResponse(VaultCardResponseMessage vcrm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversVaultCardResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onVaultCardResponse(vcrm);
@@ -387,6 +407,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversReadCardDataResponse(ReadCardDataResponseMessage cdrm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversReadCardDataResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onReadCardDataResponse(cdrm);
@@ -395,6 +416,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversDiscoveryResponse(DiscoveryResponseMessage drMessage)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversDiscoveryResponse)}");
             startupConnectionState = ConnectionState.Discovered;
 
             NotifyObservers(observer =>
@@ -412,6 +434,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversCapturePreAuthResponse(CapturePreAuthResponseMessage carm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversCapturePreAuthResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onCapturePreAuthResponse(carm.paymentId, carm.amount, carm.tipAmount, carm.status, carm.reason);
@@ -420,6 +443,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversCloseoutResponse(CloseoutResponseMessage crm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversCloseoutResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onCloseoutResponse(crm.status, crm.reason, crm.batch);
@@ -428,6 +452,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPendingPaymentsResponse(RetrievePendingPaymentsResponseMessage rpprm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPendingPaymentsResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onRetrievePendingPaymentsResponse(rpprm.status == ResultStatus.SUCCESS, rpprm.pendingPaymentEntries);
@@ -436,6 +461,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversActivityResponse(ActivityResponseMessage arm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversActivityResponse)}");
             NotifyObservers(observer =>
             {
                 ResultStatus status = arm.resultCode == -1 ? ResultStatus.SUCCESS : ResultStatus.CANCEL;
@@ -445,6 +471,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversKeyPressed(KeyPressMessage keyPress)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversKeyPressed)}");
             NotifyObservers(observer =>
             {
                 observer.onKeyPressed(keyPress.keyPress);
@@ -453,6 +480,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversCashbackSelected(CashbackSelectedMessage cbSelected)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversCashbackSelected)}");
             NotifyObservers(observer =>
             {
                 observer.onCashbackSelected(cbSelected.cashbackAmount);
@@ -461,6 +489,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversConfirmPayment(ConfirmPaymentMessage message)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversConfirmPayment)}");
             NotifyObservers(observer =>
             {
                 observer.onConfirmPayment(message.payment, message.challenges);
@@ -469,6 +498,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversTipAdded(TipAddedMessage tipAdded)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversTipAdded)}");
             NotifyObservers(observer =>
             {
                 observer.onTipAdded(tipAdded.tipAmount);
@@ -477,6 +507,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversTxStartResponse(TxStartResponseMessage txsrm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversTxStartResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onTxStartResponse(txsrm.result, txsrm.externalId, txsrm.reason, txsrm.message, txsrm.requestInfo);
@@ -485,6 +516,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPartialAuth(PartialAuthMessage partialAuth)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPartialAuth)}");
             NotifyObservers(observer =>
             {
                 observer.onPartialAuth(partialAuth.partialAuthAmount);
@@ -493,6 +525,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPaymentVoided(VoidPaymentResponseMessage vprm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPaymentVoided)}");
             NotifyObservers(observer =>
             {
                 observer.onPaymentVoided(vprm.payment, vprm.voidReason, vprm.status, vprm.reason, vprm.message);
@@ -501,6 +534,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversVerifySignature(VerifySignatureMessage verifySigMsg)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversVerifySignature)}");
             NotifyObservers(observer =>
             {
                 observer.onVerifySignature(verifySigMsg.payment, verifySigMsg.signature);
@@ -510,6 +544,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversUiState(UiStateMessage uiStateMsg)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversUiState)}");
             NotifyObservers(observer =>
             {
                 observer.onUiState(uiStateMsg.uiState, uiStateMsg.uiText, uiStateMsg.uiDirection, uiStateMsg.inputOptions);
@@ -519,6 +554,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversTxState(TxStateMessage txStateMsg)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversTxState)}");
             NotifyObservers(observer =>
             {
                 observer.onTxState(txStateMsg.txState);
@@ -527,6 +563,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversFinishCancel(TxType requestInfo)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversFinishCancel)}");
             NotifyObservers(observer =>
             {
                 observer.onFinishCancel(requestInfo);
@@ -535,6 +572,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversFinishOk(FinishOkMessage msg)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversFinishOk)}");
             NotifyObservers(observer =>
             {
                 if (msg.payment != null)
@@ -558,6 +596,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserverAck(AcknowledgementMessage ackMessage)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserverAck)}");
             lock (ackLock)
             {
                 if (msgIdToTask.TryGetValue(ackMessage.sourceMessageId, out BackgroundWorker worker))
@@ -579,6 +618,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPrintCredit(CreditPrintMessage cpm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPrintCredit)}");
             NotifyObservers(observer =>
             {
                 observer.onPrintCredit(cpm.credit);
@@ -587,6 +627,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPrintCreditDecline(DeclineCreditPrintMessage dcpm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPrintCreditDecline)}");
             NotifyObservers(observer =>
             {
                 observer.onPrintCreditDecline(dcpm.credit, dcpm.reason);
@@ -595,6 +636,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPrintPayment(PaymentPrintMessage ppm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPrintPayment)}");
             NotifyObservers(observer =>
             {
                 observer.onPrintPayment(ppm.payment, ppm.order);
@@ -603,6 +645,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPrintPaymentDecline(DeclinePaymentPrintMessage dppm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPrintPaymentDecline)}");
             NotifyObservers(observer =>
             {
                 observer.onPrintPaymentDecline(dppm.payment, dppm.reason);
@@ -611,6 +654,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPrintMerchantCopy(PaymentPrintMerchantCopyMessage ppmcm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPrintMerchantCopy)}");
             NotifyObservers(observer =>
             {
                 observer.onPrintMerchantReceipt(ppmcm.payment);
@@ -619,6 +663,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversPrintRefund(RefundPaymentPrintMessage rppm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversPrintRefund)}");
             NotifyObservers(observer =>
             {
                 observer.onPrintRefundPayment(rppm.payment, rppm.order, rppm.refund);
@@ -628,6 +673,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversActivityMessage(ActivityMessageFromActivity amfa)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversActivityMessage)}");
             NotifyObservers(observer =>
             {
                 observer.onMessageFromActivity(amfa.action, amfa.payload);
@@ -636,6 +682,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversDeviceReset(ResetDeviceResponseMessage rdrm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(ResetDeviceResponseMessage)}");
             NotifyObservers(observer =>
             {
                 observer.onResetDeviceResponse(ResultStatus.SUCCESS, rdrm.reason, rdrm.state);
@@ -644,6 +691,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponseMessage rdsrm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversRetrieveDeviceStatusResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onDeviceStatusResponse(ResultStatus.SUCCESS, rdsrm.reason, rdsrm.state, rdsrm.data);
@@ -652,6 +700,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversRetrievePaymentResponse(RetrievePaymentResponseMessage rpr)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversRetrievePaymentResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onRetrievePaymentResponse(rpr.queryStatus != QueryStatus.NOT_FOUND ? ResultStatus.SUCCESS : ResultStatus.FAIL, rpr.reason, rpr.externalPaymentId, rpr.queryStatus, rpr.payment);
@@ -660,6 +709,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversRetrievePrinterResponse(RetrievePrintersResponseMessage response)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversRetrievePrinterResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onRetrievePrintersResponse(response.printers);
@@ -668,6 +718,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversRetrievePrintJobStatus(PrintJobStatusResponseMessage response)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversRetrievePrintJobStatus)}");
             NotifyObservers(observer =>
             {
                 observer.onRetrievePrintJobStatus(response.externalPrintJobId, response.status);
@@ -676,6 +727,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserverDisplayReceiptOptionsResponse(ShowReceiptOptionsResponseMessage srorm)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserverDisplayReceiptOptionsResponse)}");
             NotifyObservers(observer =>
             {
                 observer.onDisplayReceiptOptionsResponse(srorm.status, srorm.reason);
@@ -684,6 +736,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversCustomerProvidedData(CustomerProvidedDataResponseMessage response)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversCustomerProvidedData)}");
             NotifyObservers(observer =>
             {
                 observer.onCustomerProvidedDataResponse(response.eventId, response.config, response.data);
@@ -692,6 +745,7 @@ namespace com.clover.remotepay.transport
 
         public void notifyObserversInvalidStateTransition(InvalidStateTransitionMessage message)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversInvalidStateTransition)}");
             NotifyObservers(observer =>
             {
                 observer.onInvalidStateTransition(message.reason, message.requestedTransition, message.state, message.substate, message.data);
@@ -700,20 +754,25 @@ namespace com.clover.remotepay.transport
 
         private void NotifyObservers(Action<ICloverDeviceObserver> action)
         {
+            Log(MessageLevel.SuperDebug, $"DefaultCloverDevice.{nameof(NotifyObservers)}");
+
             List<ICloverDeviceObserver> localObservers = new List<ICloverDeviceObserver>(deviceObservers);
             foreach (ICloverDeviceObserver observer in localObservers)
             {
+                Log(MessageLevel.SuperDebug, $"Queuing async notify observer: {observer.GetHashCode()}");
                 BackgroundWorker bw = new BackgroundWorker();
                 bw.DoWork += delegate
                 {
                     try
                     {
+                        Log(MessageLevel.SuperDebug, $"Executing async notify observer: {observer.GetHashCode()}");
                         action(observer);
                     }
                     catch (Exception exception)
                     {
                         // eat unhandled exceptions from user code - any logging other than debug?
                         Debug.WriteLine("DefaultCloverDevice: Error calling custom code: " + exception);
+                        Log(MessageLevel.Debug, $"DefaultCloverDevice: Error calling custom code {observer.GetHashCode()}: {exception}");
                     }
                 };
                 bw.RunWorkerAsync();
@@ -722,41 +781,49 @@ namespace com.clover.remotepay.transport
 
         public override void doShowPaymentReceiptScreen(string orderId, string paymentId, bool disablePrinting)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doShowPaymentReceiptScreen)}");
             sendObjectMessage(new ShowPaymentReceiptOptionsMessage(orderId, paymentId, disablePrinting));
         }
 
         public override void doShowReceiptScreen(string orderId, string paymentId, string refundId, string creditId, bool disablePrinting)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doShowReceiptScreen)}");
             sendObjectMessage(new ShowReceiptOptionsMessage(orderId, paymentId, refundId, creditId, disablePrinting));
         }
 
         public override void doLogMessages(LogLevelEnum logLevel, Dictionary<string, string> messages)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doLogMessages)} {logLevel}");
             sendObjectMessage(new LogMessage(logLevel, messages));
         }
 
         public override void doKeyPress(KeyPress keyPress)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doKeyPress)}");
             sendObjectMessage(new KeyPressMessage(keyPress));
         }
 
         public override void doShowThankYouScreen()
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doShowThankYouScreen)}");
             sendObjectMessage(new Message(Methods.SHOW_THANK_YOU_SCREEN));
         }
 
         public override void doShowWelcomeScreen()
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doShowWelcomeScreen)}");
             sendObjectMessage(new Message(Methods.SHOW_WELCOME_SCREEN));
         }
 
         public override void doRetrievePendingPayments()
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRetrievePendingPayments)}");
             sendObjectMessage(new Message(Methods.RETRIEVE_PENDING_PAYMENTS));
         }
 
         public override void doVerifySignature(Payment payment, bool verified)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doVerifySignature)}");
             paymentConfirmationIdle.Wait();
             if (!paymentRejected)
             {
@@ -766,16 +833,19 @@ namespace com.clover.remotepay.transport
 
         public override void doTerminalMessage(string text)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doTerminalMessage)}");
             sendObjectMessage(new TerminalMessage(text));
         }
 
         public override void doSendDebugLog(string message)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doSendDebugLog)}");
             sendObjectMessage(new CloverDeviceLogMessage(message));
         }
 
         public override void doOpenCashDrawer(string reason, string deviceId)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doOpenCashDrawer)}");
             Printer printer = null;
             if (deviceId != null)
             {
@@ -787,41 +857,50 @@ namespace com.clover.remotepay.transport
 
         public override void doVaultCard(int? CardEntryMethods)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doVaultCard)}");
             sendObjectMessage(new VaultCardMessage(CardEntryMethods)); // take defaults entry methods
         }
 
         public override void doReadCardData(PayIntent payIntent)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doReadCardData)}");
             sendObjectMessage(new ReadCardDataMessage(payIntent));
         }
 
         public override void doCloseout(bool allowOpenTabs, string batchId)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doCloseout)}");
             sendObjectMessage(new CloseoutMessage(allowOpenTabs, batchId));
         }
 
         public override void doResetDevice()
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doResetDevice)}");
             sendObjectMessage(new BreakMessage());
         }
 
         public override void doTxStart(PayIntent payIntent, Order order, TxType requestInfo)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doTxStart)}");
             sendObjectMessage(new TxStartRequestMessage(payIntent, order, requestInfo));
         }
 
         public override void doTipAdjustAuth(string orderId, string paymentId, long? amount, Dictionary<string, string> extras)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doTipAdjustAuth)}");
             sendObjectMessage(new TipAdjustAuthMessage(orderId, paymentId, amount, extras));
         }
 
         public override void doCapturePreAuth(string paymentID, long amount, long tipAmount)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doCapturePreAuth)}");
             sendObjectMessage(new CapturePreAuthMessage(paymentID, amount, tipAmount));
         }
 
         public override void doPrintText(List<string> textLines, string printRequestId, string printDeviceId)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doPrintText)}");
+
             TextPrintMessage tpm = new TextPrintMessage();
             tpm.externalPrintJobId = printRequestId;
             foreach (string line in textLines)
@@ -834,6 +913,8 @@ namespace com.clover.remotepay.transport
 
         public override void doPrintImageURL(string base64String, string printRequestId, string printDeviceId)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doPrintImageURL)}");
+
             WebRequest request = WebRequest.Create(base64String);
             WebResponse response = request.GetResponse();
             Stream responseStream = response.GetResponseStream();
@@ -865,6 +946,7 @@ namespace com.clover.remotepay.transport
 
         public override void doPrintImage(Bitmap img, string printRequestId, string printDeviceId)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doPrintImage)}");
             if (img != null)
             {
                 ImagePrintMessage ipm = new ImagePrintMessage();
@@ -898,6 +980,8 @@ namespace com.clover.remotepay.transport
 
         public override void doVoidPayment(Payment payment, VoidReason reason, Dictionary<string, string> extras)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doVoidPayment)}");
+
             VoidPaymentMessage vpm = new VoidPaymentMessage
             {
                 payment = payment,
@@ -909,32 +993,40 @@ namespace com.clover.remotepay.transport
 
         public override void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId, Dictionary<string, string> extras)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doVoidPaymentRefund)}");
+
             // Clover connector should report a nice error and block ever getting here, but stop the process if we get here.
             throw new NotSupportedException("VoidPaymentRefund is not supported in this version");
         }
 
         public override void doRefundPayment(string orderId, string paymentId, long? amount, bool? fullRefund, bool? disableCloverPrinting, bool? disableReceiptSelection, Dictionary<string, string> extras)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRefundPayment)}");
+
             sendObjectMessage(new RefundRequestMessage(orderId, paymentId, amount, fullRefund, disableCloverPrinting, disableReceiptSelection, extras));
         }
 
         private void doPong()
         {
+            Log(MessageLevel.Debug + 700, $"DefaultCloverDevice.{nameof(doPong)}");
+
             // Send special Pong message
             RemoteMessage remoteMessage = RemoteMessage.CreatePongMessage(packageName, remoteSourceSDK, remoteApplicationID);
             string msg = JsonUtils.SerializeSdk(remoteMessage);
             transport.sendMessage(msg);
-
-            System.Diagnostics.Debug.WriteLine("Sent Pong: " + msg);
         }
 
         public override void doDiscoveryRequest()
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doDiscoveryRequest)}");
+
             sendObjectMessage(new DiscoveryRequestMessage());
         }
 
         public override void doOrderUpdate(DisplayOrder order, DisplayOperation operation)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doOrderUpdate)}");
+
             OrderUpdateMessage updateMessage = new OrderUpdateMessage(order);
             updateMessage.setOperation(operation);
 
@@ -943,6 +1035,8 @@ namespace com.clover.remotepay.transport
 
         public override void doAcceptPayment(Payment payment)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doAcceptPayment)}");
+
             setPaymentConfirmationIdle(true);
             PaymentConfirmedMessage message = new PaymentConfirmedMessage();
             message.payment = payment;
@@ -952,6 +1046,8 @@ namespace com.clover.remotepay.transport
 
         public override void doRejectPayment(Payment payment, Challenge challenge)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRejectPayment)}");
+
             paymentRejected = true;
             setPaymentConfirmationIdle(true);
             PaymentRejectedMessage message = new PaymentRejectedMessage();
@@ -963,6 +1059,8 @@ namespace com.clover.remotepay.transport
 
         public override void doStartCustomActivity(string action, string payload, bool nonBlocking)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doStartCustomActivity)} {action} {(nonBlocking ? "not blocking" : "blocking")}");
+
             ActivityRequest ar = new ActivityRequest();
             ar.action = action;
             ar.payload = payload;
@@ -973,18 +1071,24 @@ namespace com.clover.remotepay.transport
 
         public override void doSendMessageToActivity(string action, string payload)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doSendMessageToActivity)}");
+
             ActivityMessageToActivity amta = new ActivityMessageToActivity(action, payload);
             sendObjectMessage(amta);
         }
 
         public override void doRetrieveDeviceStatus(bool sendLastMessage)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRetrieveDeviceStatus)} {(sendLastMessage ? "with last message" : "")}");
+
             RetrieveDeviceStatusRequestMessage rdsrm = new RetrieveDeviceStatusRequestMessage(sendLastMessage);
             sendObjectMessage(rdsrm);
         }
 
         public override void doRetrievePrinters(RetrievePrintersRequest request)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRetrievePrinters)}");
+
             RetrievePrintersRequestMessage message = new RetrievePrintersRequestMessage();
             message.category = request.category;
 
@@ -993,6 +1097,8 @@ namespace com.clover.remotepay.transport
 
         public override void doRetrievePayment(string externalPaymentId)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRetrievePayment)}");
+
             PaymentRequestMessage rprm = new PaymentRequestMessage();
             rprm.externalPaymentId = externalPaymentId;
             sendObjectMessage(rprm);
@@ -1000,12 +1106,16 @@ namespace com.clover.remotepay.transport
 
         public override void doRetrievePrintJobStatus(string printRequestId)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRetrievePrintJobStatus)}");
+
             PrintJobStatusRequestMessage msg = new PrintJobStatusRequestMessage(printRequestId);
             sendObjectMessage(msg);
         }
 
         public override void doPrintImage(string base64String)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doPrintImage)}");
+
             ImagePrintMessage ipm = new ImagePrintMessage();
             ipm.png = base64String;
             sendObjectMessage(ipm);
@@ -1017,7 +1127,12 @@ namespace com.clover.remotepay.transport
         /// Loyalty API: Register to receive specific loyalty data types
         /// </summary>
         /// <param name="configs"></param>
-        public override void doRegisterForCustomerProvidedData(List<LoyaltyDataConfig> configs) => sendObjectMessage(new RegisterForCustomerProvidedDataMessage() { configurations = configs });
+        public override void doRegisterForCustomerProvidedData(List<LoyaltyDataConfig> configs)
+        {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doRegisterForCustomerProvidedData)}");
+
+            sendObjectMessage(new RegisterForCustomerProvidedDataMessage() { configurations = configs });
+        }
 
         /// <summary>
         /// Loyalty API: Set customer info 
@@ -1025,6 +1140,8 @@ namespace com.clover.remotepay.transport
         /// <param name="customerInfo"></param>
         public override void doSetCustomerInfo(CustomerInfo customerInfo)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doSetCustomerInfo)}");
+
             CustomerInfoMessage message = new CustomerInfoMessage
             {
                 customer = customerInfo
@@ -1038,6 +1155,8 @@ namespace com.clover.remotepay.transport
         #region Send Messages via Transport
         private string sendObjectMessage(Message message)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(sendObjectMessage)}");
+
             RemoteMessage remoteMessage = RemoteMessage.createMessage(message.method, MessageTypes.COMMAND, message, this.packageName, remoteSourceSDK, remoteApplicationID);
             string msg = JsonUtils.SerializeSdk(remoteMessage);
 
@@ -1049,6 +1168,8 @@ namespace com.clover.remotepay.transport
 
         private string sendCommandMessage(Message payload, Methods method, int version = 1, string attachment = null, string attachmentEncoding = null, byte[] attachmentData = null, string attachmentUrl = null)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(sendCommandMessage)}");
+
             RemoteMessage rm = RemoteMessage.createMessage(method, MessageTypes.COMMAND, payload, this.packageName, remoteSourceSDK, remoteApplicationID);
             rm.attachment = attachment;
             rm.attachmentEncoding = attachmentEncoding;
@@ -1058,11 +1179,14 @@ namespace com.clover.remotepay.transport
 
         private string sendRemoteMessage(RemoteMessage remoteMsg, int version = 1, byte[] attachmentData = null, string attachmentUrl = null, string attachmentEncoding = null)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(sendRemoteMessage)}");
+
             remoteMsg.packageName = this.packageName;
             remoteMsg.remoteApplicationID = remoteApplicationID;
             remoteMsg.remoteSourceSDK = remoteSourceSDK;
             remoteMsg.version = version;
 
+            // TODO: historical code... if remoteMsg.version is 0/1 we do nothing? Never happens, needs cleaning refactor
             if (remoteMsg.version > 1)
             {
                 bool hasAttachmentURI = attachmentUrl != null;
@@ -1082,6 +1206,8 @@ namespace com.clover.remotepay.transport
                 int maxSize = maxMessageSizeInChars <= 0 ? 1000 : maxMessageSizeInChars;
                 bool payloadTooLarge = payloadHelper > maxSize;
                 bool shouldFrag = hasAttachmentURI || payloadTooLarge || hasAttachmentData;
+
+                // TODO: historical code... this function is only called with attachment data, so we always frag, needs cleaning refactor
                 if (shouldFrag)
                 {
 
@@ -1160,6 +1286,8 @@ namespace com.clover.remotepay.transport
 
         private void sendMessageFragment(RemoteMessage remoteMsg, string fPayload, string fAttachment, int fragmentIndex, bool lastFragment)
         {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(sendMessageFragment)}");
+
             RemoteMessage fRemoteMessage = new RemoteMessage();
             fRemoteMessage.id = remoteMsg.id;
             fRemoteMessage.method = remoteMsg.method;

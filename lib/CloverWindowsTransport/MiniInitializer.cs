@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
@@ -29,103 +32,24 @@ namespace com.clover.remotepay.transport
         public static byte ACCESSORY_GET_PROTOCOL = 51;
         public static byte ACCESSORY_SEND_STRING = 52;
         public static byte ACCESSORY_START = 53;
+        public delegate bool Step();
 
         public static bool InitializeDeviceConnectionAccessoryMode(UsbDevice device)
         {
-            bool result = false;
-
-            if (device != null)
+            List<Step> steps = new List<Step>
             {
-                bool shouldRun = true;
-                bool ok = CheckProtocol(device);
+                () => device != null,
+                () => CheckProtocol(device),
+                () => SendControlMessage(device, ACCESSORY_SEND_STRING, ACCESSORY_STRING_MANUFACTURER, "Clover"),
+                () => SendControlMessage(device, ACCESSORY_SEND_STRING, ACCESSORY_STRING_MODEL, "Adapter"),
+                () => SendControlMessage(device, ACCESSORY_SEND_STRING, ACCESSORY_STRING_DESCRIPTION, "Windows POS Device"),
+                () => SendControlMessage(device, ACCESSORY_SEND_STRING, ACCESSORY_STRING_VERSION, "0.01"),
+                () => SendControlMessage(device, ACCESSORY_SEND_STRING, ACCESSORY_STRING_URI, "market://details?id=com.clover.remote.protocol.usb"),
+                () => SendControlMessage(device, ACCESSORY_SEND_STRING, ACCESSORY_STRING_SERIAL, "C415000"),
+                () => SendControlMessage(device, ACCESSORY_START, 0, null),
+            };
 
-                if (shouldRun)
-                {
-                    ok = SendControlMessage(device,
-                                             ACCESSORY_SEND_STRING,
-                                             ACCESSORY_STRING_MANUFACTURER,
-                                             "Clover");
-                    if (!ok)
-                    {
-                        shouldRun = false;
-                    }
-                }
-
-                if (shouldRun)
-                {
-                    ok = SendControlMessage(device,
-                                             ACCESSORY_SEND_STRING,
-                                             ACCESSORY_STRING_MODEL,
-                                             "Adapter");
-                    if (!ok)
-                    {
-                        shouldRun = false;
-                    }
-                }
-
-                if (shouldRun)
-                {
-                    ok = SendControlMessage(device,
-                                             ACCESSORY_SEND_STRING,
-                                             ACCESSORY_STRING_DESCRIPTION,
-                                             "Windows POS Device");
-                    if (!ok)
-                    {
-                        shouldRun = false;
-                    }
-                }
-
-                if (shouldRun)
-                {
-                    ok = SendControlMessage(device,
-                                             ACCESSORY_SEND_STRING,
-                                             ACCESSORY_STRING_VERSION,
-                                             "0.01");
-                    if (!ok)
-                    {
-                        shouldRun = false;
-                    }
-                }
-
-                if (shouldRun)
-                {
-                    ok = SendControlMessage(device,
-                                             ACCESSORY_SEND_STRING,
-                                             ACCESSORY_STRING_URI,
-                                             "market://details?id=com.clover.remote.protocol.usb");
-                    if (!ok)
-                    {
-                        shouldRun = false;
-                    }
-                }
-
-                if (shouldRun)
-                {
-                    ok = SendControlMessage(device,
-                                             ACCESSORY_SEND_STRING,
-                                             ACCESSORY_STRING_SERIAL,
-                                             "C415000");
-                    if (!ok)
-                    {
-                        shouldRun = false;
-                    }
-                }
-
-                if (shouldRun)
-                {
-                    ok = SendControlMessage(device,
-                                             ACCESSORY_START,
-                                             0,
-                                             null);
-                    if (!ok)
-                    {
-                        shouldRun = false;
-                    }
-                }
-
-                result = shouldRun;
-            }
-            return result;
+            return steps.All(step => step());
         }
 
         private static bool SendControlMessage(UsbDevice device, byte requestCode, short index, string message)

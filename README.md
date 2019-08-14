@@ -4,7 +4,7 @@ Clover SDK for Windows POS integration
 
 Version
 -------
-Current version: 4.0.0
+Current version: 4.0.2
 
 Overview
 --------

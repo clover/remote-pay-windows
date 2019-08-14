@@ -1176,11 +1176,15 @@ namespace com.clover.remotepay.transport
         public readonly int version = 1;
         public string method { get; set; }
         public string payload { get; set; }
+        public string remoteApplicationID { get; set; }
+        public string remoteSourceSDK { get; set; }
 
-        public PairingRequestMessage(PairingRequest pr)
+        public PairingRequestMessage(PairingRequest pr, string remoteApplicationID, string remoteSourceSdk)
         {
-            method = "PAIRING_REQUEST";
-            payload = JsonUtils.Serialize(pr);
+            this.method = "PAIRING_REQUEST";
+            this.payload = JsonUtils.Serialize(pr);
+            this.remoteApplicationID = remoteApplicationID;
+            this.remoteSourceSDK = remoteSourceSdk;
         }
 
         public PairingRequestMessage(string method)

@@ -50,16 +50,26 @@ namespace com.clover.remotepay.transport
         }
 
         /// <summary>
+        /// Log a message to the transport log, bacwards compatability, set level to below default (Minimal) but above 0 
+        /// </summary>
+        /// <param name="msg"></param>
+        protected void TransportLog(string msg) => TransportLog(500, msg);
+
+        /// <summary>
         /// Log a message to the transport log
         /// </summary>
         /// <param name="msg"></param>
-        protected void TransportLog(string msg)
+        protected void TransportLog(int level, string msg)
         {
-            if (msg.Length > 5000)
+            if (level <= logLevel)
             {
-                msg = msg.Substring(0, 5000) + "...";
+                // Trim long messages if loglevel is on lower half of 0...9999 scale
+                if (msg.Length > 5000 && logLevel < 5000)
+                {
+                    msg = msg.Substring(0, 5000) + "...";
+                }
+                Trace.WriteLine(msg);
             }
-            Trace.WriteLine(msg);
         }
 
         /// <summary>
