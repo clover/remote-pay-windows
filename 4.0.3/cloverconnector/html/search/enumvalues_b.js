@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['packet_5fexception_940',['PACKET_EXCEPTION',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3a9fcece51cdd7d711c73a64d3531f13e4',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['personal_5fid_5fentry_941',['PERSONAL_ID_ENTRY',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3aeb81c1f08cf7cddeb6ca411e11704b3c',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['personal_5fid_5fentry_5fpas_942',['PERSONAL_ID_ENTRY_PAS',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3aba1f61c95715a4eef40129a527044bda',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['pin_5fbypass_5fconfirm_943',['PIN_BYPASS_CONFIRM',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3aecf2b44d8d7123e7b1de16ce792b6dce',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['pin_5fpad_944',['PIN_PAD',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3abdf78c612a86bc8605e7c92a0060cbd4',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['preauthresponse_945',['PreAuthResponse',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3baac956d237380a121d2d5018252312c0e',1,'Clover::RemotePay']]],
+  ['printing_946',['PRINTING',['../namespacecom_1_1clover_1_1remotepay_1_1sdk.html#a7f035b9087c646b0eebf6280d429f7afa80740a1b51505a3f7697e6c4e532ba81',1,'com::clover::remotepay::sdk']]],
+  ['printjobstatusrequest_947',['PrintJobStatusRequest',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3ba66037fe8f7b11540f211a24d8f94e267',1,'Clover::RemotePay']]],
+  ['printjobstatusresponse_948',['PrintJobStatusResponse',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3bae9a7ddd86e3966d4698c6b345846b83f',1,'Clover::RemotePay']]],
+  ['printmanualrefunddeclinereceipt_949',['PrintManualRefundDeclineReceipt',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3ba2b6b39256f8f4a6b8a118b48053842e4',1,'Clover::RemotePay']]],
+  ['printmanualrefundreceipt_950',['PrintManualRefundReceipt',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3bade7c7ad3ec2f02f3f9b353039b12a6d4',1,'Clover::RemotePay']]],
+  ['printpaymentdeclinereceipt_951',['PrintPaymentDeclineReceipt',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3ba578150026f034744e285b4b595ee0572',1,'Clover::RemotePay']]],
+  ['printpaymentmerchantcopyreceipt_952',['PrintPaymentMerchantCopyReceipt',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3ba3436555d96f266a9cd342e95cf2da7aa',1,'Clover::RemotePay']]],
+  ['printpaymentreceipt_953',['PrintPaymentReceipt',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3ba72497ccea72c11259d93859c8e43b3d5',1,'Clover::RemotePay']]],
+  ['printrefundpaymentreceipt_954',['PrintRefundPaymentReceipt',['../namespace_clover_1_1_remote_pay.html#aefb20429f4ae7f377165bf68c5a2ba3ba654671aae484be4ff3920863b098a83a',1,'Clover::RemotePay']]],
+  ['processing_955',['PROCESSING',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3ae133e9a63fd4950f19c2180be4047ecc',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['processing_5fcredit_956',['PROCESSING_CREDIT',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3ab845f6482a09938e41ce8cccc6ad4317',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['processing_5fgo_5fonline_957',['PROCESSING_GO_ONLINE',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3a7dd3599169a887197ac12a5e16d909df',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['processing_5fswipe_958',['PROCESSING_SWIPE',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3af677627f72bd14c4639d04193ce40e25',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]]
+];

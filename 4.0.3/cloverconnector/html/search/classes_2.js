@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['capturepreauthrequest_540',['CapturePreAuthRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_request.html',1,'com::clover::remotepay::sdk']]],
+  ['capturepreauthresponse_541',['CapturePreAuthResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_capture_pre_auth_response.html',1,'com::clover::remotepay::sdk']]],
+  ['capturepreauthresponseeventargs_542',['CapturePreAuthResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_capture_pre_auth_response_event_args.html',1,'Clover::RemotePay']]],
+  ['closeoutrequest_543',['CloseoutRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_request.html',1,'com::clover::remotepay::sdk']]],
+  ['closeoutresponse_544',['CloseoutResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_closeout_response.html',1,'com::clover::remotepay::sdk']]],
+  ['closeoutresponseeventargs_545',['CloseoutResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_closeout_response_event_args.html',1,'Clover::RemotePay']]],
+  ['cloverconnector_546',['CloverConnector',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector.html',1,'com::clover::remotepay::sdk']]],
+  ['cloverconnectorfactory_547',['CloverConnectorFactory',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_connector_factory.html',1,'com::clover::remotepay::sdk']]],
+  ['cloverdeviceerrorevent_548',['CloverDeviceErrorEvent',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_error_event.html',1,'com::clover::remotepay::sdk']]],
+  ['cloverdeviceevent_549',['CloverDeviceEvent',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html',1,'com::clover::remotepay::sdk']]],
+  ['clovereventargs_550',['CloverEventArgs',['../class_clover_1_1_remote_pay_1_1_clover_event_args.html',1,'Clover::RemotePay']]],
+  ['clovereventconnector_551',['CloverEventConnector',['../class_clover_1_1_remote_pay_1_1_clover_event_connector.html',1,'Clover::RemotePay']]],
+  ['confirmpaymentrequest_552',['ConfirmPaymentRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_confirm_payment_request.html',1,'com::clover::remotepay::sdk']]],
+  ['confirmpaymentrequesteventargs_553',['ConfirmPaymentRequestEventArgs',['../class_clover_1_1_remote_pay_1_1_confirm_payment_request_event_args.html',1,'Clover::RemotePay']]],
+  ['customactivityrequest_554',['CustomActivityRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_request.html',1,'com::clover::remotepay::sdk']]],
+  ['customactivityresponse_555',['CustomActivityResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_custom_activity_response.html',1,'com::clover::remotepay::sdk']]],
+  ['customactivityresponseeventargs_556',['CustomActivityResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_custom_activity_response_event_args.html',1,'Clover::RemotePay']]],
+  ['customerprovideddataevent_557',['CustomerProvidedDataEvent',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_customer_provided_data_event.html',1,'com::clover::remotepay::sdk']]],
+  ['customerprovideddataresponseeventargs_558',['CustomerProvidedDataResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_customer_provided_data_response_event_args.html',1,'Clover::RemotePay']]]
+];
