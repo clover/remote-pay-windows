@@ -75,6 +75,10 @@ public class Authorization {
   /// </summary>
   public Int64 createdTime { get; set; }
 
+  /// <summary>
+  /// The external reference id if associated with the payment
+  /// </summary>
+  public String externalReferenceId { get; set; }
 }
 
 }

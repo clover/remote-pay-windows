@@ -30,6 +30,7 @@ using LibUsbDotNet.WinUsb;
 
 namespace com.clover.remotepay.transport
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Legacy Code")]
     public class USBCloverTransport : CloverTransport
     {
         public static Dictionary<string, List<UsbDeviceFinder>> VendorToFinder = new Dictionary<string, List<UsbDeviceFinder>>();
@@ -111,6 +112,7 @@ namespace com.clover.remotepay.transport
 
             init();
         }
+
 
         /// <summary>
         /// Initialize the USB Clover Transport and start watching USB events
@@ -645,7 +647,7 @@ namespace com.clover.remotepay.transport
                     lock (messageQueue)
                     {
 #if DEBUG
-                            GC.Collect(); // use to test for memory leaks
+                        GC.Collect(); // use to test for memory leaks
 #endif
                         Monitor.Wait(messageQueue, 1000); // wake up every second and check if it is shutdown...
                     }
@@ -1245,6 +1247,14 @@ namespace com.clover.remotepay.transport
             }
         }
 
+        public T Peek()
+        {
+            lock (this)
+            {
+                return queue.Peek();
+            }
+        }
+
         /// <summary>
         /// Can return null if the thread is notified/pulsed or wait timeout exires
         /// </summary>
@@ -1254,6 +1264,20 @@ namespace com.clover.remotepay.transport
             lock (this)
             {
                 return queue.Dequeue();
+            }
+        }
+
+        public bool DequeueIf(T value)
+        {
+            lock (this)
+            {
+                var peek = queue.Peek();
+                if (object.Equals(peek, value))
+                {
+                    queue.Dequeue();
+                    return true;
+                }
+                return false;
             }
         }
 

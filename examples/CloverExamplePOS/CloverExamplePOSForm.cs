@@ -779,9 +779,13 @@ namespace CloverExamplePOS
                     lvi.Tag = ppe;
                     lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
                     lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
 
                     lvi.SubItems[0].Text = ppe.paymentId;
-                    lvi.SubItems[1].Text = (ppe.amount / 100.0).ToString("C2");
+                    lvi.SubItems[1].Text = ppe.externalPaymentId;
+                    lvi.SubItems[2].Text = (ppe.amount / 100.0).ToString("C2");
+                    lvi.SubItems[3].Text = (ppe.tipAmount / 100.0).ToString("C2");
 
                     pendingPaymentListView.Items.Add(lvi);
                 }

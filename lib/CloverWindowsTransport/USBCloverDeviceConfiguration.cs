@@ -26,6 +26,7 @@ namespace com.clover.remotepay.transport
         string posName;
         string serialNumber;
         CloverTransport transport;
+        bool useLegacyUsbTransport = false;
 
         public USBCloverDeviceConfiguration(string remoteApplicationID, bool enableLogging) : this("", remoteApplicationID, enableLogging, 1)
         {
@@ -44,7 +45,7 @@ namespace com.clover.remotepay.transport
         /// <param name="serialNumber">Station ID / serial number for server reporting</param>
         /// <param name="enableLogging"></param>
         /// <param name="pingSleepSeconds"></param>
-        public USBCloverDeviceConfiguration(string deviceId, string remoteApplicationID, string posName, string serialNumber, bool enableLogging = false, int pingSleepSeconds = 1)
+        public USBCloverDeviceConfiguration(string deviceId, string remoteApplicationID, string posName, string serialNumber, bool enableLogging = false, int pingSleepSeconds = 1, bool useLegacyUsbTransport = false)
         {
             this.deviceId = deviceId;
             if (remoteApplicationID == null || remoteApplicationID.Trim().Equals(""))
@@ -57,6 +58,7 @@ namespace com.clover.remotepay.transport
             this.pingSleepSeconds = pingSleepSeconds;
             this.posName = posName;
             this.serialNumber = serialNumber;
+            this.useLegacyUsbTransport = useLegacyUsbTransport;
         }
 
         public string getCloverDeviceTypeName()
@@ -68,7 +70,15 @@ namespace com.clover.remotepay.transport
         {
             if (transport == null)
             {
-                transport = new USBCloverTransport(this.deviceId, pingSleepSeconds);
+
+                if (useLegacyUsbTransport)
+                {
+                    transport = new USBCloverTransport(this.deviceId, pingSleepSeconds);
+                }
+                else
+                {
+                    transport = new usb.UsbCloverTransport();
+                }                
             }
             return transport;
         }

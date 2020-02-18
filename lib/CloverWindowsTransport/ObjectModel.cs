@@ -53,6 +53,7 @@ namespace com.clover.remotepay.transport
         public bool? requiresRemoteConfirmation { get; set; }
         public bool allowPartialAuth { get; set; } = true;
         public TransactionSettings transactionSettings { get; set; }
+        public string externalReferenceId { get; set; }
         public Dictionary<string, string> passThroughValues { get; set; }
 
         private static readonly string BUNDLE_KEY_ACTION = "a";
@@ -274,6 +275,8 @@ namespace com.clover.remotepay.transport
     {
         public string paymentId;
         public long amount;
+        public string externalPaymentId;
+        public long tipAmount;
     }
 
     public class CardData

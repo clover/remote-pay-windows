@@ -25,7 +25,7 @@ namespace com.clover.remotepay.sdk
     /// The CloverConnector API serves as the interface for connecting to a Clover device. 
     /// This document defines the available methods.
     /// </summary>
-    public interface ICloverConnector
+    public interface ICloverConnector : IDisposable
     {
         /// <summary>
         /// Initializes the connection and starts communication with the Clover device. 

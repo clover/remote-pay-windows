@@ -74,6 +74,11 @@
     <Reference Include="Grapevine">
       <HintPath>..\..\packages\Grapevine\lib\Grapevine.dll</HintPath>
     </Reference>
+    <Reference Include="LibUsbDotNet">
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\lib\LibUsbDotNet.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Newtonsoft.Json.120r1\Net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\LibUsbDotNet.2.2.29\lib\net45\LibUsbDotNet.LibUsbDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\Newtonsoft.Json.120r1\Net45\Newtonsoft.Json.dll</HintPath>
