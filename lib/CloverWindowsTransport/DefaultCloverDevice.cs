@@ -142,7 +142,7 @@ namespace com.clover.remotepay.transport
 
             try
             {
-                Log(MessageLevel.Moderate, $"Received message type {rMessage.method}");
+                Log(MessageLevel.Moderate, $"Received message type {rMessage?.method}");
 
                 // Handle and route known messages appropriately
                 if (rMessage != null)

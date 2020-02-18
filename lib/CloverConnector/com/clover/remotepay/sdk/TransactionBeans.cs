@@ -121,6 +121,11 @@ namespace com.clover.remotepay.sdk
 
         public Dictionary<string, string> Extras { get; } = new Dictionary<string, string>();
         public Dictionary<string, string> RegionalExtras { get; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// The external reference id if associated with the payment
+        /// </summary>
+        public string ExternalReferenceId { get; set; }
     }
 
     /// <summary>

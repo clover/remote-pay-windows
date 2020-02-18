@@ -215,6 +215,7 @@ namespace com.clover.remotepay.sdk
 
             PayIntent payIntent = new PayIntent();
             payIntent.externalPaymentId = request.ExternalId;
+            payIntent.externalReferenceId = request.ExternalReferenceId;
             payIntent.transactionType = PayIntent.TransactionType.PAYMENT;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = request.TipAmount ?? 0;
@@ -445,6 +446,7 @@ namespace com.clover.remotepay.sdk
 
             PayIntent payIntent = new PayIntent();
             payIntent.externalPaymentId = request.ExternalId;
+            payIntent.externalReferenceId = request.ExternalReferenceId;
             payIntent.transactionType = request.Type;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.amount = request.Amount;
@@ -547,6 +549,7 @@ namespace com.clover.remotepay.sdk
 
             PayIntent payIntent = new PayIntent();
             payIntent.externalPaymentId = request.ExternalId;
+            payIntent.externalReferenceId = request.ExternalReferenceId;
             payIntent.transactionType = PayIntent.TransactionType.AUTH;
             TransactionSettings ts = getBaseTransactionRequestOverrides(request);
             payIntent.transactionSettings = ts;
@@ -887,6 +890,7 @@ namespace com.clover.remotepay.sdk
             payIntent.amount = -Math.Abs(request.Amount);
             payIntent.transactionType = PayIntent.TransactionType.CREDIT;
             payIntent.externalPaymentId = request.ExternalId;
+            payIntent.externalReferenceId = request.ExternalReferenceId;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.requiresRemoteConfirmation = true;
 

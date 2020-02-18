@@ -187,7 +187,9 @@ namespace CloverExamplePOS
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.pendingPaymentListView = new System.Windows.Forms.ListView();
             this.paymentIdHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.paymentExternalIdHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.paymentAmountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.paymentTipAmountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.refreshPendingPayments = new System.Windows.Forms.Button();
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.label15 = new System.Windows.Forms.Label();
@@ -411,6 +413,7 @@ namespace CloverExamplePOS
             this.OrderItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OrderItems.FullRowSelect = true;
             this.OrderItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.OrderItems.HideSelection = false;
             this.OrderItems.Location = new System.Drawing.Point(3, 33);
             this.OrderItems.MultiSelect = false;
             this.OrderItems.Name = "OrderItems";
@@ -1034,18 +1037,18 @@ namespace CloverExamplePOS
             this.CopyExternalIdMenuItem,
             this.ViewPaymentMenuItem});
             this.OrderPaymentsViewContextMenu.Name = "orderContextMenu";
-            this.OrderPaymentsViewContextMenu.Size = new System.Drawing.Size(161, 48);
+            this.OrderPaymentsViewContextMenu.Size = new System.Drawing.Size(162, 48);
             // 
             // CopyExternalIdMenuItem
             // 
             this.CopyExternalIdMenuItem.Name = "CopyExternalIdMenuItem";
-            this.CopyExternalIdMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.CopyExternalIdMenuItem.Size = new System.Drawing.Size(161, 22);
             this.CopyExternalIdMenuItem.Text = "Copy External ID";
             // 
             // ViewPaymentMenuItem
             // 
             this.ViewPaymentMenuItem.Name = "ViewPaymentMenuItem";
-            this.ViewPaymentMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.ViewPaymentMenuItem.Size = new System.Drawing.Size(161, 22);
             this.ViewPaymentMenuItem.Text = "View Payment...";
             // 
             // tableLayoutPanel4
@@ -1204,6 +1207,7 @@ namespace CloverExamplePOS
             this.TransactionsListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TransactionsListView.FullRowSelect = true;
             this.TransactionsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.TransactionsListView.HideSelection = false;
             this.TransactionsListView.Location = new System.Drawing.Point(3, 68);
             this.TransactionsListView.Name = "TransactionsListView";
             this.TransactionsListView.Size = new System.Drawing.Size(1270, 639);
@@ -1331,6 +1335,7 @@ namespace CloverExamplePOS
             this.Token});
             this.cardsListView.FullRowSelect = true;
             this.cardsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.cardsListView.HideSelection = false;
             this.cardsListView.Location = new System.Drawing.Point(9, 4);
             this.cardsListView.Name = "cardsListView";
             this.cardsListView.Size = new System.Drawing.Size(1269, 722);
@@ -1417,6 +1422,7 @@ namespace CloverExamplePOS
             this.PreAuthListView.ContextMenuStrip = this.PreAuthListViewContextMenu;
             this.PreAuthListView.FullRowSelect = true;
             this.PreAuthListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.PreAuthListView.HideSelection = false;
             this.PreAuthListView.Location = new System.Drawing.Point(6, 6);
             this.PreAuthListView.MultiSelect = false;
             this.PreAuthListView.Name = "PreAuthListView";
@@ -1919,19 +1925,19 @@ namespace CloverExamplePOS
             // 
             // pendingPaymentListView
             // 
-            this.pendingPaymentListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pendingPaymentListView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pendingPaymentListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.paymentIdHeader,
-            this.paymentAmountHeader});
+            this.paymentExternalIdHeader,
+            this.paymentAmountHeader,
+            this.paymentTipAmountHeader});
             this.pendingPaymentListView.FullRowSelect = true;
             this.pendingPaymentListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.pendingPaymentListView.HideSelection = false;
             this.pendingPaymentListView.Location = new System.Drawing.Point(7, 6);
             this.pendingPaymentListView.MultiSelect = false;
             this.pendingPaymentListView.Name = "pendingPaymentListView";
-            this.pendingPaymentListView.Size = new System.Drawing.Size(1842, 717);
+            this.pendingPaymentListView.Size = new System.Drawing.Size(1269, 717);
             this.pendingPaymentListView.TabIndex = 40;
             this.pendingPaymentListView.UseCompatibleStateImageBehavior = false;
             this.pendingPaymentListView.View = System.Windows.Forms.View.Details;
@@ -1941,18 +1947,29 @@ namespace CloverExamplePOS
             this.paymentIdHeader.Text = "Payment ID";
             this.paymentIdHeader.Width = 300;
             // 
+            // paymentExternalIdHeader
+            // 
+            this.paymentExternalIdHeader.Text = "External ID";
+            this.paymentExternalIdHeader.Width = 300;
+            // 
             // paymentAmountHeader
             // 
             this.paymentAmountHeader.Text = "Amount";
             this.paymentAmountHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.paymentAmountHeader.Width = 150;
             // 
+            // paymentTipAmountHeader
+            // 
+            this.paymentTipAmountHeader.Text = "Tip Amount";
+            this.paymentTipAmountHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.paymentTipAmountHeader.Width = 150;
+            // 
             // refreshPendingPayments
             // 
             this.refreshPendingPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.refreshPendingPayments.BackColor = System.Drawing.Color.White;
             this.refreshPendingPayments.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.refreshPendingPayments.Location = new System.Drawing.Point(1773, 729);
+            this.refreshPendingPayments.Location = new System.Drawing.Point(1201, 729);
             this.refreshPendingPayments.Name = "refreshPendingPayments";
             this.refreshPendingPayments.Size = new System.Drawing.Size(75, 49);
             this.refreshPendingPayments.TabIndex = 39;
@@ -2148,6 +2165,7 @@ namespace CloverExamplePOS
             // 
             // ratingsListView
             // 
+            this.ratingsListView.HideSelection = false;
             this.ratingsListView.Location = new System.Drawing.Point(0, 0);
             this.ratingsListView.Name = "ratingsListView";
             this.ratingsListView.Size = new System.Drawing.Size(121, 97);
@@ -2499,5 +2517,7 @@ namespace CloverExamplePOS
         private ToolStripMenuItem PreAuthListViewContextMenu_CopyExternalID;
         private TableLayoutPanel tableLayoutPanel1;
         private Button RefundReceiptOptButton;
+        private ColumnHeader paymentExternalIdHeader;
+        private ColumnHeader paymentTipAmountHeader;
     }
 }

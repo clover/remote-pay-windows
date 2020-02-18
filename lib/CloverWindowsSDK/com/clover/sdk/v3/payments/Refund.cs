@@ -79,6 +79,10 @@ public class Refund {
 
   public com.clover.sdk.v3.payments.ServiceChargeAmount serviceChargeAmount { get; set; }
 
+  /// <summary>
+  /// The external reference id if associated with the refund
+  /// </summary>
+  public string externalReferenceId { get; set; }
 }
 
 }
