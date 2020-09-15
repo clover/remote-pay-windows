@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['lineitemsaddedoperation_1493',['LineItemsAddedOperation',['../classcom_1_1clover_1_1remote_1_1order_1_1operation_1_1_line_items_added_operation.html#a9c5c992ab4220b18f4a0beda23cf43b4',1,'com.clover.remote.order.operation.LineItemsAddedOperation.LineItemsAddedOperation()'],['../classcom_1_1clover_1_1remote_1_1order_1_1operation_1_1_line_items_added_operation.html#ab109a9949d9ba4460769a032cfe61240',1,'com.clover.remote.order.operation.LineItemsAddedOperation.LineItemsAddedOperation(string orderId)']]],
+  ['lineitemsdeletedoperation_1494',['LineItemsDeletedOperation',['../classcom_1_1clover_1_1remote_1_1order_1_1operation_1_1_line_items_deleted_operation.html#a0d25697ca76a84497704a664f4e684c6',1,'com.clover.remote.order.operation.LineItemsDeletedOperation.LineItemsDeletedOperation()'],['../classcom_1_1clover_1_1remote_1_1order_1_1operation_1_1_line_items_deleted_operation.html#a1c3c3eaf41eb729b208e616768013e66',1,'com.clover.remote.order.operation.LineItemsDeletedOperation.LineItemsDeletedOperation(string orderId)']]],
+  ['listwrapper_1495',['ListWrapper',['../classcom_1_1clover_1_1remote_1_1order_1_1_list_wrapper.html#aae2fadf9a7c952b449fd3637a2adca7e',1,'com::clover::remote::order::ListWrapper']]]
+];

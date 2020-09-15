@@ -1,0 +1,10 @@
+var searchData=
+[
+  ['bakery_1767',['BAKERY',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2a3721f063add26dabbf2a30ead89c75aa',1,'com::clover::sdk::v3::base_']]],
+  ['balance_5flock_1768',['BALANCE_LOCK',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a4207f1c1388f6f392bd998855cc88936ad677de7e2e1299b2c05c1d074b47d9d0',1,'com.clover.sdk.v3.payments.BALANCE_LOCK()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a3df1de2debbb23f9584db68737e035e7ad677de7e2e1299b2c05c1d074b47d9d0',1,'com.clover.sdk.v3.payments.BALANCE_LOCK()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ad4411d3ee4c0997584ff0df20764ba06ad677de7e2e1299b2c05c1d074b47d9d0',1,'com.clover.sdk.v3.payments.BALANCE_LOCK()']]],
+  ['bar_1769',['BAR',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2a3d75eec709b70a350e143492192a1736',1,'com::clover::sdk::v3::base_']]],
+  ['batchclose_1770',['BATCHCLOSE',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a4207f1c1388f6f392bd998855cc88936ae40eea763de152eb82d47b5b547a454b',1,'com.clover.sdk.v3.payments.BATCHCLOSE()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a3df1de2debbb23f9584db68737e035e7ae40eea763de152eb82d47b5b547a454b',1,'com.clover.sdk.v3.payments.BATCHCLOSE()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ad4411d3ee4c0997584ff0df20764ba06ae40eea763de152eb82d47b5b547a454b',1,'com.clover.sdk.v3.payments.BATCHCLOSE()']]],
+  ['boutique_1771',['BOUTIQUE',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2a109265e98211ac564f6f248f76f6aca3',1,'com::clover::sdk::v3::base_']]],
+  ['business_1772',['BUSINESS',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1order.html#adda3ca304970ac1775eb37a3d8f3b829a124f71327e0b6686ec9acf8336784424',1,'com::clover::sdk::v3::order']]],
+  ['busy_1773',['BUSY',['../namespacecom_1_1clover_1_1remotepay_1_1sdk.html#a9d5838a91e2711306ad561d104fed034a802706a9238e2928077f97736854bad4',1,'com::clover::remotepay::sdk']]]
+];

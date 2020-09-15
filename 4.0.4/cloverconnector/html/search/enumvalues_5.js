@@ -1,0 +1,15 @@
+var searchData=
+[
+  ['fail_1842',['FAIL',['../namespacecom_1_1clover_1_1remotepay_1_1sdk.html#ad35c0938efdc4d31c4a040db886ad0f3ac2759effffc94bb9acc71d69fe3e8a1f',1,'com.clover.remotepay.sdk.FAIL()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#ab493172d8abd5947fc0308d7cc311b2dac2759effffc94bb9acc71d69fe3e8a1f',1,'com.clover.sdk.v3.payments.FAIL()']]],
+  ['failed_1843',['FAILED',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3ab9e14d9b2886bcff408b85aefa780419',1,'com.clover.remotepay.sdk.CloverDeviceEvent.FAILED()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1order.html#acb5aac0c1f6aeeb5b636223a69d2dec2ab9e14d9b2886bcff408b85aefa780419',1,'com.clover.sdk.v3.order.FAILED()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#afd1102ee7e347adf5b7343518d146859ab9e14d9b2886bcff408b85aefa780419',1,'com.clover.sdk.v3.payments.FAILED()'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a340cc82820b2cb686ec93885b8ebf612ab9e14d9b2886bcff408b85aefa780419',1,'com.clover.sdk.v3.payments.FAILED()']]],
+  ['failure_1844',['FAILURE',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html#a4890e376edb21551ffa5f45a28c6772aa36fc6065a3e970bc3e6b2e59da52bf2a',1,'com::clover::sdk::v3::payments']]],
+  ['fatal_1845',['FATAL',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3a19da7170bea36556dde582519795f3fc',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['fiscal_5finvoice_5fnumber_1846',['FISCAL_INVOICE_NUMBER',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_clover_device_event.html#a1c3d109490aaab4a0b8f40ceb990abe3a1bdd4e688818e07c0e9c2dd2b0055608',1,'com::clover::remotepay::sdk::CloverDeviceEvent']]],
+  ['fitness_1847',['FITNESS',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2a02bcd50b4a0f4d9bfa4822e23371656c',1,'com::clover::sdk::v3::base_']]],
+  ['fixed_1848',['FIXED',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1inventory.html#a29563083c5ea6797e6ce5b3f5a1d2f12ac6e6dc18b53b4c2681394b9d8aefcec7',1,'com::clover::sdk::v3::inventory']]],
+  ['florist_1849',['FLORIST',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2a7d5af62c91387d2c9315ff7c960b58e5',1,'com::clover::sdk::v3::base_']]],
+  ['food_5ftruck_1850',['FOOD_TRUCK',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2a933a50861c881deb3ce717dfd17dcfa4',1,'com::clover::sdk::v3::base_']]],
+  ['frozen_5fyogurt_1851',['FROZEN_YOGURT',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2afdccb68ba1343d09d164ca60d6ef439a',1,'com::clover::sdk::v3::base_']]],
+  ['full_1852',['FULL',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1order.html#a0087c2efbeb2cfefd1bc3b78a3f7dbd8aba7de5bc6888294e5884b024a4c894f1',1,'com::clover::sdk::v3::order']]],
+  ['full_5fservice_5frestaurant_1853',['FULL_SERVICE_RESTAURANT',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html#a650568214ff50530b67b37a45a6b04e2a67af4397d6101e799970b09eb5c0caea',1,'com::clover::sdk::v3::base_']]]
+];
