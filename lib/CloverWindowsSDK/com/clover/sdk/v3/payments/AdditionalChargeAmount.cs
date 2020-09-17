@@ -23,6 +23,7 @@ namespace com.clover.sdk.v3.payments
     {
         public string id { get; set; }
         public long amount { get; set; }
+        public long rate { get; set; }
         public AdditionalChargeType type { get; set; }
     }
 }

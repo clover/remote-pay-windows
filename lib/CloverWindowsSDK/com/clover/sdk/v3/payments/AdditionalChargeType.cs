@@ -21,6 +21,9 @@ namespace com.clover.sdk.v3.payments
 {
     public enum AdditionalChargeType
     {
-        INTERAC
+        INTERAC,
+        CREDIT_SURCHARGE,
+        CONVENIENCE_FEE,
+        INTERAC_V2,
     }
 }
