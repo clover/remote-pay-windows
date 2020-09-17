@@ -1,5 +1,3 @@
-﻿# This repo has moved to https://github.corp.clover.com/clover/remote-pay-windows
-
 ![Clover logo](https://www.clover.com/assets/images/public-site/press/clover_primary_gray_rgb.png)
 Clover SDK for Windows POS integration
 ======================================
