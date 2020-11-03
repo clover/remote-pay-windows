@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['base_5f_1421',['base_',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1base__.html',1,'com::clover::sdk::v3']]],
+  ['client_1422',['client',['../namespacecom_1_1clover_1_1remotepay_1_1sdk_1_1service_1_1client.html',1,'com::clover::remotepay::sdk::service']]],
+  ['clover_1423',['Clover',['../namespace_clover.html',1,'Clover'],['../namespacecom_1_1clover.html',1,'com.clover']]],
+  ['com_1424',['com',['../namespacecom.html',1,'']]],
+  ['customers_1425',['customers',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1customers.html',1,'com::clover::sdk::v3']]],
+  ['device_1426',['device',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1device.html',1,'com::clover::sdk::v3']]],
+  ['hours_1427',['hours',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1hours.html',1,'com::clover::sdk::v3']]],
+  ['inventory_1428',['inventory',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1inventory.html',1,'com::clover::sdk::v3']]],
+  ['merchant_1429',['merchant',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1merchant.html',1,'com::clover::sdk::v3']]],
+  ['operation_1430',['operation',['../namespacecom_1_1clover_1_1remote_1_1order_1_1operation.html',1,'com::clover::remote::order']]],
+  ['order_1431',['order',['../namespacecom_1_1clover_1_1remote_1_1order.html',1,'com.clover.remote.order'],['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1order.html',1,'com.clover.sdk.v3.order']]],
+  ['payments_1432',['payments',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1payments.html',1,'com::clover::sdk::v3']]],
+  ['printer_1433',['printer',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1printer.html',1,'com::clover::sdk::v3']]],
+  ['properties_1434',['Properties',['../namespacecom_1_1clover_1_1sdk_1_1v3_1_1_properties.html',1,'com::clover::sdk::v3']]],
+  ['remote_1435',['remote',['../namespacecom_1_1clover_1_1remote.html',1,'com::clover']]],
+  ['remotepay_1436',['RemotePay',['../namespace_clover_1_1_remote_pay.html',1,'Clover.RemotePay'],['../namespacecom_1_1clover_1_1remotepay.html',1,'com.clover.remotepay']]],
+  ['sdk_1437',['sdk',['../namespacecom_1_1clover_1_1remotepay_1_1sdk.html',1,'com.clover.remotepay.sdk'],['../namespacecom_1_1clover_1_1sdk.html',1,'com.clover.sdk']]],
+  ['service_1438',['service',['../namespacecom_1_1clover_1_1remotepay_1_1sdk_1_1service.html',1,'com::clover::remotepay::sdk']]],
+  ['v3_1439',['v3',['../namespacecom_1_1clover_1_1sdk_1_1v3.html',1,'com::clover::sdk']]]
+];

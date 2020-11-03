@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['tag_1388',['Tag',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tag.html',1,'com::clover::sdk::v3::inventory']]],
+  ['tagitem_1389',['TagItem',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tag_item.html',1,'com::clover::sdk::v3::inventory']]],
+  ['tagprinter_1390',['TagPrinter',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tag_printer.html',1,'com::clover::sdk::v3::inventory']]],
+  ['taxableamountrate_1391',['TaxableAmountRate',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_taxable_amount_rate.html',1,'com::clover::sdk::v3::payments']]],
+  ['taxrate_1392',['TaxRate',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tax_rate.html',1,'com::clover::sdk::v3::inventory']]],
+  ['taxrateitem_1393',['TaxRateItem',['../classcom_1_1clover_1_1sdk_1_1v3_1_1inventory_1_1_tax_rate_item.html',1,'com::clover::sdk::v3::inventory']]],
+  ['tender_1394',['Tender',['../classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_tender.html',1,'com::clover::sdk::v3::base_']]],
+  ['tipadded_1395',['TipAdded',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_added.html',1,'com::clover::remotepay::sdk']]],
+  ['tipaddedeventargs_1396',['TipAddedEventArgs',['../class_clover_1_1_remote_pay_1_1_tip_added_event_args.html',1,'Clover::RemotePay']]],
+  ['tipadjustauthrequest_1397',['TipAdjustAuthRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_adjust_auth_request.html',1,'com::clover::remotepay::sdk']]],
+  ['tipadjustauthresponse_1398',['TipAdjustAuthResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_tip_adjust_auth_response.html',1,'com::clover::remotepay::sdk']]],
+  ['tipadjustauthresponseeventargs_1399',['TipAdjustAuthResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_tip_adjust_auth_response_event_args.html',1,'Clover::RemotePay']]],
+  ['tipsuggestion_1400',['TipSuggestion',['../classcom_1_1clover_1_1sdk_1_1v3_1_1merchant_1_1_tip_suggestion.html',1,'com::clover::sdk::v3::merchant']]],
+  ['transaction_1401',['Transaction',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_transaction.html',1,'com::clover::sdk::v3::payments']]],
+  ['transactioninfo_1402',['TransactionInfo',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_transaction_info.html',1,'com::clover::sdk::v3::payments']]],
+  ['transactionrequest_1403',['TransactionRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_transaction_request.html',1,'com::clover::remotepay::sdk']]],
+  ['transactionsettings_1404',['TransactionSettings',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_transaction_settings.html',1,'com::clover::sdk::v3::payments']]],
+  ['transactionstartresponse_1405',['TransactionStartResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_transaction_start_response.html',1,'com::clover::remotepay::sdk']]],
+  ['typeinfo_1406',['TypeInfo',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_type_info.html',1,'com::clover::remotepay::sdk']]]
+];

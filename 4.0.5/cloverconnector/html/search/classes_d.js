@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['readcarddatarequest_1355',['ReadCardDataRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_read_card_data_request.html',1,'com::clover::remotepay::sdk']]],
+  ['readcarddataresponse_1356',['ReadCardDataResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_read_card_data_response.html',1,'com::clover::remotepay::sdk']]],
+  ['readcarddataresponseeventargs_1357',['ReadCardDataResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_read_card_data_response_event_args.html',1,'Clover::RemotePay']]],
+  ['reference_1358',['Reference',['../classcom_1_1clover_1_1sdk_1_1v3_1_1base___1_1_reference.html',1,'com.clover.sdk.v3.base_.Reference'],['../classcom_1_1clover_1_1sdk_1_1v3_1_1hours_1_1_reference.html',1,'com.clover.sdk.v3.hours.Reference']]],
+  ['refund_1359',['Refund',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_refund.html',1,'com::clover::sdk::v3::payments']]],
+  ['refundpaymentrequest_1360',['RefundPaymentRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_refund_payment_request.html',1,'com::clover::remotepay::sdk']]],
+  ['refundpaymentresponse_1361',['RefundPaymentResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_refund_payment_response.html',1,'com::clover::remotepay::sdk']]],
+  ['refundpaymentresponseeventargs_1362',['RefundPaymentResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_refund_payment_response_event_args.html',1,'Clover::RemotePay']]],
+  ['regionalextras_1363',['RegionalExtras',['../classcom_1_1clover_1_1sdk_1_1v3_1_1payments_1_1_regional_extras.html',1,'com::clover::sdk::v3::payments']]],
+  ['registerforcustomerprovideddatarequest_1364',['RegisterForCustomerProvidedDataRequest',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_register_for_customer_provided_data_request.html',1,'com::clover::remotepay::sdk']]],
+  ['rejectpayment_1365',['RejectPayment',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_reject_payment.html',1,'com::clover::remotepay::sdk']]],
+  ['rejectpaymentobject_1366',['RejectPaymentObject',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1service_1_1client_1_1_reject_payment_object.html',1,'com::clover::remotepay::sdk::service::client']]],
+  ['resetdeviceresponse_1367',['ResetDeviceResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_reset_device_response.html',1,'com::clover::remotepay::sdk']]],
+  ['resetdeviceresponseeventargs_1368',['ResetDeviceResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_reset_device_response_event_args.html',1,'Clover::RemotePay']]],
+  ['retrievedevicestatusresponse_1369',['RetrieveDeviceStatusResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_device_status_response.html',1,'com::clover::remotepay::sdk']]],
+  ['retrievedevicestatusresponseeventargs_1370',['RetrieveDeviceStatusResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_retrieve_device_status_response_event_args.html',1,'Clover::RemotePay']]],
+  ['retrievepaymentresponse_1371',['RetrievePaymentResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_payment_response.html',1,'com::clover::remotepay::sdk']]],
+  ['retrievepaymentresponseeventargs_1372',['RetrievePaymentResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_retrieve_payment_response_event_args.html',1,'Clover::RemotePay']]],
+  ['retrievependingpaymentsresponse_1373',['RetrievePendingPaymentsResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_pending_payments_response.html',1,'com::clover::remotepay::sdk']]],
+  ['retrievependingpaymentsresponseeventargs_1374',['RetrievePendingPaymentsResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_retrieve_pending_payments_response_event_args.html',1,'Clover::RemotePay']]],
+  ['retrieveprintersresponse_1375',['RetrievePrintersResponse',['../classcom_1_1clover_1_1remotepay_1_1sdk_1_1_retrieve_printers_response.html',1,'com::clover::remotepay::sdk']]],
+  ['retrieveprintersresponseeventargs_1376',['RetrievePrintersResponseEventArgs',['../class_clover_1_1_remote_pay_1_1_retrieve_printers_response_event_args.html',1,'Clover::RemotePay']]]
+];
