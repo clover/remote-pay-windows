@@ -142,6 +142,7 @@ namespace CloverExamplePOS
             this.Token = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.VaultCardBtn = new System.Windows.Forms.Button();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.IncrementPreAuthButton = new System.Windows.Forms.Button();
             this.ManualCaptureButton = new System.Windows.Forms.Button();
             this.PreAuthListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1385,6 +1386,7 @@ namespace CloverExamplePOS
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.IncrementPreAuthButton);
             this.tabPage7.Controls.Add(this.ManualCaptureButton);
             this.tabPage7.Controls.Add(this.PreAuthListView);
             this.tabPage7.Controls.Add(this.PreAuthButton);
@@ -1395,6 +1397,19 @@ namespace CloverExamplePOS
             this.tabPage7.TabIndex = 5;
             this.tabPage7.Text = "Pre-Auths";
             this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // IncrementPreAuthButton
+            // 
+            this.IncrementPreAuthButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.IncrementPreAuthButton.BackColor = System.Drawing.Color.White;
+            this.IncrementPreAuthButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.IncrementPreAuthButton.Location = new System.Drawing.Point(1040, 728);
+            this.IncrementPreAuthButton.Name = "IncrementPreAuthButton";
+            this.IncrementPreAuthButton.Size = new System.Drawing.Size(75, 49);
+            this.IncrementPreAuthButton.TabIndex = 40;
+            this.IncrementPreAuthButton.Text = "Increment";
+            this.IncrementPreAuthButton.UseVisualStyleBackColor = false;
+            this.IncrementPreAuthButton.Click += new System.EventHandler(this.IncrementPreAuthButton_Click);
             // 
             // ManualCaptureButton
             // 
@@ -2519,5 +2534,6 @@ namespace CloverExamplePOS
         private Button RefundReceiptOptButton;
         private ColumnHeader paymentExternalIdHeader;
         private ColumnHeader paymentTipAmountHeader;
+        private Button IncrementPreAuthButton;
     }
 }

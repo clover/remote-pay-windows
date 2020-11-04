@@ -232,6 +232,7 @@ namespace com.clover.remotepay.transport
         public abstract void doVaultCard(int? CardEntryMethods);
         public abstract void doReadCardData(PayIntent payIntent);
         public abstract void doCapturePreAuth(string paymentID, long amount, long tipAmount);
+        public abstract void doIncrementPreAuth(string paymentId, long amount);
         public abstract void doLogMessages(LogLevelEnum logLevel, Dictionary<string, string> messages);
         public abstract void doAcceptPayment(Payment payment);
         public abstract void doRejectPayment(Payment payment, Challenge challenge);
@@ -404,6 +405,11 @@ namespace com.clover.remotepay.transport
         /// <param name="status"></param>
         /// <param name="reason"></param>
         void onCapturePreAuthResponse(string paymentId, long amount, long? tipAmount, ResultStatus status, string reason);
+
+        /// <summary>
+        /// Called when an increment preauth response is received.
+        /// </summary>
+        void onIncrementPreAuthResponse(IncrementPreAuthResponseMessage message);
 
         /// <summary>
         /// Called when a device is ready to receive messages.

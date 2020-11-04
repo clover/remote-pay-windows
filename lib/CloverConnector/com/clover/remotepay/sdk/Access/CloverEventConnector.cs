@@ -121,6 +121,12 @@ namespace Clover.RemotePay
         }
 
         /// <inheritdoc />
+        public void IncrementPreAuth(IncrementPreAuthRequest request)
+        {
+            connector.IncrementPreAuth(request);
+        }
+
+        /// <inheritdoc />
         public void TipAdjustAuth(TipAdjustAuthRequest request)
         {
             connector.TipAdjustAuth(request);
@@ -343,6 +349,10 @@ namespace Clover.RemotePay
         /// </summary>
         public event CapturePreAuthResponseHandler CapturePreAuthResponse;
         /// <summary>
+        /// Increment PreAuth call has completed with these details (success or failure)
+        /// </summary>
+        public event IncrementPreAuthResponseHandler IncrementPreAuthResponse;
+        /// <summary>
         /// The customer has signed for the payment, the POS needs to confirm the signature so the payment can continue (eg Cashier compares signature to card as appropriate)
         /// </summary>
         public event VerifySignatureRequestHandler VerifySignatureRequest;
@@ -555,6 +565,18 @@ namespace Clover.RemotePay
                 response = response
             };
             CapturePreAuthResponse?.Invoke(this, eventArgs);
+            Message?.Invoke(this, eventArgs);
+        }
+
+        public void OnIncrementPreAuthResponse(IncrementPreAuthResponse response)
+        {
+            IncrementPreAuthResponseEventArgs eventArgs = new IncrementPreAuthResponseEventArgs()
+            {
+                cloverMessage = CloverMessage.IncrementPreAuthResponse,
+                cloverConnector = this,
+                response = response,
+            };
+            IncrementPreAuthResponse?.Invoke(this, eventArgs);
             Message?.Invoke(this, eventArgs);
         }
 
@@ -952,6 +974,7 @@ namespace Clover.RemotePay
         public delegate void AuthResponseHandler(object sender, AuthResponseEventArgs e);
         public delegate void TipAdjustAuthResponseHandler(object sender, TipAdjustAuthResponseEventArgs e);
         public delegate void CapturePreAuthResponseHandler(object sender, CapturePreAuthResponseEventArgs e);
+        public delegate void IncrementPreAuthResponseHandler(object sender, IncrementPreAuthResponseEventArgs e);
         public delegate void VerifySignatureRequestHandler(object sender, VerifySignatureRequestEventArgs e);
         public delegate void ConfirmPaymentRequestHandler(object sender, ConfirmPaymentRequestEventArgs e);
         public delegate void CloseoutResponseHandler(object sender, CloseoutResponseEventArgs e);
@@ -1077,6 +1100,16 @@ namespace Clover.RemotePay
     public class CapturePreAuthResponseEventArgs : CloverEventArgs
     {
         public CapturePreAuthResponse response;
+
+        public override string ToString()
+        {
+            return $"{cloverMessage}\n{response.Success} {response.Result} {response.Reason}\n{response.Message}";
+        }
+    }
+
+    public class IncrementPreAuthResponseEventArgs : CloverEventArgs
+    {
+        public IncrementPreAuthResponse response;
 
         public override string ToString()
         {
@@ -1415,45 +1448,46 @@ namespace Clover.RemotePay
     /// </summary>
     public enum CloverMessage
     {
-        DeviceActivityStart,
-        DeviceActivityEnd,
-        DeviceError,
-        PreAuthResponse,
         AuthResponse,
-        TipAdjustAuthResponse,
         CapturePreAuthResponse,
-        VerifySignatureRequest,
-        ConfirmPaymentRequest,
         CloseoutResponse,
-        SaleResponse,
-        ManualRefundResponse,
-        RefundPaymentResponse,
-        TipAdded,
-        VoidPaymentResponse,
-        VoidPaymentRefundResponse,
+        ConfirmPaymentRequest,
+        CustomActivityResponse,
+        CustomerProvidedData,
+        DeviceActivityEnd,
+        DeviceActivityStart,
         DeviceConnected,
-        DeviceReady,
         DeviceDisconnected,
-        VaultCardResponse,
-        RetrievePendingPaymentsResponse,
-        ReadCardDataResponse,
-        PrintManualRefundReceipt,
+        DeviceError,
+        DeviceReady,
+        DisplayReceiptOptionsResponse,
+        IncrementPreAuthResponse,
+        InvalidStateTransition,
+        ManualRefundResponse,
+        MessageFromActivity,
+        PreAuthResponse,
+        PrintJobStatusRequest,
+        PrintJobStatusResponse,
         PrintManualRefundDeclineReceipt,
-        PrintPaymentReceipt,
+        PrintManualRefundReceipt,
         PrintPaymentDeclineReceipt,
         PrintPaymentMerchantCopyReceipt,
+        PrintPaymentReceipt,
         PrintRefundPaymentReceipt,
-        PrintJobStatusResponse,
-        RetrievePrintersResponse,
-        CustomActivityResponse,
-        RetrieveDeviceStatusResponse,
-        MessageFromActivity,
+        ReadCardDataResponse,
+        RefundPaymentResponse,
         ResetDeviceResponse,
+        RetrieveDeviceStatusResponse,
         RetrievePaymentResponse,
-        PrintJobStatusRequest,
-        DisplayReceiptOptionsResponse,
-        CustomerProvidedData,
-        InvalidStateTransition
+        RetrievePendingPaymentsResponse,
+        RetrievePrintersResponse,
+        SaleResponse,
+        TipAdded,
+        TipAdjustAuthResponse,
+        VaultCardResponse,
+        VerifySignatureRequest,
+        VoidPaymentRefundResponse,
+        VoidPaymentResponse,
     }
     #endregion
 }

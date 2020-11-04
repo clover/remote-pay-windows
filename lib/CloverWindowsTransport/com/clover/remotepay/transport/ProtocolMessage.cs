@@ -413,6 +413,43 @@ namespace com.clover.remotepay.transport
         }
     }
 
+    public class IncrementPreAuthMessage : Message
+    {
+        /// <summary>
+        /// The amount by which to increment the pre-auth.
+        /// </summary>
+        public long amount { get; set; }
+        /// <summary>
+        /// paymentId of the pre-auth to be incremented.
+        /// </summary>
+        public string paymentId { get; set; }
+
+        public IncrementPreAuthMessage() : base(Methods.INCREMENT_PREAUTH_REQUEST)
+        {
+        }
+    }
+
+    public class IncrementPreAuthResponseMessage : Message
+    {
+        /// <summary>
+        /// The status of the request.
+        /// </summary>
+        public ResultStatus status { get; set; }
+        /// <summary>
+        /// Detail message from the server.
+        /// </summary>
+        public string reason { get; set; }
+        /// <summary>
+        ///  The resulting Authorization
+        /// </summary>
+        public Authorization authorization { get; set; }
+
+
+        public IncrementPreAuthResponseMessage() : base(Methods.INCREMENT_PREAUTH_RESPONSE)
+        {
+        }
+    }
+
     /// <summary>
     /// RefundResponseMessage is used when there is a refund for a payment. It is not used when doing a manual refund
     /// </summary>
@@ -491,7 +528,7 @@ namespace com.clover.remotepay.transport
         public Payment payment { get; set; }
         public Dictionary<string, string> passThroughValues { get; set; }
 
-        public VoidPaymentMessage() : base(Methods.VOID_PAYMENT, 2)
+        public VoidPaymentMessage() : base(Methods.VOID_PAYMENT, 3)
         {
         }
     }

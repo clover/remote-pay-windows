@@ -1145,6 +1145,34 @@ namespace CloverExamplePOS
             }
         }
 
+        public void OnIncrementPreAuthResponse(IncrementPreAuthResponse response)
+        {
+            if (response.Success)
+            {
+                foreach (POSPayment preAuth in data.Store.PreAuths)
+                {
+                    if (preAuth.PaymentID.Equals(response.Authorization.payment.id))
+                    {
+                        uiThread.Send(delegate (object state)
+                        {
+                            preAuth.Amount = response.Authorization.payment.amount;
+                            data.Store.RemovePreAuth(preAuth);
+                            data.Store.AddPreAuth(preAuth);
+                            data.Store.CurrentOrder.AddOrderPayment(preAuth);
+                            AlertForm.Show(this, "Payment Incremented", "Pre-Authorization Payment was successfully incremented");
+                        }, null);
+                        break;
+                    }
+                }
+            } else
+            {
+                uiThread.Send(delegate (object state)
+                {
+                    AlertForm.Show(this, "Increment PreAuth failure", $"{response.Reason}\n\n{response.Message}");
+                }, null);
+            }
+        }
+
         public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
             if (response.Success)
@@ -2642,6 +2670,19 @@ namespace CloverExamplePOS
                 request.TipAmount = dialog.TipAmount;
 
                 data.CloverConnector.CapturePreAuth(request);
+            }
+        }
+
+        private void IncrementPreAuthButton_Click(object sender, EventArgs e)
+        {
+            IncrementPreAuthDialog dialog = new IncrementPreAuthDialog(this);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                IncrementPreAuthRequest request = new IncrementPreAuthRequest();
+                request.PaymentID = dialog.PaymentID;
+                request.Amount = dialog.Amount;
+
+                data.CloverConnector.IncrementPreAuth(request);
             }
         }
 

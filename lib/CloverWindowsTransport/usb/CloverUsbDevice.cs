@@ -257,11 +257,12 @@ namespace com.clover.remotepay.transport.usb
                 using (var stream = new MemoryStream(e.Buffer, 0, e.Count))
                 using (var reader = new BinaryReader(stream))
                 {
-                    short size = IPAddress.NetworkToHostOrder(reader.ReadInt16());
+                    int size = buffer.New ? IPAddress.NetworkToHostOrder(reader.ReadInt16()) : e.Count;
                     if (size < 0)
                     {
                         throw new IOException($"Invalid size: ${size}");
                     }
+
 
                     if (buffer.New)
                     {

@@ -84,6 +84,13 @@ namespace com.clover.remotepay.sdk
         void OnCapturePreAuthResponse(CapturePreAuthResponse response);
 
         /// <summary>
+        /// Called in response to an IncrementPreAuth() request.
+        /// Contains the authorization if successful.
+        /// </summary>
+        /// <param name="response">The IncrementPreAuthResponse to the transaction</param>
+        void OnIncrementPreAuthResponse(IncrementPreAuthResponse response);
+
+        /// <summary>
         /// Called when the Clover device requests verification for a user's on-screen 
         /// signature. The Payment and Signature will be passed in.
         /// </summary>
@@ -366,6 +373,10 @@ namespace com.clover.remotepay.sdk
         }
 
         public virtual void OnCapturePreAuthResponse(CapturePreAuthResponse response)
+        {
+        }
+
+        public virtual void OnIncrementPreAuthResponse(IncrementPreAuthResponse response)
         {
         }
 

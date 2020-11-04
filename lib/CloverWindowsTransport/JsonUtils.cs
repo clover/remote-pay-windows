@@ -49,6 +49,7 @@ namespace com.clover.remotepay.transport
                 new BatchConverter(),
                 new VaultedCardConverter(),
                 new PrinterConverter(),
+                new AuthorizationConverter(),
                 new StringEnumConverter(),
                 new DataProviderConfigConverter(),
 
@@ -252,6 +253,35 @@ namespace com.clover.remotepay.transport
 
             string json = reader.Value.ToString();
             com.clover.sdk.v3.printer.Printer result = JsonUtils.Deserialize<com.clover.sdk.v3.printer.Printer>(json, new JsonConverter[] { });
+            return result;
+        }
+
+        public override bool CanWrite => false;
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            // writer.WriteValue(JsonUtils.Serialize(value));
+        }
+    }
+
+    /// <summary>
+    /// Custom Json parsing for Authorization
+    /// </summary>
+    public class AuthorizationConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(com.clover.sdk.v3.payments.Authorization));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.Value == null)
+            {
+                return null;
+            }
+
+            string json = reader.Value.ToString();
+            com.clover.sdk.v3.payments.Authorization result = JsonUtils.Deserialize<com.clover.sdk.v3.payments.Authorization>(json, new JsonConverter[] { });
             return result;
         }
 

@@ -189,6 +189,12 @@
     <Compile Include="RatingsListForm.Designer.cs">
       <DependentUpon>RatingsListForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UIDialogs\IncrementPreAuthDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIDialogs\IncrementPreAuthDialog.Designer.cs">
+      <DependentUpon>IncrementPreAuthDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UIDialogs\PropertiesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RatingsListForm.resx">
       <DependentUpon>RatingsListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIDialogs\IncrementPreAuthDialog.resx">
+      <DependentUpon>IncrementPreAuthDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UIDialogs\PropertiesDialog.resx">
       <DependentUpon>PropertiesDialog.cs</DependentUpon>

@@ -132,7 +132,14 @@ namespace com.clover.remotepay.transport
                 rMessage = JsonUtils.DeserializeSdk<RemoteMessage>(message);
                 remoteMessageVersion = Math.Max(remoteMessageVersion, rMessage.version);
             }
-            catch (Newtonsoft.Json.JsonSerializationException)
+            catch (Newtonsoft.Json.JsonReaderException ex)
+            {
+                // if a remote message can't be parsed, ignore this unknown message; log as appropriate
+                // - and verify backwards compatiblility story since old WinSDK releases will crash
+
+                // TODO: Log message and exception in new logging
+            }
+            catch (Newtonsoft.Json.JsonSerializationException ex)
             {
                 // if a remote message can't be parsed, ignore this unknown message; log as appropriate
                 // - and verify backwards compatiblility story since old WinSDK releases will crash
@@ -227,6 +234,10 @@ namespace com.clover.remotepay.transport
                         case Methods.CAPTURE_PREAUTH_RESPONSE:
                             CapturePreAuthResponseMessage carMsg = JsonUtils.DeserializeSdk<CapturePreAuthResponseMessage>(rMessage.payload);
                             notifyObserversCapturePreAuthResponse(carMsg);
+                            break;
+                        case Methods.INCREMENT_PREAUTH_RESPONSE:
+                            IncrementPreAuthResponseMessage iparm = JsonUtils.DeserializeSdk<IncrementPreAuthResponseMessage>(rMessage.payload);
+                            notifyObserversIncrementPreAuthResponse(iparm);
                             break;
                         case Methods.CLOSEOUT_RESPONSE:
                             CloseoutResponseMessage crMsg = JsonUtils.DeserializeSdk<CloseoutResponseMessage>(rMessage.payload);
@@ -438,6 +449,15 @@ namespace com.clover.remotepay.transport
             NotifyObservers(observer =>
             {
                 observer.onCapturePreAuthResponse(carm.paymentId, carm.amount, carm.tipAmount, carm.status, carm.reason);
+            });
+        }
+
+        public void notifyObserversIncrementPreAuthResponse(IncrementPreAuthResponseMessage iparm)
+        {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(notifyObserversIncrementPreAuthResponse)}");
+            NotifyObservers(observer =>
+            {
+                observer.onIncrementPreAuthResponse(iparm);
             });
         }
 
@@ -895,6 +915,12 @@ namespace com.clover.remotepay.transport
         {
             Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doCapturePreAuth)}");
             sendObjectMessage(new CapturePreAuthMessage(paymentID, amount, tipAmount));
+        }
+
+        public override void doIncrementPreAuth(string paymentId, long amount)
+        {
+            Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doIncrementPreAuth)}");
+            sendObjectMessage(new IncrementPreAuthMessage { amount = amount, paymentId = paymentId });
         }
 
         public override void doPrintText(List<string> textLines, string printRequestId, string printDeviceId)

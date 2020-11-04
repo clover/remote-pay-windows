@@ -449,6 +449,33 @@ namespace com.clover.remotepay.sdk
     }
 
     /// <summary>
+    /// Increments a previously made pre auth
+    /// </summary>
+    public class IncrementPreAuthRequest : BaseRequest
+    {
+        /// <summary>
+        /// The amount by which to increment the pre-auth.
+        /// </summary>
+        public long Amount { get; set; }
+
+        /// <summary>
+        /// The preauth to be incremented. This id should be pulled from the Payment.paymentId field in the PreAuthResponse.
+        /// </summary>
+        public string PaymentID { get; set; }
+    }
+
+    /// <summary>
+    /// The result of an attempt to increment a pre auth
+    /// </summary>
+    public class IncrementPreAuthResponse : BaseResponse
+    {
+        /// <summary>
+        /// The resulting Authorization
+        /// </summary>
+        public Authorization Authorization { get; set; }
+    }
+
+    /// <summary>
     /// Object passed in to an OnVaultCardResponse
     /// </summary>
     public class VaultCardResponse : BaseResponse

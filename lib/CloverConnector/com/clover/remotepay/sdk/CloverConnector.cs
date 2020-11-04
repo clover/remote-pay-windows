@@ -623,6 +623,49 @@ namespace com.clover.remotepay.sdk
         }
 
         /// <summary>
+        /// Increment a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public void IncrementPreAuth(IncrementPreAuthRequest request)
+        {
+            if (deviceObserver == null || merchantInfo == null)
+            {
+                throw new Exception("InitializeConnection() has not been called on Clover Connector");
+            }
+            if (Device == null || !IsReady)
+            {
+                deviceObserver.onIncrementPreAuthResponse(ResponseCode.ERROR,
+                                                        "Device Connection Error",
+                                                        "In IncrementPreAuth : IncrementPreAuthRequest - The Clover device is not connected.");
+                return;
+            }
+            if (!merchantInfo.supportsPreAuths)
+            {
+                deviceObserver.onIncrementPreAuthResponse(ResponseCode.UNSUPPORTED,
+                                                        "Merchant Configuration Validation Error",
+                                                        "In IncrementPreAuth : IncrementPreAuthRequest - Capture PreAuth is not supported by the merchant configured gateway. Original Request = " + request);
+                return;
+            }
+            if (request == null)
+            {
+                deviceObserver.onIncrementPreAuthResponse(ResponseCode.FAIL,
+                                                        "Request Validation Error",
+                                                        "In IncrementPreAuth : IncrementPreAuthRequest - The request that was passed in for processing is empty.");
+                return;
+            }
+            if (request.Amount <= 0)
+            {
+                deviceObserver.onIncrementPreAuthResponse(ResponseCode.FAIL,
+                                                        "Request Validation Error",
+                                                        "In IncrementPreAuth : IncrementPreAuthRequest - The Request amount cannot be zero. Original Request = " + request);
+                return;
+            }
+
+            Device.doIncrementPreAuth(request.PaymentID, request.Amount);
+        }
+
+        /// <summary>
         /// Adjust the tip for a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
         /// </summary>
         /// <param name="request"></param>
@@ -2271,6 +2314,44 @@ namespace com.clover.remotepay.sdk
                     };
 
                     listener.OnCapturePreAuthResponse(car);
+                });
+            }
+
+            public void onIncrementPreAuthResponse(IncrementPreAuthResponseMessage message)
+            {
+                cloverConnector.ShowOnDevice(showWelcomeScreen: true);
+
+                NotifyListeners(listener =>
+                {
+                    IncrementPreAuthResponse ipar = new IncrementPreAuthResponse
+                    {
+                        Success = message.status == ResultStatus.SUCCESS,
+                        Result = message.status == ResultStatus.SUCCESS ? ResponseCode.SUCCESS : ResponseCode.FAIL,
+                        Reason = message.reason,
+                        Authorization = message.authorization,
+                    };
+
+                    listener.OnIncrementPreAuthResponse(ipar);
+                });
+            }
+
+            //For Error/Fail scenarios where a payment was never processed
+            public void onIncrementPreAuthResponse(ResponseCode responseCode, String reason = null, String message = null)
+            {
+                cloverConnector.ShowOnDevice(showWelcomeScreen: true);
+
+                NotifyListeners(listener =>
+                {
+                    IncrementPreAuthResponse ipar = new IncrementPreAuthResponse
+                    {
+                        Success = responseCode == ResponseCode.SUCCESS,
+                        Result = responseCode,
+                        Reason = reason ?? responseCode.ToString(),
+                        Message = message ?? "No extended information provided.",
+                        Authorization = null,
+                    };
+
+                    listener.OnIncrementPreAuthResponse(ipar);
                 });
             }
 

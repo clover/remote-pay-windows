@@ -115,6 +115,13 @@ namespace com.clover.remotepay.sdk
         void CapturePreAuth(CapturePreAuthRequest request);
 
         /// <summary>
+        /// Increments the amount of a previous PreAuth Payment. Note: Should only be
+        /// called if the request's PaymentID is from a PreAuthResponse.
+        /// </summary>
+        /// <param name="request">The IncrementPreAuthRequest details.</param>
+        void IncrementPreAuth(IncrementPreAuthRequest request);
+
+        /// <summary>
         /// Adjusts the tip for a previous Auth transaction. This call can be made until 
         /// the Auth Payment has been finalized by a Closeout. Note: Should only be called 
         /// if the request's PaymentID is from an AuthResponse.
