@@ -1,0 +1,25 @@
+var classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device =
+[
+    [ "buildNumber", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#ad81654d7d129ff8b96a42099adbbbf41", null ],
+    [ "buildType", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#adf0001b9ed73c91f3cea9a78602a09bb", null ],
+    [ "cpuId", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a2646eab991e7d3c82c2af497fccca723", null ],
+    [ "deviceCertificate", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a7005370d4bd31497c46e6ffd4336d398", null ],
+    [ "deviceTypeName", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a0dd371a939c4d4ed3affb8531c8b9535", null ],
+    [ "id", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a7761d81a6f1d36b03d8470a891f5b770", null ],
+    [ "imei", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a4931f8c1872efdca3d12fb00007807a3", null ],
+    [ "imsi", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#ab66c0e97226b4f424c2729b3f916f9a6", null ],
+    [ "model", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#aff3bc368e4273c75480116f67b176da2", null ],
+    [ "name", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a139990e0d2f93f390e3f4954fb3bd4d9", null ],
+    [ "offlinePayments", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a9bc644ecdbfe4c848bb14851db10e40c", null ],
+    [ "offlinePaymentsAll", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#af0d9ebf7d16f3ed6f7d521df645e6187", null ],
+    [ "offlinePaymentsLimit", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a1741931c3816701b59b51a8ecc8e4c72", null ],
+    [ "offlinePaymentsPromptThreshold", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a3d8153a393ea36f5efc33a92fa85a809", null ],
+    [ "orderPrefix", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a68f555035f958e442ca7d3481b48e5c0", null ],
+    [ "pedCertificate", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a0d66773959f15b7df0a41a05a2edf70e", null ],
+    [ "pinDisabled", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#ae3711f23f198ec3fce50cf8a39350ff1", null ],
+    [ "secureId", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#aab34d023b0c9b75f452df83e71d9482a", null ],
+    [ "secureReports", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#ac5846019832c808815c4be724fdb6eb9", null ],
+    [ "serial", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a598dd63abe45a84f9055146e4640467c", null ],
+    [ "simIccid", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a240e710013c15c7b0457db77446a2594", null ],
+    [ "terminalPrefix", "classcom_1_1clover_1_1sdk_1_1v3_1_1device_1_1_device.html#a1bdda2f082c1908ea74c3b120e3e961f", null ]
+];
