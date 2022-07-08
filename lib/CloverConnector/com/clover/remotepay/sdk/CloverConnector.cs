@@ -227,13 +227,17 @@ namespace com.clover.remotepay.sdk
             {
                 payIntent.passThroughValues = request.Extras;
             }
-
-            TransactionSettings ts = getTransactionRequestOverrides(request);
-            ts.tippableAmount = request.TippableAmount;
             if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
             {
                 payIntent.isCardNotPresent = true;
             }
+            if (request.PresentQrcOnly.HasValue)
+            {
+                payIntent.isPresentQrcOnly = request.PresentQrcOnly;
+            }
+
+            TransactionSettings ts = getTransactionRequestOverrides(request);
+            ts.tippableAmount = request.TippableAmount;
             if (request.DisableCashback.HasValue && request.DisableCashback.Value)
             {
                 ts.disableCashBack = true;
@@ -452,14 +456,19 @@ namespace com.clover.remotepay.sdk
             payIntent.amount = request.Amount;
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
             payIntent.taxAmount = request.TaxAmount;
+            payIntent.requiresRemoteConfirmation = true;
+
             if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
             {
                 payIntent.isCardNotPresent = true;
             }
-
             if (request.Extras != null && request.Extras.Count > 0)
             {
                 payIntent.passThroughValues = request.Extras;
+            }
+            if (request.PresentQrcOnly.HasValue)
+            {
+                payIntent.isPresentQrcOnly = request.PresentQrcOnly;
             }
 
             TransactionSettings ts = getTransactionRequestOverrides(request);
@@ -479,9 +488,9 @@ namespace com.clover.remotepay.sdk
             {
                 ts.forceOfflinePayment = true;
             }
+
             ts.tipMode = com.clover.sdk.v3.payments.TipMode.ON_PAPER;
             payIntent.transactionSettings = ts;
-            payIntent.requiresRemoteConfirmation = true;
             Device.doTxStart(payIntent, null, TxType.AUTH);
         }
 
@@ -551,24 +560,28 @@ namespace com.clover.remotepay.sdk
             payIntent.externalPaymentId = request.ExternalId;
             payIntent.externalReferenceId = request.ExternalReferenceId;
             payIntent.transactionType = PayIntent.TransactionType.AUTH;
-            TransactionSettings ts = getBaseTransactionRequestOverrides(request);
-            payIntent.transactionSettings = ts;
-            ts.tipMode = clover.sdk.v3.payments.TipMode.NO_TIP;
             payIntent.vaultedCard = request.VaultedCard;
             payIntent.amount = request.Amount;
             payIntent.tipAmount = null; // have to force this to null until PayIntent honors transactionType of AUTH
+            payIntent.requiresRemoteConfirmation = true;
 
             if (request.CardNotPresent.HasValue && request.CardNotPresent.Value)
             {
                 payIntent.isCardNotPresent = true;
             }
-
             if (request.Extras != null && request.Extras.Count > 0)
             {
                 payIntent.passThroughValues = new Dictionary<string, string>(request.Extras);
             }
+            if (request.PresentQrcOnly.HasValue)
+            {
+                payIntent.isPresentQrcOnly = request.PresentQrcOnly;
+            }
 
-            payIntent.requiresRemoteConfirmation = true;
+            TransactionSettings ts = getBaseTransactionRequestOverrides(request);
+            payIntent.transactionSettings = ts;
+            ts.tipMode = clover.sdk.v3.payments.TipMode.NO_TIP;
+
             Device.doTxStart(payIntent, null, TxType.PREAUTH);
         }
 
@@ -770,9 +783,9 @@ namespace com.clover.remotepay.sdk
             {
                 id = request.PaymentId,
                 order = new Reference(request.OrderId),
-                employee = new Reference(request.EmployeeId)
+                employee = new Reference(request.EmployeeId),
             };
-            Device.doVoidPayment(payment, reason, request.Extras);
+            Device.doVoidPayment(payment, reason, request.Extras, request.DisablePrinting, request.DisableReceiptSelection);
         }
 
         public void VoidPaymentRefund(VoidPaymentRefundRequest request)
@@ -940,6 +953,10 @@ namespace com.clover.remotepay.sdk
             if (request.Extras != null && request.Extras.Count > 0)
             {
                 payIntent.passThroughValues = request.Extras;
+            }
+            if (request.PresentQrcOnly.HasValue)
+            {
+                payIntent.isPresentQrcOnly = request.PresentQrcOnly;
             }
 
             TransactionSettings ts = getBaseTransactionRequestOverrides(request);

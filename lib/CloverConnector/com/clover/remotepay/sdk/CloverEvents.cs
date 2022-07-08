@@ -61,6 +61,7 @@ namespace com.clover.remotepay.sdk
             SIGNATURE_REJECT,
             ADD_SIGNATURE_CANCEL_CONFIRM,
             STARTING_CUSTOM_ACTIVITY,
+            START_QR_CODE_MODE,
             CUSTOM_ACTIVITY,
             ADD_TIP,
             RECEIPT_OPTIONS,

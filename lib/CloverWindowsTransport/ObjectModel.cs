@@ -55,6 +55,7 @@ namespace com.clover.remotepay.transport
         public TransactionSettings transactionSettings { get; set; }
         public string externalReferenceId { get; set; }
         public Dictionary<string, string> passThroughValues { get; set; }
+        public bool? isPresentQrcOnly { get; set; }
 
         private static readonly string BUNDLE_KEY_ACTION = "a";
     }

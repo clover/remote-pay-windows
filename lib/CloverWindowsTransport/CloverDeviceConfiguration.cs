@@ -30,6 +30,11 @@ namespace com.clover.remotepay.transport
         int getMaxMessageCharacters();
     }
 
+    public interface IRemoteApplicationID
+    {
+        void setRemoteApplicationID(string remoteApplicationID);
+    }
+
     public static class CloverDeviceConfigurationExtensionMethods
     {
         internal static string getRemoteSdk(this CloverDeviceConfiguration config, CloverTransport transport)

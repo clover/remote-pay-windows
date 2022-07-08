@@ -126,6 +126,11 @@ namespace com.clover.remotepay.sdk
         /// The external reference id if associated with the payment
         /// </summary>
         public string ExternalReferenceId { get; set; }
+
+        /// <summary>
+        /// Present only the QR Code for Payment
+        /// </summary>
+        public bool? PresentQrcOnly { get; set; }
     }
 
     /// <summary>
@@ -574,6 +579,14 @@ namespace com.clover.remotepay.sdk
 
         public string EmployeeId { get; set; }
         public string OrderId { get; set; }
+        /// <summary>
+        /// If true, then do not print using the clover printer.  Return print information.
+        /// </summary>
+        public bool? DisablePrinting { get; set; }
+        /// <summary>
+        /// Do not show the receipt options screen
+        /// </summary>
+        public bool? DisableReceiptSelection { get; set; }
 
         public Dictionary<string, string> Extras { get; } = new Dictionary<string, string>();
 

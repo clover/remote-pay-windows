@@ -304,6 +304,7 @@ namespace com.clover.remotepay.transport.usb
             {
                 var usb = e.UsbRegistry;
                 var identity = UsbIdentity.AllIdentities.FirstOrDefault(id => id.Vid == usb.Vid && id.Pid == usb.Pid);
+                var interfaceId = usb.GetInterfaceId();
                 if (identity != null && usb.GetInterfaceId() == 0)
                 {
                     if (Device is null)

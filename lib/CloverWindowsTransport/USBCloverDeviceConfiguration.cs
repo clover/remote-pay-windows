@@ -16,7 +16,7 @@ using System;
 
 namespace com.clover.remotepay.transport
 {
-    public class USBCloverDeviceConfiguration : CloverDeviceConfiguration
+    public class USBCloverDeviceConfiguration : CloverDeviceConfiguration, IRemoteApplicationID
     {
         string deviceId;
         bool enableLogging = false;
@@ -106,6 +106,11 @@ namespace com.clover.remotepay.transport
         public string getRemoteApplicationID()
         {
             return remoteApplicationID;
+        }
+
+        public void setRemoteApplicationID(string remoteApplicationID)
+        {
+            this.remoteApplicationID = remoteApplicationID;
         }
 
         public int getMaxMessageCharacters()

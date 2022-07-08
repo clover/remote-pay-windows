@@ -25,11 +25,11 @@ namespace CloverExamplePOS
     {
         CloverDeviceConfiguration selectedConfig;
 
-        const String APPLICATION_ID = "com.clover.CloverExamplePOS:3.0.2";
+        private const string DEFAULT_APPLICATION_ID = "com.clover.CloverExamplePOS:3.0.2";
 
-        CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", APPLICATION_ID, false, 1);
+        CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", DEFAULT_APPLICATION_ID, false, 1);
 
-        WebSocketCloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("wss://192.168.1.14:12345/remote_pay", APPLICATION_ID, false, 1, "Clover Windows Example POS", "POS-3", Properties.Settings.Default.pairingAuthToken, null, null, null); // set the 3 delegates in the ctor
+        WebSocketCloverDeviceConfiguration WebSocketConfig = new WebSocketCloverDeviceConfiguration("wss://192.168.1.14:12345/remote_pay", DEFAULT_APPLICATION_ID, false, 1, "Clover Windows Example POS", "POS-3", Properties.Settings.Default.pairingAuthToken, null, null, null); // set the 3 delegates in the ctor
 
         PairingDeviceConfiguration.OnPairingCodeHandler pairingCodeHandler = null;
         PairingDeviceConfiguration.OnPairingSuccessHandler pairingSuccessHandler = null;
@@ -53,6 +53,8 @@ namespace CloverExamplePOS
             WebSocketConfig.pairingAuthToken = Properties.Settings.Default.pairingAuthToken;
 
             InitializeComponent();
+
+            txtAppId.Text = DEFAULT_APPLICATION_ID;
         }
 
         private void StartupDialog_Load(object sender, EventArgs e)
@@ -85,6 +87,10 @@ namespace CloverExamplePOS
         private void okButton_Click(object sender, EventArgs e)
         {
             selectedConfig = ((CloverDeviceConfiguration)ConnectionType.SelectedValue);
+            if (selectedConfig is IRemoteApplicationID cfg)
+            {
+                cfg.setRemoteApplicationID(txtAppId.Text);
+            }
             if (selectedConfig is WebSocketCloverDeviceConfiguration)
             {
                 InitWebSocket();
@@ -117,7 +123,7 @@ namespace CloverExamplePOS
                     Properties.Settings.Default.lastWSEndpoint = endpoint;
                     Properties.Settings.Default.Save();
 
-                    selectedConfig = new WebSocketCloverDeviceConfiguration(endpoint, APPLICATION_ID, "Clover Windows Example POS","AISLE_3", Properties.Settings.Default.pairingAuthToken);
+                    selectedConfig = new WebSocketCloverDeviceConfiguration(endpoint, DEFAULT_APPLICATION_ID, "Clover Windows Example POS","AISLE_3", Properties.Settings.Default.pairingAuthToken);
                     ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingCode = pairingCodeHandler;
                     ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingSuccess = pairingSuccessHandler;
                     ((WebSocketCloverDeviceConfiguration)selectedConfig).OnPairingState = pairingStateHandler;
@@ -132,5 +138,15 @@ namespace CloverExamplePOS
             this.Close();
         }
 
+        private void Logo_DoubleClick(object sender, EventArgs e)
+        {
+            lblAppId.Visible = !lblAppId.Visible;
+            txtAppId.Visible = !txtAppId.Visible;
+            if (txtAppId.Visible)
+            {
+                txtAppId.Focus();
+                txtAppId.SelectAll();
+            }
+        }
     }
 }

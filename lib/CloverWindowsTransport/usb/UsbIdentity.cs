@@ -13,6 +13,13 @@ namespace com.clover.remotepay.transport.usb
             new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x2000),
             new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x4000),
             new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x4003),
+            new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x4030),
+            new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x4033),
+            new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x3050),
+            new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x3053),
+            new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x4050),
+            new UsbIdentity(UsbIdentityType.Merchant, 0x28F3, 0x4053),
+
 
             new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x3002),
             new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x3004),
@@ -21,6 +28,12 @@ namespace com.clover.remotepay.transport.usb
             new UsbIdentity(UsbIdentityType.Customer, 0x18D1, 0x2D01),
             new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x4002),
             new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x4004),
+            new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x4032),
+            new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x4034),
+            new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x3052),
+            new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x3054),
+            new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x4052),
+            new UsbIdentity(UsbIdentityType.Customer, 0x28F3, 0x4054),
         };
     }
 

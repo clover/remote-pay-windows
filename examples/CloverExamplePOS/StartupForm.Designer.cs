@@ -30,8 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StartupForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtAppId = new System.Windows.Forms.TextBox();
+            this.lblAppId = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.Logo = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ConnectionType = new System.Windows.Forms.ComboBox();
@@ -42,8 +44,10 @@
             // 
             this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.txtAppId);
+            this.panel1.Controls.Add(this.lblAppId);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.Logo);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.ConnectionType);
@@ -51,6 +55,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(473, 264);
             this.panel1.TabIndex = 4;
+            //
+            // txtAppId
+            // 
+            this.txtAppId.Location = new System.Drawing.Point(206, 145);
+            this.txtAppId.Name = "txtAppId";
+            this.txtAppId.Size = new System.Drawing.Size(236, 20);
+            this.txtAppId.TabIndex = 11;
+            this.txtAppId.Visible = false;
+            // 
+            // lblAppId
+            // 
+            this.lblAppId.AutoSize = true;
+            this.lblAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAppId.Location = new System.Drawing.Point(38, 146);
+            this.lblAppId.Name = "lblAppId";
+            this.lblAppId.Size = new System.Drawing.Size(129, 15);
+            this.lblAppId.TabIndex = 10;
+            this.lblAppId.Text = "Remote Application ID";
+            this.lblAppId.Visible = false;
+            // 
             // 
             // label3
             // 
@@ -63,14 +87,15 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "Example POS Application for Clover Windows SDK";
             // 
-            // label2
+            // Logo
             // 
-            this.label2.ForeColor = System.Drawing.SystemColors.Control;
-            this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-            this.label2.Location = new System.Drawing.Point(31, 4);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(411, 125);
-            this.label2.TabIndex = 8;
+            this.Logo.ForeColor = System.Drawing.SystemColors.Control;
+            this.Logo.Image = ((System.Drawing.Image)(resources.GetObject("Logo.Image")));
+            this.Logo.Location = new System.Drawing.Point(31, 4);
+            this.Logo.Name = "Logo";
+            this.Logo.Size = new System.Drawing.Size(411, 125);
+            this.Logo.TabIndex = 8;
+            this.Logo.DoubleClick += new System.EventHandler(this.Logo_DoubleClick);
             // 
             // button1
             // 
@@ -124,6 +149,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox ConnectionType;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label Logo;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtAppId;
+        private System.Windows.Forms.Label lblAppId;
     }
 }

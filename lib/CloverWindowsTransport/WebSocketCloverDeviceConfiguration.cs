@@ -20,7 +20,7 @@ namespace com.clover.remotepay.transport
     /// Default configuration for communicating with the Secure Network Pay Display app on 
     /// the Clover device via WebSockets.
     /// </summary>
-    public class WebSocketCloverDeviceConfiguration : PairingDeviceConfiguration, CloverDeviceConfiguration
+    public class WebSocketCloverDeviceConfiguration : PairingDeviceConfiguration, CloverDeviceConfiguration, IRemoteApplicationID
     {
         public string endpoint;
         public string remoteApplicationID;
@@ -118,6 +118,11 @@ namespace com.clover.remotepay.transport
         public string getRemoteApplicationID()
         {
             return remoteApplicationID;
+        }
+
+        public void setRemoteApplicationID(string remoteApplicationID)
+        {
+            this.remoteApplicationID = remoteApplicationID;
         }
 
         public int getMaxMessageCharacters()

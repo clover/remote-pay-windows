@@ -210,7 +210,7 @@ namespace com.clover.remotepay.transport
         public abstract void doDiscoveryRequest();
         public abstract void doTxStart(PayIntent payIntent, Order order, TxType requestInfo);
         public abstract void doKeyPress(KeyPress keyPress);
-        public abstract void doVoidPayment(Payment payment, VoidReason reason, Dictionary<string, string> extras);
+        public abstract void doVoidPayment(Payment payment, VoidReason reason, Dictionary<string, string> extras, bool? disablePrinting = null, bool? disableReceiptSelection = null);
         public abstract void doVoidPaymentRefund(string orderId, string refundId, bool disablePrinting, bool disableReceiptSelection, string employeeId, Dictionary<string, string> extras);
         public abstract void doOrderUpdate(DisplayOrder order, DisplayOperation operation);
         public abstract void doVerifySignature(Payment payment, bool verified);

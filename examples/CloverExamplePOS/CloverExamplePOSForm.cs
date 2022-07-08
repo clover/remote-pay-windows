@@ -170,6 +170,13 @@ namespace CloverExamplePOS
                 }, null);
             };
             SaleButton.ContextMenu.MenuItems.Add(menuItem);
+            menuItem = new MenuItem("Sale with QR Code Only");
+            menuItem.Enabled = true;
+            menuItem.Click += delegate
+            {
+                Pay(null, true);
+            };
+            SaleButton.ContextMenu.MenuItems.Add(menuItem);
             SaleButton.Click.Add(PayButton_Click);
 
             AuthButton.ContextMenu = new ContextMenu();
@@ -449,7 +456,7 @@ namespace CloverExamplePOS
             Pay(null);
         }
         //////////////// Sale methods /////////////
-        private void Pay(POSCard card)
+        private void Pay(POSCard card, bool? isPresentQrcOnly = null)
         {
             StoreItems.BringToFront();
             StoreDiscounts.BringToFront();
@@ -459,6 +466,7 @@ namespace CloverExamplePOS
             newOrderBtn.Enabled = false;
 
             SaleRequest request = new SaleRequest();
+            request.PresentQrcOnly = isPresentQrcOnly;
             request.ExternalId = ExternalIDUtil.GenerateRandomString(32);
             request.Amount = data.Store.CurrentOrder.Total;
 

@@ -1004,7 +1004,7 @@ namespace com.clover.remotepay.transport
             }
         }
 
-        public override void doVoidPayment(Payment payment, VoidReason reason, Dictionary<string, string> extras)
+        public override void doVoidPayment(Payment payment, VoidReason reason, Dictionary<string, string> extras, bool? disablePrinting = null, bool? disableReceiptSelection = null)
         {
             Log(MessageLevel.Detailed, $"DefaultCloverDevice.{nameof(doVoidPayment)}");
 
@@ -1012,7 +1012,9 @@ namespace com.clover.remotepay.transport
             {
                 payment = payment,
                 voidReason = reason,
-                passThroughValues = extras
+                passThroughValues = extras,
+                disableCloverPrinting = disablePrinting.GetValueOrDefault(false),
+                disableReceiptSelection = disableReceiptSelection.GetValueOrDefault(false),
             };
             sendObjectMessage(vpm);
         }

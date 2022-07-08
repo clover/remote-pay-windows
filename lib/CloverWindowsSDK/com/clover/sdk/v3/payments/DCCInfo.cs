@@ -35,7 +35,7 @@ namespace com.clover.sdk.v3.payments
         /// <summary>
         /// Exchange Rate Source Timestamp
         /// </summary>
-        public string ExchangeRateSourceTimeStamp { get; set; }
+        public string exchangeRateSourceTimeStamp { get; set; }
         /// <summary>
         /// The payment with which this DCC info is associated
         /// </summary>
@@ -44,6 +44,26 @@ namespace com.clover.sdk.v3.payments
         /// The credit (manual refund) with which this DCC info is associated
         /// </summary>
         public Reference creditRef { get; set; }
+        /// <summary>
+        /// Flag indicating whether DCC was offered on this txn
+        /// </summary>
+        public bool dccEligible { get; set; }
+        /// <summary>
+        /// Exchange rate from the rate request
+        /// </summary>
+        public string exchangeRateId { get; set; }
+        /// <summary>
+        /// Rate request id from the rate request
+        /// </summary>
+        public string rateRequestId { get; set; }
+        /// <summary>
+        /// Amount sent for exchange in rate request
+        /// </summary>
+        public long baseAmount { get; set; }
+        /// <summary>
+        /// Alpha currency code for foreign currency
+        /// </summary>
+        public string baseCurrencyCode { get; set; }
 
     }
 }

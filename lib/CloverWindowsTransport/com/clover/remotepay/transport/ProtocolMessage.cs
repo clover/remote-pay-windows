@@ -527,6 +527,8 @@ namespace com.clover.remotepay.transport
         public VoidReason voidReason { get; set; }
         public Payment payment { get; set; }
         public Dictionary<string, string> passThroughValues { get; set; }
+        public bool disableCloverPrinting { get; set; } = false;
+        public bool disableReceiptSelection { get; set; } = false;
 
         public VoidPaymentMessage() : base(Methods.VOID_PAYMENT, 3)
         {
