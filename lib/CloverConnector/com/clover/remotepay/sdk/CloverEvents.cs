@@ -44,6 +44,7 @@ namespace com.clover.remotepay.sdk
             MANUAL_CARD_CVV_UNREADABLE,
             MANUAL_CARD_EXPIRATION,
             SELECT_ACCOUNT,
+            SELECT_DCC,
             CASHBACK_CONFIRM,
             CASHBACK_SELECT,
             CONTACTLESS_TAP_REQUIRED,

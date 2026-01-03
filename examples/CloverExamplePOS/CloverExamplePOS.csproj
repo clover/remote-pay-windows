@@ -3,14 +3,14 @@
   <!--<Import Project="..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" /> -->
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">DebugNet40</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">DebugNet48</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{79A038EB-1BFF-4410-B15F-5E73E06ACB2C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CloverExamplePOS</RootNamespace>
     <AssemblyName>CloverExamplePOS</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -46,6 +46,19 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNet48|AnyCPU'">
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\DebugNet48\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET48</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU'">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OutputPath>bin\ReleaseNet40\</OutputPath>
@@ -70,32 +83,124 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet48|AnyCPU'">
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <OutputPath>bin\ReleaseNet48\</OutputPath>
+    <DefineConstants>TRACE;NET48</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
+    <!-- <Reference Include="CloverConnector, Version=5.0.0.0, Culture=neutral, PublicKeyToken=ce8892565c8ecd5a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Clover.RemotePayWindows.5.0.0\lib\net48\CloverConnector.dll</HintPath>
+    </Reference>
+    <Reference Include="CloverWindowsSDK, Version=5.0.0.0, Culture=neutral, PublicKeyToken=df68c108d874d75a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Clover.RemotePayWindows.5.0.0\lib\net48\CloverWindowsSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="CloverWindowsTransport">
+      <HintPath>.\packages\Clover.RemotePayWindows.5.0.0\lib\net48\CloverWindowsSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="CloverWindowsTransport, Version=5.0.0.0, Culture=neutral, PublicKeyToken=0d9dbe68936d355f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Clover.RemotePayWindows.5.0.0\lib\net48\CloverWindowsTransport.dll</HintPath>
+    </Reference> -->
     <Reference Include="Grapevine">
       <HintPath>..\..\packages\Grapevine\lib\Grapevine.dll</HintPath>
     </Reference>
-    <Reference Include="LibUsbDotNet">
+    <Reference Include="LibUsbDotNet.LibUsbDotNet, Version=2.2.0.0, Culture=neutral, PublicKeyToken=c677239abe1e02a9, processorArchitecture=MSIL">
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\lib\LibUsbDotNet.dll</HintPath>
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Newtonsoft.Json.120r1\Net40\Newtonsoft.Json.dll</HintPath>
-      <HintPath>..\..\packages\LibUsbDotNet.2.2.29\lib\net45\LibUsbDotNet.LibUsbDotNet.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\\lib\LibUsbDotNet.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.8.1' ">..\..\packages\Clover.RemotePayWindows.5.0.0\lib\net48\LibUsbDotNet.LibUsbDotNet.dll</HintPath>
+      <HintPath>..\..\packages\LibUsbDotNet.2.2.75\lib\net45\LibUsbDotNet.LibUsbDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=3.1.0.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.3.1.0\lib\net462\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\Newtonsoft.Json.120r1\Net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Newtonsoft.Json.120r1\Net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="ObjectListView">
-      <HintPath>..\..\packages\lib\ObjectListView.dll</HintPath>
+    <Reference Include="ObjectListView, Version=2.9.1.25410, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ObjectListView.Official.2.9.2-alpha2\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
-    <Reference Include="SuperSocket.ClientEngine, Version=0.8.0.13, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\SuperSocket.ClientEngine.Core.0.8.0.13\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\SuperSocket.ClientEngine.Core.0.8.0.13\lib\net20\SuperSocket.ClientEngine.dll</HintPath>
+    <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Linq, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Linq.4.3.0\lib\net463\System.Linq.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Net.Security.4.3.0\lib\net46\System.Net.Security.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.InteropServices.4.3.0\lib\net463\System.Runtime.InteropServices.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -104,6 +209,7 @@
     <Reference Include="WebSocket4Net, Version=0.15.0.9, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\WebSocket4Net.0.15.0\lib\net45\WebSocket4Net.dll</HintPath>
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\WebSocket4Net.0.15.0\lib\net20\WebSocket4Net.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.8.1' ">..\..\packages\Clover.RemotePayWindows.5.0.0\lib\net48\WebSocket4Net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -311,6 +417,7 @@
     <EmbeddedResource Include="VaultedCardListForm.resx">
       <DependentUpon>VaultedCardListForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

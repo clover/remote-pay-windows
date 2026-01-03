@@ -104,6 +104,19 @@ namespace com.clover.sdk.v3.payments
         /// </summary>
         public com.clover.sdk.v3.payments.ServiceChargeAmount serviceCharge { get; set; }
 
+        /// <summary>
+        /// Attributes assocaited with the payment, e.g. source_type" : "card_present"; "tip_source" : "on_device" etc.
+        /// </summary>
+
+        public Dictionary<string, string> attributes { get; set; }
+
+        /// <summary>
+        /// Custom attributes assocaited with the payment that are not listed above
+        /// </summary>
+        public Dictionary<string, com.clover.sdk.v3.payments.CustomFieldDetails> CustomAttributes { get; set; }
+
+        public List<com.clover.sdk.v3.payments.AdditionalChargeAmount> additionalCharges { get; set; }
+
         public List<com.clover.sdk.v3.payments.PaymentTaxRate> taxRates { get; set; }
 
         public List<com.clover.sdk.v3.payments.Refund> refunds { get; set; }
@@ -112,7 +125,6 @@ namespace com.clover.sdk.v3.payments
 
         public List<com.clover.sdk.v3.payments.LineItemPayment> lineItemPayments { get; set; }
 
-        public List<com.clover.sdk.v3.payments.AdditionalChargeAmount> additionalCharges { get; set; }
 
         /// <summary>
         /// If voided, the reason why (when available)
@@ -121,7 +133,16 @@ namespace com.clover.sdk.v3.payments
 
         /// <summary>
         /// Dynamic Currency Conversion information
-        /// </summary>
+        /// </summary>./unin    
+        /// 
+
+
+
+
+
+
+
+
         public payments.DCCInfo dccInfo { get; set; }
         /// <summary>
         /// Per transaction settings for the payment

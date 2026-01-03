@@ -322,6 +322,35 @@ namespace com.clover.remotepay.transport
     }
 
     /// <summary>
+    /// Custom Json parser for Dictionary of custom objects
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class DictionaryConverter<T> : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(List<T>);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.StartObject)
+            {
+                ElementsWrapper<T> wrapper = (ElementsWrapper<T>)serializer.Deserialize(reader, typeof(ElementsWrapper<T>)); // If ElementsWrapper used a List<T>, it would recursively call here, so T[] resolves that recursive issue without creating a new deserializer
+                return new List<T>(wrapper.elements);
+            }
+            return null;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            ElementsWrapper<T> wrapper = new ElementsWrapper<T>();
+            wrapper.elements = ((List<T>)value).ToArray();
+            serializer.Serialize(writer, wrapper);
+        }
+    }
+
+    /// <summary>
     /// Custom Json parser for Lists of custom objects
     /// </summary>
     /// <typeparam name="T"></typeparam>

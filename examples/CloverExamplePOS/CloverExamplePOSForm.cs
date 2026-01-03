@@ -1538,18 +1538,21 @@ namespace CloverExamplePOS
 
         public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
         {
-            try
+            if (deviceEvent.EventState != CloverDeviceEvent.DeviceEventState.PROCESSING)
             {
-                uiThread.Send(delegate (object state)
+                try
                 {
-                    this.TabControl.Enabled = true;
-                    UIStateButtonPanel.Controls.Clear();
-                    DeviceCurrentStatus.Text = " ";
-                }, null);
-            }
-            catch (Exception)
-            {
-                // if UI goes away, uiThread may be disposed
+                    uiThread.Send(delegate (object state)
+                    {
+                        this.TabControl.Enabled = true;
+                        UIStateButtonPanel.Controls.Clear();
+                        DeviceCurrentStatus.Text = " ";
+                    }, null);
+                }
+                catch (Exception)
+                {
+                    // if UI goes away, uiThread may be disposed
+                }
             }
         }
 
