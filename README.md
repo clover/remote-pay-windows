@@ -87,3 +87,10 @@ To build and run the example POS application using .NET and VisualStudio 2017:
 - [Tutorial for the Windows SDK](https://docs.clover.com/clover-platform/docs/windows)
 - [API Documentation](http://clover.github.io/remote-pay-windows/5.0.0/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> refs/remotes/origin/master
