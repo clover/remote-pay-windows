@@ -1,4 +1,3 @@
-﻿![Clover logo](https://www.clover.com/static/media/clover-logo.4204a79c.svg)
 Clover SDK for Windows POS integration
 ======================================
 
@@ -88,4 +87,5 @@ To build and run the example POS application using .NET and VisualStudio 2017:
 - [Tutorial for the Windows SDK](https://docs.clover.com/clover-platform/docs/windows)
 - [API Documentation](http://clover.github.io/remote-pay-windows/4.0.6/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
+
 
