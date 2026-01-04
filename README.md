@@ -4,7 +4,7 @@ Clover SDK for Windows POS integration
 
 ## Version
 
-Current version: 4.0.6
+Current version: 5.0.0
 
 ## Overview
 
@@ -12,13 +12,14 @@ This SDK enables your Windows point-of-sale (POS) system to communicate with a [
 
 **Platforms supported:**
 
+- Windows 11
 - Windows 10
 - Windows 8
 - Windows 7
 
 **.NET Frameworks supported:**
 
-- .NET 4.5
+- .NET 4.8.1
 
 ## Connecting to a Clover device
 
@@ -28,7 +29,7 @@ Clover devices (both production and DevKit devices) are connected to Microsoft W
 
 To work with the project effectively, you will need:
 
-- A computer or virtual machine running Windows. The SDK supports Windows 10, Windows 8, and Windows 7.
+- A computer or virtual machine running Windows. The SDK supports Windows 11, Windows 10, Windows 8, and Windows 7.
 - An IDE, such as [Visual Studio](https://www.visualstudio.com/downloads/).
 - To experience transactions end-to-end from the merchant and customer perspectives, we also recommend ordering a [Clover DevKit](https://cloverdevkit.com/collections/devkits/products/clover-mini-2nd-gen-developer-kit).
 
@@ -38,12 +39,12 @@ Use NuGet references to easily include Remote Pay Windows in your .NET project
 <https://www.nuget.org/packages/Clover.RemotePayWindows>
 
 ```
-Install-Package Clover.RemotePayWindows -Version 4.0.6
+Install-Package Clover.RemotePayWindows -Version 5.0.0
 ```
 
 ## Installing the SDK and Services
 
-- The .NET 4.5 binaries are able to use TLS 1.2 network security when talking to Clover Devices using [Secure Network Pay Display](https://docs.clover.com/clover-platform/docs/pay-display-apps#section--secure-network-pay-display-).
+- The .NET 4.8.1 binaries are able to use TLS 1.2 network security when talking to Clover Devices using [Secure Network Pay Display](https://docs.clover.com/clover-platform/docs/pay-display-apps#section--secure-network-pay-display-).
 
 ### For development:
 
@@ -87,3 +88,4 @@ To build and run the example POS application using .NET and VisualStudio 2017:
 - [Tutorial for the Windows SDK](https://docs.clover.com/clover-platform/docs/windows)
 - [API Documentation](http://clover.github.io/remote-pay-windows/4.0.6/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
+
