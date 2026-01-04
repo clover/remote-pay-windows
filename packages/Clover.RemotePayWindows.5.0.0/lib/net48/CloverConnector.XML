@@ -1,0 +1,1908 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CloverConnector</name>
+    </assembly>
+    <members>
+        <member name="T:Clover.RemotePay.CloverEventConnector">
+            <summary>
+            Clover Connector and Clover Connector Listener wrapper for easy .NET event consumption of standard Clover API.
+            This is an alternate access Ease of Use layer wrapping the standard Clover Connector API for designs that would prefer to consume an Event model API.
+            
+            Standard CloverConnector API calls are made to this object
+            The single Message event can be subscribed to for a central message handler design. All messages raise the common Message event.
+            Individual response events can be subscribed to in order to handle specific messages. All messages raise their own custom event.
+            </summary>
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.#ctor">
+            <summary>
+            Create an empty CloverEventConnector
+            Attach an existing ICloverConnector object or create a new on to use this CloverEventConnector
+            </summary>
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.#ctor(com.clover.remotepay.sdk.ICloverConnector)">
+            <summary>
+            Construct a CloverEventConnector from an existing CloverConnector object that has already been setup
+            </summary>
+            <param name="existingCloverConnector">Existing CloverConnector SDK object managed by the POS</param>
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.Attach(com.clover.remotepay.sdk.ICloverConnector)">
+            <summary>
+            Attach an existing CloverConnector to this CloverEventConnector as the one and only CloverConnector SDK object
+            </summary>
+            <param name="existingCloverConnector"></param>
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.InitializeConnection">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.AddCloverConnectorListener(com.clover.remotepay.sdk.ICloverConnectorListener)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RemoveCloverConnectorListener(com.clover.remotepay.sdk.ICloverConnectorListener)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.Sale(com.clover.remotepay.sdk.SaleRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.AcceptSignature(com.clover.remotepay.sdk.VerifySignatureRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RejectSignature(com.clover.remotepay.sdk.VerifySignatureRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.AcceptPayment(com.clover.sdk.v3.payments.Payment)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RejectPayment(com.clover.sdk.v3.payments.Payment,com.clover.remotepay.transport.Challenge)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.Auth(com.clover.remotepay.sdk.AuthRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.PreAuth(com.clover.remotepay.sdk.PreAuthRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.CapturePreAuth(com.clover.remotepay.sdk.CapturePreAuthRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.IncrementPreAuth(com.clover.remotepay.sdk.IncrementPreAuthRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.TipAdjustAuth(com.clover.remotepay.sdk.TipAdjustAuthRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.VoidPayment(com.clover.remotepay.sdk.VoidPaymentRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.VoidPaymentRefund(com.clover.remotepay.sdk.VoidPaymentRefundRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RefundPayment(com.clover.remotepay.sdk.RefundPaymentRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.ManualRefund(com.clover.remotepay.sdk.ManualRefundRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.VaultCard(System.Nullable{System.Int32})">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.ReadCardData(com.clover.remotepay.sdk.ReadCardDataRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.Closeout(com.clover.remotepay.sdk.CloseoutRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.ResetDevice">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.ShowMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.ShowWelcomeScreen">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.ShowThankYouScreen">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.DisplayPaymentReceiptOptions(com.clover.remotepay.sdk.DisplayPaymentReceiptOptionsRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.OpenCashDrawer(com.clover.remotepay.sdk.OpenCashDrawerRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.ShowDisplayOrder(com.clover.remote.order.DisplayOrder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RemoveDisplayOrder(com.clover.remote.order.DisplayOrder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.InvokeInputOption(com.clover.remotepay.transport.InputOption)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.Print(com.clover.remotepay.sdk.PrintRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RetrievePrinters(com.clover.remotepay.transport.RetrievePrintersRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RetrievePrintJobStatus(com.clover.remotepay.sdk.PrintJobStatusRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RetrievePendingPayments">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.StartCustomActivity(com.clover.remotepay.sdk.CustomActivityRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.SendMessageToActivity(com.clover.remotepay.sdk.MessageToActivity)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RetrieveDeviceStatus(com.clover.remotepay.transport.RetrieveDeviceStatusRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RetrievePayment(com.clover.remotepay.transport.RetrievePaymentRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.DisplayReceiptOptions(com.clover.remotepay.sdk.DisplayReceiptOptionsRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.RegisterForCustomerProvidedData(com.clover.remotepay.sdk.RegisterForCustomerProvidedDataRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.SetCustomerInfo(com.clover.remotepay.sdk.SetCustomerInfoRequest)">
+            <inheritdoc />
+        </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.SetLogLevel(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.Message">
+            <summary>
+            Catch-all event signal raised by every ICloverConnectorListener handler in addition to their custom event to enable a central Message Handling pattern
+            The Message event is raised after the custom event, and you may set the CloverEventArgs.handled flag if you wish to do either/or message processing
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.DeviceActivityStart">
+            <summary>
+            Device Activity message - UI screen has changed and is being shown
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.DeviceActivityEnd">
+            <summary>
+            Device Activity message - UI screen is changing and current screen is being hidden
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.DeviceError">
+            <summary>
+            There was an error from the device or SDK layer, usually directly related to the last call
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PreAuthResponse">
+            <summary>
+            PreAuth call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.AuthResponse">
+            <summary>
+            Auth call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.TipAdjustAuthResponse">
+            <summary>
+            Tip Adjust call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.CapturePreAuthResponse">
+            <summary>
+            Capture PreAuth call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.IncrementPreAuthResponse">
+            <summary>
+            Increment PreAuth call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.VerifySignatureRequest">
+            <summary>
+            The customer has signed for the payment, the POS needs to confirm the signature so the payment can continue (eg Cashier compares signature to card as appropriate)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.ConfirmPaymentRequest">
+            <summary>
+            The payment was detected as a possible duplicate or the device is offline, the POS needs to confirm the payment is acceptable to continue (eg Cashier confirms it isn't a duplicate payment and should be processed)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.CloseoutResponse">
+            <summary>
+            Closeout call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.SaleResponse">
+            <summary>
+            Sale call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.ManualRefundResponse">
+            <summary>
+            Manual Refund call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.RefundPaymentResponse">
+            <summary>
+            Refund call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.TipAdded">
+            <summary>
+            Customer added a tip to the order on the device screen
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.VoidPaymentResponse">
+            <summary>
+            Void Payment call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.VoidPaymentRefundResponse">
+            <summary>
+            Void Payment Refund call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.DeviceConnected">
+            <summary>
+            A Clover Device was connected to the SDK and the SDK can see it
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.DeviceReady">
+            <summary>
+            A Clover Device was connected to and initialized by the SDK and is ready to use
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.DeviceDisconnected">
+            <summary>
+            An attached Clover Device lost connection to the SDK and cannot be used (device power cycled, unplugged, network connection lost, etc.)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.VaultCardResponse">
+            <summary>
+            Vault Card call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.RetrievePendingPaymentsResponse">
+            <summary>
+            List of Pending Payments on the device in need of transmitting to server (ie Payments taken and queued for later processing while device was offline / in forced offline mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.ReadCardDataResponse">
+            <summary>
+            Read Card Data call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintManualRefundReceipt">
+            <summary>
+            Device wants a receipt printed for Manual Refund (ie in POS Print mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintManualRefundDeclineReceipt">
+            <summary>
+            Device wants a receipt printed for Manual Refund Declined (ie in POS Print mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintPaymentReceipt">
+            <summary>
+            Device wants a receipt printed for a Payment (ie in POS Print mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintPaymentDeclineReceipt">
+            <summary>
+            Device wants a receipt printed for a Payment Declined (ie in POS Print mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintPaymentMerchantCopyReceipt">
+            <summary>
+            Device wants a receipt printed for a Payment (ie in POS Print mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintRefundPaymentReceipt">
+            <summary>
+            Device wants a receipt printed for a Refunded Payment (ie in POS Print mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintJobStatusResponse">
+            <summary>
+            Device wants a receipt printed for a Payment (ie in POS Print mode)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.RetrievePrintersResponse">
+            <summary>
+            Print Job status details call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.CustomActivityResponse">
+            <summary>
+            Custom Activity call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.RetrieveDeviceStatusResponse">
+            <summary>
+            Response to a Retrieve Device Status with current status (Idle, Busy, etc.)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.MessageFromActivity">
+            <summary>
+            Custom Activity user code on the Device sent a custom message through the SDK to the POS
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.ResetDeviceResponse">
+            <summary>
+            Reset Device call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.RetrievePaymentResponse">
+            <summary>
+            Retrieve Payment call has completed with these payment details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.PrintJobStatusRequest">
+            <summary>
+            Print Job Status call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.DisplayReceiptOptionsResponse">
+            <summary>
+            Display Receipt Options call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.CustomerProvidedDataResponse">
+            <summary>
+            Display Receipt Options call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.InvalidStateTransitionResponse">
+            <summary>
+            InvalidStateTransition event has occurred on the device
+            </summary>
+        </member>
+        <member name="T:Clover.RemotePay.CloverEventArgs">
+            <summary>
+            Base class for all CloverConnectorListener event messages
+            </summary>
+        </member>
+        <member name="P:Clover.RemotePay.CloverEventArgs.cloverMessage">
+            <summary>
+            The actual Clover ICloverConnectorLisener callback method that raised this event. Especially usful when using the central Message Handler pattern.
+            </summary>
+        </member>
+        <member name="P:Clover.RemotePay.CloverEventArgs.cloverConnector">
+            <summary>
+            The ICloverConnector object associated with this ICloverConnectorListener event message (ie the device SDK object that sent this message)
+            </summary>
+        </member>
+        <member name="P:Clover.RemotePay.CloverEventArgs.Handled">
+            <summary>
+            Flag to allow user code to specify whether it handled this message already when consuming both specific API and the catch-all Message events.
+            This value is always ignored by the SDK
+            </summary>
+        </member>
+        <member name="T:Clover.RemotePay.CloverMessage">
+            <summary>
+            All the possible Clover Connector Listener message names as a reference enum
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CloverConnectorFactory">
+            <summary>
+            Factory to create an instance of the CloverConnector.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnectorFactory.createICloverConnector(com.clover.remotepay.transport.CloverDeviceConfiguration)">
+            <summary>
+            Factory to create an instance of the CloverConnector
+            </summary>
+            <param name="config">Object that conveys the required information used by the connector.
+                Usually a USBCloverDeviceConfiguration (USB connection) or WebSocketCloverDeviceConfiguration (Network/SNPD connection)</param>
+            <returns>Initialized instance conforming to the ICloverConnector</returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnectorFactory.CreateUsbConnector(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Create a USB configured connection CloverConnector to a Clover Device running USB Pay Display (UsbPD)
+            Convenience wrapper around creating a USBCloverDeviceConfiguration object and calling CloverConnectorFactory.createICloverConnector
+            </summary>
+            <param name="remoteApplicationId">Application ID for server reporting</param>
+            <param name="posName">Point of Sale name for server reporting</param>
+            <param name="serialNumber">Station ID / serial number for server reporting</param>
+            <param name="enableLogging">Turn logging on or off</param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnectorFactory.CreateWebSocketConnector(System.String,System.String,System.String,System.String,System.String,com.clover.remotepay.transport.PairingDeviceConfiguration.OnPairingCodeHandler,com.clover.remotepay.transport.PairingDeviceConfiguration.OnPairingSuccessHandler,com.clover.remotepay.transport.PairingDeviceConfiguration.OnPairingStateHandler,System.Boolean)">
+            <summary>
+            Create a WebSockect configured connection CloverConnector to a Clover Device running Secure Network Pay Display (SNPD) 
+            Convenience wrapper around creating a WebSocketCloverDeviceConfiguration object and calling CloverConnectorFactory.createICloverConnector
+            </summary>
+            <param name="endpoint">Clover Device Secure Network Pay Display (SNPD) network address, usually similar to "https://192.168.0.1:1234/remote_pay"</param>
+            <param name="remoteApplicationId">Application ID for server reporting</param>
+            <param name="posName">Point of Sale name for server reporting</param>
+            <param name="serialNumber">Station ID / serial number for server reporting</param>
+            <param name="pairingAuthToken">Previous paired auth token to allow quick reconnection without initiating antoerh pairing. Blank value, invalid or expired token will initiate a new pairing</param>
+            <param name="pairingCodeHandler">Delegate method called with temporary pairing code to enter on device, like `6341` - display to user to enter on Clover Device to complete pairing</param>
+            <param name="pairingSuccessHandler">Delegate method called with reconnection auth token when pairing has succeeded</param>
+            <param name="pairingStateHandler">Delegate method called during pairing flow transitions</param>
+            <param name="enableLogging">Turn logging on or off</param>
+            <returns></returns>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ExternalIDUtil">
+            <summary>
+            Used for generating a unique string of the length specified
+            Uses the linear congruential generator (LCG) algorithm
+            in conjunction with the .NET RNGCryptoServiceProvider class.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ExternalIDUtil.GenerateRandomString(System.Int32)">
+            <summary>
+            Generates the random string.
+            </summary>
+            <param name="length">The length.</param>
+            <returns></returns>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CloverConnector">
+            <summary>
+            The main CloverConnector API for connecting to Clover Payment Devices, created via a CloverConnectorFactory transport setup call
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CloverConnector.MerchantInfo">
+            <summary>
+            A copy of the current CloverConnector MerchantInfo from the DeviceReady message
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CloverConnector.ConnectionTitle">
+            <summary>
+            The Configured Transport's Title, indicating USB, WebSocket, etc. in a display friendly format
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CloverConnector.ConnectionSummary">
+            <summary>
+            The Configured Transport's Summary, intended to be the web connection string or similar info as appropriate
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CloverConnector.SDKInfo">
+            <summary>
+            SDK identification for reporting
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CloverConnector.DisableDefaultDeviceScreenFlow">
+            <summary>
+            set to true, so that when request responses are processed, the Clover Mini
+            won't show default messages/ThankYou/Welcome screens.  Set to false
+            to allow the default message flow that is built into the CloverConnector.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CloverConnector.IsReady">
+            <summary>
+            Holds the current connection state
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.#ctor(com.clover.remotepay.transport.CloverDeviceConfiguration)">
+            <summary>
+            CloverConnector constructor
+            </summary>
+            <param name="config">A CloverDeviceConfiguration object; TestDeviceConfiguration can be used for testing
+            </param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.InitializeConnection">
+            <summary>
+            Initialize the connector with a given configuration
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.Sale(com.clover.remotepay.sdk.SaleRequest)">
+            <summary>
+            Sale method, aka "purchase"
+            </summary>
+            <param name="request">A SaleRequest object containing basic information needed for the transaction</param>
+            <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.AcceptSignature(com.clover.remotepay.sdk.VerifySignatureRequest)">
+            <summary>
+            If signature is captured during a Sale, this method accepts the signature as entered
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.RejectSignature(com.clover.remotepay.sdk.VerifySignatureRequest)">
+            <summary>
+            If signature is captured during a Sale, this method rejects the signature as entered
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.Auth(com.clover.remotepay.sdk.AuthRequest)">
+            <summary>
+            Auth method to obtain an Auth.  While a Pre-Auth can also be accomplished
+            by setting the IsPreAuth flag to true, the PreAuthRequest is the
+            preferred request type.  PreAuth functionality was retained for backward
+            compatibility
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.PreAuth(com.clover.remotepay.sdk.PreAuthRequest)">
+            <summary>
+            PreAuth method to obtain a PreAuth.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.CapturePreAuth(com.clover.remotepay.sdk.CapturePreAuthRequest)">
+            <summary>
+            Capture a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.IncrementPreAuth(com.clover.remotepay.sdk.IncrementPreAuthRequest)">
+            <summary>
+            Increment a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.TipAdjustAuth(com.clover.remotepay.sdk.TipAdjustAuthRequest)">
+            <summary>
+            Adjust the tip for a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.VoidPayment(com.clover.remotepay.sdk.VoidPaymentRequest)">
+            <summary>
+            Void a transaction, given a previously used order ID and/or payment ID
+            TBD - defining a payment or order ID to be used with a void without requiring a response from Sale()
+            </summary>
+            <param name="request">A VoidRequest object containing basic information needed to void the transaction</param>
+            <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.RefundPayment(com.clover.remotepay.sdk.RefundPaymentRequest)">
+            <summary>
+            Refund a specific payment
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ManualRefund(com.clover.remotepay.sdk.ManualRefundRequest)">
+            <summary>
+            Manual refund method, aka "naked credit"
+            </summary>
+            <param name="request">A ManualRefundRequest object</param>
+            <returns>Status code, 0 for success, -1 for failure (need to use pre-defined constants)</returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.Closeout(com.clover.remotepay.sdk.CloseoutRequest)">
+            <summary>
+            Send a request to the server to closeout all orders.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ResetDevice">
+            <summary>
+            Send a request to the mini to reset.  This can be used if the device gets into a non-recoverable state.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ShowMessage(System.String)">
+            <summary>
+            Show a message on the Clover Mini screen
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ShowWelcomeScreen">
+            <summary>
+            Return the device to the Welcome Screen
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ShowThankYouScreen">
+            <summary>
+            Show the thank you screen on the device
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ShowOnDevice(System.String,System.Int32,System.Boolean,System.Int32,System.Boolean)">
+            <summary>
+            This method provides a way to control the default screen flow on the device, for instances
+            where it makes sense to display some combination of message/thankyou/welcome screens with
+            configurable timing between them
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.VaultCard(System.Nullable{System.Int32})">
+            <summary>
+            Vault Card information and payment token
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ReadCardData(com.clover.remotepay.sdk.ReadCardDataRequest)">
+            <summary>
+            Retrieve Card Data
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.DisplayPaymentReceiptOptions(com.clover.remotepay.sdk.DisplayPaymentReceiptOptionsRequest)">
+            <summary>
+            Show the customer facing receipt option screen for the specified Payment.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.ShowDisplayOrder(com.clover.remote.order.DisplayOrder)">
+            <summary>
+            Show the DisplayOrder on the device. Replaces the existing DisplayOrder on the device.
+            </summary>
+            <param name="order"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.RemoveDisplayOrder(com.clover.remote.order.DisplayOrder)">
+            <summary>
+            Remove the DisplayOrder from the device.
+            </summary>
+            <param name="order"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.RetrievePendingPayments">
+            <summary>
+            Request a list of pending payments from the device.
+            Pending payments are payments taken offline that have
+            not yet been sent to the server
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.InvokeInputOption(com.clover.remotepay.transport.InputOption)">
+            <summary>
+            Invoke the InputOption on the device
+            </summary>
+            <param name="io"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.DisplayReceiptOptions(com.clover.remotepay.sdk.DisplayReceiptOptionsRequest)">
+            <summary>
+            Display receipt options for a Credit, Refund, or Payment
+            </summary>
+            <param name="request">The DisplayReceiptOptionsRequest details</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.RegisterForCustomerProvidedData(com.clover.remotepay.sdk.RegisterForCustomerProvidedDataRequest)">
+            <summary>
+            Register to receive customer data with the Clover Loyalty API
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.SetCustomerInfo(com.clover.remotepay.sdk.SetCustomerInfoRequest)">
+            <summary>
+            Set the Loyalty API's current customer info
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ICloverConnectorListener">
+            <summary>
+            These are the methods to implement for intercepting messages that 
+            are sent from a Clover device.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnDeviceActivityStart(com.clover.remotepay.sdk.CloverDeviceEvent)">
+            <summary>
+            Called when the Clover device transitions to a new screen or activity. The 
+            CloverDeviceEvent passed in will contain an event type, a description, and a 
+            list of available InputOptions.
+            </summary>
+            <param name="deviceEvent">The CloverDeviceEvent event.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnDeviceActivityEnd(com.clover.remotepay.sdk.CloverDeviceEvent)">
+            <summary>
+            Called when the Clover device transitions away from a screen or activity. The 
+            CloverDeviceEvent passed in will contain an event type and description. 
+            Note: The start and end events are not guaranteed to process in order. The 
+            event type should be used to make sure these events are paired.
+            </summary>
+            <param name="deviceEvent">The CloverDeviceEvent event.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnDeviceError(com.clover.remotepay.sdk.CloverDeviceErrorEvent)">
+            <summary>
+            Called when an error occurs while trying to send messages to the Clover 
+            device.
+            </summary>
+            <param name="deviceErrorEvent">The CloverDeviceErrorEvent event.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPreAuthResponse(com.clover.remotepay.sdk.PreAuthResponse)">
+            <summary>
+            Called in response to a PreAuth() request. 
+            Note: The boolean IsPreAuth flag in the PreAuthResponse indicates whether 
+            CapturePreAuth() can be called for the returned Payment. If the IsPreAuth flag 
+            is false and the IsAuth flag is true, then the payment gateway coerced the 
+            PreAuth() request to an Auth. 
+            The payment will need to be voided or it will be automatically captured at 
+            closeout.
+            </summary>
+            <param name="response">The PreAuthResponse details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnAuthResponse(com.clover.remotepay.sdk.AuthResponse)">
+            <summary>
+            Called in response to an Auth() request. 
+            Note: An Auth transaction may come back as a final Sale, depending on the 
+            payment gateway. The AuthResponse has a boolean IsAuth flag that indicates 
+            whether the Payment can still be tip-adjusted.
+            </summary>
+            <param name="response">The AuthResponse to the transaction request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnTipAdjustAuthResponse(com.clover.remotepay.sdk.TipAdjustAuthResponse)">
+            <summary>
+            Called in response to a tip adjustment for an Auth transaction. Contains the 
+            TipAmount if successful.
+            </summary>
+            <param name="response">The TipAdjustAuthResponse to the transaction 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnCapturePreAuthResponse(com.clover.remotepay.sdk.CapturePreAuthResponse)">
+            <summary>
+            Called in response to a CapturePreAuth() request. 
+            Contains the new Amount and TipAmount if successful.
+            </summary>
+            <param name="response">The CapturePreAuthResponse to the transaction 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnIncrementPreAuthResponse(com.clover.remotepay.sdk.IncrementPreAuthResponse)">
+            <summary>
+            Called in response to an IncrementPreAuth() request.
+            Contains the authorization if successful.
+            </summary>
+            <param name="response">The IncrementPreAuthResponse to the transaction</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnVerifySignatureRequest(com.clover.remotepay.sdk.VerifySignatureRequest)">
+            <summary>
+            Called when the Clover device requests verification for a user's on-screen 
+            signature. The Payment and Signature will be passed in.
+            </summary>
+            <param name="request">The VerifySignatureRequest.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnConfirmPaymentRequest(com.clover.remotepay.sdk.ConfirmPaymentRequest)">
+             <summary>
+             Called when the Clover device encounters a Challenge at the payment gateway 
+             and requires confirmation. A Challenge is triggered by a potential duplicate 
+             Payment (DUPLICATE_CHALLENGE) or an offline Payment (OFFLINE_CHALLENGE). The 
+             device sends an OnConfirmPaymentRequest() asking the merchant to reply by 
+             sending either an AcceptPayment() or RejectPayment() call.
+            
+             Note: Duplicate Payment Challenges are raised when multiple Payments are made 
+             with the same card type and last four digits within the same hour. For this 
+             reason, we recommend that you do not programmatically call 
+             CloverConnector.RejectPayment() on all instances of DUPLICATE_CHALLENGE. 
+             For more information, see {@link 
+             https://docs.clover.com/build/working-with-challenges/|Working with 
+             Challenges}. 
+             </summary>
+             <param name="request">The ConfirmPaymentRequest for confirmation.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnCloseoutResponse(com.clover.remotepay.sdk.CloseoutResponse)">
+            <summary>
+            Called in response to a Closeout() request.
+            </summary>
+            <param name="response">The CloseoutResponse details for the transaction 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnSaleResponse(com.clover.remotepay.sdk.SaleResponse)">
+            <summary>
+            Called at the completion of a Sale() request. The SaleResponse contains a 
+            {@see com.clover.remote.client.messages.ResultCode} and a Success boolean. 
+            A successful Sale transaction will also have the Payment object, which can be 
+            for the full or partial amount of the Sale request. Note: A Sale transaction 
+            my come back as a tip-adjustable Auth, depending on the payment gateway. The 
+            SaleResponse has a boolean IsSale flag that indicates whether 
+            the Sale is final, or will be finalized during closeout.
+            </summary>
+            <param name="response">The SaleResponse details for the transaction 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnManualRefundResponse(com.clover.remotepay.sdk.ManualRefundResponse)">
+            <summary>
+            Called in response to a ManualRefund() request. Contains a 
+            {@see com.clover.remote.client.messages.ResultCode} and a Success boolean. If 
+            successful, the ManualRefundResponse will have a Credit object associated with 
+            the relevant Payment information.
+            </summary>
+            <param name="response">The ManualRefundResponse details for the transaction 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnRefundPaymentResponse(com.clover.remotepay.sdk.RefundPaymentResponse)">
+            <summary>
+            Called in response to a RefundPayment() request. Contains a 
+            {@see com.clover.remote.client.messages.ResultCode} and a Success boolean. The 
+            response to a successful transaction will contain the Refund, which includes 
+            the original paymentId as a reference.
+            </summary>
+            <param name="response">The RefundPaymentResponse details for the transaction 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnVoidPaymentRefundResponse(com.clover.remotepay.sdk.VoidPaymentRefundResponse)">
+            <summary>
+            Called in response to a VoidPaymentRefund() request with results.
+            </summary>
+            <param name="response"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnTipAdded(com.clover.remotepay.transport.TipAddedMessage)">
+            <summary>
+            Called when a customer selects a tip amount on the Clover device's screen.
+            </summary>
+            <param name="message">The TipAddedMessage.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnVoidPaymentResponse(com.clover.remotepay.sdk.VoidPaymentResponse)">
+            <summary>
+            Called in response to a VoidPayment() request. Contains a 
+            {@see com.clover.remote.client.messages.ResultCode} and a Success boolean. If 
+            successful, the response will also contain the paymentId for the voided 
+            Payment.
+            </summary>
+            <param name="response">The VoidPaymentResponse details for the transaction 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnDeviceConnected">
+            <summary>
+            Called when the Clover device is initially connected, but not ready to 
+            communicate.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnDeviceReady(com.clover.remotepay.sdk.MerchantInfo)">
+            <summary>
+            Called when the Clover device is ready to communicate and respond to requests.
+            </summary>
+            <param name="merchantInfo">The MerchantInfo details to associate with the 
+            device.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnDeviceDisconnected">
+            <summary>
+            Called when the Clover device is disconnected from the CloverConnector or not 
+            responding.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnVaultCardResponse(com.clover.remotepay.sdk.VaultCardResponse)">
+            <summary>
+            Called in response to a VaultCard() request. Contains a 
+            {@see com.clover.remote.client.messages.ResultCode} and a Success boolean. If 
+            successful, the response will contain a VaultedCard object with a token value 
+            that's unique for the card and merchant. The token can be used for future 
+            Sale() and Auth() requests.
+            </summary>
+            <param name="response">The VaultCardResponse details for the request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnRetrievePendingPaymentsResponse(com.clover.remotepay.sdk.RetrievePendingPaymentsResponse)">
+            <summary>
+            Called in response to a RetrievePendingPayment() request.
+            </summary>
+            <param name="response">The RetrievePendingPaymentsResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnReadCardDataResponse(com.clover.remotepay.sdk.ReadCardDataResponse)">
+            <summary>
+            Called in response to a ReadCardData() request. Contains card information 
+            (specifically Track 1 and Track 2 card data).
+            </summary>
+            <param name="response">The ReadCardDataResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintManualRefundReceipt(com.clover.remotepay.sdk.PrintManualRefundReceiptMessage)">
+            <summary>
+            Called when a user requests a paper receipt for a Manual Refund. Will only be 
+            called if DisablePrinting = true on the ManualRefund() request.
+            </summary>
+            <param name="message">A callback that asks the POS to 
+            print a receipt for a ManualRefund. Contains a Credit object.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintManualRefundDeclineReceipt(com.clover.remotepay.sdk.PrintManualRefundDeclineReceiptMessage)">
+            <summary>
+            Called when a user requests a paper receipt for a declined Manual Refund. Will 
+            only be called if DisablePrinting = true on the ManualRefund() request.
+            </summary>
+            <param name="message">The 
+            PrintManualRefundDeclineReceiptMessage.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintPaymentReceipt(com.clover.remotepay.sdk.PrintPaymentReceiptMessage)">
+            <summary>
+            Called when a user requests a paper receipt for a Payment. Will only be called 
+            if DisablePrinting = true on the Sale(), Auth(), or PreAuth() request.
+            </summary>
+            <param name="message">The PrintPaymentReceiptMessage 
+            details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintPaymentDeclineReceipt(com.clover.remotepay.sdk.PrintPaymentDeclineReceiptMessage)">
+            <summary>
+            Called when a user requests a paper receipt for a declined Payment.  Will only 
+            be called if DisablePrinting = true on the Sale(), Auth(), or PreAuth() 
+            request.
+            </summary>
+            <param name="message">The 
+            PrintPaymentDeclineReceiptMessage details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintPaymentMerchantCopyReceipt(com.clover.remotepay.sdk.PrintPaymentMerchantCopyReceiptMessage)">
+            <summary>
+            Called when a user requests a merchant copy of a Payment receipt. Will only be 
+            called if DisablePrinting = true on the Sale(), Auth(), or PreAuth() request.
+            </summary>
+            <param name="message">The 
+            PrintPaymentMerchantCopyReceiptMessage details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintRefundPaymentReceipt(com.clover.remotepay.sdk.PrintRefundPaymentReceiptMessage)">
+            <summary>
+            Called when a user requests a paper receipt for a Payment Refund. Will only be 
+            called if DisablePrinting = true on the Sale(), Auth(), PreAuth() or 
+            ManualRefund() request.
+            </summary>
+            <param name="message">The 
+            PrintRefundPaymentReceiptMessage details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintJobStatusResponse(com.clover.remotepay.sdk.PrintJobStatusResponse)">
+            <summary>
+            Called in response to a RetrievePrintJobStatus() request.
+            </summary>
+            <param name="response">The PrintJobStatusResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnRetrievePrintersResponse(com.clover.remotepay.sdk.RetrievePrintersResponse)">
+            <summary>
+            Called in response to a RetrievePrinters() request.
+            </summary>
+            <param name="response">The RetrievePrintersResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnCustomActivityResponse(com.clover.remotepay.sdk.CustomActivityResponse)">
+            <summary>
+            Called when a Custom Activity finishes normally.
+            </summary>
+            <param name="response">The CustomActivityResponse.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnRetrieveDeviceStatusResponse(com.clover.remotepay.sdk.RetrieveDeviceStatusResponse)">
+            <summary>
+            Called in response to a RetrieveDeviceStatus() request.
+            </summary>
+            <param name="response">The RetrieveDeviceStatusResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnMessageFromActivity(com.clover.remotepay.sdk.MessageFromActivity)">
+            <summary>
+            Called when a Custom Activity sends a message to the POS.
+            </summary>
+            <param name="response">The MessageFromActivity details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnResetDeviceResponse(com.clover.remotepay.sdk.ResetDeviceResponse)">
+            <summary>
+            Called in response to a ResetDevice() request.
+            </summary>
+            <param name="response">The ResetDeviceResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnRetrievePaymentResponse(com.clover.remotepay.sdk.RetrievePaymentResponse)">
+            <summary>
+            Called in response to a RetrievePayment() request.
+            </summary>
+            <param name="response">The RetrievePaymentResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnPrintJobStatusRequest(com.clover.remotepay.sdk.PrintJobStatusRequest)">
+            <summary>
+            Called in response to a RetrievePrintJobStatus() request.
+            </summary>
+            <param name="request">The PrintJobStatusResponse details for the 
+            request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnDisplayReceiptOptionsResponse(com.clover.remotepay.sdk.DisplayReceiptOptionsResponse)">
+            <summary>
+            Called in response to a DisplayReceiptOptions request.
+            </summary>
+            <param name="response">The DisplayReceiptOptionsResponse details for the response.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnInvalidStateTransitionResponse(com.clover.remotepay.sdk.InvalidStateTransitionNotification)">
+            <summary>
+            Called to notify the Point of Sale that a call was invalid in the current context or an internal state change failed.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnCustomerProvidedData(com.clover.remotepay.sdk.CustomerProvidedDataEvent)">
+            <summary>
+            Called when Loyalty API sends customer identifying data for a loyalty data type subscribed to in CloverConnector.RegisterForCustomerProvidedData()
+            </summary>
+            <param name="response">The CustomerProvidedDataEvent containing type and data payload, like PHONE, 555-1212 in type-specific custom encoding</param>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.DefaultCloverConnectorListener">
+             <summary>
+             This is a default implementation of the ICloverConnectorListener
+             that can be used for quickly creating applications by 
+             simply overriding the appropriate listener method(s) needed
+             for testing a particular remote call.
+            
+             Also see the CloverEventConnector for another option to receive
+             events instead of overriding the class and receiving method calls
+             </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ICloverConnector">
+            <summary>
+            The CloverConnector API serves as the interface for connecting to a Clover device. 
+            This document defines the available methods.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.InitializeConnection">
+            <summary>
+            Initializes the connection and starts communication with the Clover device. 
+            This method is called after the connector has been created and listeners have 
+            been added to it. 
+            It must be called before any other method (other than those that add or remove 
+            listeners).
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.AddCloverConnectorListener(com.clover.remotepay.sdk.ICloverConnectorListener)">
+            <summary>
+            Adds a Clover Connector listener.
+            </summary>
+            <param name="connectorListener">The connection listener.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RemoveCloverConnectorListener(com.clover.remotepay.sdk.ICloverConnectorListener)">
+            <summary>
+            Removes a Clover Connector listener.
+            </summary>
+            <param name="connectorListener">The connection listener.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.Sale(com.clover.remotepay.sdk.SaleRequest)">
+            <summary>
+            Requests a Sale transaction (purchase).
+            </summary>
+            <param name="request">A SaleRequest object containing basic information needed 
+            for the transaction.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.AcceptSignature(com.clover.remotepay.sdk.VerifySignatureRequest)">
+            <summary>
+            If a signature is captured during a transaction, this method accepts the 
+            signature as entered.
+            </summary>
+            <param name="request">The accepted VerifySignatureRequest the device passed to 
+            OnVerifySignatureRequest().</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RejectSignature(com.clover.remotepay.sdk.VerifySignatureRequest)">
+            <summary>
+            If a signature is captured during a transaction, this method rejects the 
+            signature as entered.
+            </summary>
+            <param name="request">The rejected VerifySignatureRequest the device passed to 
+            OnVerifySignatureRequest().</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.AcceptPayment(com.clover.sdk.v3.payments.Payment)">
+            <summary>
+            If Payment confirmation is required during a transaction due to a Challenge, 
+            this method accepts the Payment. A Challenge may be triggered by a potential 
+            duplicate Payment or an offline Payment.
+            </summary>
+            <param name="payment">The Payment to accept.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RejectPayment(com.clover.sdk.v3.payments.Payment,com.clover.remotepay.transport.Challenge)">
+            <summary>
+            If Payment confirmation is required during a transaction due to a Challenge, 
+            this method rejects the Payment. A Challenge may be triggered by a potential 
+            duplicate Payment or an offline Payment.
+            </summary>
+            <param name="payment">The Payment to accept.</param>
+            <param name="challenge">The Challenge that resulted in Payment 
+            rejection.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.Auth(com.clover.remotepay.sdk.AuthRequest)">
+            <summary>
+            Requests an Auth transaction. The tip for an Auth can be adjusted through the 
+            TipAdjustAuth() call until the batch Closeout is processed.
+            </summary>
+            <param name="request">The AuthRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.PreAuth(com.clover.remotepay.sdk.PreAuthRequest)">
+            <summary>
+            Initiates a PreAuth transaction (a pre-authorization for a certain amount). 
+            This transaction lets the merchant know whether the account associated with a 
+            card has sufficient funds, without actually charging the card. 
+            When the merchant is ready to charge a final amount, the POS will 
+            call CapturePreAuth() to complete the Payment.
+            </summary>
+            <param name="request">The PreAuthRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.CapturePreAuth(com.clover.remotepay.sdk.CapturePreAuthRequest)">
+            <summary>
+            Marks a PreAuth Payment for capture by a Closeout process. After a PreAuth is 
+            captured, it is effectively the same as an Auth Payment. Note: Should only be 
+            called if the request's PaymentID is from a PreAuthResponse.
+            </summary>
+            <param name="request">The CapturePreAuthRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.IncrementPreAuth(com.clover.remotepay.sdk.IncrementPreAuthRequest)">
+            <summary>
+            Increments the amount of a previous PreAuth Payment. Note: Should only be
+            called if the request's PaymentID is from a PreAuthResponse.
+            </summary>
+            <param name="request">The IncrementPreAuthRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.TipAdjustAuth(com.clover.remotepay.sdk.TipAdjustAuthRequest)">
+            <summary>
+            Adjusts the tip for a previous Auth transaction. This call can be made until 
+            the Auth Payment has been finalized by a Closeout. Note: Should only be called 
+            if the request's PaymentID is from an AuthResponse.
+            </summary>
+            <param name="request">The TipAdjustAuthRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.VoidPayment(com.clover.remotepay.sdk.VoidPaymentRequest)">
+            <summary>
+            Voids a transaction.
+            </summary>
+            <param name="request">A VoidRequest object containing basic information needed 
+            to void the transaction.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.VoidPaymentRefund(com.clover.remotepay.sdk.VoidPaymentRefundRequest)">
+            <summary>
+            
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RefundPayment(com.clover.remotepay.sdk.RefundPaymentRequest)">
+            <summary>
+            Refunds the full or partial amount of a Payment.
+            </summary>
+            <param name="request">The RefundPaymentRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.ManualRefund(com.clover.remotepay.sdk.ManualRefundRequest)">
+            <summary>
+            Initiates a Manual Refund transaction (a “Refund” or credit that is not 
+            associated with a previous Payment).
+            </summary>
+            <param name="request">A ManualRefundRequest object with the request 
+            details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.VaultCard(System.Nullable{System.Int32})">
+            <summary>
+            Asks the Clover device to capture card information and request a payment token 
+            from the payment gateway. The payment token can be used for future Sale and 
+            Auth requests in place of the card details. 
+            Note: The merchant account must be configured to allow payment tokens.
+            </summary>
+            <param name="CardEntryMethods">The card entry methods allowed to capture the 
+            payment token. 
+            If this parameter is null, the default values (CARD_ENTRY_METHOD_MAG_STRIPE, 
+            CARD_ENTRY_METHOD_ICC_CONTACT, and CARD_ENTRY_METHOD_NFC_CONTACTLESS) 
+            will be used.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.ReadCardData(com.clover.remotepay.sdk.ReadCardDataRequest)">
+            <summary>
+            Requests card information (specifically Track 1 and Track 2 card data).
+            </summary>
+            <param name="request">The ReadCardDataRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.Closeout(com.clover.remotepay.sdk.CloseoutRequest)">
+            <summary>
+            Sends a request to the Clover server to close out all transactions.
+            Note: The merchant account must be configured to allow transaction closeout.
+            </summary>
+            <param name="request">The CloseoutRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.ResetDevice">
+            <summary>
+            Sends a request to reset the Clover device back to the welcome screen. Can be 
+            used when the device is in an unknown or invalid state from the perspective of 
+            the POS. 
+            Note: This request could cause the POS to miss a transaction or other 
+            information. Use cautiously as a last resort.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.ShowMessage(System.String)">
+            <summary>
+            Displays a string-based message on the Clover device's screen.
+            </summary>
+            <param name="message">The string message to display.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.ShowWelcomeScreen">
+            <summary>
+            Displays the welcome screen on the Clover device.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.ShowThankYouScreen">
+            <summary>
+            Displays the thank you screen on the Clover device.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.DisplayPaymentReceiptOptions(com.clover.remotepay.sdk.DisplayPaymentReceiptOptionsRequest)">
+            <summary>
+            Displays the customer-facing receipt options (print, email, etc.) for a 
+            Payment on the Clover device. 
+            </summary>
+            <param name="request">The request with payment IDs, etc., to locate the receipt</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.OpenCashDrawer(com.clover.remotepay.sdk.OpenCashDrawerRequest)">
+            <summary>
+            Opens the first cash drawer found connected to the Clover device. The reason 
+            for opening the cash drawer must be provided.
+            </summary>
+            <param name="request">Request with text specifying the reason for opening the cash 
+            drawer.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.ShowDisplayOrder(com.clover.remote.order.DisplayOrder)">
+            <summary>
+            Displays an Order and associated line items on the Clover device. Will replace 
+            an Order that is already displayed on the device screen.
+            </summary>
+            <param name="order">The DisplayOrder to display.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RemoveDisplayOrder(com.clover.remote.order.DisplayOrder)">
+            <summary>
+            Removes the DisplayOrder object from the Clover device's screen.
+            </summary>
+            <param name="order">The DisplayOrder to remove.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.Dispose">
+            <summary>
+            Disposes the connection to the Clover device. After this is called, the 
+            connection to the device is severed, and the CloverConnector object is no 
+            longer usable. Instantiate a new CloverConnector object in 
+            order to call InitializeConnection().
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.InvokeInputOption(com.clover.remotepay.transport.InputOption)">
+            <summary>
+            Sends a keystroke to the Clover device that invokes an input option (OK, 
+            CANCEL, DONE, etc.) on the customer's behalf. InputOptions are on the 
+            CloverDeviceEvent passed to OnDeviceActivityStart().
+            </summary>
+            <param name="io">The input option to invoke.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.Print(com.clover.remotepay.sdk.PrintRequest)">
+            <summary>
+            Sends a print request using the PrintRequest object. Used to print text, 
+            Bitmap image objects, and images from URLs using the specified printer.
+            </summary>
+            <param name="request">The PrintRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RetrievePrinters(com.clover.remotepay.transport.RetrievePrintersRequest)">
+            <summary>
+            Queries available printers attached to the Clover device using the 
+            RetrievePrintersRequest object.
+            </summary>
+            <param name="request">The RetrievePrintersRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RetrievePrintJobStatus(com.clover.remotepay.sdk.PrintJobStatusRequest)">
+            <summary>
+            Queries the status of a print job using the PrintJobStatusRequest object.
+            </summary>
+            <param name="request">The PrintJobStatusRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RetrievePendingPayments">
+            <summary>
+            Retrieves a list of unprocessed Payments that were taken offline and are 
+            pending submission to the server.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.StartCustomActivity(com.clover.remotepay.sdk.CustomActivityRequest)">
+            <summary>
+            Starts a Custom Activity on the Clover device.
+            Note: The Custom Activity must already be set up and configured on the Clover 
+            device.
+            </summary>
+            <param name="request">The CustomActivityRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.SendMessageToActivity(com.clover.remotepay.sdk.MessageToActivity)">
+            <summary>
+            Sends a message to a Custom Activity running on a Clover device.
+            </summary>
+            <param name="request">The MessageToActivity details to send to the Custom 
+            Activity.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RetrieveDeviceStatus(com.clover.remotepay.transport.RetrieveDeviceStatusRequest)">
+            <summary>
+            Sends a message requesting the current status of the Clover device.
+            </summary>
+            <param name="request">The RetrieveDeviceStatusRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RetrievePayment(com.clover.remotepay.transport.RetrievePaymentRequest)">
+            <summary>
+            Requests the Payment information associated with the externalPaymentId passed 
+            in. Only valid for Payments made in the past 24 hours on the Clover device 
+            queried.
+            </summary>
+            <param name="request">The RetrievePaymentRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.DisplayReceiptOptions(com.clover.remotepay.sdk.DisplayReceiptOptionsRequest)">
+            <summary>
+            Display receipt options for a Credit, Refund, or Payment
+            </summary>
+            <param name="request">The DisplayReceiptOptionsRequest details</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.RegisterForCustomerProvidedData(com.clover.remotepay.sdk.RegisterForCustomerProvidedDataRequest)">
+            <summary>
+            Register to receive customer data with the Clover Loyalty API
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.SetCustomerInfo(com.clover.remotepay.sdk.SetCustomerInfoRequest)">
+            <summary>
+            Set the Clover Loyalty API's current customer info
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.SetLogLevel(System.Int32)">
+            <summary>
+            Set the current Log Level to filter log messages. Use constants from the LogLevel class for convenience.
+            </summary>
+            <param name="level"></param>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.LogLevel">
+            <summary>
+            CloverConnector Log Level convenience constants
+            </summary>
+        </member>
+        <member name="F:com.clover.remotepay.sdk.LogLevel.MINIMAL">
+            <summary>
+            Minimal logging, only the most critical messages will be logged
+            </summary>
+        </member>
+        <member name="F:com.clover.remotepay.sdk.LogLevel.MODERATE">
+            <summary>
+            Moderate logging, basic flow information without logging excessive details
+            </summary>
+        </member>
+        <member name="F:com.clover.remotepay.sdk.LogLevel.DETAILED">
+            <summary>
+            Detailed logging, flow of information and relevant details
+            </summary>
+        </member>
+        <member name="F:com.clover.remotepay.sdk.LogLevel.DEBUG">
+            <summary>
+            Debug level logging of everything
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.MerchantInfo.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.MerchantInfo.#ctor(com.clover.remotepay.transport.DiscoveryResponseMessage)">
+            <summary>
+            Contains merchant information about the device
+            </summary>
+            <param name="drm"></param>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.DeviceInfo">
+            <summary>
+            Contains the device information of the connected device
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.DeviceInfo.Name">
+            <summary>
+            The merchant assigned name of the device
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.DeviceInfo.Serial">
+            <summary>
+            The serial number of the device
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.DeviceInfo.Model">
+            <summary>
+            The model identifier of the device
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.DeviceInfo.SupportsAcks">
+            <summary>
+            Remote pay version supports message acks
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.SDKInfo">
+            <summary>
+            Descriptive information about this SDK
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SDKInfo.Name">
+            <summary>
+            Gets or sets the SDK name.
+            </summary>
+            <value>
+            The SDK name.
+            </value>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SDKInfo.Version">
+            <summary>
+            Gets or sets the SDK version.
+            </summary>
+            <value>
+            The SDK version.
+            </value>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.BaseRequest">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.BaseResponse">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.BaseResponse.Success">
+            <summary>
+            If true then the requested operation succeeded
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.BaseResponse.Result">
+            <summary>
+            The result of the requested operation.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.BaseResponse.Reason">
+            <summary>
+            Optional information about result.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.BaseResponse.Message">
+            <summary>
+            Detailed information about result.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.BaseTransactionRequest">
+            <summary>
+            Base Sale/Auth/Refund/PreAuth Transaction Request
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.BaseTransactionRequest.ExternalReferenceId">
+            <summary>
+            The external reference id if associated with the payment
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.BaseTransactionRequest.PresentQrcOnly">
+            <summary>
+            Present only the QR Code for Payment
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.TransactionRequest">
+            <summary>
+            Extended Sale/Auth Transaction Request
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.TransactionStartResponse">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PrintRequest">
+            <summary>
+            This should be used for a print call.
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.PrintRequest.#ctor(System.Drawing.Bitmap,System.String,System.String)">
+             Create a PrintRequest to print a given Image
+            
+             - Parameters:
+               - image: Image to print
+               - printRequestId: Optional identifier to give to the print job, so it can later be queried
+               - printDeviceId: Optional identifier to speciy which printer to use
+        </member>
+        <member name="M:com.clover.remotepay.sdk.PrintRequest.#ctor(System.String,System.String,System.String)">
+             Create a PrintRequest to print an image at a given URL
+            
+             - Parameters:
+               - imageURL: URL to the image to print
+               - printRequestId: Optional identifier to give to the print job, so it can later be queried
+               - printDeviceId: Optional identifier to speciy which printer to use
+        </member>
+        <member name="M:com.clover.remotepay.sdk.PrintRequest.#ctor(System.Collections.Generic.List{System.String},System.String,System.String)">
+             Create a PrintRequest to print an array of strings to print
+            
+             - Parameters:
+               - text: Array of strings to be printed
+               - printRequestId: Optional identifier to give to the print job, so it can later be queried
+               - printDeviceId: Optional identifier to speciy which printer to use
+        </member>
+        <member name="M:com.clover.remotepay.sdk.OpenCashDrawerRequest.#ctor(System.String)">
+             Create an object used to inform the Clover Connector's `openCashDrawer()` function of required/additional information when requesting the cash drawer be opened
+            
+             - Parameters:
+               - reason: string describing the reason to open the drawer
+        </member>
+        <member name="T:com.clover.remotepay.sdk.SaleRequest">
+            <summary>
+            This request should be used for a Sale call.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.DisableCashback">
+            <summary>
+            If true then the cashback feature will not appear during the transaction
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.TaxAmount">
+            <summary>
+            Amount paid in tips
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.TippableAmount">
+            <summary>
+            Amount against which a tip should be applied
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.AllowOfflinePayment">
+            <summary>
+            If true then offline payments can be accepted
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.ApproveOfflinePaymentWithoutPrompt">
+            <summary>
+            If true then offline payments will be approved without a prompt.  Currently must be true.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.TipAmount">
+            <summary>
+            Gets or sets the tip amount.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.TipMode">
+            <summary>
+            Gets or sets the tip mode, which controls when the tip is either 
+            designated by the customer, provided by the system as part of the request,
+            or ommitted completely from the transaction
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.SaleRequest.ForceOfflinePayment">
+            <summary>
+            If true then payments will be placed directly in the offline queue for
+            processing when a valid connection exists to the gateway.  This means that
+            payments can be taken offline even with a healthy gateway connection, for purposes
+            of keeping customer interaction with the payment device to the bare minimum.
+            The merchant assumes all risk of potentially declined transactions when this 
+            feature is enabled.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.SaleResponse">
+            <summary>
+            Object passed in to an OnSaleResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.VerifySignatureRequest">
+            <summary>
+            Object passed in to VerifySignatureRequest. This must
+            also be used to either accept or reject a signature as requested
+            from the clover device.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.AuthRequest">
+            <summary>
+            This request should be used for Auth only, but is backward
+            compatible for older implementations.
+            If you are currently using an AuthRequest with IsPreAuth = true,
+            please change your code to use PreAuthRequest/PreAuthResponse
+            for all PreAuth transactions.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.AuthRequest.TaxAmount">
+            <summary>
+            Amount paid in tips
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.AuthRequest.TippableAmount">
+            <summary>
+            Amount against which a tip should be applied
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.AuthRequest.AllowOfflinePayment">
+            <summary>
+            If true then offline payments can be accepted
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.AuthRequest.ApproveOfflinePaymentWithoutPrompt">
+            <summary>
+            If true then offline payments will be approved without a prompt.  Currently must be true.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.AuthRequest.ForceOfflinePayment">
+            <summary>
+            If true then payments will be placed directly in the offline queue for
+            processing when a valid connection exists to the gateway.  This means that
+            payments can be taken offline even with a healthy gateway connection, for purposes
+            of keeping customer interaction with the payment device to the bare minimum.
+            The merchant assumes all risk of potentially declined transactions when this 
+            feature is enabled.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.AuthResponse">
+            <summary>
+            Object passed in to OnAuthResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PreAuthRequest">
+            <summary>
+            This request should be used for PreAuth transactions.
+            If you are currently using an AuthRequest with IsPreAuth = true,
+            please change your code to use PreAuthRequest/PreAuthResponse
+            for all PreAuth transactions.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PreAuthResponse">
+            <summary>
+            Object passed in to OnPreAuthResponse
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.PaymentResponse.#ctor">
+            Initialize the values for this.
+            @private
+        </member>
+        <member name="P:com.clover.remotepay.sdk.PaymentResponse.Payment">
+            <summary>
+            The payment from the sale
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CapturePreAuthRequest">
+            <summary>
+            This request should be used for capturing payments obtained from
+            a PreAuth response
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.IncrementPreAuthRequest">
+            <summary>
+            Increments a previously made pre auth
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.IncrementPreAuthRequest.Amount">
+            <summary>
+            The amount by which to increment the pre-auth.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.IncrementPreAuthRequest.PaymentID">
+            <summary>
+            The preauth to be incremented. This id should be pulled from the Payment.paymentId field in the PreAuthResponse.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.IncrementPreAuthResponse">
+            <summary>
+            The result of an attempt to increment a pre auth
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.IncrementPreAuthResponse.Authorization">
+            <summary>
+            The resulting Authorization
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.VaultCardResponse">
+            <summary>
+            Object passed in to an OnVaultCardResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ReadCardDataRequest">
+            <summary>
+            This request should be passed to initiate retrieval of card data
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ReadCardDataResponse">
+            <summary>
+            Retrieve Card Data
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CapturePreAuthResponse">
+            <summary>
+            Object passed in to OnCapturePreAuthResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CloseoutRequest">
+            <summary>
+            This request should be passed in to make a closeout request
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CloseoutResponse">
+            <summary>
+            Object passed in to OnCloseoutResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.TipAdjustAuthRequest">
+            <summary>
+            This request should be used to make a request to adjust the
+            tip amount on a payment obtained from an Auth request or payment
+            after a CapturePreAuth request
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.TipAdjustAuthResponse">
+            <summary>
+            Object passed in to OnTipAdjustAuthResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ConfirmPaymentRequest">
+            <summary>
+            Object passed in to ConfirmPaymentRequest. This must
+            also be used to either accept or reject a payment as requested
+            from the clover device.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.VoidPaymentRequest">
+            <summary>
+            Object passed in to request the voiding of a payment
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.VoidPaymentRequest.VoidReason">
+            <summary>
+            Reason for void, must be one of the recognized categories, see VoidPaymentRequest consts for common options
+            use VoidPaymentRequest.USER_CANCEL as default
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.VoidPaymentRequest.DisablePrinting">
+            <summary>
+            If true, then do not print using the clover printer.  Return print information.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.VoidPaymentRequest.DisableReceiptSelection">
+            <summary>
+            Do not show the receipt options screen
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.VoidPaymentResponse">
+            <summary>
+            Object passed in to OnVoidPaymentResopnse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.VoidPaymentRefundRequest">
+            <summary>
+            Voiding a payment refund (card present flows like canada region)
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.VoidPaymentRefundResponse">
+            <summary>
+            Object passed in to OnVoidPaymentRefundResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ManualRefundRequest">
+            <summary>
+            This should be used to request a manual refund via the ManualRefund method
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ManualRefundResponse">
+            <summary>
+            The object passed in to OnManualRefundResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.RefundPaymentRequest">
+            <summary>
+            This request should be used to make a payment request
+            using the RefundPayment method
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.RefundPaymentResponse">
+            <summary>
+            Object passed in to OnRefundPaymentResponse
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.AcceptPayment">
+            <summary>
+            Object passed in to OnAcceptPayment
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.RejectPayment">
+            <summary>
+            Object passed in to OnRejectPayment
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.TipAdded">
+            <summary>
+            Pased in to OnTipAdded, when an on-screen tip
+            is selected
+            </summary>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.TipAdded.#ctor">
+            Initialize the values for this.
+            @private
+        </member>
+        <member name="P:com.clover.remotepay.sdk.TipAdded.TipAmount">
+            <summary>
+            Tip amount
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.DisplayPaymentReceiptOptionsRequest">
+            <summary>
+            The request used to show the receipt options screen
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.RetrievePendingPaymentsResponse">
+            <summary>
+            The response object for offline payments that
+            have not been processed by the Clover device
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.RetrievePendingPaymentsResponse.PendingPayments">
+            <summary>
+            List of payments taken offline and not yet processed
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PrintManualRefundReceiptMessage">
+             <summary>
+             Callback to request the POS print a receipt for a ManualRefund
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PrintManualRefundDeclineReceiptMessage">
+            <summary>
+            Callback to request the POS print a ManualRefund declined receipt
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PrintPaymentReceiptMessage">
+            <summary>
+            Callback to the POS to request a payment receipt be printed
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PrintPaymentDeclineReceiptMessage">
+            <summary>
+            Callback to the POS to request a payment declined receipt
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PrintPaymentMerchantCopyReceiptMessage">
+            <summary>
+            Callback to the POS to request a merchant payment receipt
+            be printed
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.PrintRefundPaymentReceiptMessage">
+            <summary>
+            Callback to the POS to request a payment refund receipt
+            be printed
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CustomActivityRequest">
+            <summary>
+            Request for the Clover device to start a Custom Activity
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CustomActivityRequest.Action">
+            <summary>
+            Action string, usually the Activity name
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.CustomActivityResponse">
+            <summary>
+            Response when a custom activity completes on the
+            Clover device when it is completed in a normal flow
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.CustomActivityResponse.Action">
+            <summary>
+            Action string, usually the Activity name
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ActivityMessage">
+            <summary>
+            base class for messages flowing between POS and CustomActivity
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.ActivityMessage.Action">
+            <summary>
+            Action string, usually the Activity name
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.MessageToActivity">
+            <summary>
+            class for sending messages to a CustomActivity from POS
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.MessageToActivity.Action">
+            <summary>
+            Action string, usually the Activity name
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.MessageFromActivity">
+            <summary>
+            class for sending message from a CustomActivity to POS
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.MessageFromActivity.Action">
+            <summary>
+            Action string, usually the Activity name
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.RetrieveDeviceStatusResponse">
+            <summary>
+            response to RetrieveDeviceStatus call
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ExternalDeviceStateData">
+            <summary>
+            Depending on the current device status,
+            these fields may or may not be populated
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.ExternalDeviceState">
+            <summary>
+            enum of current states of the Clover device.
+            IDLE - device can handle new requests. Sale, CustomActivity, etc.
+            BUSY - device will not response to new requests
+            WAITING_FOR_POS - device is waiting for a response from the POS
+            WAITING_FOR_CUSTOMER - device is waiting for the customer to take some action
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.RetrievePaymentResponse">
+            <summary>
+            response to RetrievePayment call
+            </summary>
+        </member>
+    </members>
+</doc>

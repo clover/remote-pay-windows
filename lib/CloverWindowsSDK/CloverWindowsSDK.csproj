@@ -2,14 +2,14 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">DebugNet40</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">ReleaseNet48</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B1DD9531-BE27-429D-9F22-494142378E21}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>com.clover.sdk.v3</RootNamespace>
     <AssemblyName>CloverWindowsSDK</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -43,6 +43,22 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <NoWarn>1591, 1587</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNet48|AnyCPU'">
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <OutputPath>bin\DebugNet48\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE;NET48</DefineConstants>
+    <DocumentationFile>bin\Debug\CloverWindowsSDK.XML</DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591, 1587</NoWarn>
+    <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
+  </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
@@ -65,6 +81,17 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <OutputPath>bin\ReleaseNet45\</OutputPath>
     <DefineConstants>TRACE;NET45</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet48|AnyCPU'">
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <OutputPath>bin\ReleaseNet48\</OutputPath>
+    <DefineConstants>TRACE;NET48</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -168,6 +195,7 @@
     <Compile Include="com\clover\sdk\v3\payments\CashAdvanceExtra.cs" />
     <Compile Include="com\clover\sdk\v3\payments\Credit.cs" />
     <Compile Include="com\clover\sdk\v3\payments\Currency.cs" />
+    <Compile Include="com\clover\sdk\v3\payments\CustomFieldDetails.cs" />
     <Compile Include="com\clover\sdk\v3\payments\CvmResult.cs" />
     <Compile Include="com\clover\sdk\v3\payments\CVVResult.cs" />
     <Compile Include="com\clover\sdk\v3\payments\DCCInfo.cs" />
@@ -224,6 +252,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\Newtonsoft.Json.120r1\Net45\Newtonsoft.Json.dll</HintPath>
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Newtonsoft.Json.120r1\Net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.8.1' ">..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

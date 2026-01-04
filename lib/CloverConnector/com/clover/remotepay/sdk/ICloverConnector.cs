@@ -241,7 +241,7 @@ namespace com.clover.remotepay.sdk
         /// longer usable. Instantiate a new CloverConnector object in 
         /// order to call InitializeConnection().
         /// </summary>
-        void Dispose();
+        new void Dispose();
 
         /// <summary>
         /// Sends a keystroke to the Clover device that invokes an input option (OK, 
