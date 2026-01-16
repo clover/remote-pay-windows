@@ -118,7 +118,7 @@ namespace com.clover.remotepay.sdk
         public CloverConnector(CloverDeviceConfiguration config)
         {
             Config = config;
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("CloverConnector");
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetAssembly(GetType());
             SDKInfo.Name = assembly.GetAssemblyAttribute<System.Reflection.AssemblyDescriptionAttribute>().Description;
             SDKInfo.Version = (assembly.GetAssemblyAttribute<System.Reflection.AssemblyFileVersionAttribute>()).Version
                 + (assembly.GetAssemblyAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()).InformationalVersion;
