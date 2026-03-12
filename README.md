@@ -3,7 +3,7 @@ Clover SDK for Windows POS integration
 
 ## Version
 
-Current version: 5.0.0
+Current version: 5.0.1
 
 ## Overview
 
@@ -38,7 +38,7 @@ Use NuGet references to easily include Remote Pay Windows in your .NET project
 <https://www.nuget.org/packages/Clover.RemotePayWindows>
 
 ```
-Install-Package Clover.RemotePayWindows -Version 5.0.0
+Install-Package Clover.RemotePayWindows -Version 5.0.1
 ```
 
 ## Installing the SDK and Services
@@ -85,7 +85,7 @@ To build and run the example POS application using .NET and VisualStudio 2017:
 - [Windows SDK Wiki](https://github.com/clover/remote-pay-windows/wiki)
 - [Secure Network Pay Display](https://docs.clover.com/clover-platform/docs/pay-display-apps#section--secure-network-pay-display-)
 - [Tutorial for the Windows SDK](https://docs.clover.com/clover-platform/docs/windows)
-- [API Documentation](http://clover.github.io/remote-pay-windows/5.0.0/cloverconnector/html/index.html)
+- [API Documentation](http://clover.github.io/remote-pay-windows/5.0.1/cloverconnector/html/index.html)
 - [Clover Developer Community](https://community.clover.com/index.html)
 
 

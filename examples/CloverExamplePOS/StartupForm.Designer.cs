@@ -148,7 +148,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox ConnectionType;
-        private System.Windows.Forms.Label label2;
+        // private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label Logo;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtAppId;

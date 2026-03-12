@@ -25,7 +25,7 @@ namespace CloverExamplePOS
     {
         CloverDeviceConfiguration selectedConfig;
 
-        private const string DEFAULT_APPLICATION_ID = "com.clover.CloverExamplePOS:3.0.2";
+        private const string DEFAULT_APPLICATION_ID = "com.clover.CloverExamplePOS:5.0.1";
 
         CloverDeviceConfiguration USBConfig = new USBCloverDeviceConfiguration("__deviceID__", DEFAULT_APPLICATION_ID, false, 1);
 

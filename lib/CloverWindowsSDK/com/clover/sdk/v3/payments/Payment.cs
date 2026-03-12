@@ -133,16 +133,7 @@ namespace com.clover.sdk.v3.payments
 
         /// <summary>
         /// Dynamic Currency Conversion information
-        /// </summary>./unin    
-        /// 
-
-
-
-
-
-
-
-
+        /// </summary>
         public payments.DCCInfo dccInfo { get; set; }
         /// <summary>
         /// Per transaction settings for the payment
