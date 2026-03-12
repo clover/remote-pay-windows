@@ -215,8 +215,9 @@ namespace com.clover.remotepay.transport
                             break;
                         case "wss":
 #if NET40
-                            throw new ArgumentException("Clover Windows SDK does not support SSL connections in .NET 4.0, only in .NET 4.5 configurations.", nameof(endpoint));
-#elif NET45
+                            throw new ArgumentException("Clover Windows SDK does not support SSL connections in .NET 4.0, only in .NET 4.5 and above configurations.", nameof(endpoint));
+#else
+                            TransportLog($"Start wss connection: {endpoint}");
                             websocket = new WebSocket(endpoint, sslProtocols: SslProtocols.Tls12);
                             // websocket.Security.AllowUnstrustedCertificate = true; // for testing ONLY
 #endif
@@ -224,6 +225,7 @@ namespace com.clover.remotepay.transport
                         default:
                             Exception ex = new ArgumentException($"Unknown endpoint scheme \"{uri.Scheme}\". Expecting \"wss://\" or \"ws://\" secure or unsecure WebSocket scheme.", nameof(endpoint));
                             onDeviceError(/* CloverDeviceErrorEvent.InvalidEndpoint */ -16381, ex, ex.Message);
+                            TransportLog($"CloverDeviceErrorEvent.InvalidEndpoint: {ex.Message}");
                             break;
                     }
                 }
@@ -265,7 +267,10 @@ namespace com.clover.remotepay.transport
         public override void Dispose()
         {
             shutdown = true;
-            websocket.Close();
+            if (websocket != null)
+            {
+                websocket.Close();
+            }
         }
 
         protected static int getMaxDataTransferSize()
