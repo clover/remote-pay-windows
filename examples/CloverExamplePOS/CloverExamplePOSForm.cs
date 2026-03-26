@@ -12,6 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using CloverExamplePOS.CustomActivity;
+using CloverExamplePOS.UIDialogs;
+using com.clover.remote.order;
+using com.clover.remotepay.sdk;
+using com.clover.remotepay.transport;
+using com.clover.sdk.v3.payments;
+using com.clover.sdk.v3.printer;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -22,14 +30,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using CloverExamplePOS.CustomActivity;
-using CloverExamplePOS.UIDialogs;
-using com.clover.remote.order;
-using com.clover.remotepay.sdk;
-using com.clover.remotepay.transport;
-using com.clover.sdk.v3.payments;
-using com.clover.sdk.v3.printer;
-using Newtonsoft.Json;
+using static com.clover.remotepay.sdk.CloverDeviceEvent;
 using Transport = com.clover.remotepay.transport;
 
 namespace CloverExamplePOS
@@ -1533,6 +1534,14 @@ namespace CloverExamplePOS
                 }
                 UIStateButtonPanel.Parent.PerformLayout();
                 DeviceCurrentStatus.Text = deviceEvent.Message;
+                if (deviceEvent.EventState.Equals(DeviceEventState.SELECT_DCC) && (deviceEvent.Message == null || deviceEvent.Message.Length<= 0))
+                {
+                    DeviceCurrentStatus.Text = "Customer is choosing a currency...";
+                }
+                else if (deviceEvent.EventState.Equals(DeviceEventState.SELECT_ACCOUNT))
+                {
+                    DeviceCurrentStatus.Text = "Customer is choosing account type...";
+                }
             }, null);
         }
 

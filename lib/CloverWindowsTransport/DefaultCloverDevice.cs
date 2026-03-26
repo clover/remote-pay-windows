@@ -138,6 +138,7 @@ namespace com.clover.remotepay.transport
                 // - and verify backwards compatiblility story since old WinSDK releases will crash
 
                 // TODO: Log message and exception in new logging
+                Log(MessageLevel.Detailed, "{ex.data}");
             }
             catch (Newtonsoft.Json.JsonSerializationException ex)
             {
@@ -145,6 +146,7 @@ namespace com.clover.remotepay.transport
                 // - and verify backwards compatiblility story since old WinSDK releases will crash
 
                 // TODO: Log message and exception in new logging
+                Log(MessageLevel.Detailed, "{ex.data}");
             }
 
             try
