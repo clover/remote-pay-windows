@@ -1,11 +1,11 @@
-﻿using LibUsbDotNet.Info;
+﻿using LibUsbDotNet;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.Main;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LibUsbDotNet;
-using LibUsbDotNet.Main;
 
 namespace com.clover.remotepay.transport.usb
 {

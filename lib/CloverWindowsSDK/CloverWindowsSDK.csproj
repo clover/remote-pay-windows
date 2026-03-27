@@ -90,7 +90,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet48|AnyCPU'">
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-    <OutputPath>bin\ReleaseNet48\</OutputPath>
+    <OutputPath>bin\ReleaseNet48</OutputPath>
     <DefineConstants>TRACE;NET48</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -100,6 +100,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -243,17 +246,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.5.2' ">..\..\packages\Newtonsoft.Json.120r1\Net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\..\packages\Newtonsoft.Json.120r1\Net40\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.8.1' ">..\..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
