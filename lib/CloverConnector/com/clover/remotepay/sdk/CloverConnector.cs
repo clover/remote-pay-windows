@@ -2151,7 +2151,14 @@ namespace com.clover.remotepay.sdk
 
             public void onPaymentVoided(Payment payment, VoidReason voidReason, ResultStatus result, string reason, string message)
             {
-                cloverConnector.ShowOnDevice("The transaction was voided.", 3000, true, 3000, true);
+                if (result == ResultStatus.SUCCESS)
+                {
+                    cloverConnector.ShowOnDevice("The transaction was voided.", 3000, true, 3000, true);
+                }
+                else
+                {
+                    cloverConnector.ShowOnDevice("Transaction void failed.", 3000, true, 3000, true);
+                }
 
                 NotifyListeners(listener =>
                 {
@@ -2161,7 +2168,7 @@ namespace com.clover.remotepay.sdk
                         Result = result.ToResponseCode(),
                         Message = message ?? "No extended information provided.",
                         Reason = reason ?? result.ToString(),
-                        PaymentId = payment.id,
+                        PaymentId = payment?.id,
                         Payment = payment
                     };
 
